@@ -892,14 +892,14 @@ function ScreenTrip() {
               style={{
                 width: '100%', padding: '14px 18px',
                 background: '#fff', borderRadius: 999, border: 'none',
-                display: 'flex', alignItems: 'center', gap: 10,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 boxShadow: '0 4px 20px rgba(0,0,0,0.14)',
-                cursor: 'pointer', textAlign: 'left',
+                cursor: 'pointer',
               }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={TRIP_INK} strokeWidth="2.2" strokeLinecap="round">
                 <circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>
               </svg>
-              <span style={{ color: '#C4C9DB', fontSize: 15, fontWeight: 500 }}>Qayerga sayohat?</span>
+              <span style={{ color: TRIP_INK, fontSize: 15, fontWeight: 600 }}>Qayerga sayohat?</span>
             </button>
           </div>
 
