@@ -1033,9 +1033,7 @@ function SearchAllScreen({ active, onSelect, onBack, onSearch, services = ALL_SE
       {/* Header */}
       {logoHeader ? (
         <button onClick={onBack} style={{ width: '100%', padding: '20px 20px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', position: 'sticky', top: 0, zIndex: 10, backgroundColor: C.bg }}>
-          <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(180deg, #2DD4DC 0%, #1FBFC9 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(31,191,201,0.25)' }}>
-            <img src="assets/lets-trip-logo.png?v=3" alt="Let's Trip" style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
-          </div>
+          <img src="assets/lets-trip-logo-brand.png?v=1" alt="Let's Trip" style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
           <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, color: TRIP_INK }}>Let's Trip</div>
         </button>
       ) : (
