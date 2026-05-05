@@ -872,8 +872,8 @@ function ScreenTrip() {
               padding: '20px 20px 8px',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
             }}>
-              <img src="assets/lets-trip-logo.png?v=2" alt="Let's Trip"
-                style={{ height: 36, width: 36, objectFit: 'cover', objectPosition: 'right top', display: 'block', filter: 'brightness(0) invert(1)' }}/>
+              <img src="assets/lets-trip-logo.png?v=3" alt="Let's Trip"
+                style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
               <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, color: '#FFFFFF' }}>
                 Let's Trip
               </div>
