@@ -832,13 +832,14 @@ function ScreenTrip() {
 
   return (
     <Frame>
-      {/* Sticky top bar */}
-      <div style={{
-        padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 12,
-        position: 'sticky', top: 0, zIndex: 10,
-        background: C.bg,
-      }}>
-        {intent ? (
+      {/* Sticky top bar — when no intent, logo is centered with a marketing
+          hero pitch underneath. Inside an intent, falls back to a back button +
+          contextual title row. */}
+      {intent ? (
+        <div style={{
+          padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 12,
+          position: 'sticky', top: 0, zIndex: 10, background: C.bg,
+        }}>
           <button
             onClick={() => { setIntent(null); setActiveCat(null); }}
             aria-label="Back"
@@ -849,13 +850,36 @@ function ScreenTrip() {
             }}>
             <IconBack size={20} color={TRIP_INK}/>
           </button>
-        ) : (
-          <img src="assets/lets-trip-logo.png" alt="Let's Trip" style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0 }}/>
-        )}
-        <h1 style={{ margin: 0, fontSize: 26, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK, flex: 1, textAlign: intent ? 'left' : 'left' }}>
-          {intent ? current.title : "Let's Trip"}
-        </h1>
-      </div>
+          <h1 style={{ margin: 0, fontSize: 26, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK, flex: 1 }}>
+            {current.title}
+          </h1>
+        </div>
+      ) : (
+        <>
+          <div style={{
+            padding: '14px 20px 6px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            position: 'sticky', top: 0, zIndex: 10, background: C.bg,
+          }}>
+            <img src="assets/lets-trip-logo.png" alt="Let's Trip"
+              style={{ width: 44, height: 44, borderRadius: '50%' }}/>
+          </div>
+          <div style={{ padding: '8px 24px 18px', textAlign: 'center' }}>
+            <h1 style={{
+              margin: 0, fontSize: 26, fontWeight: 800,
+              letterSpacing: -0.5, color: TRIP_INK, lineHeight: 1.15,
+            }}>
+              Sayohatingizni <span style={{ color: TEAL }}>bitta qidiruv</span> bilan boshlang
+            </h1>
+            <p style={{
+              margin: '10px auto 0', maxWidth: 320,
+              fontSize: 14, fontWeight: 500, color: '#5C6B86', lineHeight: 1.5,
+            }}>
+              Parvoz, mehmonxona, eSIM va ekskursiyalar — manzilingiz bo'yicha avtomatik ko'rsatiladi.
+            </p>
+          </div>
+        </>
+      )}
 
       {!intent ? (
         <IntentPicker onPick={(id) => setIntent(id)} onFlight={openFlight}/>
@@ -1161,16 +1185,6 @@ function IntentPicker({ onPick, onFlight }) {
       display: 'flex', flexDirection: 'column', gap: 14,
     }}>
       <DestinationSearchCard onSearch={onFlight}/>
-
-      {/* Page-level explanation: tell people what this single search actually
-          does — bundles flight + hotel + eSIM + excursions for the picked
-          destination, so they don't expect 8 separate menus. */}
-      <div style={{
-        padding: '2px 14px',
-        fontSize: 12.5, color: '#5C6B86', fontWeight: 500, lineHeight: 1.55,
-      }}>
-        Bitta qidiruv — to'liq sayohat. Tanlagan manzilingiz uchun parvoz, mehmonxona, eSIM va ekskursiyalar bir joyda chiqadi.
-      </div>
 
       {/* Aeroportga ketyapman — local trip path, compact card */}
       {INTENTS.filter(it => it.id === 'airport').map(it => (
