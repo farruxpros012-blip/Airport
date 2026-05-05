@@ -869,11 +869,18 @@ function ScreenTrip() {
           <div style={{ position: 'relative', zIndex: 1 }}>
             {/* Centered logo + Let's Trip wordmark in a single row */}
             <div style={{
-              padding: '16px 20px 4px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              padding: '20px 20px 8px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <img src="assets/lets-trip-logo.png?v=2" alt="Let's Trip"
-                style={{ height: 64, width: 'auto', filter: 'brightness(0) invert(1)' }}/>
+              <div style={{
+                background: 'rgba(255,255,255,0.15)',
+                borderRadius: 16,
+                padding: '8px 20px',
+                backdropFilter: 'blur(8px)',
+              }}>
+                <img src="assets/lets-trip-logo.png?v=2" alt="Let's Trip"
+                  style={{ height: 56, width: 'auto', display: 'block' }}/>
+              </div>
             </div>
 
             {/* Marketing hero — primary value prop */}
