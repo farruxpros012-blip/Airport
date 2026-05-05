@@ -707,6 +707,20 @@ function IntentPicker({ onPick, onFlight }) {
         </div>
       </Card>
 
+      {/* Subtle hint that flight search results also surface hotels, eSIM,
+          excursions for the chosen destination — Booking-style bundling. */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '2px 12px',
+        fontSize: 12, color: '#7A86A8', fontWeight: 500, lineHeight: 1.5,
+      }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A86A8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 8v4M12 16h0"/>
+        </svg>
+        <span>Hotel, eSIM va ekskursiyalar qidiruv natijasida ko'rsatiladi</span>
+      </div>
+
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '6px 4px 0',
@@ -718,10 +732,8 @@ function IntentPicker({ onPick, onFlight }) {
         <div style={{ height: 1, background: '#E0E4F0', flex: 1 }}/>
       </div>
 
-      <div style={{ fontSize: 15, color: '#5C6B86', fontWeight: 500, padding: '0 4px 4px' }}>
-        Bugun nima qilmoqchisiz?
-      </div>
-      {INTENTS.map(it => (
+      {/* Local-trip path: only the airport intent — separate from sayohat */}
+      {INTENTS.filter(it => it.id === 'airport').map(it => (
         <button key={it.id}
           onClick={() => onPick(it.id)}
           style={{
@@ -735,7 +747,6 @@ function IntentPicker({ onPick, onFlight }) {
             textAlign: 'left',
             position: 'relative', overflow: 'hidden',
           }}>
-          {/* Decorative icon stack in the corner */}
           <div style={{
             position: 'absolute', right: 18, top: '50%', transform: 'translateY(-50%)',
             display: 'flex', gap: 8, opacity: 0.85,
@@ -746,6 +757,22 @@ function IntentPicker({ onPick, onFlight }) {
           <div style={{ fontSize: 13, fontWeight: 500, opacity: 0.85 }}>{it.sub}</div>
         </button>
       ))}
+
+      {/* Escape hatch — power users / curious users can still browse all 8 services */}
+      <button
+        onClick={() => onPick('travel')}
+        style={{
+          marginTop: 4, alignSelf: 'center',
+          border: 'none', background: 'transparent',
+          padding: '10px 16px', cursor: 'pointer',
+          fontSize: 14, fontWeight: 600, color: TEAL,
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+        }}>
+        Barcha xizmatlar
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={TEAL} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 6l6 6-6 6"/>
+        </svg>
+      </button>
     </div>
   );
 }
