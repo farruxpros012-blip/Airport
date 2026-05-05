@@ -834,21 +834,6 @@ function IntentPicker({ onPick, onFlight }) {
         </button>
       ))}
 
-      {/* Escape hatch — power users / curious users can still browse all 8 services */}
-      <button
-        onClick={() => onPick('travel')}
-        style={{
-          marginTop: 4, alignSelf: 'center',
-          border: 'none', background: 'transparent',
-          padding: '10px 16px', cursor: 'pointer',
-          fontSize: 14, fontWeight: 600, color: TEAL,
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-        }}>
-        Barcha xizmatlar
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={TEAL} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 6l6 6-6 6"/>
-        </svg>
-      </button>
     </div>
   );
 }
