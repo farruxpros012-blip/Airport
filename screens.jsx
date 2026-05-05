@@ -854,37 +854,54 @@ function ScreenTrip() {
             {current.title}
           </h1>
         </div>
-      ) : (
-        <>
-          <div style={{
-            padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12,
-            position: 'sticky', top: 0, zIndex: 10, background: C.bg,
-          }}>
-            <img src="assets/lets-trip-logo.png" alt="Let's Trip"
-              style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0 }}/>
-            <h1 style={{ margin: 0, fontSize: 26, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK, flex: 1 }}>
-              Let's Trip
-            </h1>
-          </div>
-          <div style={{ padding: '18px 24px 22px', textAlign: 'center' }}>
-            <h2 style={{
-              margin: 0, fontSize: 21, fontWeight: 800,
-              letterSpacing: -0.4, color: TRIP_INK, lineHeight: 1.2,
-            }}>
-              Sayohatingizni <span style={{ color: TEAL }}>bitta qidiruv</span> bilan boshlang
-            </h2>
-            <p style={{
-              margin: '10px auto 0', maxWidth: 320,
-              fontSize: 13.5, fontWeight: 500, color: '#5C6B86', lineHeight: 1.55,
-            }}>
-              Parvoz, mehmonxona, eSIM va ekskursiyalar — manzilingiz bo'yicha avtomatik ko'rsatiladi.
-            </p>
-          </div>
-        </>
-      )}
+      ) : null}
 
       {!intent ? (
-        <IntentPicker onPick={(id) => setIntent(id)} onFlight={openFlight}/>
+        <div style={{ position: 'relative' }}>
+          {/* Soft teal hero background that fades into the page roughly mid-way
+              through the destination card below — gives the top a marketing
+              feel without overwhelming the form. */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: 580,
+            background: `linear-gradient(180deg,
+              rgba(45,212,220,0.26) 0%,
+              rgba(45,212,220,0.16) 38%,
+              rgba(45,212,220,0.06) 78%,
+              rgba(45,212,220,0) 100%)`,
+            pointerEvents: 'none', zIndex: 0,
+          }}/>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            {/* Centered logo + Let's Trip wordmark */}
+            <div style={{
+              padding: '14px 20px 4px',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+            }}>
+              <img src="assets/lets-trip-logo.png" alt="Let's Trip"
+                style={{ width: 44, height: 44, borderRadius: '50%' }}/>
+              <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: -0.3, color: TRIP_INK }}>
+                Let's Trip
+              </div>
+            </div>
+
+            {/* Marketing hero — primary value prop */}
+            <div style={{ padding: '14px 24px 22px', textAlign: 'center' }}>
+              <h2 style={{
+                margin: 0, fontSize: 28, fontWeight: 800,
+                letterSpacing: -0.5, color: TRIP_INK, lineHeight: 1.18,
+              }}>
+                Sayohatingizni <span style={{ color: TEAL }}>bitta qidiruv</span> bilan boshlang
+              </h2>
+              <p style={{
+                margin: '12px auto 0', maxWidth: 320,
+                fontSize: 13.5, fontWeight: 500, color: '#5C6B86', lineHeight: 1.55,
+              }}>
+                Parvoz, mehmonxona, eSIM va ekskursiyalar — manzilingiz bo'yicha avtomatik ko'rsatiladi.
+              </p>
+            </div>
+
+            <IntentPicker onPick={(id) => setIntent(id)} onFlight={openFlight}/>
+          </div>
+        </div>
       ) : (
         <IntentPane intent={current} activeCat={activeCat} setActiveCat={setActiveCat}/>
       )}
@@ -933,15 +950,15 @@ function DestinationSearchCard({ onSearch }) {
       {/* Title */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 12,
-        padding: '20px 24px 14px',
+        padding: '16px 22px 10px',
       }}>
-        <div style={{ fontSize: 17, fontWeight: 800, color: TRIP_INK, letterSpacing: -0.2 }}>
+        <div style={{ fontSize: 16, fontWeight: 800, color: TRIP_INK, letterSpacing: -0.2 }}>
           Qayerga sayohat?
         </div>
       </div>
 
       {/* From */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px 14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 22px 11px' }}>
         <FigTakeoff size={26}/>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={labelStyle}>Qayerdan</div>
@@ -957,7 +974,7 @@ function DestinationSearchCard({ onSearch }) {
       <div style={{ height: 1, background: '#ECEEF6', marginLeft: 64, marginRight: 24 }}/>
 
       {/* To */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px 14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 22px 11px' }}>
         <FigLanding size={26}/>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={labelStyle}>Qayerga</div>
@@ -975,7 +992,7 @@ function DestinationSearchCard({ onSearch }) {
       {/* Date range — opens bottom sheet */}
       <div
         onClick={() => setSheetOpen(true)}
-        style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px 18px', cursor: 'pointer' }}>
+        style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 22px 14px', cursor: 'pointer' }}>
         <span style={{ display: 'inline-flex', opacity: 0.85 }}><FigCalendar size={22}/></span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={labelStyle}>Sana</div>
@@ -985,14 +1002,14 @@ function DestinationSearchCard({ onSearch }) {
         </div>
       </div>
 
-      <div style={{ padding: '0 20px 20px' }}>
+      <div style={{ padding: '4px 18px 18px' }}>
         <button
           onClick={handleSearch}
           style={{
-            width: '100%', padding: '14px',
+            width: '100%', padding: '13px',
             border: 'none', borderRadius: 999,
             background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`,
-            color: '#fff', fontSize: 16, fontWeight: 700,
+            color: '#fff', fontSize: 15, fontWeight: 700,
             boxShadow: '0 8px 20px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.35)',
             cursor: 'pointer',
           }}>Search</button>
