@@ -878,7 +878,7 @@ function ScreenTrip() {
         }}/>
         <div style={{ position: 'relative', zIndex: 1 }}>
           {/* Logo row */}
-          <div style={{ padding: '20px 20px 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+          <div style={{ padding: '20px 20px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img src="assets/lets-trip-logo.png?v=3" alt="Let's Trip" style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
             </div>
@@ -929,7 +929,10 @@ function ScreenTrip() {
               minHeight: 56,
             }}>
               {cat.services.map(svcId => (
-                <span key={svcId} style={{ display: 'inline-flex' }}>
+                <span key={svcId} style={{
+                  display: 'inline-flex',
+                  filter: 'brightness(0) saturate(100%) invert(58%) sepia(72%) saturate(425%) hue-rotate(141deg) brightness(92%) contrast(88%)',
+                }}>
                   {CAT_DEF[svcId].icon}
                 </span>
               ))}
