@@ -887,7 +887,7 @@ function ScreenTrip() {
       <div style={{ position: 'relative' }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'radial-gradient(ellipse 130% 110% at 85% -10%, #7EE0E6 0%, #2DD4DC 35%, #1F9FBE 70%, #4A6BD4 100%)',
+          background: 'linear-gradient(45deg, #4A6BD4 0%, #1F9FBE 35%, #2DD4DC 70%, #7EE0E6 100%)',
           pointerEvents: 'none', zIndex: 0,
         }}/>
         <div style={{ position: 'relative', zIndex: 1 }}>
@@ -974,7 +974,7 @@ function ScreenTrip() {
                 boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 2px rgba(59,71,200,0.06), 0 2px 6px rgba(59,71,200,0.10), 0 0 0 1px rgba(59,71,200,0.04)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.brand} strokeWidth="2.2" strokeLinecap="round">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A8A93" strokeWidth="2.4" strokeLinecap="round">
                   <circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>
                 </svg>
               </div>
@@ -982,7 +982,13 @@ function ScreenTrip() {
                 <div style={{ fontSize: 14, fontWeight: 700, color: TRIP_INK }}>{r.from} → {r.to}</div>
                 <div style={{ fontSize: 12, fontWeight: 500, color: '#7A8499', marginTop: 1 }}>{r.date}</div>
               </div>
-              <span style={{ fontSize: 11, fontWeight: 700, color: TEAL, padding: '4px 10px', borderRadius: 999, background: 'rgba(31,191,201,0.12)', textTransform: 'uppercase', letterSpacing: 0.4 }}>{r.service}</span>
+              <span style={{
+                fontSize: 11, fontWeight: 700, color: '#0A8A93',
+                padding: '5px 11px', borderRadius: 999,
+                background: 'linear-gradient(155deg, #FFFFFF 0%, #EEF1FB 50%, #DDE3F4 100%)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 2px rgba(59,71,200,0.06), 0 2px 6px rgba(59,71,200,0.10), 0 0 0 1px rgba(59,71,200,0.04)',
+                textTransform: 'uppercase', letterSpacing: 0.4,
+              }}>{r.service}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4C9DB" strokeWidth="2.4" strokeLinecap="round">
                 <path d="M9 6l6 6-6 6"/>
               </svg>
