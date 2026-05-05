@@ -870,16 +870,12 @@ function ScreenTrip() {
             {/* Centered logo + Let's Trip wordmark in a single row */}
             <div style={{
               padding: '20px 20px 8px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
             }}>
-              <div style={{
-                background: 'rgba(255,255,255,0.15)',
-                borderRadius: 16,
-                padding: '8px 20px',
-                backdropFilter: 'blur(8px)',
-              }}>
-                <img src="assets/lets-trip-logo.png?v=2" alt="Let's Trip"
-                  style={{ height: 56, width: 'auto', display: 'block' }}/>
+              <img src="assets/lets-trip-logo.png?v=2" alt="Let's Trip"
+                style={{ height: 36, width: 36, objectFit: 'cover', objectPosition: 'right top', display: 'block', filter: 'brightness(0) invert(1)' }}/>
+              <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, color: '#FFFFFF' }}>
+                Let's Trip
               </div>
             </div>
 
