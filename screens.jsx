@@ -921,12 +921,12 @@ function ScreenTrip() {
       </div>
 
       {/* Categories — outside hero, on page bg */}
-      <div style={{ padding: '22px 20px 8px' }}>
+      <div style={{ padding: '24px 20px 12px' }}>
         <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2 }}>
           Kategoriyalar
         </div>
       </div>
-      <div style={{ padding: '0 16px 20px', display: 'flex', gap: 10 }}>
+      <div style={{ padding: '0 16px 0', display: 'flex', gap: 10 }}>
         {TRIP_CATS_NEW.map(cat => (
           <button key={cat.id}
             onClick={() => { setCatView(cat.id); setActiveService(cat.services[0]); setView('category'); }}
@@ -960,7 +960,7 @@ function ScreenTrip() {
       </div>
 
       {/* Recent searches */}
-      <div style={{ padding: '20px 20px 8px' }}>
+      <div style={{ padding: '24px 20px 0' }}>
         <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2, marginBottom: 12 }}>
           So'nggi qidiruvlar
         </div>
@@ -987,7 +987,7 @@ function ScreenTrip() {
       </div>
 
       {/* Popular destinations */}
-      <div style={{ padding: '20px 0 0' }}>
+      <div style={{ padding: '24px 0 0' }}>
         <div style={{ padding: '0 20px 12px', fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2 }}>
           Mashhur yo'nalishlar
         </div>
@@ -1015,7 +1015,7 @@ function ScreenTrip() {
 }
 
 // Full-screen search: all 8 services + adaptive form below
-function SearchAllScreen({ active, onSelect, onBack, onSearch }) {
+function SearchAllScreen({ active, onSelect, onBack, onSearch, services = ALL_SERVICES, title = 'Sayohat qilmoqchiman' }) {
   return (
     <Frame>
       {/* Header */}
@@ -1024,13 +1024,13 @@ function SearchAllScreen({ active, onSelect, onBack, onSearch }) {
           <IconBack size={20} color={TRIP_INK}/>
         </button>
         <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK }}>
-          Sayohat qilmoqchiman
+          {title}
         </h1>
       </div>
 
-      {/* All 8 services in 4-column grid */}
+      {/* Service icons grid */}
       <div style={{ padding: '4px 20px 20px', display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-        {ALL_SERVICES.map(svcId => {
+        {services.map(svcId => {
           const on = active === svcId;
           return (
             <button key={svcId} onClick={() => onSelect(svcId)}
