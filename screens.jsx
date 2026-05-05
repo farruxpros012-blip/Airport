@@ -659,11 +659,26 @@ const SAMPLE_RESULTS = {
   ],
 };
 
-function TripResultsView({ onBack }) {
+function TripResultsView({ params, onBack }) {
+  // Hide services that don't make sense for one-way trips: hotel needs a
+  // checkout date, multi-day tours need a return. eSIM and excursions are
+  // duration-agnostic so they always show.
+  const oneWay = !!params.oneWay;
+  const visibleTabs = oneWay
+    ? RESULT_TABS.filter(t => t.id !== 'hotel')
+    : RESULT_TABS;
   const [tab, setTab] = React.useState('flight');
   const [filter, setFilter] = React.useState(null);
   const filters = RESULT_FILTERS[tab];
   const items = SAMPLE_RESULTS[tab];
+
+  const dest = (params.to || 'Dubai').trim() || 'Dubai';
+  const origin = (params.from || 'Tashkent').trim() || 'Tashkent';
+
+  const fmtD = (d) => d ? d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : null;
+  const dateLabel = oneWay
+    ? (fmtD(params.departDate) ? `${fmtD(params.departDate)} · faqat ketish` : 'Faqat ketish')
+    : (params.departDate && params.returnDate ? `${fmtD(params.departDate)} — ${fmtD(params.returnDate)}` : '');
 
   return (
     <Frame>
@@ -684,10 +699,10 @@ function TripResultsView({ onBack }) {
         </button>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>
-            Tashkent → Dubai
+            {origin} → {dest}
           </div>
           <div style={{ fontSize: 17, fontWeight: 800, color: TRIP_INK, letterSpacing: -0.2 }}>
-            Qidiruv natijasi
+            {dateLabel || 'Qidiruv natijasi'}
           </div>
         </div>
       </div>
@@ -696,7 +711,7 @@ function TripResultsView({ onBack }) {
       <div style={{
         display: 'flex', gap: 6, padding: '0 16px 14px', overflowX: 'auto',
       }}>
-        {RESULT_TABS.map(t => {
+        {visibleTabs.map(t => {
           const on = t.id === tab;
           return (
             <button
@@ -808,10 +823,11 @@ function ScreenTrip() {
 
   // Search button on the destination card jumps to the unified results page
   // that bundles flight + hotel + eSIM + excursion for the chosen destination.
-  const openFlight = () => setShowResults(true);
+  const [searchParams, setSearchParams] = React.useState(null);
+  const openFlight = (params) => { setSearchParams(params || {}); setShowResults(true); };
 
   if (showResults) {
-    return <TripResultsView onBack={() => setShowResults(false)}/>;
+    return <TripResultsView params={searchParams || {}} onBack={() => setShowResults(false)}/>;
   }
 
   return (
@@ -865,8 +881,14 @@ function DestinationSearchCard({ onSearch }) {
   const fmtRange = () => {
     if (!departDate) return '';
     const f = (d) => d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
-    if (!returnDate) return f(departDate);
+    if (!returnDate) return `${f(departDate)} · faqat ketish`;
     return `${f(departDate)} — ${f(returnDate)}`;
+  };
+
+  const handleSearch = () => {
+    // One-way trip = no return date. Pass it on so the results page can hide
+    // services that don't make sense without a return (e.g. multi-day tours).
+    onSearch && onSearch({ from, to, departDate, returnDate, oneWay: !returnDate });
   };
 
   const inputStyle = {
@@ -939,7 +961,7 @@ function DestinationSearchCard({ onSearch }) {
 
       <div style={{ padding: '0 20px 20px' }}>
         <button
-          onClick={onSearch}
+          onClick={handleSearch}
           style={{
             width: '100%', padding: '14px',
             border: 'none', borderRadius: 999,
@@ -961,12 +983,14 @@ function DestinationSearchCard({ onSearch }) {
   );
 }
 
-// Bottom-sheet date range picker. Two-month vertical scroll, tap to set
-// depart, tap second date to set return. Compact and matches the rounded
-// teal style used elsewhere on Let's Trip.
+// Bottom-sheet date range picker. Focus auto-advances: depart first, then
+// return. Picking the return date auto-applies and closes. A separate
+// "Faqat ketish" button lets users commit a one-way trip with just depart.
+// Sheet sits above the bottom tab bar (z-index 100).
 function CalendarRangeSheet({ depart, returnDate, onClose, onApply }) {
   const [d1, setD1] = React.useState(depart);
   const [d2, setD2] = React.useState(returnDate);
+  const [focused, setFocused] = React.useState(depart && !returnDate ? 'return' : 'depart');
 
   const today = React.useMemo(() => {
     const t = new Date(); t.setHours(0,0,0,0); return t;
@@ -985,10 +1009,23 @@ function CalendarRangeSheet({ depart, returnDate, onClose, onApply }) {
   const inRange = (d) => d1 && d2 && d > d1 && d < d2;
 
   const pick = (d) => {
-    if (!d1 || (d1 && d2)) { setD1(d); setD2(null); return; }
-    if (d < d1) { setD1(d); setD2(null); return; }
-    if (sameDay(d, d1)) { setD2(null); return; }
+    if (focused === 'depart') {
+      // Setting depart resets return if it would now be invalid.
+      setD1(d);
+      if (d2 && d2 <= d) setD2(null);
+      setFocused('return');
+      return;
+    }
+    // focused === 'return'
+    if (!d1) { setD1(d); setFocused('return'); return; }
+    if (d <= d1) {
+      // Picking a date earlier than depart re-anchors depart, stays on return.
+      setD1(d); setD2(null);
+      return;
+    }
     setD2(d);
+    // Auto-apply both dates and close — saves users an extra confirm tap.
+    setTimeout(() => onApply(d1, d), 180);
   };
 
   const monthName = (m) => m.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
@@ -1042,14 +1079,20 @@ function CalendarRangeSheet({ depart, returnDate, onClose, onApply }) {
     );
   };
 
-  const ready = !!d1;
+  const fieldStyle = (isOn, hasValue) => ({
+    flex: 1, padding: '10px 14px', borderRadius: 14,
+    background: isOn ? 'rgba(31,191,201,0.10)' : '#F4F5FA',
+    border: isOn ? `1.5px solid ${TEAL}` : '1.5px solid transparent',
+    cursor: 'pointer', textAlign: 'left',
+    transition: 'all 0.15s',
+  });
 
   return (
     <div
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, background: 'rgba(15,27,61,0.45)',
-        zIndex: 50, display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+        zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
       }}>
       <div
         onClick={(e) => e.stopPropagation()}
@@ -1058,7 +1101,7 @@ function CalendarRangeSheet({ depart, returnDate, onClose, onApply }) {
           borderTopLeftRadius: 28, borderTopRightRadius: 28,
           padding: '14px 20px 20px',
           display: 'flex', flexDirection: 'column',
-          maxHeight: '85vh',
+          maxHeight: '92vh',
         }}>
         {/* Grab handle + header */}
         <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 8 }}>
@@ -1071,20 +1114,20 @@ function CalendarRangeSheet({ depart, returnDate, onClose, onApply }) {
           </button>
         </div>
 
-        {/* Range summary */}
+        {/* Range summary — tap to refocus a field */}
         <div style={{ display: 'flex', gap: 8, paddingBottom: 14 }}>
-          <div style={{ flex: 1, padding: '10px 12px', borderRadius: 12, background: '#F4F5FA' }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>Qachondan</div>
+          <button onClick={() => setFocused('depart')} style={fieldStyle(focused === 'depart', !!d1)}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: focused === 'depart' ? TEAL : '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>Qachondan</div>
             <div style={{ fontSize: 14, fontWeight: 700, color: d1 ? TRIP_INK : '#C4C9DB', marginTop: 2 }}>
               {d1 ? d1.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : '—'}
             </div>
-          </div>
-          <div style={{ flex: 1, padding: '10px 12px', borderRadius: 12, background: '#F4F5FA' }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>Qachongacha</div>
+          </button>
+          <button onClick={() => setFocused('return')} style={fieldStyle(focused === 'return', !!d2)}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: focused === 'return' ? TEAL : '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>Qachongacha</div>
             <div style={{ fontSize: 14, fontWeight: 700, color: d2 ? TRIP_INK : '#C4C9DB', marginTop: 2 }}>
               {d2 ? d2.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : '—'}
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Months scroll */}
@@ -1093,19 +1136,18 @@ function CalendarRangeSheet({ depart, returnDate, onClose, onApply }) {
         </div>
 
         <button
-          onClick={() => onApply(d1, d2)}
-          disabled={!ready}
+          onClick={() => d1 && onApply(d1, null)}
+          disabled={!d1}
           style={{
             width: '100%', padding: '14px',
-            border: 'none', borderRadius: 999,
-            background: ready
-              ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`
-              : '#E0E4F0',
-            color: '#fff', fontSize: 16, fontWeight: 700,
-            boxShadow: ready ? '0 8px 20px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.35)' : 'none',
-            cursor: ready ? 'pointer' : 'default',
+            border: '1.5px solid ' + (d1 ? TEAL : '#E0E4F0'),
+            borderRadius: 999,
+            background: '#fff',
+            color: d1 ? TEAL : '#C4C9DB',
+            fontSize: 15, fontWeight: 700,
+            cursor: d1 ? 'pointer' : 'default',
           }}>
-          Tasdiqlash
+          Faqat ketish sanasi bilan davom etish
         </button>
       </div>
     </div>
