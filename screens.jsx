@@ -863,6 +863,7 @@ function ScreenTrip() {
         onSelect={setActiveService}
         onBack={() => { setView('home'); setActiveService(null); }}
         onSearch={(p) => { setSearchParams(p); setView('results'); }}
+        logoHeader
       />
     );
   }
@@ -1026,18 +1027,27 @@ function ScreenTrip() {
 }
 
 // Full-screen search: all 8 services + adaptive form below
-function SearchAllScreen({ active, onSelect, onBack, onSearch, services = ALL_SERVICES, title = 'Sayohat qilmoqchiman' }) {
+function SearchAllScreen({ active, onSelect, onBack, onSearch, services = ALL_SERVICES, title = 'Sayohat qilmoqchiman', logoHeader = false }) {
   return (
     <Frame>
       {/* Header */}
-      <div style={{ padding: '16px 20px 12px', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, zIndex: 10, background: C.bg }}>
-        <button onClick={onBack} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(15,42,74,0.08)', cursor: 'pointer', flexShrink: 0 }}>
-          <IconBack size={20} color={TRIP_INK}/>
+      {logoHeader ? (
+        <button onClick={onBack} style={{ width: '100%', padding: '20px 20px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', position: 'sticky', top: 0, zIndex: 10, backgroundColor: C.bg }}>
+          <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(180deg, #2DD4DC 0%, #1FBFC9 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(31,191,201,0.25)' }}>
+            <img src="assets/lets-trip-logo.png?v=3" alt="Let's Trip" style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
+          </div>
+          <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, color: TRIP_INK }}>Let's Trip</div>
         </button>
-        <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK }}>
-          {title}
-        </h1>
-      </div>
+      ) : (
+        <div style={{ padding: '16px 20px 12px', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, zIndex: 10, background: C.bg }}>
+          <button onClick={onBack} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(15,42,74,0.08)', cursor: 'pointer', flexShrink: 0 }}>
+            <IconBack size={20} color={TRIP_INK}/>
+          </button>
+          <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK }}>
+            {title}
+          </h1>
+        </div>
+      )}
 
       {/* Service icons grid */}
       <div style={{ padding: '4px 20px 20px', display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: services.length < 4 ? 'center' : 'flex-start' }}>
