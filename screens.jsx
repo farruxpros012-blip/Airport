@@ -1160,8 +1160,19 @@ function IntentPicker({ onPick, onFlight }) {
       padding: '4px 20px 24px',
       display: 'flex', flexDirection: 'column', gap: 14,
     }}>
-      {/* Two compact info bars sit ABOVE the main destination card, matching
-          the wireframe layout: header → 2 small bars → big card. */}
+      <DestinationSearchCard onSearch={onFlight}/>
+
+      {/* Page-level explanation: tell people what this single search actually
+          does — bundles flight + hotel + eSIM + excursions for the picked
+          destination, so they don't expect 8 separate menus. */}
+      <div style={{
+        padding: '2px 14px',
+        fontSize: 12.5, color: '#5C6B86', fontWeight: 500, lineHeight: 1.55,
+      }}>
+        Bitta qidiruv — to'liq sayohat. Tanlagan manzilingiz uchun parvoz, mehmonxona, eSIM va ekskursiyalar bir joyda chiqadi.
+      </div>
+
+      {/* Aeroportga ketyapman — local trip path, compact card */}
       {INTENTS.filter(it => it.id === 'airport').map(it => (
         <button key={it.id}
           onClick={() => onPick(it.id)}
@@ -1196,24 +1207,6 @@ function IntentPicker({ onPick, onFlight }) {
           </svg>
         </button>
       ))}
-
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 10,
-        padding: '4px 14px',
-        background: '#fff',
-        borderRadius: 14,
-        fontSize: 12, color: '#7A86A8', fontWeight: 500, lineHeight: 1.5,
-        minHeight: 44,
-        boxShadow: '0 2px 8px rgba(15,42,74,0.04)',
-      }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={TEAL} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-          <circle cx="12" cy="12" r="9"/>
-          <path d="M12 8v4M12 16h0"/>
-        </svg>
-        <span>Hotel, eSIM va ekskursiyalar qidiruv natijasida ko'rsatiladi</span>
-      </div>
-
-      <DestinationSearchCard onSearch={onFlight}/>
 
     </div>
   );
