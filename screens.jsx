@@ -903,37 +903,43 @@ function ScreenTrip() {
             </button>
           </div>
 
-          {/* Category cards with service icons inside — tap opens category page */}
-          <div style={{ padding: '0 16px 20px', display: 'flex', gap: 10 }}>
-            {TRIP_CATS_NEW.map(cat => (
-              <button key={cat.id}
-                onClick={() => { setCatView(cat.id); setActiveService(cat.services[0]); setView('category'); }}
-                style={{
-                  flex: 1, padding: '10px 8px 12px',
-                  border: '1.5px solid rgba(255,255,255,0.35)',
-                  background: 'rgba(255,255,255,0.12)',
-                  borderRadius: 16, color: '#fff', cursor: 'pointer',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-                  backdropFilter: 'blur(10px)',
-                }}>
-                <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.1 }}>{cat.label}</span>
-                <div style={{ display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  {cat.services.map(svcId => (
-                    <div key={svcId} style={{
-                      width: 28, height: 28, borderRadius: 999,
-                      background: 'rgba(255,255,255,0.25)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <span style={{ display: 'inline-flex', filter: 'brightness(0) invert(1)', transform: 'scale(0.6)', transformOrigin: 'center' }}>
-                        {CAT_DEF[svcId].icon}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </button>
-            ))}
-          </div>
         </div>
+      </div>
+
+      {/* Categories — outside hero, on page bg */}
+      <div style={{ padding: '22px 20px 8px' }}>
+        <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2 }}>
+          Kategoriyalar
+        </div>
+      </div>
+      <div style={{ padding: '0 16px 20px', display: 'flex', gap: 10 }}>
+        {TRIP_CATS_NEW.map(cat => (
+          <button key={cat.id}
+            onClick={() => { setCatView(cat.id); setActiveService(cat.services[0]); setView('category'); }}
+            style={{
+              flex: 1, border: 'none', cursor: 'pointer',
+              background: 'transparent', padding: 0,
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+            }}>
+            <div style={{
+              width: '100%', padding: '16px 8px',
+              background: '#fff', borderRadius: 999,
+              boxShadow: '0 4px 14px rgba(15,42,74,0.08)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              minHeight: 56,
+            }}>
+              {cat.services.map(svcId => (
+                <span key={svcId} style={{ display: 'inline-flex' }}>
+                  {CAT_DEF[svcId].icon}
+                </span>
+              ))}
+            </div>
+            <span style={{
+              fontSize: 11, fontWeight: 700, color: '#5C6B86',
+              letterSpacing: 1.2, textTransform: 'uppercase',
+            }}>{cat.label}</span>
+          </button>
+        ))}
       </div>
 
       <TabBar active="trip"/>
