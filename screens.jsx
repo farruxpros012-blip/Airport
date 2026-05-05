@@ -863,11 +863,9 @@ function ScreenTrip() {
               feel without overwhelming the form. */}
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: 580,
-            background: `linear-gradient(180deg,
-              rgba(45,212,220,0.26) 0%,
-              rgba(45,212,220,0.16) 38%,
-              rgba(45,212,220,0.06) 78%,
-              rgba(45,212,220,0) 100%)`,
+            background: '#C7EEF1',
+            WebkitMaskImage: 'linear-gradient(180deg, #000 0%, #000 60%, transparent 100%)',
+            maskImage: 'linear-gradient(180deg, #000 0%, #000 60%, transparent 100%)',
             pointerEvents: 'none', zIndex: 0,
           }}/>
           <div style={{ position: 'relative', zIndex: 1 }}>
