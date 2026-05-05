@@ -862,10 +862,8 @@ function ScreenTrip() {
               through the destination card below — gives the top a marketing
               feel without overwhelming the form. */}
           <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: 580,
+            position: 'absolute', top: 0, left: 0, right: 0, height: 310,
             background: 'radial-gradient(ellipse 160% 90% at 60% -10%, #2DD4DC 0%, #3B47C8 55%, #0F1E6E 100%)',
-            WebkitMaskImage: 'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
-            maskImage: 'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
             pointerEvents: 'none', zIndex: 0,
           }}/>
           <div style={{ position: 'relative', zIndex: 1 }}>
