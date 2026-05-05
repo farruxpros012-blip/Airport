@@ -974,7 +974,7 @@ function ScreenTrip() {
                 boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 2px rgba(59,71,200,0.06), 0 2px 6px rgba(59,71,200,0.10), 0 0 0 1px rgba(59,71,200,0.04)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A8A93" strokeWidth="2.4" strokeLinecap="round">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A7E8A" strokeWidth="2.4" strokeLinecap="round">
                   <circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>
                 </svg>
               </div>
@@ -983,7 +983,7 @@ function ScreenTrip() {
                 <div style={{ fontSize: 12, fontWeight: 500, color: '#7A8499', marginTop: 1 }}>{r.date}</div>
               </div>
               <span style={{
-                fontSize: 11, fontWeight: 700, color: '#0A8A93',
+                fontSize: 11, fontWeight: 700, color: '#1A7E8A',
                 padding: '5px 11px', borderRadius: 999,
                 background: 'linear-gradient(155deg, #FFFFFF 0%, #EEF1FB 50%, #DDE3F4 100%)',
                 boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 2px rgba(59,71,200,0.06), 0 2px 6px rgba(59,71,200,0.10), 0 0 0 1px rgba(59,71,200,0.04)',
