@@ -888,24 +888,24 @@ function ScreenTrip() {
               <span style={{ color: '#C4C9DB', fontSize: 15, fontWeight: 500 }}>Qayerga sayohat?</span>
             </button>
           </div>
-        </div>
-      </div>
 
-      {/* Category pills */}
-      <div style={{ padding: '0 20px 16px', display: 'flex', gap: 8 }}>
-        {TRIP_CATS_NEW.map(cat => {
-          const on = activeCat === cat.id;
-          return (
-            <button key={cat.id} onClick={() => setActiveCat(cat.id)} style={{
-              flex: 1, padding: '9px 4px',
-              border: on ? 'none' : `1.5px solid #ECEEF6`,
-              background: on ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)` : '#fff',
-              borderRadius: 999, color: on ? '#fff' : TRIP_INK,
-              fontSize: 13, fontWeight: 700, cursor: 'pointer',
-              boxShadow: on ? '0 4px 12px rgba(31,191,201,0.30)' : 'none',
-            }}>{cat.label}</button>
-          );
-        })}
+          {/* Category pills — inside relative wrapper so they sit above the absolute bg */}
+          <div style={{ padding: '0 20px 16px', display: 'flex', gap: 8 }}>
+            {TRIP_CATS_NEW.map(cat => {
+              const on = activeCat === cat.id;
+              return (
+                <button key={cat.id} onClick={() => setActiveCat(cat.id)} style={{
+                  flex: 1, padding: '9px 4px',
+                  border: on ? 'none' : `1.5px solid rgba(255,255,255,0.5)`,
+                  background: on ? 'rgba(255,255,255,0.25)' : 'transparent',
+                  borderRadius: 999, color: '#fff',
+                  fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                  backdropFilter: on ? 'blur(8px)' : 'none',
+                }}>{cat.label}</button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Service icons for active category */}
