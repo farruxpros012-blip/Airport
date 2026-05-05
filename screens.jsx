@@ -810,211 +810,264 @@ function TripResultsView({ params, onBack }) {
   );
 }
 
+// ─── Trip screen data ─────────────────────────────────────────
+const TRIP_CATS_NEW = [
+  { id: 'travel',    label: 'Sayohat',   services: ['tours','flight','hotels','esim'] },
+  { id: 'rest',      label: 'Dam olish', services: ['excur','villas'] },
+  { id: 'transport', label: 'Transport', services: ['taxi','xfer'] },
+];
+const ALL_SERVICES = ['tours','flight','hotels','esim','excur','villas','taxi','xfer'];
+
+// Which services need a "From" field
+const NEEDS_FROM = new Set(['flight','taxi','xfer']);
+// Which services use duration instead of date range
+const USES_DURATION = new Set(['esim']);
+// Label overrides for destination field
+const DEST_LABEL = {
+  tours: 'Qaysi mamlakatga?', flight: 'Qayerga?', hotels: 'Qaysi shaharga?',
+  esim: 'Qaysi mamlakat?', excur: 'Qaysi shaharga?', villas: 'Qaysi viloyatga?',
+  taxi: 'Qayerga?', xfer: 'Qayerga?',
+};
+const FROM_LABEL = { flight: 'Qayerdan?', taxi: 'Qaysi aeroportdan?', xfer: 'Qayerdan?' };
+
 function ScreenTrip() {
-  const [intent, setIntent] = React.useState(null); // null = picker, else intent.id
-  const [activeCat, setActiveCat] = React.useState(null);
-  const [showResults, setShowResults] = React.useState(false);
-
-  const current = intent ? INTENTS.find(i => i.id === intent) : null;
-
-  React.useEffect(() => {
-    if (current && !activeCat) setActiveCat(current.cats[0]);
-  }, [intent]);
-
-  // Search button on the destination card jumps to the unified results page
-  // that bundles flight + hotel + eSIM + excursion for the chosen destination.
+  const [view, setView] = React.useState('home'); // 'home' | 'searchAll' | 'results'
+  const [activeCat, setActiveCat] = React.useState('travel');
+  const [activeService, setActiveService] = React.useState(null);
   const [searchParams, setSearchParams] = React.useState(null);
-  const openFlight = (params) => { setSearchParams(params || {}); setShowResults(true); };
 
-  if (showResults) {
-    return <TripResultsView params={searchParams || {}} onBack={() => setShowResults(false)}/>;
+  const catServices = (TRIP_CATS_NEW.find(c => c.id === activeCat) || TRIP_CATS_NEW[0]).services;
+
+  if (view === 'results') {
+    return <TripResultsView params={searchParams || {}} onBack={() => setView('home')}/>;
+  }
+
+  if (view === 'searchAll') {
+    return (
+      <SearchAllScreen
+        active={activeService || 'flight'}
+        onSelect={setActiveService}
+        onBack={() => { setView('home'); setActiveService(null); }}
+        onSearch={(p) => { setSearchParams(p); setView('results'); }}
+      />
+    );
   }
 
   return (
     <Frame>
-      {/* Sticky top bar — when no intent, logo is centered with a marketing
-          hero pitch underneath. Inside an intent, falls back to a back button +
-          contextual title row. */}
-      {intent ? (
+      {/* Hero */}
+      <div style={{ position: 'relative' }}>
         <div style={{
-          padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 12,
-          position: 'sticky', top: 0, zIndex: 10, background: C.bg,
-        }}>
-          <button
-            onClick={() => { setIntent(null); setActiveCat(null); }}
-            aria-label="Back"
-            style={{
-              width: 40, height: 40, borderRadius: 999, border: 'none',
-              background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 2px 8px rgba(15,42,74,0.08)', cursor: 'pointer', flexShrink: 0,
-            }}>
-            <IconBack size={20} color={TRIP_INK}/>
-          </button>
-          <h1 style={{ margin: 0, fontSize: 26, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK, flex: 1 }}>
-            {current.title}
-          </h1>
-        </div>
-      ) : null}
-
-      {!intent ? (
-        <div style={{ position: 'relative' }}>
-          {/* Soft teal hero background that fades into the page roughly mid-way
-              through the destination card below — gives the top a marketing
-              feel without overwhelming the form. */}
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: 360,
-            background: 'linear-gradient(160deg, #0FB8C2 0%, #0A8A93 100%)',
-            pointerEvents: 'none', zIndex: 0,
-          }}/>
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            {/* Centered logo + Let's Trip wordmark in a single row */}
-            <div style={{
-              padding: '20px 20px 8px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-            }}>
-              <div style={{
-                width: 40, height: 40, borderRadius: '50%',
-                background: '#FFFFFF',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <img src="assets/lets-trip-logo.png?v=3" alt="Let's Trip"
-                  style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
-              </div>
-              <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, color: '#FFFFFF' }}>
-                Let's Trip
-              </div>
+          position: 'absolute', top: 0, left: 0, right: 0, height: 260,
+          background: 'linear-gradient(160deg, #0FB8C2 0%, #0A8A93 100%)',
+          pointerEvents: 'none', zIndex: 0,
+        }}/>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {/* Logo row */}
+          <div style={{ padding: '20px 20px 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src="assets/lets-trip-logo.png?v=3" alt="Let's Trip" style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
             </div>
+            <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, color: '#FFFFFF' }}>Let's Trip</div>
+          </div>
 
-            {/* Marketing hero — primary value prop */}
-            <div style={{ padding: '14px 24px 22px', textAlign: 'center' }}>
-              <h2 style={{
-                margin: 0, fontSize: 28, fontWeight: 800,
-                letterSpacing: -0.5, color: '#FFFFFF', lineHeight: 1.18,
+          {/* Search bar */}
+          <div style={{ padding: '0 20px 24px' }}>
+            <button
+              onClick={() => { setActiveService('flight'); setView('searchAll'); }}
+              style={{
+                width: '100%', padding: '14px 18px',
+                background: '#fff', borderRadius: 999, border: 'none',
+                display: 'flex', alignItems: 'center', gap: 10,
+                boxShadow: '0 4px 20px rgba(0,0,0,0.14)',
+                cursor: 'pointer', textAlign: 'left',
               }}>
-                Sayohatingizni <span style={{ color: '#7EF0F5' }}>bitta qidiruv</span> bilan boshlang
-              </h2>
-              <p style={{
-                margin: '12px auto 0', maxWidth: 320,
-                fontSize: 13.5, fontWeight: 500, color: 'rgba(255,255,255,0.72)', lineHeight: 1.55,
-              }}>
-                Parvoz, mehmonxona, eSIM va ekskursiyalar — manzilingiz bo'yicha avtomatik ko'rsatiladi.
-              </p>
-            </div>
-
-            <IntentPicker onPick={(id) => setIntent(id)} onFlight={openFlight}/>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round">
+                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>
+              </svg>
+              <span style={{ color: '#C4C9DB', fontSize: 15, fontWeight: 500 }}>Qayerga sayohat?</span>
+            </button>
           </div>
         </div>
-      ) : (
-        <IntentPane intent={current} activeCat={activeCat} setActiveCat={setActiveCat}/>
-      )}
+      </div>
+
+      {/* Category pills */}
+      <div style={{ padding: '0 20px 16px', display: 'flex', gap: 8 }}>
+        {TRIP_CATS_NEW.map(cat => {
+          const on = activeCat === cat.id;
+          return (
+            <button key={cat.id} onClick={() => setActiveCat(cat.id)} style={{
+              flex: 1, padding: '9px 4px',
+              border: on ? 'none' : `1.5px solid #ECEEF6`,
+              background: on ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)` : '#fff',
+              borderRadius: 999, color: on ? '#fff' : TRIP_INK,
+              fontSize: 13, fontWeight: 700, cursor: 'pointer',
+              boxShadow: on ? '0 4px 12px rgba(31,191,201,0.30)' : 'none',
+            }}>{cat.label}</button>
+          );
+        })}
+      </div>
+
+      {/* Service icons for active category */}
+      <div style={{ padding: '4px 20px 24px', display: 'flex', gap: 8, justifyContent: 'center' }}>
+        {catServices.map(svcId => (
+          <button key={svcId}
+            onClick={() => { setActiveService(svcId); setView('searchAll'); }}
+            style={{ flex: 1, maxWidth: 80, border: 'none', background: 'transparent', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+            <div style={{
+              width: 56, height: 56, borderRadius: 999,
+              background: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 2px 10px rgba(15,42,74,0.10)',
+            }}>
+              {CAT_DEF[svcId].icon}
+            </div>
+            <span style={{ fontSize: 11, fontWeight: 600, color: TRIP_INK, textAlign: 'center' }}>{CAT_DEF[svcId].label}</span>
+          </button>
+        ))}
+      </div>
 
       <TabBar active="trip"/>
     </Frame>
   );
 }
 
-// Unified destination search card — replaces the dual flight-widget /
-// destination-search pattern. One question, one entry: "Qayerga sayohat?"
-// Search results page bundles flight + hotel + eSIM + excursions for the picked place.
-function DestinationSearchCard({ onSearch }) {
+// Full-screen search: all 8 services + adaptive form below
+function SearchAllScreen({ active, onSelect, onBack, onSearch }) {
+  return (
+    <Frame>
+      {/* Header */}
+      <div style={{ padding: '16px 20px 12px', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, zIndex: 10, background: C.bg }}>
+        <button onClick={onBack} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(15,42,74,0.08)', cursor: 'pointer', flexShrink: 0 }}>
+          <IconBack size={20} color={TRIP_INK}/>
+        </button>
+        <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK }}>
+          Sayohat qilmoqchiman
+        </h1>
+      </div>
+
+      {/* All 8 services in 4-column grid */}
+      <div style={{ padding: '4px 20px 20px', display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+        {ALL_SERVICES.map(svcId => {
+          const on = active === svcId;
+          return (
+            <button key={svcId} onClick={() => onSelect(svcId)}
+              style={{ width: 'calc(25% - 9px)', border: 'none', background: 'transparent', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+              <div style={{
+                width: 56, height: 56, borderRadius: 999,
+                background: on ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)` : '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: on ? '0 6px 16px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.4)' : '0 2px 8px rgba(15,42,74,0.08)',
+                transition: 'all 0.15s',
+              }}>
+                <span style={{ filter: on ? 'brightness(0) invert(1)' : 'none', display: 'inline-flex' }}>
+                  {CAT_DEF[svcId].icon}
+                </span>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 600, color: on ? TEAL : TRIP_INK, textAlign: 'center' }}>{CAT_DEF[svcId].label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Adaptive service form */}
+      <div style={{ padding: '0 20px' }}>
+        <ServiceForm serviceId={active} onSearch={onSearch}/>
+      </div>
+
+      <TabBar active="trip"/>
+    </Frame>
+  );
+}
+
+// Adaptive search form — fields change based on selected service
+function ServiceForm({ serviceId, onSearch }) {
   const [from, setFrom] = React.useState('Tashkent');
   const [to, setTo] = React.useState('');
-  const [departDate, setDepartDate] = React.useState(null); // Date | null
+  const [departDate, setDepartDate] = React.useState(null);
   const [returnDate, setReturnDate] = React.useState(null);
+  const [duration, setDuration] = React.useState('7 kun');
   const [sheetOpen, setSheetOpen] = React.useState(false);
 
+  const needsFrom = NEEDS_FROM.has(serviceId);
+  const usesDuration = USES_DURATION.has(serviceId);
+  const destLabel = DEST_LABEL[serviceId] || 'Qayerga?';
+  const fromLabel = FROM_LABEL[serviceId] || 'Qayerdan?';
+
   const fmtRange = () => {
-    if (!departDate) return '';
-    const f = (d) => d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+    const f = (d) => d.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'short' });
     if (!returnDate) return `${f(departDate)} · faqat ketish`;
     return `${f(departDate)} — ${f(returnDate)}`;
   };
 
   const handleSearch = () => {
-    // One-way trip = no return date. Pass it on so the results page can hide
-    // services that don't make sense without a return (e.g. multi-day tours).
-    onSearch && onSearch({ from, to, departDate, returnDate, oneWay: !returnDate });
+    onSearch && onSearch({ serviceId, from, to, departDate, returnDate, duration, oneWay: !returnDate });
   };
 
-  const inputStyle = {
-    width: '100%', border: 'none', outline: 'none', background: 'transparent',
-    fontSize: 17, fontWeight: 700, color: TRIP_INK,
-    fontFamily: 'inherit', padding: 0,
-  };
-
-  const labelStyle = {
-    fontSize: 11, fontWeight: 600, color: '#9AA1B8',
-    textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 3,
-  };
+  const inputStyle = { width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 17, fontWeight: 700, color: TRIP_INK, fontFamily: 'inherit', padding: 0 };
+  const labelStyle = { fontSize: 11, fontWeight: 600, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 3 };
+  const divider = <div style={{ height: 1, background: '#ECEEF6', marginLeft: 60, marginRight: 20 }}/>;
 
   return (
-    <Card style={{ padding: 0, borderRadius: 32 }}>
-      {/* Title */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 12,
-        padding: '16px 22px 10px',
-      }}>
-        <div style={{ fontSize: 16, fontWeight: 800, color: TRIP_INK, letterSpacing: -0.2 }}>
-          Qayerga sayohat?
-        </div>
-      </div>
-
-      {/* From */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 22px 11px' }}>
-        <FigTakeoff size={26}/>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={labelStyle}>Qayerdan</div>
-          <input
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-            placeholder="Shahar yoki aeroport"
-            style={inputStyle}
-          />
-        </div>
-      </div>
-
-      <div style={{ height: 1, background: '#ECEEF6', marginLeft: 64, marginRight: 24 }}/>
-
-      {/* To */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 22px 11px' }}>
-        <FigLanding size={26}/>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={labelStyle}>Qayerga</div>
-          <input
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-            placeholder="Dubai, Samarqand, Istanbul..."
-            style={inputStyle}
-          />
-        </div>
-      </div>
-
-      <div style={{ height: 1, background: '#ECEEF6', marginLeft: 64, marginRight: 24 }}/>
-
-      {/* Date range — opens bottom sheet */}
-      <div
-        onClick={() => setSheetOpen(true)}
-        style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 22px 14px', cursor: 'pointer' }}>
-        <span style={{ display: 'inline-flex', opacity: 0.85 }}><FigCalendar size={22}/></span>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={labelStyle}>Sana</div>
-          <div style={{ fontSize: 17, fontWeight: 700, color: departDate ? TRIP_INK : '#C4C9DB' }}>
-            {departDate ? fmtRange() : 'Qachondan — qachongacha'}
+    <Card style={{ padding: 0, borderRadius: 28, overflow: 'hidden' }}>
+      {needsFrom && <>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 20px' }}>
+          <FigTakeoff size={24}/>
+          <div style={{ flex: 1 }}>
+            <div style={labelStyle}>{fromLabel}</div>
+            <input value={from} onChange={e => setFrom(e.target.value)} placeholder="Toshkent" style={inputStyle}/>
           </div>
         </div>
+        {divider}
+      </>}
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 20px' }}>
+        <FigLanding size={24}/>
+        <div style={{ flex: 1 }}>
+          <div style={labelStyle}>{destLabel}</div>
+          <input value={to} onChange={e => setTo(e.target.value)} placeholder="Dubai, Istanbul, Misr..." style={inputStyle}/>
+        </div>
       </div>
 
-      <div style={{ padding: '4px 18px 18px' }}>
-        <button
-          onClick={handleSearch}
-          style={{
-            width: '100%', padding: '13px',
-            border: 'none', borderRadius: 999,
-            background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`,
-            color: '#fff', fontSize: 15, fontWeight: 700,
-            boxShadow: '0 8px 20px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.35)',
-            cursor: 'pointer',
-          }}>Search</button>
+      {!usesDuration ? <>
+        {divider}
+        <div onClick={() => setSheetOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 20px', cursor: 'pointer' }}>
+          <span style={{ display: 'inline-flex', opacity: 0.8 }}><FigCalendar size={22}/></span>
+          <div style={{ flex: 1 }}>
+            <div style={labelStyle}>Sana</div>
+            <div style={{ fontSize: 17, fontWeight: 700, color: departDate ? TRIP_INK : '#C4C9DB' }}>
+              {departDate ? fmtRange() : 'Qachondan — qachongacha'}
+            </div>
+          </div>
+        </div>
+      </> : <>
+        {divider}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 20px' }}>
+          <FigCalendar size={22}/>
+          <div style={{ flex: 1 }}>
+            <div style={labelStyle}>Muddat</div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', paddingTop: 4 }}>
+              {['7 kun', '15 kun', '30 kun', 'Limitlanmagan'].map(d => (
+                <button key={d} onClick={() => setDuration(d)} style={{
+                  padding: '5px 12px', borderRadius: 999, border: 'none', cursor: 'pointer',
+                  background: duration === d ? TEAL : '#F1F4FA',
+                  color: duration === d ? '#fff' : TRIP_INK,
+                  fontSize: 12, fontWeight: 700,
+                }}>{d}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </>}
+
+      <div style={{ padding: '12px 16px 16px' }}>
+        <button onClick={handleSearch} style={{
+          width: '100%', padding: '14px', border: 'none', borderRadius: 999,
+          background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`,
+          color: '#fff', fontSize: 15, fontWeight: 700,
+          boxShadow: '0 8px 20px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.35)',
+          cursor: 'pointer',
+        }}>Qidirish</button>
       </div>
 
       {sheetOpen && (
@@ -1199,168 +1252,6 @@ function CalendarRangeSheet({ depart, returnDate, onClose, onApply }) {
   );
 }
 
-function IntentPicker({ onPick, onFlight }) {
-  return (
-    <div style={{
-      padding: '4px 20px 24px',
-      display: 'flex', flexDirection: 'column', gap: 14,
-    }}>
-      <DestinationSearchCard onSearch={onFlight}/>
-
-      {/* Aeroportga ketyapman — local trip path, compact card */}
-      {INTENTS.filter(it => it.id === 'airport').map(it => (
-        <button key={it.id}
-          onClick={() => onPick(it.id)}
-          style={{
-            border: 'none', cursor: 'pointer',
-            background: it.grad,
-            color: '#fff',
-            borderRadius: 18,
-            padding: '14px 18px',
-            display: 'flex', alignItems: 'center', gap: 12,
-            boxShadow: '0 6px 16px rgba(15,42,74,0.14), inset 0 1px 0 rgba(255,255,255,0.25)',
-            textAlign: 'left',
-          }}>
-          <div style={{
-            width: 38, height: 38, borderRadius: 12,
-            background: 'rgba(255,255,255,0.2)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-          }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/>
-              <rect x="3" y="11" width="18" height="6" rx="2"/>
-              <circle cx="7" cy="17" r="1.5" fill="#fff"/>
-              <circle cx="17" cy="17" r="1.5" fill="#fff"/>
-            </svg>
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: -0.2 }}>{it.title}</div>
-            <div style={{ fontSize: 12, fontWeight: 500, opacity: 0.85, marginTop: 1 }}>{it.sub}</div>
-          </div>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.85 }}>
-            <path d="M9 6l6 6-6 6"/>
-          </svg>
-        </button>
-      ))}
-
-    </div>
-  );
-}
-
-function IntentIconStack({ id }) {
-  // Soft white-tinted decorative icon for each intent card
-  const wrap = { width: 56, height: 56, borderRadius: 18, background: 'rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' };
-  let glyph;
-  if (id === 'travel') glyph = (
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff">
-      <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16z"/>
-    </svg>
-  );
-  else if (id === 'airport') glyph = (
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/>
-      <rect x="3" y="11" width="18" height="6" rx="2"/>
-      <circle cx="7" cy="17" r="1.5" fill="#fff"/>
-      <circle cx="17" cy="17" r="1.5" fill="#fff"/>
-    </svg>
-  );
-  else glyph = (
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="6" r="3"/>
-      <path d="M3 18s2-3 9-3 9 3 9 3"/>
-      <path d="M12 9v6"/>
-    </svg>
-  );
-  return <div style={wrap}>{glyph}</div>;
-}
-
-function IntentPane({ intent, activeCat, setActiveCat }) {
-  // Local sub-tabs: only this intent's categories (max 4) — no horizontal scroll, no overflow
-  const cats = intent.cats.map(id => ({ id, ...CAT_DEF[id] }));
-  return (
-    <>
-      {/* Compact in-intent tab strip — fits without scrolling (2-4 items) */}
-      <div style={{
-        display: 'flex', gap: 10, padding: '4px 20px 18px',
-        flexShrink: 0,
-      }}>
-        {cats.map(c => {
-          const on = c.id === activeCat;
-          return (
-            <button key={c.id}
-              onClick={() => setActiveCat(c.id)}
-              style={{
-                flex: 1, minWidth: 0,
-                border: 'none', background: 'transparent', padding: 0, cursor: 'pointer',
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-              }}>
-              <div style={{
-                width: 56, height: 56, borderRadius: 999,
-                background: on ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)` : '#fff',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: on
-                  ? '0 6px 16px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.4)'
-                  : '0 2px 8px rgba(15,42,74,0.08)',
-                color: on ? '#fff' : '#41668B',
-                transition: 'all 0.18s ease',
-              }}>
-                <span style={{
-                  display: 'inline-flex',
-                  filter: on ? 'brightness(0) invert(1)' : 'none',
-                }}>{c.icon}</span>
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: TRIP_INK, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{c.label}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      <div style={{ padding: 0, display: 'flex', flexDirection: 'column', gap: 14, flex: 1, minHeight: 0 }}>
-        {activeCat === 'excur' ? <ExcursionsView/> : <DefaultTripView/>}
-      </div>
-    </>
-  );
-}
-
-// Default trip search view (Tashkent → Egypt + chips + All hotel + Search)
-function DefaultTripView() {
-  return (
-    <>
-      <Card style={{ padding: 0, borderRadius: 32 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '18px 20px 16px' }}>
-          <FigTakeoff size={26}/>
-          <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK }}>Tashkent</div>
-        </div>
-        <div style={{ height: 1, background: '#ECEEF6', marginLeft: 60, marginRight: 20 }}/>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px 20px' }}>
-          <FigLanding size={26}/>
-          <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK }}>Egypt</div>
-        </div>
-        <div style={{ display: 'flex', gap: 8, padding: '0 20px 20px', flexWrap: 'wrap' }}>
-          <TripChip icon={<FigCalendar size={16}/>}>May 12 · 7 nights</TripChip>
-          <TripChip icon={<FigPersonAdult size={16}/>}>2 adults</TripChip>
-        </div>
-      </Card>
-
-      <Card style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '18px 20px', borderRadius: 32 }}>
-        <span style={{ display: 'inline-flex', opacity: 0.72 }}><FigHotel size={26}/></span>
-        <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK }}>All hotel</div>
-      </Card>
-
-      <div style={{ flex: 1 }}/>
-
-      <button style={{
-        width: 'calc(100% - 40px)', alignSelf: 'center', padding: '18px',
-        border: 'none', borderRadius: 999,
-        background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`,
-        color: '#fff', fontSize: 17, fontWeight: 700,
-        boxShadow: '0 10px 24px rgba(31,191,201,0.4), inset 0 1px 0 rgba(255,255,255,0.35)',
-        cursor: 'pointer',
-        marginBottom: 8,
-      }}>Search</button>
-    </>
-  );
-}
 
 // Excursions view: country picker on top, excursion cards below
 const EXCURSIONS = [
