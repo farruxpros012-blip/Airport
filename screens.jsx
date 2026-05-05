@@ -814,7 +814,7 @@ function TripResultsView({ params, onBack }) {
 const POPULAR_DESTS = [
   { id: 'dubai',    city: 'Dubai',     country: 'BAA',      img: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80&auto=format&fit=crop' },
   { id: 'istanbul', city: 'Istanbul',  country: 'Turkiya',  img: 'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=400&q=80&auto=format&fit=crop' },
-  { id: 'bangkok',  city: 'Bangkok',   country: 'Tailand',  img: 'https://images.unsplash.com/photo-1508009603885-50cf7c8dd0d5?w=400&q=80&auto=format&fit=crop' },
+  { id: 'bangkok',  city: 'Bangkok',   country: 'Tailand',  img: 'https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=400&q=80&auto=format&fit=crop' },
   { id: 'paris',    city: 'Paris',     country: 'Fransiya', img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80&auto=format&fit=crop' },
   { id: 'bali',     city: 'Bali',      country: 'Indoneziya', img: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80&auto=format&fit=crop' },
 ];
@@ -887,7 +887,7 @@ function ScreenTrip() {
       <div style={{ position: 'relative' }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'linear-gradient(160deg, #0FB8C2 0%, #0A8A93 100%)',
+          background: 'radial-gradient(ellipse 130% 100% at 80% 0%, #1FBFC9 0%, #0A8A93 45%, #1A4D8F 90%)',
           pointerEvents: 'none', zIndex: 0,
         }}/>
         <div style={{ position: 'relative', zIndex: 1 }}>
@@ -945,41 +945,18 @@ function ScreenTrip() {
               {cat.services.map(svcId => (
                 <span key={svcId} style={{
                   display: 'inline-flex',
-                  filter: 'brightness(0) saturate(100%) invert(58%) sepia(72%) saturate(425%) hue-rotate(141deg) brightness(92%) contrast(88%)',
+                  filter: 'brightness(0) saturate(100%) invert(35%) sepia(60%) saturate(900%) hue-rotate(155deg) brightness(85%) contrast(95%)',
                 }}>
                   {CAT_DEF[svcId].icon}
                 </span>
               ))}
             </div>
             <span style={{
-              fontSize: 11, fontWeight: 700, color: '#5C6B86',
+              fontSize: 11, fontWeight: 800, color: TRIP_INK,
               letterSpacing: 1.2, textTransform: 'uppercase',
             }}>{cat.label}</span>
           </button>
         ))}
-      </div>
-
-      {/* Popular destinations */}
-      <div style={{ padding: '20px 0 0' }}>
-        <div style={{ padding: '0 20px 12px', fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2 }}>
-          Mashhur yo'nalishlar
-        </div>
-        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingLeft: 20, paddingRight: 20, paddingBottom: 4, scrollbarWidth: 'none' }}>
-          {POPULAR_DESTS.map(dest => (
-            <div key={dest.id} onClick={() => { setSearchParams({ to: dest.city, toCountry: dest.country }); setView('results'); }}
-              style={{ flexShrink: 0, width: 160, borderRadius: 20, overflow: 'hidden', position: 'relative', cursor: 'pointer', boxShadow: '0 6px 20px rgba(15,42,74,0.14)' }}>
-              <img src={dest.img} alt={dest.city} style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }}/>
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(10,25,50,0.78) 100%)' }}/>
-              <div style={{ position: 'absolute', bottom: 44, left: 12, right: 12 }}>
-                <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', letterSpacing: -0.3 }}>{dest.city}</div>
-                <div style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.80)', marginTop: 2 }}>{dest.country}</div>
-              </div>
-              <div style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}>
-                <div style={{ background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`, borderRadius: 999, padding: '7px 0', textAlign: 'center', fontSize: 12, fontWeight: 700, color: '#fff' }}>Ko'rish</div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Recent searches */}
@@ -998,12 +975,36 @@ function ScreenTrip() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: TRIP_INK }}>{r.from} → {r.to}</div>
-                <div style={{ fontSize: 12, fontWeight: 500, color: '#7A8499', marginTop: 1 }}>{r.date} · {r.service}</div>
+                <div style={{ fontSize: 12, fontWeight: 500, color: '#7A8499', marginTop: 1 }}>{r.date}</div>
               </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: TEAL, padding: '4px 10px', borderRadius: 999, background: 'rgba(31,191,201,0.12)', textTransform: 'uppercase', letterSpacing: 0.4 }}>{r.service}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4C9DB" strokeWidth="2.4" strokeLinecap="round">
                 <path d="M9 6l6 6-6 6"/>
               </svg>
             </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Popular destinations */}
+      <div style={{ padding: '20px 0 0' }}>
+        <div style={{ padding: '0 20px 12px', fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2 }}>
+          Mashhur yo'nalishlar
+        </div>
+        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingLeft: 20, paddingRight: 20, paddingBottom: 4, scrollbarWidth: 'none' }}>
+          {POPULAR_DESTS.map(dest => (
+            <div key={dest.id} onClick={() => { setSearchParams({ to: dest.city, toCountry: dest.country }); setView('results'); }}
+              style={{ flexShrink: 0, width: 160, borderRadius: 20, overflow: 'hidden', position: 'relative', cursor: 'pointer', boxShadow: '0 6px 20px rgba(15,42,74,0.14)' }}>
+              <img src={dest.img} alt={dest.city} style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }}/>
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(10,25,50,0.78) 100%)' }}/>
+              <div style={{ position: 'absolute', bottom: 44, left: 12, right: 12 }}>
+                <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', letterSpacing: -0.3 }}>{dest.city}</div>
+                <div style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.80)', marginTop: 2 }}>{dest.country}</div>
+              </div>
+              <div style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}>
+                <div style={{ background: 'rgba(255,255,255,0.22)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.35)', borderRadius: 999, padding: '7px 0', textAlign: 'center', fontSize: 12, fontWeight: 700, color: '#fff' }}>Ko'rish</div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
