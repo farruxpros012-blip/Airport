@@ -626,6 +626,13 @@ function ScreenTrip() {
     if (current && !activeCat) setActiveCat(current.cats[0]);
   }, [intent]);
 
+  // Jump straight into Flight inside the "travel" intent — used by the
+  // top-of-screen quick search widget so users skip the intent step.
+  const openFlight = () => {
+    setIntent('travel');
+    setActiveCat('flight');
+  };
+
   return (
     <Frame>
       {/* Sticky top bar */}
@@ -654,7 +661,7 @@ function ScreenTrip() {
       </div>
 
       {!intent ? (
-        <IntentPicker onPick={(id) => setIntent(id)}/>
+        <IntentPicker onPick={(id) => setIntent(id)} onFlight={openFlight}/>
       ) : (
         <IntentPane intent={current} activeCat={activeCat} setActiveCat={setActiveCat}/>
       )}
@@ -664,12 +671,183 @@ function ScreenTrip() {
   );
 }
 
-function IntentPicker({ onPick }) {
+// Compact flight search widget surfaced at the very top of Let's Trip.
+// Flight is the most-used + most-parametric service, so it earns its own
+// always-visible entry and skips the intent picker entirely.
+function FlightQuickSearch({ onSearch }) {
+  const [from, setFrom] = React.useState('Toshkent (TAS)');
+  const [to, setTo]     = React.useState('');
+  const [date, setDate] = React.useState('');
+  const [pax, setPax]   = React.useState(1);
+
+  const swap = () => { setFrom(to); setTo(from); };
+
+  const fmtDate = (d) => {
+    if (!d) return 'Sana';
+    const dt = new Date(d);
+    if (isNaN(dt)) return 'Sana';
+    return dt.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' });
+  };
+
+  const inputBase = {
+    width: '100%', border: 'none', outline: 'none', background: 'transparent',
+    fontSize: 15, fontWeight: 700, color: TRIP_INK,
+    fontFamily: 'inherit', padding: 0,
+  };
+
+  const fieldRow = {
+    display: 'flex', alignItems: 'center', gap: 12,
+    padding: '14px 18px',
+  };
+
+  return (
+    <div style={{
+      background: '#fff', borderRadius: 26,
+      boxShadow: '0 10px 30px rgba(15,42,74,0.10), 0 1px 0 rgba(15,42,74,0.04)',
+      overflow: 'hidden',
+      position: 'relative',
+    }}>
+      {/* Header strip */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '14px 18px 6px',
+      }}>
+        <span style={{ display: 'inline-flex' }}><FigFlight size={20}/></span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: TRIP_INK, letterSpacing: 0.2 }}>
+          Parvoz qidirish
+        </span>
+      </div>
+
+      {/* From */}
+      <div style={fieldRow}>
+        <span style={{ display: 'inline-flex', flexShrink: 0 }}><FigTakeoff size={22}/></span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 2 }}>Qayerdan</div>
+          <input
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            placeholder="Shahar yoki aeroport"
+            style={inputBase}
+          />
+        </div>
+        <button
+          onClick={swap}
+          aria-label="Almashtirish"
+          style={{
+            width: 36, height: 36, borderRadius: 999, border: '1px solid #ECEEF6',
+            background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', flexShrink: 0,
+            boxShadow: '0 2px 6px rgba(15,42,74,0.06)',
+          }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={TRIP_INK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M7 4v16M7 4l-3 3M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/>
+          </svg>
+        </button>
+      </div>
+
+      <div style={{ height: 1, background: '#ECEEF6', marginLeft: 52, marginRight: 18 }}/>
+
+      {/* To */}
+      <div style={fieldRow}>
+        <span style={{ display: 'inline-flex', flexShrink: 0 }}><FigLanding size={22}/></span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 2 }}>Qayerga</div>
+          <input
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            placeholder="Shahar yoki aeroport"
+            style={inputBase}
+          />
+        </div>
+      </div>
+
+      {/* Date + Pax row */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1,
+        background: '#ECEEF6',
+        marginTop: 1,
+      }}>
+        <label style={{
+          ...fieldRow, background: '#fff', cursor: 'pointer', position: 'relative',
+        }}>
+          <span style={{ display: 'inline-flex', flexShrink: 0, opacity: 0.85 }}><FigCalendar size={20}/></span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 2 }}>Sana</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: date ? TRIP_INK : '#9AA1B8' }}>
+              {fmtDate(date)}
+            </div>
+          </div>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%' }}
+          />
+        </label>
+
+        <div style={{ ...fieldRow, background: '#fff' }}>
+          <span style={{ display: 'inline-flex', flexShrink: 0, opacity: 0.85 }}><FigPersonAdult size={20}/></span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 2 }}>Yo'lovchi</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <button
+                onClick={() => setPax(Math.max(1, pax - 1))}
+                aria-label="Kamaytirish"
+                style={{ width: 24, height: 24, borderRadius: 999, border: '1px solid #ECEEF6', background: '#fff', cursor: 'pointer', fontSize: 14, fontWeight: 700, color: TRIP_INK, padding: 0, lineHeight: 1 }}
+              >−</button>
+              <span style={{ fontSize: 15, fontWeight: 700, color: TRIP_INK, minWidth: 12, textAlign: 'center' }}>{pax}</span>
+              <button
+                onClick={() => setPax(Math.min(9, pax + 1))}
+                aria-label="Ko'paytirish"
+                style={{ width: 24, height: 24, borderRadius: 999, border: '1px solid #ECEEF6', background: '#fff', cursor: 'pointer', fontSize: 14, fontWeight: 700, color: TRIP_INK, padding: 0, lineHeight: 1 }}
+              >+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ padding: '14px 18px 18px' }}>
+        <button
+          onClick={onSearch}
+          style={{
+            width: '100%', padding: '14px',
+            border: 'none', borderRadius: 999,
+            background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`,
+            color: '#fff', fontSize: 16, fontWeight: 700,
+            boxShadow: '0 8px 20px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.35)',
+            cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+          }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="m20 20-3.5-3.5"/>
+          </svg>
+          Parvoz qidirish
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function IntentPicker({ onPick, onFlight }) {
   return (
     <div style={{
       padding: '4px 20px 24px',
       display: 'flex', flexDirection: 'column', gap: 14,
     }}>
+      <FlightQuickSearch onSearch={onFlight}/>
+
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '6px 4px 0',
+      }}>
+        <div style={{ height: 1, background: '#E0E4F0', flex: 1 }}/>
+        <div style={{ fontSize: 12, color: '#9AA1B8', fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase' }}>
+          Yoki
+        </div>
+        <div style={{ height: 1, background: '#E0E4F0', flex: 1 }}/>
+      </div>
+
       <div style={{ fontSize: 15, color: '#5C6B86', fontWeight: 500, padding: '0 4px 4px' }}>
         Bugun nima qilmoqchisiz?
       </div>
