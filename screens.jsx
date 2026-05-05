@@ -858,7 +858,7 @@ function ScreenTrip() {
       {/* Hero */}
       <div style={{ position: 'relative' }}>
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 260,
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
           background: 'linear-gradient(160deg, #0FB8C2 0%, #0A8A93 100%)',
           pointerEvents: 'none', zIndex: 0,
         }}/>
@@ -872,7 +872,7 @@ function ScreenTrip() {
           </div>
 
           {/* Search bar */}
-          <div style={{ padding: '0 20px 24px' }}>
+          <div style={{ padding: '0 20px 20px' }}>
             <button
               onClick={() => { setActiveService('flight'); setView('searchAll'); }}
               style={{
@@ -889,19 +889,34 @@ function ScreenTrip() {
             </button>
           </div>
 
-          {/* Category pills — inside relative wrapper so they sit above the absolute bg */}
-          <div style={{ padding: '0 20px 16px', display: 'flex', gap: 8 }}>
+          {/* Category cards with service icons inside */}
+          <div style={{ padding: '0 16px 20px', display: 'flex', gap: 10 }}>
             {TRIP_CATS_NEW.map(cat => {
               const on = activeCat === cat.id;
               return (
                 <button key={cat.id} onClick={() => setActiveCat(cat.id)} style={{
-                  flex: 1, padding: '9px 4px',
-                  border: on ? 'none' : `1.5px solid rgba(255,255,255,0.5)`,
-                  background: on ? 'rgba(255,255,255,0.25)' : 'transparent',
-                  borderRadius: 999, color: '#fff',
-                  fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                  backdropFilter: on ? 'blur(8px)' : 'none',
-                }}>{cat.label}</button>
+                  flex: 1, padding: '10px 8px 12px',
+                  border: on ? 'none' : '1.5px solid rgba(255,255,255,0.35)',
+                  background: on ? 'rgba(255,255,255,0.22)' : 'transparent',
+                  borderRadius: 16, color: '#fff', cursor: 'pointer',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+                  backdropFilter: on ? 'blur(10px)' : 'none',
+                }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.1 }}>{cat.label}</span>
+                  <div style={{ display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    {cat.services.map(svcId => (
+                      <div key={svcId} style={{
+                        width: 28, height: 28, borderRadius: 999,
+                        background: 'rgba(255,255,255,0.25)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <span style={{ display: 'inline-flex', filter: 'brightness(0) invert(1)', transform: 'scale(0.6)', transformOrigin: 'center' }}>
+                          {CAT_DEF[svcId].icon}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </button>
               );
             })}
           </div>
