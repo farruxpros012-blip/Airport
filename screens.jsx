@@ -887,7 +887,7 @@ function ScreenTrip() {
       <div style={{ position: 'relative' }}>
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'radial-gradient(ellipse 130% 100% at 80% 0%, #1FBFC9 0%, #0A8A93 45%, #1A4D8F 90%)',
+          background: 'radial-gradient(ellipse 130% 110% at 85% -10%, #7EE0E6 0%, #2DD4DC 35%, #1F9FBE 70%, #4A6BD4 100%)',
           pointerEvents: 'none', zIndex: 0,
         }}/>
         <div style={{ position: 'relative', zIndex: 1 }}>
@@ -968,8 +968,13 @@ function ScreenTrip() {
           {RECENT_SEARCHES.map((r, i) => (
             <button key={i} onClick={() => { setSearchParams({ to: r.to, from: r.from }); setView('results'); }}
               style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#fff', border: 'none', borderRadius: 14, padding: '12px 14px', cursor: 'pointer', boxShadow: '0 2px 8px rgba(15,42,74,0.07)', textAlign: 'left' }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: '#F1F4FA', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={TEAL} strokeWidth="2" strokeLinecap="round">
+              <div style={{
+                width: 36, height: 36, borderRadius: 11, flexShrink: 0,
+                background: 'linear-gradient(155deg, #FFFFFF 0%, #EEF1FB 50%, #DDE3F4 100%)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 2px rgba(59,71,200,0.06), 0 2px 6px rgba(59,71,200,0.10), 0 0 0 1px rgba(59,71,200,0.04)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.brand} strokeWidth="2.2" strokeLinecap="round">
                   <circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>
                 </svg>
               </div>
