@@ -812,9 +812,9 @@ function TripResultsView({ params, onBack }) {
 
 // ─── Trip screen data ─────────────────────────────────────────
 const TRIP_CATS_NEW = [
-  { id: 'travel',    label: 'Sayohat',   services: ['tours','flight','hotels','esim'] },
-  { id: 'rest',      label: 'Dam olish', services: ['excur','villas'] },
-  { id: 'transport', label: 'Transport', services: ['taxi','xfer'] },
+  { id: 'travel',    label: 'Sayohat',    services: ['tours','flight','hotels'] },
+  { id: 'rest',      label: 'Qo\'shimcha', services: ['excur','villas','esim'] },
+  { id: 'transport', label: 'Transport',  services: ['taxi','xfer'] },
 ];
 const ALL_SERVICES = ['tours','flight','hotels','esim','excur','villas','taxi','xfer'];
 
