@@ -857,23 +857,25 @@ function ScreenTrip() {
       ) : (
         <>
           <div style={{
-            padding: '14px 20px 6px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12,
             position: 'sticky', top: 0, zIndex: 10, background: C.bg,
           }}>
             <img src="assets/lets-trip-logo.png" alt="Let's Trip"
-              style={{ width: 44, height: 44, borderRadius: '50%' }}/>
+              style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0 }}/>
+            <h1 style={{ margin: 0, fontSize: 26, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK, flex: 1 }}>
+              Let's Trip
+            </h1>
           </div>
-          <div style={{ padding: '8px 24px 18px', textAlign: 'center' }}>
-            <h1 style={{
-              margin: 0, fontSize: 26, fontWeight: 800,
-              letterSpacing: -0.5, color: TRIP_INK, lineHeight: 1.15,
+          <div style={{ padding: '18px 24px 22px', textAlign: 'center' }}>
+            <h2 style={{
+              margin: 0, fontSize: 21, fontWeight: 800,
+              letterSpacing: -0.4, color: TRIP_INK, lineHeight: 1.2,
             }}>
               Sayohatingizni <span style={{ color: TEAL }}>bitta qidiruv</span> bilan boshlang
-            </h1>
+            </h2>
             <p style={{
               margin: '10px auto 0', maxWidth: 320,
-              fontSize: 14, fontWeight: 500, color: '#5C6B86', lineHeight: 1.5,
+              fontSize: 13.5, fontWeight: 500, color: '#5C6B86', lineHeight: 1.55,
             }}>
               Parvoz, mehmonxona, eSIM va ekskursiyalar — manzilingiz bo'yicha avtomatik ko'rsatiladi.
             </p>
