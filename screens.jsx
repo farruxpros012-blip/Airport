@@ -892,12 +892,12 @@ function ScreenTrip() {
         }}/>
         <div style={{ position: 'relative', zIndex: 1 }}>
           {/* Logo row */}
-          <div style={{ padding: '20px 20px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+          <button onClick={() => { setActiveService(null); setView('searchAll'); }} style={{ padding: '20px 20px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', width: '100%' }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img src="assets/lets-trip-logo.png?v=3" alt="Let's Trip" style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
             </div>
             <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, color: '#FFFFFF' }}>Let's Trip</div>
-          </div>
+          </button>
 
           {/* Search bar */}
           <div style={{ padding: '0 20px 20px' }}>
