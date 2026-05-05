@@ -1029,7 +1029,7 @@ function SearchAllScreen({ active, onSelect, onBack, onSearch, services = ALL_SE
       </div>
 
       {/* Service icons grid */}
-      <div style={{ padding: '4px 20px 20px', display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+      <div style={{ padding: '4px 20px 20px', display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: services.length < 4 ? 'center' : 'flex-start' }}>
         {services.map(svcId => {
           const on = active === svcId;
           return (
