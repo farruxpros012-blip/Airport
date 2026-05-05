@@ -863,6 +863,19 @@ function ScreenTrip() {
         onSelect={setActiveService}
         onBack={() => { setView('home'); setActiveService(null); }}
         onSearch={(p) => { setSearchParams(p); setView('results'); }}
+      />
+    );
+  }
+
+  if (view === 'searchAllLogo') {
+    return (
+      <SearchAllScreen
+        title="Sayohat qilmoqchiman"
+        services={ALL_SERVICES}
+        active={activeService || 'flight'}
+        onSelect={setActiveService}
+        onBack={() => { setView('home'); setActiveService(null); }}
+        onSearch={(p) => { setSearchParams(p); setView('results'); }}
         logoHeader
       />
     );
@@ -893,7 +906,7 @@ function ScreenTrip() {
         }}/>
         <div style={{ position: 'relative', zIndex: 1 }}>
           {/* Logo row */}
-          <button onClick={() => { setActiveService(null); setView('searchAll'); }} style={{ padding: '20px 20px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', width: '100%' }}>
+          <button onClick={() => { setActiveService(null); setView('searchAllLogo'); }} style={{ padding: '20px 20px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', width: '100%' }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img src="assets/lets-trip-logo.png?v=3" alt="Let's Trip" style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
             </div>
