@@ -871,14 +871,14 @@ function ScreenTrip() {
             pointerEvents: 'none', zIndex: 0,
           }}/>
           <div style={{ position: 'relative', zIndex: 1 }}>
-            {/* Centered logo + Let's Trip wordmark */}
+            {/* Centered logo + Let's Trip wordmark in a single row */}
             <div style={{
-              padding: '14px 20px 4px',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+              padding: '16px 20px 4px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
             }}>
               <img src="assets/lets-trip-logo.png" alt="Let's Trip"
-                style={{ width: 44, height: 44, borderRadius: '50%' }}/>
-              <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: -0.3, color: TRIP_INK }}>
+                style={{ width: 36, height: 36, borderRadius: '50%' }}/>
+              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK }}>
                 Let's Trip
               </div>
             </div>
