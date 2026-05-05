@@ -671,41 +671,117 @@ function ScreenTrip() {
   );
 }
 
+// Unified destination search card — replaces the dual flight-widget /
+// destination-search pattern. One question, one entry: "Qayerga sayohat?"
+// Search results page bundles flight + hotel + eSIM + excursions for the picked place.
+function DestinationSearchCard({ onSearch }) {
+  const [from, setFrom] = React.useState('Tashkent');
+  const [to, setTo] = React.useState('');
+  const [date, setDate] = React.useState('');
+
+  const fmtDate = (d) => {
+    if (!d) return '';
+    const dt = new Date(d);
+    if (isNaN(dt)) return '';
+    return dt.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+  };
+
+  const inputStyle = {
+    width: '100%', border: 'none', outline: 'none', background: 'transparent',
+    fontSize: 17, fontWeight: 700, color: TRIP_INK,
+    fontFamily: 'inherit', padding: 0,
+  };
+
+  const labelStyle = {
+    fontSize: 11, fontWeight: 600, color: '#9AA1B8',
+    textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 3,
+  };
+
+  return (
+    <Card style={{ padding: 0, borderRadius: 32 }}>
+      {/* Title */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 12,
+        padding: '20px 24px 14px',
+      }}>
+        <span style={{ display: 'inline-flex' }}><FigFlight size={22}/></span>
+        <div style={{ fontSize: 17, fontWeight: 800, color: TRIP_INK, letterSpacing: -0.2 }}>
+          Qayerga sayohat?
+        </div>
+      </div>
+
+      {/* From */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px 14px' }}>
+        <FigTakeoff size={26}/>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={labelStyle}>Qayerdan</div>
+          <input
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            placeholder="Shahar yoki aeroport"
+            style={inputStyle}
+          />
+        </div>
+      </div>
+
+      <div style={{ height: 1, background: '#ECEEF6', marginLeft: 64, marginRight: 24 }}/>
+
+      {/* To */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px 14px' }}>
+        <FigLanding size={26}/>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={labelStyle}>Qayerga</div>
+          <input
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            placeholder="Dubai, Samarqand, Istanbul..."
+            style={inputStyle}
+          />
+        </div>
+      </div>
+
+      <div style={{ height: 1, background: '#ECEEF6', marginLeft: 64, marginRight: 24 }}/>
+
+      {/* Date */}
+      <label style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px 18px', position: 'relative', cursor: 'pointer' }}>
+        <span style={{ display: 'inline-flex', opacity: 0.85 }}><FigCalendar size={22}/></span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={labelStyle}>Sana</div>
+          <div style={{ fontSize: 17, fontWeight: 700, color: date ? TRIP_INK : '#C4C9DB' }}>
+            {date ? fmtDate(date) : 'Tanlash'}
+          </div>
+        </div>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%' }}
+        />
+      </label>
+
+      <div style={{ padding: '0 20px 20px' }}>
+        <button
+          onClick={onSearch}
+          style={{
+            width: '100%', padding: '14px',
+            border: 'none', borderRadius: 999,
+            background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`,
+            color: '#fff', fontSize: 16, fontWeight: 700,
+            boxShadow: '0 8px 20px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.35)',
+            cursor: 'pointer',
+          }}>Search</button>
+      </div>
+    </Card>
+  );
+}
+
 function IntentPicker({ onPick, onFlight }) {
   return (
     <div style={{
       padding: '4px 20px 24px',
       display: 'flex', flexDirection: 'column', gap: 14,
     }}>
-      {/* Existing flight card lifted from DefaultTripView so users can launch
-          a flight search without entering the "Sayohat" intent first. */}
-      <Card style={{ padding: 0, borderRadius: 32 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '18px 20px 16px' }}>
-          <FigTakeoff size={26}/>
-          <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK }}>Tashkent</div>
-        </div>
-        <div style={{ height: 1, background: '#ECEEF6', marginLeft: 60, marginRight: 20 }}/>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px 20px' }}>
-          <FigLanding size={26}/>
-          <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK }}>Egypt</div>
-        </div>
-        <div style={{ display: 'flex', gap: 8, padding: '0 20px 20px', flexWrap: 'wrap' }}>
-          <TripChip icon={<FigCalendar size={16}/>}>May 12 · 7 nights</TripChip>
-          <TripChip icon={<FigPersonAdult size={16}/>}>2 adults</TripChip>
-        </div>
-        <div style={{ padding: '0 20px 20px' }}>
-          <button
-            onClick={onFlight}
-            style={{
-              width: '100%', padding: '14px',
-              border: 'none', borderRadius: 999,
-              background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`,
-              color: '#fff', fontSize: 16, fontWeight: 700,
-              boxShadow: '0 8px 20px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.35)',
-              cursor: 'pointer',
-            }}>Search</button>
-        </div>
-      </Card>
+      <DestinationSearchCard onSearch={onFlight}/>
 
       {/* Subtle hint that flight search results also surface hotels, eSIM,
           excursions for the chosen destination — Booking-style bundling. */}
