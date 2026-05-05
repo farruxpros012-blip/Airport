@@ -812,9 +812,12 @@ function TripResultsView({ params, onBack }) {
 
 // ─── Trip screen data ─────────────────────────────────────────
 const TRIP_CATS_NEW = [
-  { id: 'travel',    label: 'Sayohat',   services: ['tours','flight','hotels','esim'] },
-  { id: 'rest',      label: 'Dam olish', services: ['excur','villas'] },
-  { id: 'transport', label: 'Transport', services: ['taxi','xfer'] },
+  { id: 'travel',    label: 'Sayohat',   tagline: 'Chet elga',   services: ['tours','flight','hotels','esim'],
+    accent: 'linear-gradient(135deg, #FFE89A 0%, #F5B544 100%)', emoji: '✈️' },
+  { id: 'rest',      label: 'Dam olish', tagline: 'O\'zbekistonda', services: ['excur','villas'],
+    accent: 'linear-gradient(135deg, #FFB199 0%, #FF6E5C 100%)', emoji: '🌿' },
+  { id: 'transport', label: 'Transport', tagline: 'Yetkazib berish', services: ['taxi','xfer'],
+    accent: 'linear-gradient(135deg, #B6E0FF 0%, #5B9BFF 100%)', emoji: '🚗' },
 ];
 const ALL_SERVICES = ['tours','flight','hotels','esim','excur','villas','taxi','xfer'];
 
@@ -831,12 +834,10 @@ const DEST_LABEL = {
 const FROM_LABEL = { flight: 'Qayerdan?', taxi: 'Qaysi aeroportdan?', xfer: 'Qayerdan?' };
 
 function ScreenTrip() {
-  const [view, setView] = React.useState('home'); // 'home' | 'searchAll' | 'results'
-  const [activeCat, setActiveCat] = React.useState('travel');
+  const [view, setView] = React.useState('home'); // 'home' | 'searchAll' | 'category' | 'results'
+  const [catView, setCatView] = React.useState(null); // category id for category view
   const [activeService, setActiveService] = React.useState(null);
   const [searchParams, setSearchParams] = React.useState(null);
-
-  const catServices = (TRIP_CATS_NEW.find(c => c.id === activeCat) || TRIP_CATS_NEW[0]).services;
 
   if (view === 'results') {
     return <TripResultsView params={searchParams || {}} onBack={() => setView('home')}/>;
@@ -845,7 +846,23 @@ function ScreenTrip() {
   if (view === 'searchAll') {
     return (
       <SearchAllScreen
+        title="Sayohat qilmoqchiman"
+        services={ALL_SERVICES}
         active={activeService || 'flight'}
+        onSelect={setActiveService}
+        onBack={() => { setView('home'); setActiveService(null); }}
+        onSearch={(p) => { setSearchParams(p); setView('results'); }}
+      />
+    );
+  }
+
+  if (view === 'category') {
+    const cat = TRIP_CATS_NEW.find(c => c.id === catView) || TRIP_CATS_NEW[0];
+    return (
+      <SearchAllScreen
+        title={cat.label}
+        services={cat.services}
+        active={activeService || cat.services[0]}
         onSelect={setActiveService}
         onBack={() => { setView('home'); setActiveService(null); }}
         onSearch={(p) => { setSearchParams(p); setView('results'); }}
@@ -889,55 +906,68 @@ function ScreenTrip() {
             </button>
           </div>
 
-          {/* Category cards with service icons inside */}
-          <div style={{ padding: '0 16px 20px', display: 'flex', gap: 10 }}>
-            {TRIP_CATS_NEW.map(cat => {
-              const on = activeCat === cat.id;
-              return (
-                <button key={cat.id} onClick={() => setActiveCat(cat.id)} style={{
-                  flex: 1, padding: '10px 8px 12px',
-                  border: on ? 'none' : '1.5px solid rgba(255,255,255,0.35)',
-                  background: on ? 'rgba(255,255,255,0.22)' : 'transparent',
-                  borderRadius: 16, color: '#fff', cursor: 'pointer',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-                  backdropFilter: on ? 'blur(10px)' : 'none',
-                }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.1 }}>{cat.label}</span>
-                  <div style={{ display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-                    {cat.services.map(svcId => (
-                      <div key={svcId} style={{
-                        width: 28, height: 28, borderRadius: 999,
-                        background: 'rgba(255,255,255,0.25)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      }}>
-                        <span style={{ display: 'inline-flex', filter: 'brightness(0) invert(1)', transform: 'scale(0.6)', transformOrigin: 'center' }}>
-                          {CAT_DEF[svcId].icon}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
         </div>
       </div>
 
-      {/* Service icons for active category */}
-      <div style={{ padding: '4px 20px 24px', display: 'flex', gap: 8, justifyContent: 'center' }}>
-        {catServices.map(svcId => (
-          <button key={svcId}
-            onClick={() => { setActiveService(svcId); setView('searchAll'); }}
-            style={{ flex: 1, maxWidth: 80, border: 'none', background: 'transparent', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-            <div style={{
-              width: 56, height: 56, borderRadius: 999,
-              background: '#fff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 2px 10px rgba(15,42,74,0.10)',
+      {/* Section title */}
+      <div style={{ padding: '20px 22px 12px' }}>
+        <div style={{ fontSize: 18, fontWeight: 800, color: TRIP_INK, letterSpacing: -0.3 }}>
+          Yo'nalishingizni tanlang
+        </div>
+        <div style={{ fontSize: 12.5, fontWeight: 500, color: '#7A8499', marginTop: 2 }}>
+          Bitta kategoriyani tanlang — barcha xizmatlarini ko'ring
+        </div>
+      </div>
+
+      {/* Creative category cards — tappable, open dedicated page */}
+      <div style={{ padding: '0 16px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {TRIP_CATS_NEW.map(cat => (
+          <button key={cat.id}
+            onClick={() => { setCatView(cat.id); setActiveService(cat.services[0]); setView('category'); }}
+            style={{
+              border: 'none', cursor: 'pointer',
+              background: '#fff', borderRadius: 20,
+              padding: 0, overflow: 'hidden',
+              boxShadow: '0 4px 16px rgba(15,42,74,0.08)',
+              display: 'flex', alignItems: 'stretch', textAlign: 'left',
+              minHeight: 86,
             }}>
-              {CAT_DEF[svcId].icon}
+            {/* Accent strip with emoji */}
+            <div style={{
+              width: 86, flexShrink: 0,
+              background: cat.accent,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 36,
+            }}>
+              {cat.emoji}
             </div>
-            <span style={{ fontSize: 11, fontWeight: 600, color: TRIP_INK, textAlign: 'center' }}>{CAT_DEF[svcId].label}</span>
+            {/* Body */}
+            <div style={{ flex: 1, padding: '12px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 8 }}>
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: TRIP_INK, letterSpacing: -0.2 }}>{cat.label}</div>
+                <div style={{ fontSize: 11.5, fontWeight: 500, color: '#7A8499', marginTop: 1 }}>{cat.tagline} · {cat.services.length} ta xizmat</div>
+              </div>
+              {/* Mini service icons */}
+              <div style={{ display: 'flex', gap: 6 }}>
+                {cat.services.map(svcId => (
+                  <div key={svcId} style={{
+                    width: 26, height: 26, borderRadius: 999,
+                    background: '#F1F4FA',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <span style={{ display: 'inline-flex', transform: 'scale(0.62)', transformOrigin: 'center' }}>
+                      {CAT_DEF[svcId].icon}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Chevron */}
+            <div style={{ display: 'flex', alignItems: 'center', paddingRight: 14 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round">
+                <path d="M9 6l6 6-6 6"/>
+              </svg>
+            </div>
           </button>
         ))}
       </div>
