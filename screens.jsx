@@ -863,9 +863,9 @@ function ScreenTrip() {
               feel without overwhelming the form. */}
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: 580,
-            background: '#C7EEF1',
-            WebkitMaskImage: 'linear-gradient(180deg, #000 0%, #000 60%, transparent 100%)',
-            maskImage: 'linear-gradient(180deg, #000 0%, #000 60%, transparent 100%)',
+            background: 'radial-gradient(ellipse 160% 90% at 60% -10%, #2DD4DC 0%, #3B47C8 55%, #0F1E6E 100%)',
+            WebkitMaskImage: 'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
+            maskImage: 'linear-gradient(180deg, #000 0%, #000 55%, transparent 100%)',
             pointerEvents: 'none', zIndex: 0,
           }}/>
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -876,7 +876,7 @@ function ScreenTrip() {
             }}>
               <img src="assets/lets-trip-logo.png" alt="Let's Trip"
                 style={{ width: 36, height: 36, borderRadius: '50%' }}/>
-              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK }}>
+              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: -0.4, color: '#FFFFFF' }}>
                 Let's Trip
               </div>
             </div>
@@ -885,13 +885,13 @@ function ScreenTrip() {
             <div style={{ padding: '14px 24px 22px', textAlign: 'center' }}>
               <h2 style={{
                 margin: 0, fontSize: 28, fontWeight: 800,
-                letterSpacing: -0.5, color: TRIP_INK, lineHeight: 1.18,
+                letterSpacing: -0.5, color: '#FFFFFF', lineHeight: 1.18,
               }}>
-                Sayohatingizni <span style={{ color: TEAL }}>bitta qidiruv</span> bilan boshlang
+                Sayohatingizni <span style={{ color: '#7EF0F5' }}>bitta qidiruv</span> bilan boshlang
               </h2>
               <p style={{
                 margin: '12px auto 0', maxWidth: 320,
-                fontSize: 13.5, fontWeight: 500, color: '#5C6B86', lineHeight: 1.55,
+                fontSize: 13.5, fontWeight: 500, color: 'rgba(255,255,255,0.72)', lineHeight: 1.55,
               }}>
                 Parvoz, mehmonxona, eSIM va ekskursiyalar — manzilingiz bo'yicha avtomatik ko'rsatiladi.
               </p>
