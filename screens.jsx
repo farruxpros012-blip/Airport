@@ -811,6 +811,20 @@ function TripResultsView({ params, onBack }) {
 }
 
 // ─── Trip screen data ─────────────────────────────────────────
+const POPULAR_DESTS = [
+  { id: 'dubai',    city: 'Dubai',     country: 'BAA',      img: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80&auto=format&fit=crop' },
+  { id: 'istanbul', city: 'Istanbul',  country: 'Turkiya',  img: 'https://images.unsplash.com/photo-1527838832700-5059252407fa?w=400&q=80&auto=format&fit=crop' },
+  { id: 'bangkok',  city: 'Bangkok',   country: 'Tailand',  img: 'https://images.unsplash.com/photo-1508009603885-50cf7c8dd0d5?w=400&q=80&auto=format&fit=crop' },
+  { id: 'paris',    city: 'Paris',     country: 'Fransiya', img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80&auto=format&fit=crop' },
+  { id: 'bali',     city: 'Bali',      country: 'Indoneziya', img: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80&auto=format&fit=crop' },
+];
+
+const RECENT_SEARCHES = [
+  { from: 'Toshkent', to: 'Dubai',    date: '12 May · 7 kun', service: 'Flight' },
+  { from: 'Toshkent', to: 'Istanbul', date: '20 May · 5 kun', service: 'Tour'   },
+  { from: 'Toshkent', to: 'Bali',     date: '1 Iyun · 10 kun', service: 'Hotel' },
+];
+
 const TRIP_CATS_NEW = [
   { id: 'travel',    label: 'Sayohat',    services: ['tours','flight','hotels'] },
   { id: 'rest',      label: 'Qo\'shimcha', services: ['excur','villas','esim'] },
@@ -943,6 +957,55 @@ function ScreenTrip() {
             }}>{cat.label}</span>
           </button>
         ))}
+      </div>
+
+      {/* Popular destinations */}
+      <div style={{ padding: '20px 0 0' }}>
+        <div style={{ padding: '0 20px 12px', fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2 }}>
+          Mashhur yo'nalishlar
+        </div>
+        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingLeft: 20, paddingRight: 20, paddingBottom: 4, scrollbarWidth: 'none' }}>
+          {POPULAR_DESTS.map(dest => (
+            <div key={dest.id} onClick={() => { setSearchParams({ to: dest.city, toCountry: dest.country }); setView('results'); }}
+              style={{ flexShrink: 0, width: 160, borderRadius: 20, overflow: 'hidden', position: 'relative', cursor: 'pointer', boxShadow: '0 6px 20px rgba(15,42,74,0.14)' }}>
+              <img src={dest.img} alt={dest.city} style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }}/>
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(10,25,50,0.78) 100%)' }}/>
+              <div style={{ position: 'absolute', bottom: 44, left: 12, right: 12 }}>
+                <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', letterSpacing: -0.3 }}>{dest.city}</div>
+                <div style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.80)', marginTop: 2 }}>{dest.country}</div>
+              </div>
+              <div style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}>
+                <div style={{ background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`, borderRadius: 999, padding: '7px 0', textAlign: 'center', fontSize: 12, fontWeight: 700, color: '#fff' }}>Ko'rish</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Recent searches */}
+      <div style={{ padding: '20px 20px 8px' }}>
+        <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2, marginBottom: 12 }}>
+          So'nggi qidiruvlar
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {RECENT_SEARCHES.map((r, i) => (
+            <button key={i} onClick={() => { setSearchParams({ to: r.to, from: r.from }); setView('results'); }}
+              style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#fff', border: 'none', borderRadius: 14, padding: '12px 14px', cursor: 'pointer', boxShadow: '0 2px 8px rgba(15,42,74,0.07)', textAlign: 'left' }}>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: '#F1F4FA', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={TEAL} strokeWidth="2" strokeLinecap="round">
+                  <circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>
+                </svg>
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: TRIP_INK }}>{r.from} → {r.to}</div>
+                <div style={{ fontSize: 12, fontWeight: 500, color: '#7A8499', marginTop: 1 }}>{r.date} · {r.service}</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4C9DB" strokeWidth="2.4" strokeLinecap="round">
+                <path d="M9 6l6 6-6 6"/>
+              </svg>
+            </button>
+          ))}
+        </div>
       </div>
 
       <TabBar active="trip"/>
