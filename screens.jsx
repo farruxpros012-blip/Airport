@@ -616,9 +616,189 @@ const CAT_DEF = {
   xfer:   { label: 'Transfer',     icon: <FigTransfer size={26}/> },
 };
 
+// ─── Trip search results ──────────────────────────────────────
+// Bundled results page: top tabs switch between service categories
+// (Flight / Hotel / eSIM / Excursion) for the picked destination.
+// Each tab shows a tight set of category-specific filter chips and
+// a list of result cards. Designed compact so it fits the same card
+// language as the rest of Let's Trip.
+const RESULT_TABS = [
+  { id: 'flight', label: 'Flight',     icon: <FigFlight size={20}/>     },
+  { id: 'hotel',  label: 'Hotel',      icon: <FigHotel size={20}/>      },
+  { id: 'esim',   label: 'eSIM',       icon: <FigEsim size={20}/>       },
+  { id: 'excur',  label: 'Ekskursiya', icon: <FigExcursions size={20}/> },
+];
+
+const RESULT_FILTERS = {
+  flight: ['Eng arzon', 'Tezkor', 'To\'g\'ridan', 'Ertalab', 'Kechqurun'],
+  hotel:  ['5★', '4★', 'Markaz', 'Pulli ovqat', 'Basseyn'],
+  esim:   ['7 kun', '15 kun', '30 kun', 'Limitlanmagan'],
+  excur:  ['Yarim kun', 'To\'liq kun', 'Guruh', 'Shaxsiy'],
+};
+
+const SAMPLE_RESULTS = {
+  flight: [
+    { title: 'Uzbekistan Airways', sub: 'TAS → DXB · 4s 20m · to\'g\'ridan', price: '$289', tag: 'Eng arzon' },
+    { title: 'FlyDubai',           sub: 'TAS → DXB · 4s 30m · to\'g\'ridan', price: '$315' },
+    { title: 'Qatar Airways',      sub: 'TAS → DXB · 9s 15m · 1 transfer',  price: '$398' },
+  ],
+  hotel: [
+    { title: 'Atlantis The Palm',  sub: '5★ · Palm Jumeirah · 8.9',         price: '$420 / kecha', tag: 'Mashhur' },
+    { title: 'Rove Downtown',      sub: '4★ · Downtown · 8.4',              price: '$140 / kecha' },
+    { title: 'Citymax Bur Dubai',  sub: '3★ · Bur Dubai · 8.1',             price: '$78 / kecha' },
+  ],
+  esim: [
+    { title: 'UAE 7 kun',  sub: '5 GB · 4G/5G · darhol faollashadi', price: '$12' },
+    { title: 'UAE 15 kun', sub: '15 GB · 4G/5G',                     price: '$22', tag: 'Tavsiya' },
+    { title: 'UAE 30 kun', sub: '30 GB · 4G/5G',                     price: '$36' },
+  ],
+  excur: [
+    { title: 'Burj Khalifa kirish',     sub: '124-148 qavat · 1.5 soat',       price: '$58' },
+    { title: 'Cho\'l safari',           sub: '6 soat · transfer + kechki ovqat', price: '$72', tag: 'Mashhur' },
+    { title: 'Dubai Marina kruizi',     sub: '2 soat · ovqat bilan',           price: '$45' },
+  ],
+};
+
+function TripResultsView({ onBack }) {
+  const [tab, setTab] = React.useState('flight');
+  const [filter, setFilter] = React.useState(null);
+  const filters = RESULT_FILTERS[tab];
+  const items = SAMPLE_RESULTS[tab];
+
+  return (
+    <Frame>
+      {/* Sticky header */}
+      <div style={{
+        padding: '16px 20px 12px', display: 'flex', alignItems: 'center', gap: 12,
+        position: 'sticky', top: 0, zIndex: 10, background: C.bg,
+      }}>
+        <button
+          onClick={onBack}
+          aria-label="Back"
+          style={{
+            width: 40, height: 40, borderRadius: 999, border: 'none',
+            background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(15,42,74,0.08)', cursor: 'pointer', flexShrink: 0,
+          }}>
+          <IconBack size={20} color={TRIP_INK}/>
+        </button>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>
+            Tashkent → Dubai
+          </div>
+          <div style={{ fontSize: 17, fontWeight: 800, color: TRIP_INK, letterSpacing: -0.2 }}>
+            Qidiruv natijasi
+          </div>
+        </div>
+      </div>
+
+      {/* Service tabs */}
+      <div style={{
+        display: 'flex', gap: 6, padding: '0 16px 14px', overflowX: 'auto',
+      }}>
+        {RESULT_TABS.map(t => {
+          const on = t.id === tab;
+          return (
+            <button
+              key={t.id}
+              onClick={() => { setTab(t.id); setFilter(null); }}
+              style={{
+                flex: '1 0 auto',
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '10px 14px', borderRadius: 999,
+                border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+                background: on
+                  ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`
+                  : '#fff',
+                color: on ? '#fff' : TRIP_INK,
+                fontSize: 13, fontWeight: 700,
+                boxShadow: on
+                  ? '0 6px 14px rgba(31,191,201,0.30), inset 0 1px 0 rgba(255,255,255,0.35)'
+                  : '0 2px 6px rgba(15,42,74,0.06)',
+              }}>
+              <span style={{ display: 'inline-flex', filter: on ? 'brightness(0) invert(1)' : 'none' }}>
+                {t.icon}
+              </span>
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Category-aware filter chips */}
+      <div style={{
+        display: 'flex', gap: 6, padding: '0 16px 14px', overflowX: 'auto',
+      }}>
+        {filters.map(f => {
+          const on = filter === f;
+          return (
+            <button
+              key={f}
+              onClick={() => setFilter(on ? null : f)}
+              style={{
+                flex: '0 0 auto',
+                padding: '7px 14px', borderRadius: 999,
+                border: on ? `1.5px solid ${TEAL}` : '1px solid #ECEEF6',
+                background: on ? 'rgba(31,191,201,0.10)' : '#fff',
+                color: on ? TEAL : '#5C6B86',
+                fontSize: 12, fontWeight: 700,
+                cursor: 'pointer', whiteSpace: 'nowrap',
+              }}>
+              {f}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Result cards */}
+      <div style={{ padding: '0 20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {items.map((it, idx) => (
+          <Card key={idx} style={{ padding: 16, borderRadius: 22 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: 14,
+                background: 'rgba(31,191,201,0.12)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                {RESULT_TABS.find(t => t.id === tab).icon}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: TRIP_INK }}>{it.title}</div>
+                  {it.tag && (
+                    <span style={{ fontSize: 10, fontWeight: 800, color: TEAL, padding: '3px 8px', borderRadius: 999, background: 'rgba(31,191,201,0.12)', textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                      {it.tag}
+                    </span>
+                  )}
+                </div>
+                <div style={{ fontSize: 12, color: '#5C6B86', marginTop: 3, lineHeight: 1.4 }}>{it.sub}</div>
+              </div>
+              <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                <div style={{ fontSize: 16, fontWeight: 800, color: TRIP_INK }}>{it.price}</div>
+                <button style={{
+                  marginTop: 6,
+                  padding: '6px 14px', borderRadius: 999,
+                  border: 'none', cursor: 'pointer',
+                  background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`,
+                  color: '#fff', fontSize: 12, fontWeight: 700,
+                  boxShadow: '0 4px 10px rgba(31,191,201,0.30)',
+                }}>Tanlash</button>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <TabBar active="trip"/>
+    </Frame>
+  );
+}
+
 function ScreenTrip() {
   const [intent, setIntent] = React.useState(null); // null = picker, else intent.id
   const [activeCat, setActiveCat] = React.useState(null);
+  const [showResults, setShowResults] = React.useState(false);
 
   const current = intent ? INTENTS.find(i => i.id === intent) : null;
 
@@ -626,12 +806,13 @@ function ScreenTrip() {
     if (current && !activeCat) setActiveCat(current.cats[0]);
   }, [intent]);
 
-  // Jump straight into Flight inside the "travel" intent — used by the
-  // top-of-screen quick search widget so users skip the intent step.
-  const openFlight = () => {
-    setIntent('travel');
-    setActiveCat('flight');
-  };
+  // Search button on the destination card jumps to the unified results page
+  // that bundles flight + hotel + eSIM + excursion for the chosen destination.
+  const openFlight = () => setShowResults(true);
+
+  if (showResults) {
+    return <TripResultsView onBack={() => setShowResults(false)}/>;
+  }
 
   return (
     <Frame>
@@ -677,13 +858,15 @@ function ScreenTrip() {
 function DestinationSearchCard({ onSearch }) {
   const [from, setFrom] = React.useState('Tashkent');
   const [to, setTo] = React.useState('');
-  const [date, setDate] = React.useState('');
+  const [departDate, setDepartDate] = React.useState(null); // Date | null
+  const [returnDate, setReturnDate] = React.useState(null);
+  const [sheetOpen, setSheetOpen] = React.useState(false);
 
-  const fmtDate = (d) => {
-    if (!d) return '';
-    const dt = new Date(d);
-    if (isNaN(dt)) return '';
-    return dt.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+  const fmtRange = () => {
+    if (!departDate) return '';
+    const f = (d) => d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+    if (!returnDate) return f(departDate);
+    return `${f(departDate)} — ${f(returnDate)}`;
   };
 
   const inputStyle = {
@@ -704,7 +887,6 @@ function DestinationSearchCard({ onSearch }) {
         display: 'flex', alignItems: 'center', gap: 12,
         padding: '20px 24px 14px',
       }}>
-        <span style={{ display: 'inline-flex' }}><FigFlight size={22}/></span>
         <div style={{ fontSize: 17, fontWeight: 800, color: TRIP_INK, letterSpacing: -0.2 }}>
           Qayerga sayohat?
         </div>
@@ -742,22 +924,18 @@ function DestinationSearchCard({ onSearch }) {
 
       <div style={{ height: 1, background: '#ECEEF6', marginLeft: 64, marginRight: 24 }}/>
 
-      {/* Date */}
-      <label style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px 18px', position: 'relative', cursor: 'pointer' }}>
+      {/* Date range — opens bottom sheet */}
+      <div
+        onClick={() => setSheetOpen(true)}
+        style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px 18px', cursor: 'pointer' }}>
         <span style={{ display: 'inline-flex', opacity: 0.85 }}><FigCalendar size={22}/></span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={labelStyle}>Sana</div>
-          <div style={{ fontSize: 17, fontWeight: 700, color: date ? TRIP_INK : '#C4C9DB' }}>
-            {date ? fmtDate(date) : 'Tanlash'}
+          <div style={{ fontSize: 17, fontWeight: 700, color: departDate ? TRIP_INK : '#C4C9DB' }}>
+            {departDate ? fmtRange() : 'Qachondan — qachongacha'}
           </div>
         </div>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%' }}
-        />
-      </label>
+      </div>
 
       <div style={{ padding: '0 20px 20px' }}>
         <button
@@ -771,7 +949,166 @@ function DestinationSearchCard({ onSearch }) {
             cursor: 'pointer',
           }}>Search</button>
       </div>
+
+      {sheetOpen && (
+        <CalendarRangeSheet
+          depart={departDate} returnDate={returnDate}
+          onClose={() => setSheetOpen(false)}
+          onApply={(d, r) => { setDepartDate(d); setReturnDate(r); setSheetOpen(false); }}
+        />
+      )}
     </Card>
+  );
+}
+
+// Bottom-sheet date range picker. Two-month vertical scroll, tap to set
+// depart, tap second date to set return. Compact and matches the rounded
+// teal style used elsewhere on Let's Trip.
+function CalendarRangeSheet({ depart, returnDate, onClose, onApply }) {
+  const [d1, setD1] = React.useState(depart);
+  const [d2, setD2] = React.useState(returnDate);
+
+  const today = React.useMemo(() => {
+    const t = new Date(); t.setHours(0,0,0,0); return t;
+  }, []);
+
+  const months = React.useMemo(() => {
+    const arr = [];
+    const start = new Date(today.getFullYear(), today.getMonth(), 1);
+    for (let i = 0; i < 6; i++) {
+      arr.push(new Date(start.getFullYear(), start.getMonth() + i, 1));
+    }
+    return arr;
+  }, [today]);
+
+  const sameDay = (a, b) => a && b && a.toDateString() === b.toDateString();
+  const inRange = (d) => d1 && d2 && d > d1 && d < d2;
+
+  const pick = (d) => {
+    if (!d1 || (d1 && d2)) { setD1(d); setD2(null); return; }
+    if (d < d1) { setD1(d); setD2(null); return; }
+    if (sameDay(d, d1)) { setD2(null); return; }
+    setD2(d);
+  };
+
+  const monthName = (m) => m.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const weekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+  const renderMonth = (m) => {
+    const year = m.getFullYear();
+    const month = m.getMonth();
+    const firstDow = (new Date(year, month, 1).getDay() + 6) % 7; // Mon=0
+    const days = new Date(year, month + 1, 0).getDate();
+    const cells = [];
+    for (let i = 0; i < firstDow; i++) cells.push(null);
+    for (let d = 1; d <= days; d++) cells.push(new Date(year, month, d));
+    return (
+      <div key={m.toISOString()} style={{ marginBottom: 18 }}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: TRIP_INK, padding: '0 4px 10px' }}>
+          {monthName(m)}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
+          {weekdays.map((w, i) => (
+            <div key={'h'+i} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: '#9AA1B8', padding: '4px 0' }}>{w}</div>
+          ))}
+          {cells.map((c, i) => {
+            if (!c) return <div key={'e'+i}/>;
+            const past = c < today;
+            const isStart = sameDay(c, d1);
+            const isEnd = sameDay(c, d2);
+            const between = inRange(c);
+            const selected = isStart || isEnd;
+            return (
+              <button
+                key={c.toISOString()}
+                disabled={past}
+                onClick={() => pick(c)}
+                style={{
+                  height: 38, border: 'none', cursor: past ? 'default' : 'pointer',
+                  background: selected
+                    ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`
+                    : between ? 'rgba(31,191,201,0.14)' : 'transparent',
+                  color: past ? '#D5D9E5' : selected ? '#fff' : TRIP_INK,
+                  fontSize: 14, fontWeight: selected ? 800 : 600,
+                  borderRadius: selected ? 999 : (between ? 0 : 999),
+                  padding: 0,
+                }}>
+                {c.getDate()}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const ready = !!d1;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, background: 'rgba(15,27,61,0.45)',
+        zIndex: 50, display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+      }}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: '#fff', width: '100%', maxWidth: 460,
+          borderTopLeftRadius: 28, borderTopRightRadius: 28,
+          padding: '14px 20px 20px',
+          display: 'flex', flexDirection: 'column',
+          maxHeight: '85vh',
+        }}>
+        {/* Grab handle + header */}
+        <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 8 }}>
+          <div style={{ width: 40, height: 4, borderRadius: 2, background: '#E0E4F0' }}/>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12 }}>
+          <div style={{ fontSize: 17, fontWeight: 800, color: TRIP_INK }}>Sanani tanlang</div>
+          <button onClick={onClose} aria-label="Yopish" style={{ width: 32, height: 32, borderRadius: 999, border: 'none', background: '#F4F5FA', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={TRIP_INK} strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+
+        {/* Range summary */}
+        <div style={{ display: 'flex', gap: 8, paddingBottom: 14 }}>
+          <div style={{ flex: 1, padding: '10px 12px', borderRadius: 12, background: '#F4F5FA' }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>Qachondan</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: d1 ? TRIP_INK : '#C4C9DB', marginTop: 2 }}>
+              {d1 ? d1.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : '—'}
+            </div>
+          </div>
+          <div style={{ flex: 1, padding: '10px 12px', borderRadius: 12, background: '#F4F5FA' }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>Qachongacha</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: d2 ? TRIP_INK : '#C4C9DB', marginTop: 2 }}>
+              {d2 ? d2.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : '—'}
+            </div>
+          </div>
+        </div>
+
+        {/* Months scroll */}
+        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', paddingBottom: 12 }}>
+          {months.map(renderMonth)}
+        </div>
+
+        <button
+          onClick={() => onApply(d1, d2)}
+          disabled={!ready}
+          style={{
+            width: '100%', padding: '14px',
+            border: 'none', borderRadius: 999,
+            background: ready
+              ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`
+              : '#E0E4F0',
+            color: '#fff', fontSize: 16, fontWeight: 700,
+            boxShadow: ready ? '0 8px 20px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.35)' : 'none',
+            cursor: ready ? 'pointer' : 'default',
+          }}>
+          Tasdiqlash
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -781,34 +1118,8 @@ function IntentPicker({ onPick, onFlight }) {
       padding: '4px 20px 24px',
       display: 'flex', flexDirection: 'column', gap: 14,
     }}>
-      <DestinationSearchCard onSearch={onFlight}/>
-
-      {/* Subtle hint that flight search results also surface hotels, eSIM,
-          excursions for the chosen destination — Booking-style bundling. */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 10,
-        padding: '2px 12px',
-        fontSize: 12, color: '#7A86A8', fontWeight: 500, lineHeight: 1.5,
-      }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A86A8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-          <circle cx="12" cy="12" r="9"/>
-          <path d="M12 8v4M12 16h0"/>
-        </svg>
-        <span>Hotel, eSIM va ekskursiyalar qidiruv natijasida ko'rsatiladi</span>
-      </div>
-
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 10,
-        padding: '6px 4px 0',
-      }}>
-        <div style={{ height: 1, background: '#E0E4F0', flex: 1 }}/>
-        <div style={{ fontSize: 12, color: '#9AA1B8', fontWeight: 600, letterSpacing: 0.4, textTransform: 'uppercase' }}>
-          Yoki
-        </div>
-        <div style={{ height: 1, background: '#E0E4F0', flex: 1 }}/>
-      </div>
-
-      {/* Local-trip path: only the airport intent — separate from sayohat */}
+      {/* Two compact info bars sit ABOVE the main destination card, matching
+          the wireframe layout: header → 2 small bars → big card. */}
       {INTENTS.filter(it => it.id === 'airport').map(it => (
         <button key={it.id}
           onClick={() => onPick(it.id)}
@@ -816,23 +1127,51 @@ function IntentPicker({ onPick, onFlight }) {
             border: 'none', cursor: 'pointer',
             background: it.grad,
             color: '#fff',
-            borderRadius: 28,
-            padding: '24px 24px',
-            display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6,
-            boxShadow: '0 12px 28px rgba(15,42,74,0.18), inset 0 1px 0 rgba(255,255,255,0.25)',
+            borderRadius: 18,
+            padding: '14px 18px',
+            display: 'flex', alignItems: 'center', gap: 12,
+            boxShadow: '0 6px 16px rgba(15,42,74,0.14), inset 0 1px 0 rgba(255,255,255,0.25)',
             textAlign: 'left',
-            position: 'relative', overflow: 'hidden',
           }}>
           <div style={{
-            position: 'absolute', right: 18, top: '50%', transform: 'translateY(-50%)',
-            display: 'flex', gap: 8, opacity: 0.85,
+            width: 38, height: 38, borderRadius: 12,
+            background: 'rgba(255,255,255,0.2)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
           }}>
-            <IntentIconStack id={it.id}/>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/>
+              <rect x="3" y="11" width="18" height="6" rx="2"/>
+              <circle cx="7" cy="17" r="1.5" fill="#fff"/>
+              <circle cx="17" cy="17" r="1.5" fill="#fff"/>
+            </svg>
           </div>
-          <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: -0.3 }}>{it.title}</div>
-          <div style={{ fontSize: 13, fontWeight: 500, opacity: 0.85 }}>{it.sub}</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 15, fontWeight: 800, letterSpacing: -0.2 }}>{it.title}</div>
+            <div style={{ fontSize: 12, fontWeight: 500, opacity: 0.85, marginTop: 1 }}>{it.sub}</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.85 }}>
+            <path d="M9 6l6 6-6 6"/>
+          </svg>
         </button>
       ))}
+
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '4px 14px',
+        background: '#fff',
+        borderRadius: 14,
+        fontSize: 12, color: '#7A86A8', fontWeight: 500, lineHeight: 1.5,
+        minHeight: 44,
+        boxShadow: '0 2px 8px rgba(15,42,74,0.04)',
+      }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={TEAL} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 8v4M12 16h0"/>
+        </svg>
+        <span>Hotel, eSIM va ekskursiyalar qidiruv natijasida ko'rsatiladi</span>
+      </div>
+
+      <DestinationSearchCard onSearch={onFlight}/>
 
     </div>
   );
