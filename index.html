@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F4F5FA">
-<title>Uzbekistan Airports</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Let's Trip</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #DDE0EB; }
@@ -33,9 +36,16 @@
 <body>
 <div id="app"></div>
 <div id="tweaks-root"></div>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
-<script type="text/babel" src="tweaks.jsx"></script>
-<script type="text/babel" src="screens.jsx"></script>
+<script>
+  // Cache-bust JSX files on every load — guarantees fresh code on every refresh
+  (function() {
+    var v = Date.now();
+    var files = ['tweaks-panel.jsx', 'tweaks.jsx', 'screens.jsx'];
+    files.forEach(function(f) {
+      document.write('<script type="text/babel" src="' + f + '?v=' + v + '"><\/script>');
+    });
+  })();
+</script>
 <script type="text/babel">
 const { ScreenHome, ScreenServices, ScreenSupport, ScreenProfile, ScreenFlight, ScreenTrip, AirportTweaks, applyLogo, readLogo } = window;
 
