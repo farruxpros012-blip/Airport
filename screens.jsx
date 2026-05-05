@@ -872,11 +872,8 @@ function ScreenTrip() {
               padding: '16px 20px 4px',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
             }}>
-              <img src="assets/lets-trip-logo.png" alt="Let's Trip"
-                style={{ width: 36, height: 36, borderRadius: '50%' }}/>
-              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: -0.4, color: '#FFFFFF' }}>
-                Let's Trip
-              </div>
+              <img src="assets/lets-trip-logo.png?v=2" alt="Let's Trip"
+                style={{ height: 64, width: 'auto', filter: 'brightness(0) invert(1)' }}/>
             </div>
 
             {/* Marketing hero — primary value prop */}
