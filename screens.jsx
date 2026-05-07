@@ -942,81 +942,76 @@ function ScreenTrip() {
   const FILTERS = { turlar:['Arzon narx','Ovqat','Yulduz','Narx'], excur:['Arzon narx','Davlat','Davomiylik'], esim:['Arzon narx','Hudud','GB'], hotel:['Arzon narx','Ovqat','Yulduz'], aviabilet:['Arzon narx','To\'g\'ri reys','Vaqt'] };
 
   /* ── Bottom Sheet ── */
+  /* ── Unified Bottom Sheet ── */
   const BottomSheet = () => {
     const [fromVal, setFromVal] = React.useState(route.from);
     const [toVal, setToVal] = React.useState(route.to);
+    const [nightsVal, setNightsVal] = React.useState(dates.nights);
     const [adultsVal, setAdultsVal] = React.useState(guests.adults);
     const [childVal, setChildVal] = React.useState(guests.children);
-    if (!sheet) return null;
+    if (!sheet || sheet !== 'all') return null;
     const close = () => setSheet(null);
-    const overlay = { position:'fixed', inset:0, background:'rgba(10,31,33,0.45)', zIndex:100, display:'flex', alignItems:'flex-end' };
-    const drawer = { width:'100%', maxWidth:460, margin:'0 auto', background:'#fff', borderRadius:'24px 24px 0 0', padding:'0 20px 32px', boxShadow:'0 -8px 40px rgba(0,0,0,0.18)' };
-    const handle = { width:40, height:4, borderRadius:999, background:'#DDE0EB', margin:'12px auto 20px' };
-    const lbl = { fontSize:11, fontWeight:700, color:'#9AA1B8', textTransform:'uppercase', letterSpacing:0.8, marginBottom:6, display:'block' };
-    const inp = { width:'100%', padding:'13px 16px', border:'1.5px solid #E8EAF3', borderRadius:16, fontSize:14, color:'#0A1F21', outline:'none', boxSizing:'border-box', background:'#FAFBFD' };
-    const counter = (val, set, min=0) => (
-      <div style={{display:'flex',alignItems:'center',gap:0,background:'#F4F5FA',borderRadius:14,overflow:'hidden',width:120}}>
-        <button onClick={()=>set(v=>Math.max(min,v-1))} style={{flex:1,height:44,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',fontWeight:300}}>−</button>
-        <span style={{fontSize:16,fontWeight:700,color:'#0A1F21',minWidth:32,textAlign:'center'}}>{val}</span>
-        <button onClick={()=>set(v=>v+1)} style={{flex:1,height:44,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',fontWeight:300}}>+</button>
+    const inp = { width:'100%', padding:'13px 16px', border:'1.5px solid #E8EAF3', borderRadius:14, fontSize:14, color:'#0A1F21', outline:'none', boxSizing:'border-box', background:'#F4F5FA' };
+    const sec = { fontSize:12, fontWeight:700, color:'#9AA1B8', textTransform:'uppercase', letterSpacing:0.8, marginBottom:8, marginTop:20, display:'block' };
+    const cnt = (val, set, min=0) => (
+      <div style={{display:'flex',alignItems:'center',gap:0,border:'1.5px solid #E8EAF3',borderRadius:12,overflow:'hidden'}}>
+        <button onClick={()=>set(v=>Math.max(min,v-1))} style={{width:44,height:44,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',lineHeight:1}}>−</button>
+        <span style={{fontSize:16,fontWeight:700,color:'#0A1F21',width:32,textAlign:'center'}}>{val}</span>
+        <button onClick={()=>set(v=>v+1)} style={{width:44,height:44,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',lineHeight:1}}>+</button>
       </div>
     );
-    const saveBtn = (fn) => <button onClick={fn} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',marginTop:20}}>Saqlash</button>;
+    const save = () => {
+      setRoute({ from:fromVal, to:toVal });
+      setDates(d=>({ ...d, nights:nightsVal }));
+      setGuests({ adults:adultsVal, children:childVal });
+      close();
+    };
     return (
-      <div style={overlay} onClick={close}>
-        <div style={drawer} onClick={e=>e.stopPropagation()}>
-          <div style={handle}/>
-          {sheet==='route' && <>
-            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:20}}>Yo'nalishni o'zgartirish</div>
-            <label style={lbl}>Qayerdan</label>
-            <input value={fromVal} onChange={e=>setFromVal(e.target.value)} style={{...inp,marginBottom:12}}/>
-            <div style={{display:'flex',justifyContent:'center',marginBottom:12}}>
-              <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{width:40,height:40,borderRadius:999,background:TBG,border:`1.5px solid rgba(0,153,168,0.2)`,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
-              </button>
+      <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:100,display:'flex',alignItems:'flex-end'}} onClick={close}>
+        <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 20px 36px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'90vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+          <div style={{width:40,height:4,borderRadius:999,background:'#DDE0EB',margin:'14px auto 4px'}}/>
+          <div style={{fontSize:18,fontWeight:800,color:'#0A1F21',marginTop:16,marginBottom:4}}>Qidiruvni sozlash</div>
+
+          {/* Route */}
+          <span style={sec}>Yo'nalish</span>
+          <div style={{position:'relative',marginBottom:10}}>
+            <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Qayerdan" style={inp}/>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+            <div style={{flex:1,height:1,background:'#E8EAF3'}}/>
+            <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{width:36,height:36,borderRadius:999,background:TBG,border:'none',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+            </button>
+            <div style={{flex:1,height:1,background:'#E8EAF3'}}/>
+          </div>
+          <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder="Qayerga" style={inp}/>
+
+          {/* Nights */}
+          <span style={sec}>Kechalar soni</span>
+          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+            {[3,5,7,10,14].map(n=>(
+              <button key={n} onClick={()=>setNightsVal(n)} style={{padding:'9px 18px',borderRadius:999,border:`1.5px solid ${nightsVal===n?T:'#E8EAF3'}`,background:nightsVal===n?TBG:'#fff',color:nightsVal===n?T:'#0A1F21',fontSize:13,fontWeight:700,cursor:'pointer'}}>{n} kecha</button>
+            ))}
+          </div>
+
+          {/* Guests */}
+          <span style={sec}>Mehmonlar</span>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderBottom:'1px solid #F0F2F8'}}>
+            <div>
+              <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Kattalar</div>
+              <div style={{fontSize:11,color:'#9AA1B8'}}>12+ yosh</div>
             </div>
-            <label style={lbl}>Qayerga</label>
-            <input value={toVal} onChange={e=>setToVal(e.target.value)} style={{...inp,marginBottom:0}}/>
-            {saveBtn(()=>{setRoute({from:fromVal,to:toVal});close();})}
-          </>}
-          {sheet==='dates' && <>
-            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:20}}>Sanani tanlang</div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:16}}>
-              <div>
-                <label style={lbl}>Borish</label>
-                <input defaultValue={dates.start} id="ds" style={inp}/>
-              </div>
-              <div>
-                <label style={lbl}>Qaytish</label>
-                <input defaultValue={dates.end} id="de" style={inp}/>
-              </div>
+            {cnt(adultsVal,setAdultsVal,1)}
+          </div>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0'}}>
+            <div>
+              <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Bolalar</div>
+              <div style={{fontSize:11,color:'#9AA1B8'}}>2–11 yosh</div>
             </div>
-            <label style={lbl}>Kechalar soni</label>
-            <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',marginBottom:4}}>
-              {[3,5,7,10,14].map(n=>(
-                <button key={n} onClick={()=>setDates(d=>({...d,nights:n}))} style={{padding:'8px 16px',borderRadius:999,border:`1.5px solid ${dates.nights===n?T:'#E8EAF3'}`,background:dates.nights===n?TBG:'#fff',color:dates.nights===n?T:'#0A1F21',fontSize:13,fontWeight:700,cursor:'pointer'}}>{n} kecha</button>
-              ))}
-            </div>
-            {saveBtn(()=>{const s=document.getElementById('ds'),e=document.getElementById('de');setDates(d=>({...d,start:s?s.value:d.start,end:e?e.value:d.end}));close();})}
-          </>}
-          {sheet==='guests' && <>
-            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:24}}>Mehmonlar</div>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
-              <div>
-                <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Kattalar</div>
-                <div style={{fontSize:11,color:'#9AA1B8'}}>12 yoshdan katta</div>
-              </div>
-              {counter(adultsVal, setAdultsVal, 1)}
-            </div>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-              <div>
-                <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Bolalar</div>
-                <div style={{fontSize:11,color:'#9AA1B8'}}>2–11 yosh</div>
-              </div>
-              {counter(childVal, setChildVal)}
-            </div>
-            {saveBtn(()=>{setGuests({adults:adultsVal,children:childVal});close();})}
-          </>}
+            {cnt(childVal,setChildVal)}
+          </div>
+
+          <button onClick={save} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',marginTop:8}}>Qidirish</button>
         </div>
       </div>
     );
@@ -1028,42 +1023,34 @@ function ScreenTrip() {
       <Frame>
         {/* Sticky header */}
         <div style={{background:'#fff',position:'sticky',top:0,zIndex:20,borderBottom:'1px solid #F0F2F8'}}>
-          {/* Row 1: back | title+subtitle | UZS */}
+          {/* Row 1: back | center (tappable) | UZS */}
           <div style={{display:'flex',alignItems:'center',padding:'14px 16px 10px',gap:8}}>
-            <button onClick={()=>setPage(null)} style={{background:'none',border:'none',cursor:'pointer',padding:4,flexShrink:0,display:'flex',alignItems:'center'}}>
+            <button onClick={()=>setPage(null)} style={{background:'none',border:'none',cursor:'pointer',padding:'4px 6px',flexShrink:0,display:'flex',alignItems:'center'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             </button>
-            {/* Center: route title + teal subtitle — tap opens sheets */}
-            <div style={{flex:1,textAlign:'center'}}>
-              <button onClick={()=>setSheet('route')} style={{background:'none',border:'none',cursor:'pointer',padding:0,display:'block',width:'100%'}}>
-                <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',lineHeight:1.2}}>{route.from} — {route.to}</div>
-              </button>
-              <button onClick={()=>setSheet('dates')} style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
-                <span style={{fontSize:12,color:T,fontWeight:500}}>{dates.start}–{dates.end}, {dates.nights} kecha, </span>
-              </button>
-              <button onClick={()=>setSheet('guests')} style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
-                <span style={{fontSize:12,color:T,fontWeight:500}}>{guests.adults} kishi</span>
-              </button>
-            </div>
-            <button onClick={()=>{}} style={{display:'flex',alignItems:'center',gap:3,background:'none',border:'none',cursor:'pointer',padding:4,flexShrink:0}}>
+            {/* Whole center is one tap target */}
+            <button onClick={()=>setSheet('all')} style={{flex:1,background:'none',border:'none',cursor:'pointer',padding:0,textAlign:'center'}}>
+              <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',lineHeight:1.25}}>{route.from} — {route.to}</div>
+              <div style={{fontSize:12,color:T,fontWeight:500,marginTop:2}}>{dates.start}–{dates.end} · {dates.nights} kecha · {guests.adults + guests.children} kishi</div>
+            </button>
+            <button style={{display:'flex',alignItems:'center',gap:2,background:'none',border:'none',cursor:'pointer',padding:'4px 6px',flexShrink:0}}>
               <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>UZS</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
-          {/* Row 2: Search input */}
+          {/* Row 2: Search */}
           <div style={{padding:'0 16px 10px',position:'relative'}}>
             <svg style={{position:'absolute',left:28,top:'50%',transform:'translateY(-50%)',pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input placeholder={page==='hotel'?'Search hotel':page==='turlar'?'Search tour':page==='esim'?'Search eSIM':page==='excur'?'Search excursion':'Search flight'} style={{width:'100%',padding:'11px 16px 11px 40px',border:'none',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#F4F5FA',outline:'none',boxSizing:'border-box'}}/>
+            <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Hudud yoki davlat...',hotel:'Mehmonxona qidirish...',aviabilet:'Shahar yoki aeroport...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 40px',border:'none',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#F4F5FA',outline:'none',boxSizing:'border-box'}}/>
           </div>
-          {/* Row 3: Filter chips */}
-          <div style={{display:'flex',gap:8,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
-            <div style={{flexShrink:0,width:36,height:36,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
+          {/* Row 3: Filters */}
+          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
+            <div style={{flexShrink:0,width:36,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
             </div>
             {(FILTERS[page]||[]).map((f,i)=>(
-              <button key={i} style={{flexShrink:0,display:'flex',alignItems:'center',gap:4,padding:'8px 14px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:13,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>
-                {f}
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+              <button key={i} style={{flexShrink:0,display:'flex',alignItems:'center',gap:4,padding:'7px 13px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>
+                {f}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
               </button>
             ))}
           </div>
@@ -1071,42 +1058,32 @@ function ScreenTrip() {
 
         <Scroll style={{background:'#F4F5FA',padding:'12px 16px'}}>
           {items.map((it,i)=>(
-            <div key={i} style={{background:'#fff',borderRadius:22,overflow:'hidden',marginBottom:14,boxShadow:'0 4px 20px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.08)'}}>
-              <div style={{width:'100%',height:200,overflow:'hidden',position:'relative'}}>
+            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)'}}>
+              {/* Photo */}
+              <div style={{width:'100%',height:170,overflow:'hidden',position:'relative'}}>
                 <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                <div style={{position:'absolute',inset:0,background:'linear-gradient(to top, rgba(10,31,33,0.4) 0%, transparent 55%)'}}/>
               </div>
-              <div style={{padding:'14px 16px 16px'}}>
-                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:4}}>
-                  <div style={{flex:1,paddingRight:8}}>
-                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.3,marginBottom:2}}>{it.title}</div>
-                    <div style={{fontSize:12,color:'#9AA1B8'}}>{it.sub}</div>
+              {/* Info */}
+              <div style={{padding:'12px 14px'}}>
+                {/* Title + regular price */}
+                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:14,fontWeight:700,color:'#0A1F21',lineHeight:1.3}}>{it.title}</div>
+                    <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>{it.sub}</div>
                   </div>
                   <div style={{textAlign:'right',flexShrink:0}}>
-                    <div style={{fontSize:10,color:'#9AA1B8',marginBottom:1}}>dan boshlab</div>
-                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.1}}>{it.regular}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8'}}>dan</div>
+                    <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{it.regular}</div>
                   </div>
                 </div>
-                <div style={{height:'1px',background:'#F0F2F8',margin:'12px 0'}}/>
-                {/* Premium badge */}
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#FFF8EC',borderRadius:12,padding:'9px 12px',border:'1px solid rgba(240,138,44,0.18)'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:7}}>
-                    <div style={{width:26,height:26,borderRadius:8,background:'#F08A2C',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/></svg>
-                    </div>
-                    <div>
-                      <div style={{fontSize:10,fontWeight:700,color:'#F08A2C',textTransform:'uppercase',letterSpacing:0.5}}>Premium narx</div>
-                      <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{it.premium}</div>
-                    </div>
+                {/* Premium + button row */}
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginTop:10,padding:'8px 10px',background:'#FFF8EC',borderRadius:12,border:'1px solid rgba(240,138,44,0.15)'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:6}}>
+                    <span style={{fontSize:12}}>👑</span>
+                    <span style={{fontSize:11,color:'#9AA1B8'}}>Premium: </span>
+                    <span style={{fontSize:12,fontWeight:800,color:'#F08A2C'}}>{it.premium}</span>
                   </div>
-                  <button style={{padding:'8px 16px',borderRadius:12,background:T,border:'none',color:'#fff',fontSize:12,fontWeight:700,cursor:'pointer'}}>Buyurtma</button>
-                </div>
-                {/* Coins */}
-                <div style={{display:'flex',alignItems:'center',gap:6,marginTop:10}}>
-                  <div style={{width:18,height:18,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                    <span style={{fontSize:9,fontWeight:900,color:'#92400E'}}>C</span>
-                  </div>
-                  <span style={{fontSize:11,color:'#9AA1B8'}}>+200 Coins — tur band qilganingiz uchun bonus</span>
+                  <button style={{padding:'7px 14px',borderRadius:10,background:T,border:'none',color:'#fff',fontSize:12,fontWeight:700,cursor:'pointer'}}>Buyurtma</button>
                 </div>
               </div>
             </div>
