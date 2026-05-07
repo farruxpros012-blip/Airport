@@ -844,6 +844,7 @@ const DEST_LABEL = {
 };
 const FROM_LABEL = { flight: 'Qayerdan?', taxi: 'Qaysi aeroportdan?', xfer: 'Qayerdan?' };
 
+
 // ═════════════════════════════════════════════════════════════
 // SCREEN — LET'S TRIP
 // ═════════════════════════════════════════════════════════════
@@ -860,9 +861,9 @@ const TRIP_RESULTS = {
     { img:'https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600', title:'Xiva safari', sub:'1 kun · Guruh bilan', regular:"495 000 so'm", premium:"450 000 so'm" },
     { img:'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=600', title:'Eski Buxoro', sub:'1 kun · Gid bilan', regular:"418 000 so'm", premium:"380 000 so'm" },
     { img:'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=600', title:'Samarqand', sub:'1 kun · Premium tur', regular:"572 000 so'm", premium:"520 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1613044490851-0aa86cd5e65f?w=600', title:'Tashkent City', sub:'Yarim kun · Shahar turi', regular:"275 000 so'm", premium:"250 000 so'm" },
     { img:'https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=600', title:'Istanbul', sub:'1 kun · Ekskursiya', regular:"660 000 so'm", premium:"600 000 so'm" },
     { img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600', title:'Dubai', sub:'1 kun · Premium gid', regular:"880 000 so'm", premium:"800 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1613044490851-0aa86cd5e65f?w=600', title:'Tashkent City', sub:'Yarim kun · Shahar turi', regular:"275 000 so'm", premium:"250 000 so'm" },
   ],
   esim: [
     { img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600', title:'Yevropa · 7 kun', sub:'34 davlat · Cheksiz 5G', regular:"165 000 so'm", premium:"150 000 so'm" },
@@ -877,62 +878,46 @@ const TRIP_RESULTS = {
     { img:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600', title:'Rixos Premium Antalya', sub:'5★ · Antaliya · Ultra AI', regular:"8 800 000 so'm", premium:"8 000 000 so'm" },
   ],
   aviabilet: [
-    { img:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600', title:'TAS → DXB', sub:'Toshkent — Dubai · To\'g\'ri reys', regular:"3 740 000 so'm", premium:"3 400 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600', title:'DXB → TAS', sub:'Dubai — Toshkent · To\'g\'ri reys', regular:"3 410 000 so'm", premium:"3 100 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=600', title:'TAS → IST', sub:'Toshkent — Istanbul · To\'g\'ri', regular:"2 750 000 so'm", premium:"2 500 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600', title:'TAS → DXB', sub:"Toshkent — Dubai · To'g'ri reys", regular:"3 740 000 so'm", premium:"3 400 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=600', title:'TAS → IST', sub:"Toshkent — Istanbul · To'g'ri", regular:"2 750 000 so'm", premium:"2 500 000 so'm" },
     { img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600', title:'TAS → CDG', sub:'Toshkent — Paris · 1 transit', regular:"5 500 000 so'm", premium:"5 000 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600', title:'DXB → TAS', sub:"Dubai — Toshkent · To'g'ri reys", regular:"3 410 000 so'm", premium:"3 100 000 so'm" },
   ],
 };
 
 function ScreenTrip() {
   const [open, setOpen] = React.useState({ turlar: true, aviabilet: true });
   const [page, setPage] = React.useState(null);
+  const [taxiDir, setTaxiDir] = React.useState('to');
+  const [vehicle, setVehicle] = React.useState('economy');
   const toggle = (key) => setOpen(o => ({ ...o, [key]: !o[key] }));
 
   const T = '#0099A8';
   const TBG = '#E0F2F3';
-  const SH = '0 8px 24px rgba(0,153,168,0.10)';
-  const card = { background:'#fff', borderRadius:24, boxShadow:SH, border:'1px solid rgba(0,153,168,0.10)', overflow:'hidden', marginBottom:16 };
-  const rowStyle = { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', cursor:'pointer' };
-  const iBox = { width:44, height:44, borderRadius:14, background:T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 };
-  const mkBtn = (mt=16) => ({ width:'100%', background:T, color:'#fff', border:'none', borderRadius:20, padding:'13px 0', fontSize:14, fontWeight:600, cursor:'pointer', marginTop:mt });
-  const mc = { background:TBG, padding:'8px 10px', borderRadius:14, border:'1px solid rgba(0,153,168,0.15)' };
+  const SH = '0 4px 20px rgba(0,153,168,0.10)';
+  const card = { background:'#fff', borderRadius:24, boxShadow:SH, border:'1px solid rgba(0,153,168,0.08)', overflow:'hidden', marginBottom:14 };
+  const mkBtn = (mt,bg) => ({ width:'100%', background:bg||T, color:'#fff', border:'none', borderRadius:16, padding:'13px 0', fontSize:14, fontWeight:600, cursor:'pointer', marginTop:mt||14 });
 
   const Chevron = ({on}) => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round" style={{transform:on?'rotate(180deg)':'none',transition:'0.25s'}}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round" style={{transform:on?'rotate(180deg)':'none',transition:'0.25s',flexShrink:0}}>
       <path d="M6 9l6 6 6-6"/>
     </svg>
   );
-  const Ico = ({d}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
-  const Head = ({icon,label,k}) => (
-    <div onClick={()=>toggle(k)} style={rowStyle}>
+  const Ico = ({d,s}) => <svg width={s||22} height={s||22} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
+  const IcoC = ({d,s,color}) => <svg width={s||22} height={s||22} viewBox="0 0 24 24" fill="none" stroke={color||"#fff"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
+  const iBox = (bg) => ({ width:44, height:44, borderRadius:14, background:bg||T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 });
+  const Head = ({icon,label,k,bg}) => (
+    <div onClick={()=>toggle(k)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 18px',cursor:'pointer'}}>
       <div style={{display:'flex',alignItems:'center',gap:12}}>
-        <div style={iBox}>{icon}</div>
-        <span style={{fontSize:15,fontWeight:600,color:'#0A1F21'}}>{label}</span>
+        <div style={iBox(bg)}>{icon}</div>
+        <span style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>{label}</span>
       </div>
       <Chevron on={open[k]}/>
     </div>
   );
-  const Slide = ({img,badge,title,sub,prices}) => (
-    <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
-      <div style={{width:'100%',aspectRatio:'16/9',borderRadius:16,overflow:'hidden',position:'relative',marginBottom:10,border:'1px solid rgba(0,153,168,0.12)'}}>
-        <img src={img} alt={title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-        {badge && <div style={{position:'absolute',top:8,left:8,background:T,color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>{badge}</div>}
-      </div>
-      <div style={{padding:'0 4px 8px'}}>
-        <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>{title}</div>
-        {sub && <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>{sub}</div>}
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
-          {prices.map((p,i)=><div key={i} style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{p.label}</div><div style={{fontSize:11,fontWeight:700,color:T}}>{p.price}</div></div>)}
-        </div>
-      </div>
-    </div>
-  );
-
   const planeIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>;
   const compassIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>;
   const globeIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/></svg>;
-
   const PAGE_TITLES = { turlar:'Barcha turlar', excur:'Barcha ekskursiyalar', esim:'Barcha eSIM rejalar', hotel:'Barcha mehmonxonalar', aviabilet:'Barcha aviabiletlar' };
 
   if (page) {
@@ -940,31 +925,36 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{padding:'16px 20px',display:'flex',alignItems:'center',gap:12,background:C.bg,position:'sticky',top:0,zIndex:10}}>
-          <button onClick={()=>setPage(null)} style={{width:40,height:40,borderRadius:999,border:'none',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(0,0,0,0.08)',cursor:'pointer',flexShrink:0}}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <button onClick={()=>setPage(null)} style={{width:40,height:40,borderRadius:14,border:'none',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(0,0,0,0.08)',cursor:'pointer',flexShrink:0}}>
+            <IcoC d="M19 12H5M12 19l-7-7 7-7" color="#0A1F21"/>
           </button>
           <h1 style={{margin:0,fontSize:18,fontWeight:700,color:'#0A1F21'}}>{PAGE_TITLES[page]}</h1>
         </div>
         <Scroll>
-          {items.map((it,i)=>(
-            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:SH,border:'1px solid rgba(0,153,168,0.10)'}}>
-              <div style={{width:'100%',height:180,overflow:'hidden'}}>
+          {items.map((it,i) => (
+            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:SH,border:'1px solid rgba(0,153,168,0.08)'}}>
+              <div style={{width:'100%',height:190,overflow:'hidden',position:'relative'}}>
                 <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                <div style={{position:'absolute',inset:0,background:'linear-gradient(to top, rgba(10,31,33,0.55) 0%, transparent 50%)'}}/>
+                <div style={{position:'absolute',bottom:12,left:14,right:14}}>
+                  <div style={{fontSize:16,fontWeight:700,color:'#fff',marginBottom:2}}>{it.title}</div>
+                  <div style={{fontSize:11,color:'rgba(255,255,255,0.85)'}}>{it.sub}</div>
+                </div>
               </div>
-              <div style={{padding:'12px 16px'}}>
-                <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',marginBottom:2}}>{it.title}</div>
-                <div style={{fontSize:12,color:'#5C7577',marginBottom:12}}>{it.sub}</div>
-                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-                  <div style={{background:'#FFF8EC',borderRadius:14,padding:'10px 14px',border:'1px solid rgba(240,138,44,0.2)'}}>
-                    <div style={{fontSize:10,fontWeight:600,color:'#F08A2C',textTransform:'uppercase',letterSpacing:0.5,marginBottom:4}}>Oddiy narx</div>
-                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.regular}</div>
+              <div style={{padding:'14px 16px'}}>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}}>
+                  <div style={{background:'#FFF8EC',borderRadius:14,padding:'12px 14px',border:'1px solid rgba(240,138,44,0.18)'}}>
+                    <div style={{fontSize:10,fontWeight:700,color:'#F08A2C',textTransform:'uppercase',letterSpacing:0.6,marginBottom:5}}>Oddiy narx</div>
+                    <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{it.regular}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8',marginTop:2}}>Standart xizmat</div>
                   </div>
-                  <div style={{background:TBG,borderRadius:14,padding:'10px 14px',border:'1px solid rgba(0,153,168,0.2)'}}>
-                    <div style={{fontSize:10,fontWeight:600,color:T,textTransform:'uppercase',letterSpacing:0.5,marginBottom:4}}>Premium narx</div>
-                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.premium}</div>
+                  <div style={{background:TBG,borderRadius:14,padding:'12px 14px',border:'1px solid rgba(0,153,168,0.18)'}}>
+                    <div style={{fontSize:10,fontWeight:700,color:T,textTransform:'uppercase',letterSpacing:0.6,marginBottom:5}}>Premium narx</div>
+                    <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{it.premium}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8',marginTop:2}}>VIP xizmat</div>
                   </div>
                 </div>
-                <button style={mkBtn(12)}>Buyurtma berish</button>
+                <button style={mkBtn(0)}>Buyurtma berish</button>
               </div>
             </div>
           ))}
@@ -976,137 +966,320 @@ function ScreenTrip() {
 
   return (
     <Frame>
-      <div style={{padding:'24px 20px 20px',display:'flex',alignItems:'center',justifyContent:'center',background:C.bg,position:'sticky',top:0,zIndex:10}}>
+      <div style={{padding:'24px 20px 18px',display:'flex',alignItems:'center',justifyContent:'center',background:C.bg,position:'sticky',top:0,zIndex:10}}>
         <h1 style={{margin:0,fontSize:24,fontWeight:800,color:'#0A1F21',letterSpacing:-0.5}}>Let's Trip</h1>
       </div>
       <Scroll>
-        {/* Turlar */}
+
+        {/* TURLAR — Hero destination cards */}
         <div style={card}>
           <Head icon={compassIco} label="Turlar" k="turlar"/>
           {open.turlar && <div style={{paddingBottom:20}}>
-            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
-              <Slide img="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600" badge="Turkiya" title="Turkiya: 5 100 000 so'mdan" sub="7 kecha · 2 kishi · Ultra All Inclusive" prices={[{label:'Antaliya',price:"7.2 mln so'm"},{label:'Istanbul',price:"5.1 mln so'm"},{label:'Bodrum',price:"8.4 mln so'm"},{label:'Izmir',price:"6.2 mln so'm"}]}/>
-              <Slide img="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600" badge="Dubai" title="Dubai: 6 800 000 so'mdan" sub="5 kecha · Premium mehmonxonalar" prices={[{label:'Jumeirah Beach',price:"9.8 mln so'm"},{label:'Marina View',price:"7.5 mln so'm"},{label:'Downtown',price:"11.2 mln so'm"},{label:'Palm Island',price:"15.4 mln so'm"}]}/>
+            <div style={{display:'flex',gap:12,overflowX:'auto',scrollSnapType:'x mandatory',padding:'4px 18px',WebkitOverflowScrolling:'touch'}}>
+              {[
+                {img:'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=700',city:'Antaliya',country:'Turkiya',nights:'7 kecha',price:"5 100 000 so'm",tag:'🔥 Eng ommabop'},
+                {img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700',city:'Dubai',country:'BAA',nights:'5 kecha',price:"6 800 000 so'm",tag:'✨ Premium'},
+                {img:'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=700',city:'Paris',country:'Fransiya',nights:'6 kecha',price:"13 000 000 so'm",tag:'💎 Eksklyuziv'},
+              ].map((d,i) => (
+                <div key={i} style={{flexShrink:0,width:220,scrollSnapAlign:'start',borderRadius:20,overflow:'hidden',position:'relative',height:280,cursor:'pointer',boxShadow:'0 6px 20px rgba(0,0,0,0.15)'}}>
+                  <img src={d.img} alt={d.city} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                  <div style={{position:'absolute',inset:0,background:'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)'}}/>
+                  <div style={{position:'absolute',top:12,left:12}}>
+                    <span style={{background:'rgba(255,255,255,0.2)',backdropFilter:'blur(8px)',WebkitBackdropFilter:'blur(8px)',color:'#fff',fontSize:10,fontWeight:700,padding:'4px 10px',borderRadius:999,border:'1px solid rgba(255,255,255,0.3)'}}>{d.tag}</span>
+                  </div>
+                  <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'16px 14px'}}>
+                    <div style={{fontSize:20,fontWeight:800,color:'#fff',lineHeight:1.1}}>{d.city}</div>
+                    <div style={{fontSize:12,color:'rgba(255,255,255,0.75)',marginBottom:10}}>{d.country} · {d.nights}</div>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                      <div>
+                        <div style={{fontSize:10,color:'rgba(255,255,255,0.65)'}}>dan boshlab</div>
+                        <div style={{fontSize:14,fontWeight:800,color:'#fff'}}>{d.price}</div>
+                      </div>
+                      <div style={{width:32,height:32,borderRadius:'50%',background:'rgba(255,255,255,0.2)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',border:'1px solid rgba(255,255,255,0.3)'}}>
+                        <IcoC d="M5 12h14M12 5l7 7-7 7" s={14}/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('turlar')} style={mkBtn()}>Barcha turlarni ko'rish</button></div>
+            <div style={{padding:'12px 18px 0'}}><button onClick={()=>setPage('turlar')} style={mkBtn(0)}>Barcha turlarni ko'rish</button></div>
           </div>}
         </div>
 
-        {/* Ekskursiya */}
+        {/* EKSKURSIYA — Compact cards with rating */}
         <div style={card}>
           <Head icon={<Ico d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>} label="Ekskursiya" k="excur"/>
           {open.excur && <div style={{paddingBottom:20}}>
-            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
-              <Slide img="https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600" badge="O'zbekiston" title="Tarixiy shaharlar bo'ylab" sub="Eng mashhur yo'nalishlar" prices={[{label:"Xiva safari",price:"450 000 so'm"},{label:'Eski Buxoro',price:"380 000 so'm"},{label:'Samarqand',price:"520 000 so'm"},{label:'Tashkent City',price:"250 000 so'm"}]}/>
-              <Slide img="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=600" badge="Xalqaro" title="Xorijiy shaharlar" sub="Istanbul, Dubai va boshqalar" prices={[{label:'Istanbul',price:"600 000 so'm"},{label:'Dubai',price:"800 000 so'm"},{label:'Bangkok',price:"550 000 so'm"},{label:'Bali',price:"720 000 so'm"}]}/>
+            <div style={{display:'flex',gap:12,overflowX:'auto',scrollSnapType:'x mandatory',padding:'4px 18px',WebkitOverflowScrolling:'touch'}}>
+              {[
+                {img:'https://images.unsplash.com/photo-1547555999-14e818e09e33?w=400',title:"Xiva safari",loc:"O'zbekiston",dur:'1 kun',rating:'4.9',reviews:'128',price:"450 000 so'm"},
+                {img:'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=400',title:'Samarqand turi',loc:"O'zbekiston",dur:'1 kun',rating:'4.8',reviews:'94',price:"520 000 so'm"},
+                {img:'https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=400',title:'Istanbul ekskursiyasi',loc:'Turkiya',dur:'1 kun',rating:'4.7',reviews:'76',price:"600 000 so'm"},
+                {img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400',title:'Dubai city tour',loc:'BAA',dur:'Yarim kun',rating:'4.9',reviews:'203',price:"800 000 so'm"},
+              ].map((e,i) => (
+                <div key={i} style={{flexShrink:0,width:175,scrollSnapAlign:'start',borderRadius:18,overflow:'hidden',background:'#fff',boxShadow:'0 4px 16px rgba(0,0,0,0.09)',border:'1px solid rgba(0,153,168,0.07)',cursor:'pointer'}}>
+                  <div style={{height:130,overflow:'hidden',position:'relative'}}>
+                    <img src={e.img} alt={e.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                    <div style={{position:'absolute',top:8,right:8,background:'rgba(0,0,0,0.45)',backdropFilter:'blur(4px)',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 7px',borderRadius:999,display:'flex',alignItems:'center',gap:3}}>
+                      <span style={{color:'#FFD700'}}>★</span>{e.rating}
+                    </div>
+                  </div>
+                  <div style={{padding:'10px 11px 13px'}}>
+                    <div style={{fontSize:12,fontWeight:700,color:'#0A1F21',marginBottom:3,lineHeight:1.3}}>{e.title}</div>
+                    <div style={{display:'flex',alignItems:'center',gap:4,marginBottom:8}}>
+                      <span style={{fontSize:10,color:'#9AA1B8'}}>{e.loc} · {e.dur}</span>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                      <div style={{fontSize:11,fontWeight:800,color:T}}>{e.price}</div>
+                      <div style={{fontSize:9,color:'#9AA1B8'}}>{e.reviews} sharh</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('excur')} style={mkBtn()}>Barcha ekskursiyalarni ko'rish</button></div>
+            <div style={{padding:'12px 18px 0'}}><button onClick={()=>setPage('excur')} style={mkBtn(0)}>Barcha ekskursiyalarni ko'rish</button></div>
           </div>}
         </div>
 
-        {/* eSIM */}
+        {/* eSIM — Gradient plan cards */}
         <div style={card}>
-          <Head icon={globeIco} label="eSIM" k="esim"/>
+          <Head icon={globeIco} label="eSIM" k="esim" bg="#7C3AED"/>
           {open.esim && <div style={{paddingBottom:20}}>
-            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
-              <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
-                <div style={{background:'#EDF7F8',borderRadius:16,padding:16,position:'relative',overflow:'hidden',border:'1px solid rgba(0,153,168,0.15)'}}>
-                  <div style={{position:'absolute',top:8,right:8,opacity:0.08}}><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></div>
-                  <div style={{display:'flex',gap:8,marginBottom:12}}><span style={{background:'#1D4ED8',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>YEVROPA</span><span style={{background:TBG,color:T,fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999,border:'1px solid rgba(0,153,168,0.2)'}}>34 Davlat</span></div>
-                  <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',marginBottom:4}}>Cheksiz</div>
-                  <div style={{fontSize:11,color:'#5C7577',marginBottom:12}}>Cheksiz internet + 5G tezlik</div>
-                  <div style={{display:'flex',justifyContent:'space-between'}}><span style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>7 kun</span><span style={{fontSize:15,fontWeight:700,color:T}}>150 000 so'm</span></div>
+            <div style={{display:'flex',gap:12,overflowX:'auto',scrollSnapType:'x mandatory',padding:'4px 18px',WebkitOverflowScrolling:'touch'}}>
+              {[
+                {gradient:'linear-gradient(135deg,#1D4ED8 0%,#0099A8 100%)',region:'YEVROPA',countries:'34 davlat',data:'Cheksiz',speed:'5G',days:7,price:"150 000 so'm",features:['Cheksiz internet','5G tezlik','Faol qilish oson']},
+                {gradient:'linear-gradient(135deg,#7C3AED 0%,#1D4ED8 100%)',region:'GLOBAL',countries:'150+ davlat',data:'20 GB',speed:'4G/5G',days:30,price:"400 000 so'm",features:['20 GB traffic','150+ mamlakat','Hotspot bepul']},
+                {gradient:'linear-gradient(135deg,#0099A8 0%,#067865 100%)',region:'OSIYO',countries:'20 davlat',data:'10 GB',speed:'4G',days:14,price:"180 000 so'm",features:['10 GB traffic','20 mamlakat','Arzon narx']},
+              ].map((p,i) => (
+                <div key={i} style={{flexShrink:0,width:200,scrollSnapAlign:'start',borderRadius:20,background:p.gradient,padding:'18px 16px',position:'relative',cursor:'pointer',boxShadow:'0 6px 20px rgba(0,0,0,0.15)',overflow:'hidden'}}>
+                  <div style={{position:'absolute',top:-20,right:-20,width:100,height:100,borderRadius:'50%',background:'rgba(255,255,255,0.08)'}}/>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14}}>
+                    <span style={{background:'rgba(255,255,255,0.2)',color:'#fff',fontSize:10,fontWeight:800,padding:'4px 10px',borderRadius:999,letterSpacing:0.5}}>{p.region}</span>
+                    <span style={{background:'rgba(255,255,255,0.15)',color:'#fff',fontSize:10,fontWeight:600,padding:'4px 8px',borderRadius:999}}>{p.countries}</span>
+                  </div>
+                  <div style={{fontSize:32,fontWeight:900,color:'#fff',lineHeight:1,marginBottom:4}}>{p.data}</div>
+                  <div style={{fontSize:12,color:'rgba(255,255,255,0.75)',marginBottom:14}}>{p.speed} · {p.days} kun</div>
+                  {p.features.map((f,j) => (
+                    <div key={j} style={{display:'flex',alignItems:'center',gap:6,marginBottom:5}}>
+                      <div style={{width:14,height:14,borderRadius:'50%',background:'rgba(255,255,255,0.25)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><path d="M5 12l5 5L20 7"/></svg>
+                      </div>
+                      <span style={{fontSize:10,color:'rgba(255,255,255,0.85)'}}>{f}</span>
+                    </div>
+                  ))}
+                  <div style={{marginTop:14,background:'rgba(255,255,255,0.2)',borderRadius:12,padding:'10px 14px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                    <span style={{fontSize:10,color:'rgba(255,255,255,0.7)'}}>Narxi</span>
+                    <span style={{fontSize:15,fontWeight:800,color:'#fff'}}>{p.price}</span>
+                  </div>
                 </div>
-              </div>
-              <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
-                <div style={{background:'#EDF7F8',borderRadius:16,padding:16,position:'relative',overflow:'hidden',border:'1px solid rgba(0,153,168,0.15)'}}>
-                  <div style={{position:'absolute',top:8,right:8,opacity:0.08}}><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></div>
-                  <div style={{display:'flex',gap:8,marginBottom:12}}><span style={{background:'#7C3AED',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>GLOBAL</span><span style={{background:TBG,color:T,fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999,border:'1px solid rgba(0,153,168,0.2)'}}>150+ Davlat</span></div>
-                  <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',marginBottom:4}}>20 GB</div>
-                  <div style={{fontSize:11,color:'#5C7577',marginBottom:12}}>4G/5G · Dunyoning har yerida</div>
-                  <div style={{display:'flex',justifyContent:'space-between'}}><span style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>30 kun</span><span style={{fontSize:15,fontWeight:700,color:T}}>400 000 so'm</span></div>
-                </div>
-              </div>
+              ))}
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('esim')} style={mkBtn()}>Barcha eSIMlarni ko'rish</button></div>
+            <div style={{padding:'12px 18px 0'}}><button onClick={()=>setPage('esim')} style={mkBtn(0,'#7C3AED')}>Barcha eSIMlarni ko'rish</button></div>
           </div>}
         </div>
 
-        {/* Mehmonxona */}
+        {/* MEHMONXONA — Photo + stars + amenities */}
         <div style={card}>
-          <Head icon={<Ico d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10"/>} label="Mehmonxona" k="hotel"/>
+          <Head icon={<Ico d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10"/>} label="Mehmonxona" k="hotel" bg="#F59E0B"/>
           {open.hotel && <div style={{paddingBottom:20}}>
-            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
-              <Slide img="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" badge="Toshkent" title="Toshkent mehmonxonalari" sub="Premium dam olish maskanlari" prices={[{label:'Hyatt Regency',price:"2.4 mln so'm"},{label:'Hilton Tashkent',price:"2.1 mln so'm"},{label:'Wyndham',price:"1.8 mln so'm"},{label:'Ramada',price:"1.5 mln so'm"}]}/>
-              <Slide img="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600" badge="Dubai" title="Dubai mehmonxonalari" sub="Dengiz yoqasidagi 5★ oteller" prices={[{label:'Jumeirah Beach',price:"9.8 mln so'm"},{label:'Atlantis Palm',price:"14.2 mln so'm"},{label:'Burj Al Arab',price:"38 mln so'm"},{label:'Address DT',price:"11.5 mln so'm"}]}/>
+            <div style={{display:'flex',gap:12,overflowX:'auto',scrollSnapType:'x mandatory',padding:'4px 18px',WebkitOverflowScrolling:'touch'}}>
+              {[
+                {img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600',name:'Hyatt Regency',city:'Toshkent',stars:5,price:'2 400 000',amenities:['wifi','pool','spa']},
+                {img:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600',name:'Jumeirah Beach Hotel',city:'Dubai',stars:5,price:'9 800 000',amenities:['wifi','pool','beach']},
+                {img:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600',name:'Rixos Premium',city:'Antaliya',stars:5,price:'8 000 000',amenities:['wifi','pool','ai']},
+              ].map((h,i) => (
+                <div key={i} style={{flexShrink:0,width:210,scrollSnapAlign:'start',borderRadius:20,overflow:'hidden',background:'#fff',boxShadow:'0 4px 16px rgba(0,0,0,0.09)',border:'1px solid rgba(245,158,11,0.1)',cursor:'pointer'}}>
+                  <div style={{height:145,overflow:'hidden',position:'relative'}}>
+                    <img src={h.img} alt={h.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                    <div style={{position:'absolute',top:10,left:10,background:'rgba(0,0,0,0.5)',backdropFilter:'blur(4px)',borderRadius:10,padding:'4px 8px'}}>
+                      <span style={{fontSize:11,color:'#FFD700',letterSpacing:1}}>{'★'.repeat(h.stars)}</span>
+                    </div>
+                  </div>
+                  <div style={{padding:'12px 13px'}}>
+                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>{h.name}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8',marginBottom:10}}>{h.city}</div>
+                    <div style={{display:'flex',gap:6,marginBottom:10}}>
+                      {h.amenities.map((a,j) => {
+                        const icons = {
+                          wifi:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>,
+                          pool:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M2 12h20M2 20h20M6 8l2-4M12 8l2-4M18 8l2-4"/></svg>,
+                          spa:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+                          beach:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg>,
+                          ai:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>,
+                        };
+                        return <div key={j} style={{width:26,height:26,borderRadius:8,background:TBG,display:'flex',alignItems:'center',justifyContent:'center'}}>{icons[a]}</div>;
+                      })}
+                    </div>
+                    <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between'}}>
+                      <div>
+                        <div style={{fontSize:9,color:'#9AA1B8'}}>kechadan</div>
+                        <div style={{fontSize:13,fontWeight:800,color:'#0A1F21'}}>{h.price} <span style={{fontSize:10,fontWeight:600,color:'#9AA1B8'}}>so'm</span></div>
+                      </div>
+                      <div style={{background:'#F59E0B',borderRadius:10,padding:'6px 12px'}}>
+                        <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>Band qil</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('hotel')} style={mkBtn()}>Barcha mehmonxonalarni ko'rish</button></div>
+            <div style={{padding:'12px 18px 0'}}><button onClick={()=>setPage('hotel')} style={mkBtn(0,'#F59E0B')}>Barcha mehmonxonalarni ko'rish</button></div>
           </div>}
         </div>
 
-        {/* Aviabilet */}
+        {/* AVIABILET — Boarding pass style */}
         <div style={card}>
           <Head icon={planeIco} label="Aviabilet" k="aviabilet"/>
           {open.aviabilet && <div style={{paddingBottom:20}}>
-            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
-              <Slide img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600" badge="Dubai" title="Dubai" sub="Mashhur yo'nalishlar" prices={[{label:'TAS → DXB',price:"3.4 mln so'm"},{label:'DXB → TAS',price:"3.1 mln so'm"},{label:"To'g'ri reys",price:'5 soat'},{label:'Biznes klass',price:"9.8 mln so'm"}]}/>
-              <Slide img="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=600" badge="Istanbul" title="Istanbul" sub="Mashhur yo'nalishlar" prices={[{label:'TAS → IST',price:"2.5 mln so'm"},{label:'IST → TAS',price:"2.3 mln so'm"},{label:"To'g'ri reys",price:'4 soat'},{label:'Biznes klass',price:"7.2 mln so'm"}]}/>
+            <div style={{display:'flex',gap:12,overflowX:'auto',scrollSnapType:'x mandatory',padding:'4px 18px',WebkitOverflowScrolling:'touch'}}>
+              {[
+                {from:'TAS',fromCity:'Toshkent',to:'DXB',toCity:'Dubai',duration:'5s',stops:"To'g'ri",date:'Har kuni',price:"3 400 000 so'm",airline:'UZ'},
+                {from:'TAS',fromCity:'Toshkent',to:'IST',toCity:'Istanbul',duration:'4s',stops:"To'g'ri",date:'Har kuni',price:"2 500 000 so'm",airline:'TK'},
+                {from:'TAS',fromCity:'Toshkent',to:'CDG',toCity:'Paris',duration:'9s',stops:'1 transit',date:'4x/hafta',price:"5 000 000 so'm",airline:'LH'},
+              ].map((f,i) => (
+                <div key={i} style={{flexShrink:0,width:240,scrollSnapAlign:'start',borderRadius:20,background:'#fff',boxShadow:'0 4px 20px rgba(0,0,0,0.10)',border:'1px solid rgba(0,153,168,0.1)',overflow:'hidden',cursor:'pointer'}}>
+                  <div style={{background:`linear-gradient(135deg, ${T} 0%, #067865 100%)`,padding:'12px 16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                    <div style={{width:32,height:32,borderRadius:8,background:'rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      <span style={{fontSize:11,fontWeight:800,color:'#fff'}}>{f.airline}</span>
+                    </div>
+                    <div style={{background:'rgba(255,255,255,0.15)',borderRadius:999,padding:'3px 10px'}}>
+                      <span style={{fontSize:10,color:'#fff',fontWeight:600}}>{f.stops}</span>
+                    </div>
+                  </div>
+                  <div style={{padding:'16px 16px 14px'}}>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+                      <div style={{textAlign:'center'}}>
+                        <div style={{fontSize:26,fontWeight:900,color:'#0A1F21',letterSpacing:-1}}>{f.from}</div>
+                        <div style={{fontSize:10,color:'#9AA1B8'}}>{f.fromCity}</div>
+                      </div>
+                      <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4,padding:'0 8px'}}>
+                        <div style={{fontSize:10,color:'#9AA1B8'}}>{f.duration}</div>
+                        <div style={{position:'relative',width:'100%',display:'flex',alignItems:'center'}}>
+                          <div style={{flex:1,height:1,background:'#ECEEF6'}}/>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{margin:'0 2px',flexShrink:0}}><path d="M22 2L11 13" stroke={T} strokeWidth="2" strokeLinecap="round"/><path d="M22 2L15 22 11 13 2 9l20-7z" stroke={T} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          <div style={{flex:1,height:1,background:'#ECEEF6'}}/>
+                        </div>
+                        <div style={{fontSize:10,color:'#9AA1B8'}}>{f.date}</div>
+                      </div>
+                      <div style={{textAlign:'center'}}>
+                        <div style={{fontSize:26,fontWeight:900,color:'#0A1F21',letterSpacing:-1}}>{f.to}</div>
+                        <div style={{fontSize:10,color:'#9AA1B8'}}>{f.toCity}</div>
+                      </div>
+                    </div>
+                    <div style={{borderTop:'1.5px dashed #ECEEF6',margin:'0 -16px',position:'relative'}}>
+                      <div style={{position:'absolute',left:-10,top:-9,width:18,height:18,borderRadius:'50%',background:C.bg}}/>
+                      <div style={{position:'absolute',right:-10,top:-9,width:18,height:18,borderRadius:'50%',background:C.bg}}/>
+                    </div>
+                    <div style={{paddingTop:14,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                      <div>
+                        <div style={{fontSize:10,color:'#9AA1B8'}}>dan boshlab</div>
+                        <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>{f.price}</div>
+                      </div>
+                      <div style={{background:T,borderRadius:12,padding:'8px 14px'}}>
+                        <span style={{fontSize:12,fontWeight:700,color:'#fff'}}>Sotib ol</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('aviabilet')} style={mkBtn()}>Barcha aviabiletlarni ko'rish</button></div>
+            <div style={{padding:'12px 18px 0'}}><button onClick={()=>setPage('aviabilet')} style={mkBtn(0)}>Barcha aviabiletlarni ko'rish</button></div>
           </div>}
         </div>
 
-        {/* Airport taxi */}
+        {/* AIRPORT TAXI — Step-based form with vehicle selector */}
         <div style={card}>
-          <Head icon={<Ico d="M5 17H3v-5l2-5h14l2 5v5h-2M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M15 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/>} label="Airport taxi" k="taxi"/>
-          {open.taxi && <div style={{padding:'0 20px 20px'}}>
-            <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginBottom:16}}>
-              <button style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:700,background:'#fff',borderRadius:10,border:'none',color:T,boxShadow:'0 1px 4px rgba(0,0,0,0.08)',cursor:'pointer'}}>Aeroportga borish</button>
-              <button style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:600,background:'none',border:'none',color:'#9AA1B8',cursor:'pointer'}}>Aeroportdan ketish</button>
+          <Head icon={<Ico d="M5 17H3v-5l2-5h14l2 5v5h-2M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M15 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/>} label="Airport taxi" k="taxi" bg="#10B981"/>
+          {open.taxi && <div style={{padding:'0 18px 20px'}}>
+            <div style={{display:'flex',background:'#F0F6F5',borderRadius:14,padding:3,marginBottom:14}}>
+              {[{key:'to',label:'🛬 Aeroportga'},{key:'from',label:'🛫 Aeroportdan'}].map(d => (
+                <button key={d.key} onClick={()=>setTaxiDir(d.key)} style={{flex:1,padding:'9px 0',fontSize:12,fontWeight:700,background:taxiDir===d.key?'#fff':'none',borderRadius:11,border:'none',color:taxiDir===d.key?T:'#9AA1B8',boxShadow:taxiDir===d.key?'0 2px 8px rgba(0,0,0,0.08)':'none',cursor:'pointer',transition:'all 0.15s'}}>{d.label}</button>
+              ))}
             </div>
-            <div style={{display:'flex',alignItems:'center',gap:12,padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)',marginBottom:4}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              <div><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase'}}>Qayerdan</div><div style={{fontSize:12,fontWeight:600,color:'#0A1F21'}}>O'z manzilingizni kiriting</div></div>
+            <div style={{background:TBG,borderRadius:16,overflow:'hidden',marginBottom:14,border:'1px solid rgba(0,153,168,0.15)'}}>
+              <div style={{display:'flex',alignItems:'center',gap:10,padding:'11px 14px',borderBottom:'1px solid rgba(0,153,168,0.1)'}}>
+                <div style={{width:8,height:8,borderRadius:'50%',background:'#10B981',flexShrink:0}}/>
+                <div>
+                  <div style={{fontSize:9,color:'#5C7577',textTransform:'uppercase',marginBottom:1}}>Qayerdan</div>
+                  <div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>{taxiDir==='to'?'Manzilingizni kiriting':'Toshkent Xalqaro Aeroporti'}</div>
+                </div>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:10,padding:'11px 14px'}}>
+                <div style={{width:8,height:8,borderRadius:'50%',background:T,flexShrink:0}}/>
+                <div>
+                  <div style={{fontSize:9,color:'#5C7577',textTransform:'uppercase',marginBottom:1}}>Qayerga</div>
+                  <div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>{taxiDir==='to'?'Toshkent Xalqaro Aeroporti':'Manzilingizni kiriting'}</div>
+                </div>
+              </div>
             </div>
-            <button style={mkBtn()}>Taksi buyurtma qilish</button>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:14}}>
+              {[{key:'economy',icon:'🚗',label:'Ekonom',price:'70 000'},{key:'comfort',icon:'🚙',label:'Komfort',price:'100 000'},{key:'business',icon:'🚐',label:'Biznes',price:'150 000'}].map(v => (
+                <button key={v.key} onClick={()=>setVehicle(v.key)} style={{padding:'10px 6px',borderRadius:14,border:`1.5px solid ${vehicle===v.key?T:'#ECEEF6'}`,background:vehicle===v.key?TBG:'#fff',cursor:'pointer',textAlign:'center',transition:'all 0.15s'}}>
+                  <div style={{fontSize:18,marginBottom:3}}>{v.icon}</div>
+                  <div style={{fontSize:11,fontWeight:700,color:vehicle===v.key?T:'#0A1F21'}}>{v.label}</div>
+                  <div style={{fontSize:10,color:'#9AA1B8',marginTop:1}}>{v.price} so'm</div>
+                </button>
+              ))}
+            </div>
+            <button style={mkBtn(0,'#10B981')}>Taksi buyurtma qilish</button>
           </div>}
         </div>
 
-        {/* Transfer */}
+        {/* TRANSFER — Route visualization + vehicle types */}
         <div style={card}>
-          <Head icon={<Ico d="M8 6v6m8-6v6M3 6h18M3 10h18M3 14h18M5 18l1 2h12l1-2M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14H6V4z"/>} label="Transfer" k="transfer"/>
-          {open.transfer && <div style={{padding:'0 20px 20px'}}>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:4}}>
-              <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerdan</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Toshkent</div></div>
-              <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerga</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Samarqand</div></div>
+          <Head icon={<Ico d="M8 6v6m8-6v6M3 6h18M3 10h18M3 14h18M5 18l1 2h12l1-2M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14H6V4z"/>} label="Transfer" k="transfer" bg="#6366F1"/>
+          {open.transfer && <div style={{padding:'0 18px 20px'}}>
+            <div style={{background:'linear-gradient(135deg, #EEF2FF 0%, #E0F2F3 100%)',borderRadius:16,padding:14,marginBottom:14,border:'1px solid rgba(99,102,241,0.12)'}}>
+              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
+                <div style={{width:36,height:36,borderRadius:10,background:'#6366F1',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <IcoC d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" s={16}/>
+                </div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:10,color:'#9AA1B8',textTransform:'uppercase',marginBottom:1}}>Qayerdan</div>
+                  <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Toshkent</div>
+                </div>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:8,paddingLeft:6,marginBottom:8}}>
+                <div style={{width:24,display:'flex',flexDirection:'column',alignItems:'center',gap:2}}>
+                  <div style={{width:1,height:8,background:'#C4C9E0'}}/>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12l7 7 7-7" stroke="#6366F1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <div style={{width:1,height:8,background:'#C4C9E0'}}/>
+                </div>
+                <div style={{background:'rgba(99,102,241,0.1)',borderRadius:8,padding:'3px 10px'}}>
+                  <span style={{fontSize:11,fontWeight:700,color:'#6366F1'}}>344 km · ~3.5 soat</span>
+                </div>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:10}}>
+                <div style={{width:36,height:36,borderRadius:10,background:T,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <IcoC d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" s={16}/>
+                </div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:10,color:'#9AA1B8',textTransform:'uppercase',marginBottom:1}}>Qayerga</div>
+                  <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Samarqand</div>
+                </div>
+              </div>
             </div>
-            <button style={mkBtn()}>Transferni band qilish</button>
+            <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:14}}>
+              {[
+                {icon:'🚗',label:'Sedan',sub:'1-3 kishi',price:"350 000 so'm",time:'~3.5 soat'},
+                {icon:'🚐',label:'Minivan',sub:'4-7 kishi',price:"550 000 so'm",time:'~3.5 soat'},
+                {icon:'🏎️',label:'Premium',sub:'VIP · 1-3 kishi',price:"750 000 so'm",time:'~3 soat'},
+              ].map((v,i) => (
+                <div key={i} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 13px',background:'#fff',borderRadius:14,border:'1px solid #ECEEF6',cursor:'pointer'}}>
+                  <span style={{fontSize:22}}>{v.icon}</span>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{v.label} <span style={{fontSize:11,fontWeight:400,color:'#9AA1B8'}}>· {v.sub}</span></div>
+                    <div style={{fontSize:11,color:'#9AA1B8'}}>{v.time}</div>
+                  </div>
+                  <div style={{fontSize:13,fontWeight:700,color:T}}>{v.price}</div>
+                </div>
+              ))}
+            </div>
+            <button style={mkBtn(0,'#6366F1')}>Transferni band qilish</button>
           </div>}
         </div>
 
-        {/* Mashhur yo'nalishlar */}
-        <div style={{fontSize:20,fontWeight:700,color:'#0A1F21',margin:'8px 0 12px',letterSpacing:-0.3}}>Mashhur yo'nalishlar</div>
-        <div style={{background:'#fff',borderRadius:16,padding:16,boxShadow:SH,border:'1px solid rgba(0,153,168,0.10)',marginBottom:16,display:'flex',alignItems:'flex-start',gap:12}}>
-          <div style={{width:8,height:8,borderRadius:'50%',background:T,marginTop:6,flexShrink:0}}/>
-          <div>
-            <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:1,fontWeight:600,color:'#5C7577',marginBottom:4}}>O'zbekistondan</div>
-            <div style={{fontSize:16,fontWeight:600,color:'#0A1F21',marginBottom:2}}>Samarqand — Rim</div>
-            <div style={{fontSize:13,color:'#5C7577',marginBottom:4}}>2 soat 40 daqiqa</div>
-            <div style={{fontSize:12,fontWeight:700,color:T}}>3 450 000 so'm dan</div>
-          </div>
-        </div>
-
-        {/* Promo */}
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:24,height:180}}>
-          <div style={{background:TBG,borderRadius:20,padding:16,display:'flex',flexDirection:'column',justifyContent:'space-between',border:'1px solid rgba(0,153,168,0.15)',boxShadow:SH}}>
-            <div><div style={{fontSize:15,fontWeight:700,color:T,marginBottom:8,lineHeight:1.3}}>Global eSIM xizmati</div><div style={{fontSize:11,color:'#5C7577',lineHeight:1.5}}>Dunyoning 150+ davlatida aloqada bo'ling.</div></div>
-            <div style={{display:'flex',alignItems:'center',gap:4,color:T,fontWeight:700,fontSize:13}}>Batafsil <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-          </div>
-          <div style={{borderRadius:20,overflow:'hidden',position:'relative',border:'1px solid rgba(0,153,168,0.10)',boxShadow:SH}}>
-            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400" alt="eSIM" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-            <div style={{position:'absolute',inset:0,background:'linear-gradient(to top, rgba(0,0,0,0.35), transparent)'}}/>
-          </div>
-        </div>
       </Scroll>
       <TabBar active="trip"/>
     </Frame>
