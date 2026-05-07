@@ -1005,29 +1005,14 @@ function ScreenTrip() {
             </div>
           </div>
 
-          {/* Nights selector */}
-          <div style={{background:'#F4F5FA',borderRadius:16,padding:'13px 14px',marginBottom:16,display:'flex',alignItems:'center',gap:4,flexWrap:'wrap'}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="1.8" strokeLinecap="round" style={{marginRight:4}}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            <span style={{fontSize:13,color:'#9AA1B8',marginRight:8}}>Kechalar:</span>
-            {[3,5,7,10,14].map(n=>(
-              <button key={n} onClick={()=>setNightsVal(n)} style={{padding:'5px 12px',borderRadius:999,border:`1.5px solid ${nightsVal===n?T:'transparent'}`,background:nightsVal===n?TBG:'transparent',color:nightsVal===n?T:'#0A1F21',fontSize:13,fontWeight:700,cursor:'pointer'}}>{n}</button>
-            ))}
-          </div>
-
           {/* Guests counters */}
           <div style={{background:'#F4F5FA',borderRadius:16,overflow:'hidden',marginBottom:4}}>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 16px',borderBottom:'1px solid #E8EAF3'}}>
-              <div>
-                <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Kattalar <span style={{fontSize:11,color:'#9AA1B8',fontWeight:400}}>12+ yosh</span></div>
+            {[{label:'Kattalar',sub:'12+',val:adultsVal,set:setAdultsVal,min:1},{label:'Bolalar',sub:'2–11',val:childVal,set:setChildVal,min:0}].map((g,i,arr)=>(
+              <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 16px',borderBottom:i<arr.length-1?'1px solid #E8EAF3':'none'}}>
+                <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{g.label} <span style={{fontSize:11,color:'#9AA1B8',fontWeight:400}}>{g.sub}</span></span>
+                {cnt(g.val,g.set,g.min)}
               </div>
-              {cnt(adultsVal,setAdultsVal,1)}
-            </div>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 16px'}}>
-              <div>
-                <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Bolalar <span style={{fontSize:11,color:'#9AA1B8',fontWeight:400}}>2–11 yosh</span></div>
-              </div>
-              {cnt(childVal,setChildVal)}
-            </div>
+            ))}
           </div>
 
           <button onClick={save} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',marginTop:8}}>Qidirish</button>
