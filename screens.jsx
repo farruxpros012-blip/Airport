@@ -888,6 +888,10 @@ const TRIP_RESULTS = {
 function ScreenTrip() {
   const [open, setOpen] = React.useState({ turlar: true, aviabilet: true });
   const [page, setPage] = React.useState(null);
+  const [sheet, setSheet] = React.useState(null); // 'route'|'dates'|'guests'
+  const [route, setRoute] = React.useState({ from:'Toshkent', to:'Dubai' });
+  const [dates, setDates] = React.useState({ start:'15 May', end:'20 May', nights:5 });
+  const [guests, setGuests] = React.useState({ adults:2, children:0 });
   const toggle = (key) => setOpen(o => ({ ...o, [key]: !o[key] }));
 
   const T = '#0099A8';
@@ -934,72 +938,174 @@ function ScreenTrip() {
   const compassIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>;
   const globeIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/></svg>;
 
-  const PAGE_TITLES = { turlar:'Barcha turlar', excur:'Barcha ekskursiyalar', esim:'Barcha eSIM rejalar', hotel:'Barcha mehmonxonalar', aviabilet:'Barcha aviabiletlar' };
-  const PAGE_SUB = { turlar:'Toshkent · Barcha yo\'nalishlar', excur:'Ekskursiya paketlari', esim:'Dunyo bo\'ylab internet', hotel:'Mehmonxona bronlash', aviabilet:'Aviabilet qidirish' };
-  const SEARCH_PH = { turlar:'Tur qidirish...', excur:'Ekskursiya qidirish...', esim:'Hudud yoki davlat...', hotel:'Mehmonxona qidirish...', aviabilet:'Shahar yoki aeroporti...' };
+  const PAGE_LABELS = { turlar:'Turlar', excur:'Ekskursiyalar', esim:'eSIM', hotel:'Mehmonxonalar', aviabilet:'Aviabiletlar' };
+  const FILTERS = { turlar:['Arzon ↑↓','Ovqat','Yulduz ✦','Narx'], excur:['Arzon ↑↓','Davlat','Davomiylik'], esim:['Arzon ↑↓','Hudud','GB'], hotel:['Arzon ↑↓','Yulduz','Ovqat','Narx'], aviabilet:['Arzon ↑↓','To\'g\'ri','Vaqt'] };
+
+  /* ── Bottom Sheet ── */
+  const BottomSheet = () => {
+    const [fromVal, setFromVal] = React.useState(route.from);
+    const [toVal, setToVal] = React.useState(route.to);
+    const [adultsVal, setAdultsVal] = React.useState(guests.adults);
+    const [childVal, setChildVal] = React.useState(guests.children);
+    if (!sheet) return null;
+    const close = () => setSheet(null);
+    const overlay = { position:'fixed', inset:0, background:'rgba(10,31,33,0.45)', zIndex:100, display:'flex', alignItems:'flex-end' };
+    const drawer = { width:'100%', maxWidth:460, margin:'0 auto', background:'#fff', borderRadius:'24px 24px 0 0', padding:'0 20px 32px', boxShadow:'0 -8px 40px rgba(0,0,0,0.18)' };
+    const handle = { width:40, height:4, borderRadius:999, background:'#DDE0EB', margin:'12px auto 20px' };
+    const lbl = { fontSize:11, fontWeight:700, color:'#9AA1B8', textTransform:'uppercase', letterSpacing:0.8, marginBottom:6, display:'block' };
+    const inp = { width:'100%', padding:'13px 16px', border:'1.5px solid #E8EAF3', borderRadius:16, fontSize:14, color:'#0A1F21', outline:'none', boxSizing:'border-box', background:'#FAFBFD' };
+    const counter = (val, set, min=0) => (
+      <div style={{display:'flex',alignItems:'center',gap:0,background:'#F4F5FA',borderRadius:14,overflow:'hidden',width:120}}>
+        <button onClick={()=>set(v=>Math.max(min,v-1))} style={{flex:1,height:44,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',fontWeight:300}}>−</button>
+        <span style={{fontSize:16,fontWeight:700,color:'#0A1F21',minWidth:32,textAlign:'center'}}>{val}</span>
+        <button onClick={()=>set(v=>v+1)} style={{flex:1,height:44,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',fontWeight:300}}>+</button>
+      </div>
+    );
+    const saveBtn = (fn) => <button onClick={fn} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',marginTop:20}}>Saqlash</button>;
+    return (
+      <div style={overlay} onClick={close}>
+        <div style={drawer} onClick={e=>e.stopPropagation()}>
+          <div style={handle}/>
+          {sheet==='route' && <>
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:20}}>Yo'nalishni o'zgartirish</div>
+            <label style={lbl}>Qayerdan</label>
+            <input value={fromVal} onChange={e=>setFromVal(e.target.value)} style={{...inp,marginBottom:12}}/>
+            <div style={{display:'flex',justifyContent:'center',marginBottom:12}}>
+              <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{width:40,height:40,borderRadius:999,background:TBG,border:`1.5px solid rgba(0,153,168,0.2)`,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+              </button>
+            </div>
+            <label style={lbl}>Qayerga</label>
+            <input value={toVal} onChange={e=>setToVal(e.target.value)} style={{...inp,marginBottom:0}}/>
+            {saveBtn(()=>{setRoute({from:fromVal,to:toVal});close();})}
+          </>}
+          {sheet==='dates' && <>
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:20}}>Sanani tanlang</div>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:16}}>
+              <div>
+                <label style={lbl}>Borish</label>
+                <input defaultValue={dates.start} id="ds" style={inp}/>
+              </div>
+              <div>
+                <label style={lbl}>Qaytish</label>
+                <input defaultValue={dates.end} id="de" style={inp}/>
+              </div>
+            </div>
+            <label style={lbl}>Kechalar soni</label>
+            <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',marginBottom:4}}>
+              {[3,5,7,10,14].map(n=>(
+                <button key={n} onClick={()=>setDates(d=>({...d,nights:n}))} style={{padding:'8px 16px',borderRadius:999,border:`1.5px solid ${dates.nights===n?T:'#E8EAF3'}`,background:dates.nights===n?TBG:'#fff',color:dates.nights===n?T:'#0A1F21',fontSize:13,fontWeight:700,cursor:'pointer'}}>{n} kecha</button>
+              ))}
+            </div>
+            {saveBtn(()=>{const s=document.getElementById('ds'),e=document.getElementById('de');setDates(d=>({...d,start:s?s.value:d.start,end:e?e.value:d.end}));close();})}
+          </>}
+          {sheet==='guests' && <>
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:24}}>Mehmonlar</div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
+              <div>
+                <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Kattalar</div>
+                <div style={{fontSize:11,color:'#9AA1B8'}}>12 yoshdan katta</div>
+              </div>
+              {counter(adultsVal, setAdultsVal, 1)}
+            </div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <div>
+                <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Bolalar</div>
+                <div style={{fontSize:11,color:'#9AA1B8'}}>2–11 yosh</div>
+              </div>
+              {counter(childVal, setChildVal)}
+            </div>
+            {saveBtn(()=>{setGuests({adults:adultsVal,children:childVal});close();})}
+          </>}
+        </div>
+      </div>
+    );
+  };
 
   if (page) {
     const items = TRIP_RESULTS[page] || [];
     return (
       <Frame>
-        {/* Header */}
-        <div style={{background:'#fff',padding:'14px 16px 0',position:'sticky',top:0,zIndex:10,borderBottom:'1px solid #F0F2F8'}}>
-          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
-            <button onClick={()=>setPage(null)} style={{width:36,height:36,borderRadius:999,border:'none',background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}>
+        {/* Sticky header */}
+        <div style={{background:'#fff',position:'sticky',top:0,zIndex:20,boxShadow:'0 2px 12px rgba(10,31,33,0.07)'}}>
+          {/* Top row */}
+          <div style={{display:'flex',alignItems:'center',gap:10,padding:'14px 16px 10px'}}>
+            <button onClick={()=>setPage(null)} style={{width:38,height:38,borderRadius:14,border:'none',background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             </button>
-            <div style={{flex:1,textAlign:'center'}}>
-              <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.2}}>{PAGE_TITLES[page]}</div>
-              <div style={{fontSize:11,color:T,fontWeight:500,marginTop:1}}>{PAGE_SUB[page]}</div>
-            </div>
-            <div style={{width:36,height:36,borderRadius:999,background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            {/* Route — tappable */}
+            <button onClick={()=>setSheet('route')} style={{flex:1,background:'none',border:'none',cursor:'pointer',textAlign:'center',padding:0}}>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>
+                <span style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{route.from}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <span style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{route.to}</span>
+              </div>
+              <div style={{fontSize:11,color:T,fontWeight:500,marginTop:2}}>{PAGE_LABELS[page]}</div>
+            </button>
+            <div style={{width:38,height:38,borderRadius:14,background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
               <span style={{fontSize:11,fontWeight:700,color:'#0A1F21'}}>UZS</span>
             </div>
           </div>
-          {/* Search */}
-          <div style={{margin:'0 0 10px',position:'relative'}}>
-            <svg style={{position:'absolute',left:13,top:'50%',transform:'translateY(-50%)',pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input placeholder={SEARCH_PH[page]} style={{width:'100%',padding:'10px 14px 10px 38px',border:'1.5px solid #E8EAF3',borderRadius:14,fontSize:13,color:'#0A1F21',background:'#FAFBFD',outline:'none',boxSizing:'border-box'}}/>
+          {/* Dates + guests chips — tappable */}
+          <div style={{display:'flex',gap:8,padding:'0 16px 12px'}}>
+            <button onClick={()=>setSheet('dates')} style={{display:'flex',alignItems:'center',gap:6,padding:'8px 14px',borderRadius:12,border:'1.5px solid #E8EAF3',background:'#FAFBFD',cursor:'pointer',flex:1}}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <span style={{fontSize:12,fontWeight:600,color:'#0A1F21',flex:1,textAlign:'left'}}>{dates.start} – {dates.end}</span>
+              <span style={{fontSize:11,color:'#9AA1B8'}}>{dates.nights} kecha</span>
+            </button>
+            <button onClick={()=>setSheet('guests')} style={{display:'flex',alignItems:'center',gap:6,padding:'8px 14px',borderRadius:12,border:'1.5px solid #E8EAF3',background:'#FAFBFD',cursor:'pointer'}}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span style={{fontSize:12,fontWeight:600,color:'#0A1F21'}}>{guests.adults + guests.children} kishi</span>
+            </button>
           </div>
-          {/* Filters */}
-          <div style={{display:'flex',gap:7,overflowX:'auto',paddingBottom:12,WebkitOverflowScrolling:'touch'}}>
-            <div style={{flexShrink:0,width:34,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          {/* Filter chips */}
+          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
+            <div style={{flexShrink:0,width:34,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
             </div>
-            {['Arzon narx ↑↓','Ovqat ∨','Yulduz ∨','Narx oralig\'i ∨'].map((f,i)=>(
-              <button key={i} style={{flexShrink:0,padding:'7px 13px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>{f}</button>
+            {(FILTERS[page]||[]).map((f,i)=>(
+              <button key={i} style={{flexShrink:0,padding:'7px 14px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>{f}</button>
             ))}
           </div>
         </div>
-        <Scroll style={{background:'#F4F5FA'}}>
+
+        <Scroll style={{background:'#F4F5FA',padding:'12px 16px'}}>
           {items.map((it,i)=>(
-            <div key={i} style={{background:'#fff',overflow:'hidden',marginBottom:2}}>
-              <div style={{width:'100%',height:220,overflow:'hidden',position:'relative'}}>
+            <div key={i} style={{background:'#fff',borderRadius:22,overflow:'hidden',marginBottom:14,boxShadow:'0 4px 20px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.08)'}}>
+              <div style={{width:'100%',height:200,overflow:'hidden',position:'relative'}}>
                 <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                <div style={{position:'absolute',inset:0,background:'linear-gradient(to top, rgba(10,31,33,0.4) 0%, transparent 55%)'}}/>
               </div>
               <div style={{padding:'14px 16px 16px'}}>
-                <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',marginBottom:3,lineHeight:1.3}}>{it.title}</div>
-                <div style={{fontSize:12,color:'#9AA1B8',marginBottom:12}}>{it.sub}</div>
-                {/* Price row */}
-                <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:10}}>
-                  <div/>
-                  <div style={{textAlign:'right'}}>
-                    <div style={{fontSize:10,color:'#9AA1B8',marginBottom:2}}>dan boshlab</div>
-                    <div style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{it.regular}</div>
+                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:4}}>
+                  <div style={{flex:1,paddingRight:8}}>
+                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.3,marginBottom:2}}>{it.title}</div>
+                    <div style={{fontSize:12,color:'#9AA1B8'}}>{it.sub}</div>
+                  </div>
+                  <div style={{textAlign:'right',flexShrink:0}}>
+                    <div style={{fontSize:10,color:'#9AA1B8',marginBottom:1}}>dan boshlab</div>
+                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.1}}>{it.regular}</div>
                   </div>
                 </div>
+                <div style={{height:'1px',background:'#F0F2F8',margin:'12px 0'}}/>
                 {/* Premium badge */}
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#FFF3E0',borderRadius:10,padding:'8px 12px',marginBottom:8,border:'1px solid rgba(240,138,44,0.2)'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:6}}>
-                    <span style={{fontSize:13}}>👑</span>
-                    <span style={{fontSize:12,fontWeight:600,color:'#0A1F21'}}>Premium narx: </span>
-                    <span style={{fontSize:12,fontWeight:800,color:'#F08A2C'}}>{it.premium}</span>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#FFF8EC',borderRadius:12,padding:'9px 12px',border:'1px solid rgba(240,138,44,0.18)'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:7}}>
+                    <div style={{width:26,height:26,borderRadius:8,background:'#F08A2C',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/></svg>
+                    </div>
+                    <div>
+                      <div style={{fontSize:10,fontWeight:700,color:'#F08A2C',textTransform:'uppercase',letterSpacing:0.5}}>Premium narx</div>
+                      <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{it.premium}</div>
+                    </div>
                   </div>
-                  <button style={{width:26,height:26,borderRadius:999,border:'1px solid rgba(240,138,44,0.25)',background:'#fff',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:14,fontWeight:700,padding:0}}>···</button>
+                  <button style={{padding:'8px 16px',borderRadius:12,background:T,border:'none',color:'#fff',fontSize:12,fontWeight:700,cursor:'pointer'}}>Buyurtma</button>
                 </div>
                 {/* Coins */}
-                <div style={{display:'flex',alignItems:'center',gap:6}}>
-                  <span style={{fontSize:13}}>🟡</span>
+                <div style={{display:'flex',alignItems:'center',gap:6,marginTop:10}}>
+                  <div style={{width:18,height:18,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                    <span style={{fontSize:9,fontWeight:900,color:'#92400E'}}>C</span>
+                  </div>
                   <span style={{fontSize:11,color:'#9AA1B8'}}>+200 Coins — tur band qilganingiz uchun bonus</span>
                 </div>
               </div>
@@ -1007,6 +1113,7 @@ function ScreenTrip() {
           ))}
         </Scroll>
         <TabBar active="trip"/>
+        <BottomSheet/>
       </Frame>
     );
   }
