@@ -935,37 +935,73 @@ function ScreenTrip() {
   const globeIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/></svg>;
 
   const PAGE_TITLES = { turlar:'Barcha turlar', excur:'Barcha ekskursiyalar', esim:'Barcha eSIM rejalar', hotel:'Barcha mehmonxonalar', aviabilet:'Barcha aviabiletlar' };
+  const PAGE_SUB = { turlar:'Toshkent · Barcha yo\'nalishlar', excur:'Ekskursiya paketlari', esim:'Dunyo bo\'ylab internet', hotel:'Mehmonxona bronlash', aviabilet:'Aviabilet qidirish' };
+  const SEARCH_PH = { turlar:'Tur qidirish...', excur:'Ekskursiya qidirish...', esim:'Hudud yoki davlat...', hotel:'Mehmonxona qidirish...', aviabilet:'Shahar yoki aeroporti...' };
 
   if (page) {
     const items = TRIP_RESULTS[page] || [];
     return (
       <Frame>
-        <div style={{padding:'16px 20px',display:'flex',alignItems:'center',gap:12,background:C.bg,position:'sticky',top:0,zIndex:10}}>
-          <button onClick={()=>setPage(null)} style={{width:40,height:40,borderRadius:999,border:'none',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(0,0,0,0.08)',cursor:'pointer',flexShrink:0}}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          </button>
-          <h1 style={{margin:0,fontSize:18,fontWeight:700,color:'#0A1F21'}}>{PAGE_TITLES[page]}</h1>
+        {/* Header */}
+        <div style={{background:'#fff',padding:'14px 16px 0',position:'sticky',top:0,zIndex:10,borderBottom:'1px solid #F0F2F8'}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+            <button onClick={()=>setPage(null)} style={{width:36,height:36,borderRadius:999,border:'none',background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <div style={{flex:1,textAlign:'center'}}>
+              <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.2}}>{PAGE_TITLES[page]}</div>
+              <div style={{fontSize:11,color:T,fontWeight:500,marginTop:1}}>{PAGE_SUB[page]}</div>
+            </div>
+            <div style={{width:36,height:36,borderRadius:999,background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              <span style={{fontSize:11,fontWeight:700,color:'#0A1F21'}}>UZS</span>
+            </div>
+          </div>
+          {/* Search */}
+          <div style={{margin:'0 0 10px',position:'relative'}}>
+            <svg style={{position:'absolute',left:13,top:'50%',transform:'translateY(-50%)',pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input placeholder={SEARCH_PH[page]} style={{width:'100%',padding:'10px 14px 10px 38px',border:'1.5px solid #E8EAF3',borderRadius:14,fontSize:13,color:'#0A1F21',background:'#FAFBFD',outline:'none',boxSizing:'border-box'}}/>
+          </div>
+          {/* Filters */}
+          <div style={{display:'flex',gap:7,overflowX:'auto',paddingBottom:12,WebkitOverflowScrolling:'touch'}}>
+            <div style={{flexShrink:0,width:34,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+            </div>
+            {['Arzon narx ↑↓','Ovqat ∨','Yulduz ∨','Narx oralig\'i ∨'].map((f,i)=>(
+              <button key={i} style={{flexShrink:0,padding:'7px 13px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>{f}</button>
+            ))}
+          </div>
         </div>
-        <Scroll>
+        <Scroll style={{background:'#F4F5FA'}}>
           {items.map((it,i)=>(
-            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:SH,border:'1px solid rgba(0,153,168,0.10)'}}>
-              <div style={{width:'100%',height:180,overflow:'hidden'}}>
+            <div key={i} style={{background:'#fff',overflow:'hidden',marginBottom:2}}>
+              <div style={{width:'100%',height:220,overflow:'hidden',position:'relative'}}>
                 <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
               </div>
-              <div style={{padding:'12px 16px'}}>
-                <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',marginBottom:2}}>{it.title}</div>
-                <div style={{fontSize:12,color:'#5C7577',marginBottom:12}}>{it.sub}</div>
-                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-                  <div style={{background:'#FFF8EC',borderRadius:14,padding:'10px 14px',border:'1px solid rgba(240,138,44,0.2)'}}>
-                    <div style={{fontSize:10,fontWeight:600,color:'#F08A2C',textTransform:'uppercase',letterSpacing:0.5,marginBottom:4}}>Oddiy narx</div>
-                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.regular}</div>
-                  </div>
-                  <div style={{background:TBG,borderRadius:14,padding:'10px 14px',border:'1px solid rgba(0,153,168,0.2)'}}>
-                    <div style={{fontSize:10,fontWeight:600,color:T,textTransform:'uppercase',letterSpacing:0.5,marginBottom:4}}>Premium narx</div>
-                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.premium}</div>
+              <div style={{padding:'14px 16px 16px'}}>
+                <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',marginBottom:3,lineHeight:1.3}}>{it.title}</div>
+                <div style={{fontSize:12,color:'#9AA1B8',marginBottom:12}}>{it.sub}</div>
+                {/* Price row */}
+                <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:10}}>
+                  <div/>
+                  <div style={{textAlign:'right'}}>
+                    <div style={{fontSize:10,color:'#9AA1B8',marginBottom:2}}>dan boshlab</div>
+                    <div style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{it.regular}</div>
                   </div>
                 </div>
-                <button style={mkBtn(12)}>Buyurtma berish</button>
+                {/* Premium badge */}
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#FFF3E0',borderRadius:10,padding:'8px 12px',marginBottom:8,border:'1px solid rgba(240,138,44,0.2)'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:6}}>
+                    <span style={{fontSize:13}}>👑</span>
+                    <span style={{fontSize:12,fontWeight:600,color:'#0A1F21'}}>Premium narx: </span>
+                    <span style={{fontSize:12,fontWeight:800,color:'#F08A2C'}}>{it.premium}</span>
+                  </div>
+                  <button style={{width:26,height:26,borderRadius:999,border:'1px solid rgba(240,138,44,0.25)',background:'#fff',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:14,fontWeight:700,padding:0}}>···</button>
+                </div>
+                {/* Coins */}
+                <div style={{display:'flex',alignItems:'center',gap:6}}>
+                  <span style={{fontSize:13}}>🟡</span>
+                  <span style={{fontSize:11,color:'#9AA1B8'}}>+200 Coins — tur band qilganingiz uchun bonus</span>
+                </div>
               </div>
             </div>
           ))}
