@@ -939,7 +939,7 @@ function ScreenTrip() {
   const globeIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/></svg>;
 
   const PAGE_LABELS = { turlar:'Turlar', excur:'Ekskursiyalar', esim:'eSIM', hotel:'Mehmonxonalar', aviabilet:'Aviabiletlar' };
-  const FILTERS = { turlar:['Arzon ↑↓','Ovqat','Yulduz ✦','Narx'], excur:['Arzon ↑↓','Davlat','Davomiylik'], esim:['Arzon ↑↓','Hudud','GB'], hotel:['Arzon ↑↓','Yulduz','Ovqat','Narx'], aviabilet:['Arzon ↑↓','To\'g\'ri','Vaqt'] };
+  const FILTERS = { turlar:['Arzon narx','Ovqat','Yulduz','Narx'], excur:['Arzon narx','Davlat','Davomiylik'], esim:['Arzon narx','Hudud','GB'], hotel:['Arzon narx','Ovqat','Yulduz'], aviabilet:['Arzon narx','To\'g\'ri reys','Vaqt'] };
 
   /* ── Bottom Sheet ── */
   const BottomSheet = () => {
@@ -1027,44 +1027,44 @@ function ScreenTrip() {
     return (
       <Frame>
         {/* Sticky header */}
-        <div style={{background:'#fff',position:'sticky',top:0,zIndex:20,boxShadow:'0 2px 12px rgba(10,31,33,0.07)'}}>
-          {/* Top row */}
-          <div style={{display:'flex',alignItems:'center',gap:10,padding:'14px 16px 10px'}}>
-            <button onClick={()=>setPage(null)} style={{width:38,height:38,borderRadius:14,border:'none',background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <div style={{background:'#fff',position:'sticky',top:0,zIndex:20,borderBottom:'1px solid #F0F2F8'}}>
+          {/* Row 1: back | title+subtitle | UZS */}
+          <div style={{display:'flex',alignItems:'center',padding:'14px 16px 10px',gap:8}}>
+            <button onClick={()=>setPage(null)} style={{background:'none',border:'none',cursor:'pointer',padding:4,flexShrink:0,display:'flex',alignItems:'center'}}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             </button>
-            {/* Route — tappable */}
-            <button onClick={()=>setSheet('route')} style={{flex:1,background:'none',border:'none',cursor:'pointer',textAlign:'center',padding:0}}>
-              <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>
-                <span style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{route.from}</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                <span style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{route.to}</span>
-              </div>
-              <div style={{fontSize:11,color:T,fontWeight:500,marginTop:2}}>{PAGE_LABELS[page]}</div>
-            </button>
-            <div style={{width:38,height:38,borderRadius:14,background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-              <span style={{fontSize:11,fontWeight:700,color:'#0A1F21'}}>UZS</span>
+            {/* Center: route title + teal subtitle — tap opens sheets */}
+            <div style={{flex:1,textAlign:'center'}}>
+              <button onClick={()=>setSheet('route')} style={{background:'none',border:'none',cursor:'pointer',padding:0,display:'block',width:'100%'}}>
+                <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',lineHeight:1.2}}>{route.from} — {route.to}</div>
+              </button>
+              <button onClick={()=>setSheet('dates')} style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
+                <span style={{fontSize:12,color:T,fontWeight:500}}>{dates.start}–{dates.end}, {dates.nights} kecha, </span>
+              </button>
+              <button onClick={()=>setSheet('guests')} style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
+                <span style={{fontSize:12,color:T,fontWeight:500}}>{guests.adults} kishi</span>
+              </button>
             </div>
-          </div>
-          {/* Dates + guests chips — tappable */}
-          <div style={{display:'flex',gap:8,padding:'0 16px 12px'}}>
-            <button onClick={()=>setSheet('dates')} style={{display:'flex',alignItems:'center',gap:6,padding:'8px 14px',borderRadius:12,border:'1.5px solid #E8EAF3',background:'#FAFBFD',cursor:'pointer',flex:1}}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-              <span style={{fontSize:12,fontWeight:600,color:'#0A1F21',flex:1,textAlign:'left'}}>{dates.start} – {dates.end}</span>
-              <span style={{fontSize:11,color:'#9AA1B8'}}>{dates.nights} kecha</span>
-            </button>
-            <button onClick={()=>setSheet('guests')} style={{display:'flex',alignItems:'center',gap:6,padding:'8px 14px',borderRadius:12,border:'1.5px solid #E8EAF3',background:'#FAFBFD',cursor:'pointer'}}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <span style={{fontSize:12,fontWeight:600,color:'#0A1F21'}}>{guests.adults + guests.children} kishi</span>
+            <button onClick={()=>{}} style={{display:'flex',alignItems:'center',gap:3,background:'none',border:'none',cursor:'pointer',padding:4,flexShrink:0}}>
+              <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>UZS</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
-          {/* Filter chips */}
-          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
-            <div style={{flexShrink:0,width:34,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          {/* Row 2: Search input */}
+          <div style={{padding:'0 16px 10px',position:'relative'}}>
+            <svg style={{position:'absolute',left:28,top:'50%',transform:'translateY(-50%)',pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input placeholder={page==='hotel'?'Search hotel':page==='turlar'?'Search tour':page==='esim'?'Search eSIM':page==='excur'?'Search excursion':'Search flight'} style={{width:'100%',padding:'11px 16px 11px 40px',border:'none',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#F4F5FA',outline:'none',boxSizing:'border-box'}}/>
+          </div>
+          {/* Row 3: Filter chips */}
+          <div style={{display:'flex',gap:8,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
+            <div style={{flexShrink:0,width:36,height:36,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
             </div>
             {(FILTERS[page]||[]).map((f,i)=>(
-              <button key={i} style={{flexShrink:0,padding:'7px 14px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>{f}</button>
+              <button key={i} style={{flexShrink:0,display:'flex',alignItems:'center',gap:4,padding:'8px 14px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:13,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>
+                {f}
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
             ))}
           </div>
         </div>
