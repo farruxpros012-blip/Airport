@@ -845,19 +845,57 @@ const DEST_LABEL = {
 const FROM_LABEL = { flight: 'Qayerdan?', taxi: 'Qaysi aeroportdan?', xfer: 'Qayerdan?' };
 
 // ═════════════════════════════════════════════════════════════
-// SCREEN — LET'S TRIP (accordion services)
+// SCREEN — LET'S TRIP
 // ═════════════════════════════════════════════════════════════
+const TRIP_RESULTS = {
+  turlar: [
+    { img:'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600', title:'Antaliya, Turkiya', sub:'7 kecha · Ultra All Inclusive', regular:"7 920 000 so'm", premium:"7 200 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=600', title:'Istanbul, Turkiya', sub:'5 kecha · 2 kishi', regular:"5 610 000 so'm", premium:"5 100 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600', title:'Jumeirah Beach, Dubai', sub:'5 kecha · Premium', regular:"10 780 000 so'm", premium:"9 800 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600', title:'Downtown Dubai', sub:'5 kecha · 2 kishi', regular:"12 320 000 so'm", premium:"11 200 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600', title:'Paris, Fransiya', sub:'6 kecha · 2 kishi', regular:"14 300 000 so'm", premium:"13 000 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1555993539-1732b0258235?w=600', title:'Bali, Indoneziya', sub:'10 kecha · All Inclusive', regular:"11 000 000 so'm", premium:"10 000 000 so'm" },
+  ],
+  excur: [
+    { img:'https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600', title:'Xiva safari', sub:'1 kun · Guruh bilan', regular:"495 000 so'm", premium:"450 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=600', title:'Eski Buxoro', sub:'1 kun · Gid bilan', regular:"418 000 so'm", premium:"380 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=600', title:'Samarqand', sub:'1 kun · Premium tur', regular:"572 000 so'm", premium:"520 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1613044490851-0aa86cd5e65f?w=600', title:'Tashkent City', sub:'Yarim kun · Shahar turi', regular:"275 000 so'm", premium:"250 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=600', title:'Istanbul', sub:'1 kun · Ekskursiya', regular:"660 000 so'm", premium:"600 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600', title:'Dubai', sub:'1 kun · Premium gid', regular:"880 000 so'm", premium:"800 000 so'm" },
+  ],
+  esim: [
+    { img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600', title:'Yevropa · 7 kun', sub:'34 davlat · Cheksiz 5G', regular:"165 000 so'm", premium:"150 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600', title:'Osiyo · 14 kun', sub:'20 davlat · 10 GB', regular:"198 000 so'm", premium:"180 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1515859005217-8a1f08870f59?w=600', title:'Global · 30 kun', sub:'150+ davlat · 20 GB', regular:"440 000 so'm", premium:"400 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600', title:'BAA & Turkiya · 7 kun', sub:'2 davlat · Cheksiz', regular:"121 000 so'm", premium:"110 000 so'm" },
+  ],
+  hotel: [
+    { img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600', title:'Hyatt Regency Tashkent', sub:'5★ · Toshkent markazida', regular:"2 640 000 so'm", premium:"2 400 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600', title:'Hilton Tashkent City', sub:'5★ · Shahar markazi', regular:"2 310 000 so'm", premium:"2 100 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600', title:'Jumeirah Beach Hotel', sub:'5★ · Dubai, dengiz yoqasida', regular:"10 780 000 so'm", premium:"9 800 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600', title:'Rixos Premium Antalya', sub:'5★ · Antaliya · Ultra AI', regular:"8 800 000 so'm", premium:"8 000 000 so'm" },
+  ],
+  aviabilet: [
+    { img:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600', title:'TAS → DXB', sub:'Toshkent — Dubai · To\'g\'ri reys', regular:"3 740 000 so'm", premium:"3 400 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600', title:'DXB → TAS', sub:'Dubai — Toshkent · To\'g\'ri reys', regular:"3 410 000 so'm", premium:"3 100 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=600', title:'TAS → IST', sub:'Toshkent — Istanbul · To\'g\'ri', regular:"2 750 000 so'm", premium:"2 500 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600', title:'TAS → CDG', sub:'Toshkent — Paris · 1 transit', regular:"5 500 000 so'm", premium:"5 000 000 so'm" },
+  ],
+};
+
 function ScreenTrip() {
   const [open, setOpen] = React.useState({ turlar: true, aviabilet: true });
+  const [page, setPage] = React.useState(null);
   const toggle = (key) => setOpen(o => ({ ...o, [key]: !o[key] }));
 
   const T = '#0099A8';
   const TBG = '#E0F2F3';
   const SH = '0 8px 24px rgba(0,153,168,0.10)';
   const card = { background:'#fff', borderRadius:24, boxShadow:SH, border:'1px solid rgba(0,153,168,0.10)', overflow:'hidden', marginBottom:16 };
-  const row = { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', cursor:'pointer' };
+  const rowStyle = { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', cursor:'pointer' };
   const iBox = { width:44, height:44, borderRadius:14, background:T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 };
-  const btn = { width:'100%', background:T, color:'#fff', border:'none', borderRadius:20, padding:'13px 0', fontSize:14, fontWeight:600, cursor:'pointer', marginTop:16 };
+  const mkBtn = (mt=16) => ({ width:'100%', background:T, color:'#fff', border:'none', borderRadius:20, padding:'13px 0', fontSize:14, fontWeight:600, cursor:'pointer', marginTop:mt });
   const mc = { background:TBG, padding:'8px 10px', borderRadius:14, border:'1px solid rgba(0,153,168,0.15)' };
 
   const Chevron = ({on}) => (
@@ -867,7 +905,7 @@ function ScreenTrip() {
   );
   const Ico = ({d}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
   const Head = ({icon,label,k}) => (
-    <div onClick={()=>toggle(k)} style={row}>
+    <div onClick={()=>toggle(k)} style={rowStyle}>
       <div style={{display:'flex',alignItems:'center',gap:12}}>
         <div style={iBox}>{icon}</div>
         <span style={{fontSize:15,fontWeight:600,color:'#0A1F21'}}>{label}</span>
@@ -883,7 +921,7 @@ function ScreenTrip() {
       </div>
       <div style={{padding:'0 4px 8px'}}>
         <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>{title}</div>
-        <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>{sub}</div>
+        {sub && <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>{sub}</div>}
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
           {prices.map((p,i)=><div key={i} style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{p.label}</div><div style={{fontSize:11,fontWeight:700,color:T}}>{p.price}</div></div>)}
         </div>
@@ -895,23 +933,62 @@ function ScreenTrip() {
   const compassIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>;
   const globeIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/></svg>;
 
+  const PAGE_TITLES = { turlar:'Barcha turlar', excur:'Barcha ekskursiyalar', esim:'Barcha eSIM rejalar', hotel:'Barcha mehmonxonalar', aviabilet:'Barcha aviabiletlar' };
+
+  if (page) {
+    const items = TRIP_RESULTS[page] || [];
+    return (
+      <Frame>
+        <div style={{padding:'16px 20px',display:'flex',alignItems:'center',gap:12,background:C.bg,position:'sticky',top:0,zIndex:10}}>
+          <button onClick={()=>setPage(null)} style={{width:40,height:40,borderRadius:999,border:'none',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(0,0,0,0.08)',cursor:'pointer',flexShrink:0}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <h1 style={{margin:0,fontSize:18,fontWeight:700,color:'#0A1F21'}}>{PAGE_TITLES[page]}</h1>
+        </div>
+        <Scroll>
+          {items.map((it,i)=>(
+            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:SH,border:'1px solid rgba(0,153,168,0.10)'}}>
+              <div style={{width:'100%',height:180,overflow:'hidden'}}>
+                <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+              </div>
+              <div style={{padding:'12px 16px'}}>
+                <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',marginBottom:2}}>{it.title}</div>
+                <div style={{fontSize:12,color:'#5C7577',marginBottom:12}}>{it.sub}</div>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                  <div style={{background:'#FFF8EC',borderRadius:14,padding:'10px 14px',border:'1px solid rgba(240,138,44,0.2)'}}>
+                    <div style={{fontSize:10,fontWeight:600,color:'#F08A2C',textTransform:'uppercase',letterSpacing:0.5,marginBottom:4}}>Oddiy narx</div>
+                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.regular}</div>
+                  </div>
+                  <div style={{background:TBG,borderRadius:14,padding:'10px 14px',border:'1px solid rgba(0,153,168,0.2)'}}>
+                    <div style={{fontSize:10,fontWeight:600,color:T,textTransform:'uppercase',letterSpacing:0.5,marginBottom:4}}>Premium narx</div>
+                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.premium}</div>
+                  </div>
+                </div>
+                <button style={mkBtn(12)}>Buyurtma berish</button>
+              </div>
+            </div>
+          ))}
+        </Scroll>
+        <TabBar active="trip"/>
+      </Frame>
+    );
+  }
+
   return (
     <Frame>
-      {/* Header */}
       <div style={{padding:'24px 20px 20px',display:'flex',alignItems:'center',justifyContent:'center',background:C.bg,position:'sticky',top:0,zIndex:10}}>
         <h1 style={{margin:0,fontSize:24,fontWeight:800,color:'#0A1F21',letterSpacing:-0.5}}>Let's Trip</h1>
       </div>
-
       <Scroll>
         {/* Turlar */}
         <div style={card}>
           <Head icon={compassIco} label="Turlar" k="turlar"/>
           {open.turlar && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
-              <Slide img="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600" badge="Turkiya" title="Turkiya: 5 100 000 so'mdan" sub="7 kecha · 2 kishi · Ultra All Inclusive" prices={[{label:'Antaliya',price:'7.2 mln'},{label:'Istanbul',price:'5.1 mln'},{label:'Bodrum',price:'8.4 mln'},{label:'Izmir',price:'6.2 mln'}]}/>
-              <Slide img="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600" badge="BAA (Dubay)" title="Dubay: 6 800 000 so'mdan" sub="5 kecha · Premium mehmonxonalar" prices={[{label:'Jumeirah Beach',price:'9.8 mln'},{label:'Marina View',price:'7.5 mln'},{label:'Downtown',price:'11.2 mln'},{label:'Palm Island',price:'15.4 mln'}]}/>
+              <Slide img="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600" badge="Turkiya" title="Turkiya: 5 100 000 so'mdan" sub="7 kecha · 2 kishi · Ultra All Inclusive" prices={[{label:'Antaliya',price:"7.2 mln so'm"},{label:'Istanbul',price:"5.1 mln so'm"},{label:'Bodrum',price:"8.4 mln so'm"},{label:'Izmir',price:"6.2 mln so'm"}]}/>
+              <Slide img="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600" badge="Dubai" title="Dubai: 6 800 000 so'mdan" sub="5 kecha · Premium mehmonxonalar" prices={[{label:'Jumeirah Beach',price:"9.8 mln so'm"},{label:'Marina View',price:"7.5 mln so'm"},{label:'Downtown',price:"11.2 mln so'm"},{label:'Palm Island',price:"15.4 mln so'm"}]}/>
             </div>
-            <div style={{padding:'0 20px'}}><button style={btn}>Barcha turlarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('turlar')} style={mkBtn()}>Barcha turlarni ko'rish</button></div>
           </div>}
         </div>
 
@@ -920,9 +997,10 @@ function ScreenTrip() {
           <Head icon={<Ico d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>} label="Ekskursiya" k="excur"/>
           {open.excur && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
-              <Slide img="https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600" badge="O'zbekiston" title="Tarixiy shaharlar bo'ylab" sub="Eng mashhur yo'nalishlar" prices={[{label:"Xiva safari",price:'450 000'},{label:'Eski Buxoro',price:'380 000'},{label:'Samarqand',price:'520 000'},{label:'Tashkent City',price:'250 000'}]}/>
+              <Slide img="https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600" badge="O'zbekiston" title="Tarixiy shaharlar bo'ylab" sub="Eng mashhur yo'nalishlar" prices={[{label:"Xiva safari",price:"450 000 so'm"},{label:'Eski Buxoro',price:"380 000 so'm"},{label:'Samarqand',price:"520 000 so'm"},{label:'Tashkent City',price:"250 000 so'm"}]}/>
+              <Slide img="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=600" badge="Xalqaro" title="Xorijiy shaharlar" sub="Istanbul, Dubai va boshqalar" prices={[{label:'Istanbul',price:"600 000 so'm"},{label:'Dubai',price:"800 000 so'm"},{label:'Bangkok',price:"550 000 so'm"},{label:'Bali',price:"720 000 so'm"}]}/>
             </div>
-            <div style={{padding:'0 20px'}}><button style={btn}>Barcha ekskursiyalarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('excur')} style={mkBtn()}>Barcha ekskursiyalarni ko'rish</button></div>
           </div>}
         </div>
 
@@ -930,17 +1008,27 @@ function ScreenTrip() {
         <div style={card}>
           <Head icon={globeIco} label="eSIM" k="esim"/>
           {open.esim && <div style={{paddingBottom:20}}>
-            <div style={{margin:'0 20px',background:'#EDF7F8',borderRadius:16,padding:16,position:'relative',overflow:'hidden',border:'1px solid rgba(0,153,168,0.15)'}}>
-              <div style={{position:'absolute',top:8,right:8,opacity:0.08}}><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></div>
-              <div style={{display:'flex',gap:8,marginBottom:12}}>
-                <span style={{background:'#1D4ED8',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>YEVROPA</span>
-                <span style={{background:TBG,color:T,fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999,border:'1px solid rgba(0,153,168,0.2)'}}>34 Davlat</span>
+            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
+              <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
+                <div style={{background:'#EDF7F8',borderRadius:16,padding:16,position:'relative',overflow:'hidden',border:'1px solid rgba(0,153,168,0.15)'}}>
+                  <div style={{position:'absolute',top:8,right:8,opacity:0.08}}><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></div>
+                  <div style={{display:'flex',gap:8,marginBottom:12}}><span style={{background:'#1D4ED8',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>YEVROPA</span><span style={{background:TBG,color:T,fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999,border:'1px solid rgba(0,153,168,0.2)'}}>34 Davlat</span></div>
+                  <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',marginBottom:4}}>Cheksiz</div>
+                  <div style={{fontSize:11,color:'#5C7577',marginBottom:12}}>Cheksiz internet + 5G tezlik</div>
+                  <div style={{display:'flex',justifyContent:'space-between'}}><span style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>7 kun</span><span style={{fontSize:15,fontWeight:700,color:T}}>150 000 so'm</span></div>
+                </div>
               </div>
-              <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',marginBottom:4}}>Cheksiz</div>
-              <div style={{fontSize:11,color:'#5C7577',marginBottom:12}}>Cheksiz internet + 5G tezlik</div>
-              <div style={{display:'flex',justifyContent:'space-between'}}><span style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>7 kun</span><span style={{fontSize:15,fontWeight:700,color:T}}>150 000 so'm</span></div>
+              <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
+                <div style={{background:'#EDF7F8',borderRadius:16,padding:16,position:'relative',overflow:'hidden',border:'1px solid rgba(0,153,168,0.15)'}}>
+                  <div style={{position:'absolute',top:8,right:8,opacity:0.08}}><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></div>
+                  <div style={{display:'flex',gap:8,marginBottom:12}}><span style={{background:'#7C3AED',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>GLOBAL</span><span style={{background:TBG,color:T,fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999,border:'1px solid rgba(0,153,168,0.2)'}}>150+ Davlat</span></div>
+                  <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',marginBottom:4}}>20 GB</div>
+                  <div style={{fontSize:11,color:'#5C7577',marginBottom:12}}>4G/5G · Dunyoning har yerida</div>
+                  <div style={{display:'flex',justifyContent:'space-between'}}><span style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>30 kun</span><span style={{fontSize:15,fontWeight:700,color:T}}>400 000 so'm</span></div>
+                </div>
+              </div>
             </div>
-            <div style={{padding:'0 20px'}}><button style={btn}>Barcha eSIMlarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('esim')} style={mkBtn()}>Barcha eSIMlarni ko'rish</button></div>
           </div>}
         </div>
 
@@ -949,9 +1037,10 @@ function ScreenTrip() {
           <Head icon={<Ico d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10"/>} label="Mehmonxona" k="hotel"/>
           {open.hotel && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
-              <Slide img="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" badge="Ommabop" title="Toshkent" sub="Premium dam olish maskanlari" prices={[{label:'Hyatt Regency',price:'2.4 mln'},{label:'Hilton Tashkent',price:'2.1 mln'}]}/>
+              <Slide img="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" badge="Toshkent" title="Toshkent mehmonxonalari" sub="Premium dam olish maskanlari" prices={[{label:'Hyatt Regency',price:"2.4 mln so'm"},{label:'Hilton Tashkent',price:"2.1 mln so'm"},{label:'Wyndham',price:"1.8 mln so'm"},{label:'Ramada',price:"1.5 mln so'm"}]}/>
+              <Slide img="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600" badge="Dubai" title="Dubai mehmonxonalari" sub="Dengiz yoqasidagi 5★ oteller" prices={[{label:'Jumeirah Beach',price:"9.8 mln so'm"},{label:'Atlantis Palm',price:"14.2 mln so'm"},{label:'Burj Al Arab',price:"38 mln so'm"},{label:'Address DT',price:"11.5 mln so'm"}]}/>
             </div>
-            <div style={{padding:'0 20px'}}><button style={btn}>Barcha mehmonxonalarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('hotel')} style={mkBtn()}>Barcha mehmonxonalarni ko'rish</button></div>
           </div>}
         </div>
 
@@ -960,9 +1049,10 @@ function ScreenTrip() {
           <Head icon={planeIco} label="Aviabilet" k="aviabilet"/>
           {open.aviabilet && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
-              <Slide img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600" badge="BAA (Dubay)" title="Dubay — Toshkent" sub="Mashhur yo'nalishlar" prices={[{label:'DXB → TAS',price:'3.1 mln'},{label:'TAS → DXB',price:'3.4 mln'}]}/>
+              <Slide img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600" badge="Dubai" title="Dubai" sub="Mashhur yo'nalishlar" prices={[{label:'TAS → DXB',price:"3.4 mln so'm"},{label:'DXB → TAS',price:"3.1 mln so'm"},{label:"To'g'ri reys",price:'5 soat'},{label:'Biznes klass',price:"9.8 mln so'm"}]}/>
+              <Slide img="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=600" badge="Istanbul" title="Istanbul" sub="Mashhur yo'nalishlar" prices={[{label:'TAS → IST',price:"2.5 mln so'm"},{label:'IST → TAS',price:"2.3 mln so'm"},{label:"To'g'ri reys",price:'4 soat'},{label:'Biznes klass',price:"7.2 mln so'm"}]}/>
             </div>
-            <div style={{padding:'0 20px'}}><button style={btn}>Barcha chiptalarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('aviabilet')} style={mkBtn()}>Barcha aviabiletlarni ko'rish</button></div>
           </div>}
         </div>
 
@@ -978,7 +1068,7 @@ function ScreenTrip() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
               <div><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase'}}>Qayerdan</div><div style={{fontSize:12,fontWeight:600,color:'#0A1F21'}}>O'z manzilingizni kiriting</div></div>
             </div>
-            <button style={btn}>Taksi buyurtma qilish</button>
+            <button style={mkBtn()}>Taksi buyurtma qilish</button>
           </div>}
         </div>
 
@@ -990,7 +1080,7 @@ function ScreenTrip() {
               <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerdan</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Toshkent</div></div>
               <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerga</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Samarqand</div></div>
             </div>
-            <button style={btn}>Transferni band qilish</button>
+            <button style={mkBtn()}>Transferni band qilish</button>
           </div>}
         </div>
 
@@ -1018,12 +1108,10 @@ function ScreenTrip() {
           </div>
         </div>
       </Scroll>
-
       <TabBar active="trip"/>
     </Frame>
   );
 }
-
 
 // ═════════════════════════════════════════════════════════════
 // SCREEN 5 — FLIGHT DETAIL
