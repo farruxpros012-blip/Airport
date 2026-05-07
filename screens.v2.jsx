@@ -972,43 +972,62 @@ function ScreenTrip() {
           <div style={{width:40,height:4,borderRadius:999,background:'#DDE0EB',margin:'14px auto 4px'}}/>
           <div style={{fontSize:18,fontWeight:800,color:'#0A1F21',marginTop:16,marginBottom:4}}>Qidiruvni sozlash</div>
 
-          {/* Route */}
-          <span style={sec}>Yo'nalish</span>
-          <div style={{position:'relative',marginBottom:10}}>
-            <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Qayerdan" style={inp}/>
-          </div>
-          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
-            <div style={{flex:1,height:1,background:'#E8EAF3'}}/>
-            <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{width:36,height:36,borderRadius:999,background:TBG,border:'none',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+          {/* Route — grouped card like screenshot */}
+          <div style={{background:'#F4F5FA',borderRadius:18,overflow:'hidden',marginBottom:12,marginTop:20,position:'relative'}}>
+            <div style={{display:'flex',alignItems:'center',padding:'14px 16px'}}>
+              <div style={{width:8,height:8,borderRadius:'50%',background:T,flexShrink:0,marginRight:12}}/>
+              <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Qayerdan" style={{flex:1,border:'none',background:'none',fontSize:15,fontWeight:600,color:'#0A1F21',outline:'none'}}/>
+            </div>
+            <div style={{height:1,background:'#E8EAF3',marginLeft:36}}/>
+            <div style={{display:'flex',alignItems:'center',padding:'14px 16px'}}>
+              <div style={{width:8,height:8,borderRadius:'50%',background:'#DDE0EB',flexShrink:0,marginRight:12}}/>
+              <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder="Qayerga" style={{flex:1,border:'none',background:'none',fontSize:15,fontWeight:600,color:'#0A1F21',outline:'none'}}/>
+            </div>
+            {/* Swap button */}
+            <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:14,top:'50%',transform:'translateY(-50%)',width:34,height:34,borderRadius:999,background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 8px rgba(0,0,0,0.06)'}}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.3" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
             </button>
-            <div style={{flex:1,height:1,background:'#E8EAF3'}}/>
           </div>
-          <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder="Qayerga" style={inp}/>
 
-          {/* Nights */}
-          <span style={sec}>Kechalar soni</span>
-          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+          {/* Dates + Guests row */}
+          <div style={{display:'flex',gap:10,marginBottom:12}}>
+            {/* Dates */}
+            <div style={{flex:1,background:'#F4F5FA',borderRadius:16,padding:'13px 14px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{dates.start} · {nightsVal} kecha</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            {/* Guests */}
+            <div style={{flex:1,background:'#F4F5FA',borderRadius:16,padding:'13px 14px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{adultsVal + childVal} kishi</div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+          </div>
+
+          {/* Nights selector */}
+          <div style={{background:'#F4F5FA',borderRadius:16,padding:'13px 14px',marginBottom:16,display:'flex',alignItems:'center',gap:4,flexWrap:'wrap'}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="1.8" strokeLinecap="round" style={{marginRight:4}}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <span style={{fontSize:13,color:'#9AA1B8',marginRight:8}}>Kechalar:</span>
             {[3,5,7,10,14].map(n=>(
-              <button key={n} onClick={()=>setNightsVal(n)} style={{padding:'9px 18px',borderRadius:999,border:`1.5px solid ${nightsVal===n?T:'#E8EAF3'}`,background:nightsVal===n?TBG:'#fff',color:nightsVal===n?T:'#0A1F21',fontSize:13,fontWeight:700,cursor:'pointer'}}>{n} kecha</button>
+              <button key={n} onClick={()=>setNightsVal(n)} style={{padding:'5px 12px',borderRadius:999,border:`1.5px solid ${nightsVal===n?T:'transparent'}`,background:nightsVal===n?TBG:'transparent',color:nightsVal===n?T:'#0A1F21',fontSize:13,fontWeight:700,cursor:'pointer'}}>{n}</button>
             ))}
           </div>
 
-          {/* Guests */}
-          <span style={sec}>Mehmonlar</span>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderBottom:'1px solid #F0F2F8'}}>
-            <div>
-              <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Kattalar</div>
-              <div style={{fontSize:11,color:'#9AA1B8'}}>12+ yosh</div>
+          {/* Guests counters */}
+          <div style={{background:'#F4F5FA',borderRadius:16,overflow:'hidden',marginBottom:4}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 16px',borderBottom:'1px solid #E8EAF3'}}>
+              <div>
+                <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Kattalar <span style={{fontSize:11,color:'#9AA1B8',fontWeight:400}}>12+ yosh</span></div>
+              </div>
+              {cnt(adultsVal,setAdultsVal,1)}
             </div>
-            {cnt(adultsVal,setAdultsVal,1)}
-          </div>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0'}}>
-            <div>
-              <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Bolalar</div>
-              <div style={{fontSize:11,color:'#9AA1B8'}}>2–11 yosh</div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 16px'}}>
+              <div>
+                <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Bolalar <span style={{fontSize:11,color:'#9AA1B8',fontWeight:400}}>2–11 yosh</span></div>
+              </div>
+              {cnt(childVal,setChildVal)}
             </div>
-            {cnt(childVal,setChildVal)}
           </div>
 
           <button onClick={save} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',marginTop:8}}>Qidirish</button>
