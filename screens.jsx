@@ -1043,8 +1043,8 @@ function ScreenTrip() {
             </button>
           </div>
           {/* Row 2: Search */}
-          <div style={{padding:'0 16px 10px',position:'relative'}}>
-            <svg style={{position:'absolute',left:28,top:'50%',transform:'translateY(-50%)',pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          <div style={{padding:'0 16px 10px',position:'relative',display:'flex',alignItems:'center'}}>
+            <svg style={{position:'absolute',left:28,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
             <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Hudud yoki davlat...',hotel:'Mehmonxona qidirish...',aviabilet:'Shahar yoki aeroport...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 40px',border:'none',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#F4F5FA',outline:'none',boxSizing:'border-box'}}/>
           </div>
           {/* Row 3: Filters */}
