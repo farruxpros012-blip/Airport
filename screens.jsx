@@ -898,10 +898,8 @@ function ScreenTrip() {
   return (
     <Frame>
       {/* Header */}
-      <div style={{padding:'16px 20px 12px',display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid #ECEEF6',background:C.bg,position:'sticky',top:0,zIndex:10}}>
-        <div style={{width:32}}/>
-        <h1 style={{margin:0,fontSize:18,fontWeight:700,color:'#0A1F21'}}>Let's Trip</h1>
-        <div style={{width:36,height:36,borderRadius:'50%',background:`linear-gradient(135deg, ${T} 0%, #067865 100%)`,boxShadow:'0 2px 8px rgba(0,153,168,0.25)'}}/>
+      <div style={{padding:'16px 20px 12px',display:'flex',alignItems:'center',justifyContent:'center',borderBottom:'1px solid #ECEEF6',background:C.bg,position:'sticky',top:0,zIndex:10}}>
+        <h1 style={{margin:0,fontSize:24,fontWeight:800,color:'#0A1F21',letterSpacing:-0.5}}>Let's Trip</h1>
       </div>
 
       <Scroll>
