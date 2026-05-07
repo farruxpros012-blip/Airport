@@ -1087,11 +1087,52 @@ function ScreenTrip() {
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
-          <div style={{display:'flex',flexDirection:'column',alignItems:'center',padding:'12px 0 18px'}}>
-            <div style={{width:62,height:62,borderRadius:'50%',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:38,boxShadow:'0 6px 20px rgba(10,31,33,0.10), 0 2px 6px rgba(10,31,33,0.06)',marginBottom:10}}>
-              {ESIM_COUNTRY_FLAGS[esimCountry] || '🌍'}
+          {/* eSIM card style hero */}
+          <div style={{position:'relative',background:`linear-gradient(135deg, ${T} 0%, #067865 60%, #0A4F4A 100%)`,borderRadius:18,padding:'16px 18px',margin:'8px 0 14px',color:'#fff',overflow:'hidden',boxShadow:'0 10px 24px rgba(0,153,168,0.28), inset 0 1px 0 rgba(255,255,255,0.18)'}}>
+            {/* Decorative ringed circles */}
+            <div style={{position:'absolute',top:-30,right:-30,width:120,height:120,borderRadius:'50%',border:'1px solid rgba(255,255,255,0.12)'}}/>
+            <div style={{position:'absolute',top:-50,right:-50,width:160,height:160,borderRadius:'50%',border:'1px solid rgba(255,255,255,0.08)'}}/>
+            <div style={{position:'absolute',bottom:-40,left:-20,width:100,height:100,borderRadius:'50%',background:'rgba(255,255,255,0.05)'}}/>
+
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14,position:'relative'}}>
+              <div style={{display:'flex',alignItems:'center',gap:8}}>
+                {/* SIM chip */}
+                <div style={{width:32,height:24,borderRadius:5,background:'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',position:'relative',boxShadow:'0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4)'}}>
+                  <div style={{position:'absolute',inset:3,border:'1px solid rgba(146,80,14,0.4)',borderRadius:3,display:'grid',gridTemplateColumns:'1fr 1fr',gridTemplateRows:'1fr 1fr',gap:1}}>
+                    <div style={{borderRight:'1px solid rgba(146,80,14,0.4)',borderBottom:'1px solid rgba(146,80,14,0.4)'}}/>
+                    <div style={{borderBottom:'1px solid rgba(146,80,14,0.4)'}}/>
+                    <div style={{borderRight:'1px solid rgba(146,80,14,0.4)'}}/>
+                    <div/>
+                  </div>
+                </div>
+                <span style={{fontSize:11,fontWeight:700,letterSpacing:1.5,opacity:0.85}}>eSIM</span>
+              </div>
+              {/* Signal */}
+              <div style={{display:'flex',alignItems:'flex-end',gap:2}}>
+                {[7,11,15,19].map((h,i)=>(<div key={i} style={{width:3,height:h,borderRadius:1,background:'rgba(255,255,255,0.85)'}}/>))}
+              </div>
             </div>
-            <div style={{fontSize:18,fontWeight:800,color:'#0A1F21'}}>{esimCountry}</div>
+
+            <div style={{display:'flex',alignItems:'center',gap:12,position:'relative'}}>
+              <div style={{width:54,height:54,borderRadius:'50%',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:30,boxShadow:'0 4px 12px rgba(0,0,0,0.20), inset 0 0 0 2px rgba(255,255,255,0.4)',flexShrink:0}}>
+                {ESIM_COUNTRY_FLAGS[esimCountry] || '🌍'}
+              </div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:10,fontWeight:600,letterSpacing:1.2,opacity:0.7,textTransform:'uppercase'}}>Yo'nalish</div>
+                <div style={{fontSize:18,fontWeight:800,letterSpacing:-0.3,marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{esimCountry}</div>
+              </div>
+            </div>
+
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginTop:14,paddingTop:12,borderTop:'1px dashed rgba(255,255,255,0.18)',position:'relative'}}>
+              <div>
+                <div style={{fontSize:9,fontWeight:600,letterSpacing:1,opacity:0.6,textTransform:'uppercase'}}>Provider</div>
+                <div style={{fontSize:13,fontWeight:700,letterSpacing:0.5}}>Let's Trip · Global</div>
+              </div>
+              <div style={{textAlign:'right'}}>
+                <div style={{fontSize:9,fontWeight:600,letterSpacing:1,opacity:0.6,textTransform:'uppercase'}}>5G ready</div>
+                <div style={{fontSize:13,fontWeight:700}}>⚡ Tezkor</div>
+              </div>
+            </div>
           </div>
           {/* Tabs */}
           <div style={{display:'flex',background:'#ECEEF6',borderRadius:14,padding:4}}>
