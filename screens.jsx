@@ -1165,12 +1165,11 @@ function ScreenTrip() {
             );
           })}
         </Scroll>
-        {/* Continue CTA — appears when a plan is selected */}
+        {/* Continue CTA — fixed at bottom, always visible when a plan is selected */}
         {esimSelected !== null && (
-          <div style={{position:'absolute',left:0,right:0,bottom:64,padding:'12px 16px 14px',background:'linear-gradient(to top, #F4F5FA 60%, rgba(244,245,250,0))',zIndex:30}}>
-            <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 8px 20px rgba(0,153,168,0.32), inset 0 1px 0 rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>
+          <div style={{position:'absolute',left:0,right:0,bottom:64,padding:'14px 16px 16px',background:'#fff',zIndex:30,borderTop:'1px solid #ECEEF6',boxShadow:'0 -8px 24px rgba(10,31,33,0.06)'}}>
+            <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 8px 20px rgba(0,153,168,0.32), inset 0 1px 0 rgba(255,255,255,0.2)'}}>
               Davom etish
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </div>
         )}
