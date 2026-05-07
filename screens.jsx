@@ -1072,6 +1072,67 @@ function ScreenTrip() {
     ]
   };
 
+  /* ── eSIM country list (no esimCountry selected) ── */
+  if (page === 'esim' && !esimCountry) {
+    const ALL_COUNTRIES = [
+      {flag:'🇪🇬',name:'Egypt'},{flag:'🇹🇭',name:'Thailand'},{flag:'🇹🇷',name:'Türkiye'},
+      {flag:'🇦🇪',name:'United Arab Emirates'},{flag:'🇻🇳',name:'Vietnam'},
+      {flag:'🇺🇸',name:'United States'},{flag:'🇬🇧',name:'United Kingdom'},
+      {flag:'🇩🇪',name:'Germany'},{flag:'🇫🇷',name:'France'},{flag:'🇯🇵',name:'Japan'},
+      {flag:'🇰🇷',name:'Korea'},{flag:'🇨🇳',name:'China'},{flag:'🇸🇬',name:'Singapore'},
+      {flag:'🇮🇹',name:'Italy'},{flag:'🇪🇸',name:'Spain'},{flag:'🇨🇭',name:'Switzerland'},
+      {flag:'🇳🇱',name:'Netherlands'},{flag:'🇸🇦',name:'Saudi Arabia'},{flag:'🇮🇳',name:'India'},
+      {flag:'🇵🇰',name:'Pakistan'},{flag:'🇰🇿',name:'Kazakhstan'},{flag:'🇰🇬',name:'Kyrgyzstan'},
+      {flag:'🇷🇺',name:'Russia'},{flag:'🇨🇦',name:'Canada'},{flag:'🇲🇾',name:'Malaysia'},
+      {flag:'🇮🇩',name:'Indonesia'},{flag:'🇦🇿',name:'Azerbaijan'},{flag:'🇬🇪',name:'Georgia'},
+    ];
+    const POPULAR = ['Egypt','Thailand','Türkiye','United Arab Emirates','Vietnam'];
+    const popularItems = POPULAR.map(n => ALL_COUNTRIES.find(c=>c.name===n)).filter(Boolean);
+    const sortedAll = [...ALL_COUNTRIES].sort((a,b)=>a.name.localeCompare(b.name));
+
+    const Row = (c, idx) => (
+      <button key={c.name+idx} onClick={()=>setEsimCountry(c.name)} style={{width:'100%',background:'#fff',borderRadius:18,marginBottom:10,boxShadow:'0 2px 12px rgba(10,31,33,0.06)',border:'1px solid rgba(0,153,168,0.06)',padding:'14px 16px',display:'flex',alignItems:'center',gap:14,cursor:'pointer',textAlign:'left'}}>
+        <div style={{width:46,height:46,borderRadius:14,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,flexShrink:0}}>{c.flag}</div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>{c.name}</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    );
+    const sectionHeader = (label) => (
+      <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:1.2,padding:'14px 4px 8px'}}>{label}</div>
+    );
+
+    return (
+      <Frame>
+        {/* Sticky top: back + search */}
+        <div style={{display:'flex',alignItems:'center',gap:10,padding:'18px 16px 20px',background:'#F4F5FA',position:'sticky',top:0,zIndex:20}}>
+          <button onClick={()=>{setPage(null);setEsimCountry(null);}} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)',flexShrink:0}}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <div style={{flex:1,position:'relative',display:'flex',alignItems:'center'}}>
+            <svg style={{position:'absolute',left:14,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input placeholder="Qidiruv" style={{width:'100%',padding:'12px 16px 12px 40px',border:'none',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#fff',outline:'none',boxSizing:'border-box',boxShadow:'0 2px 8px rgba(10,31,33,0.05)'}}/>
+          </div>
+        </div>
+
+        <Scroll style={{background:'#F4F5FA',padding:'0 16px 16px'}}>
+          {/* Global */}
+          {Row({flag:'🌍',name:'Global'}, 'g')}
+
+          {/* Popular */}
+          {sectionHeader('Popular country')}
+          {popularItems.map((c,i)=>Row(c, 'p'+i))}
+
+          {/* All */}
+          {sectionHeader('All country')}
+          {sortedAll.map((c,i)=>Row(c, 'a'+i))}
+        </Scroll>
+        <TabBar active="trip"/>
+      </Frame>
+    );
+  }
+
   if (page === 'esim' && esimCountry) {
     const plans = ESIM_PLANS[esimTab] || [];
     return (
@@ -1165,10 +1226,10 @@ function ScreenTrip() {
             );
           })}
         </Scroll>
-        {/* Continue CTA — fixed at bottom, always visible when a plan is selected */}
+        {/* Continue CTA — truly fixed, no background */}
         {esimSelected !== null && (
-          <div style={{position:'absolute',left:0,right:0,bottom:64,padding:'14px 16px 16px',background:'#fff',zIndex:30,borderTop:'1px solid #ECEEF6',boxShadow:'0 -8px 24px rgba(10,31,33,0.06)'}}>
-            <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 8px 20px rgba(0,153,168,0.32), inset 0 1px 0 rgba(255,255,255,0.2)'}}>
+          <div style={{position:'fixed',bottom:78,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,padding:'0 16px',zIndex:30,pointerEvents:'none',boxSizing:'border-box'}}>
+            <button style={{width:'100%',pointerEvents:'auto',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 10px 28px rgba(0,153,168,0.45), 0 4px 12px rgba(0,153,168,0.25), inset 0 1px 0 rgba(255,255,255,0.22)'}}>
               Davom etish
             </button>
           </div>
