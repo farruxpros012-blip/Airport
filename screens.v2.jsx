@@ -896,6 +896,7 @@ function ScreenTrip() {
   const [page, setPage] = React.useState(null);
   const [sheet, setSheet] = React.useState(null); // 'all'
   const [hintShown, setHintShown] = React.useState(true);
+  const [esimCountry, setEsimCountry] = React.useState(null);
   React.useEffect(() => {
     if (page && hintShown) {
       const t = setTimeout(() => setHintShown(false), 5000);
@@ -1050,10 +1051,10 @@ function ScreenTrip() {
     return (
       <Frame>
         {/* Sticky header */}
-        <div style={{background:'#fff',position:'sticky',top:0,zIndex:20,borderBottom:'1px solid #F0F2F8'}}>
+        <div style={{background:'#fff',position:'sticky',top:0,zIndex:20,borderBottom:'1px solid #F0F2F8',marginBottom:20}}>
           {/* Row 1: back | center (tappable) | UZS */}
           <div style={{display:'flex',alignItems:'center',padding:'14px 16px 10px',gap:8}}>
-            <button onClick={()=>setPage(null)} style={{background:'none',border:'none',cursor:'pointer',padding:'4px 6px',flexShrink:0,display:'flex',alignItems:'center'}}>
+            <button onClick={()=>{ if(page==='esim' && esimCountry){ setEsimCountry(null); } else { setPage(null); setEsimCountry(null); } }} style={{background:'none',border:'none',cursor:'pointer',padding:'4px 6px',flexShrink:0,display:'flex',alignItems:'center'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             </button>
             {/* Whole center is one tap target — pill background + edit icon to signal tappability */}
@@ -1073,11 +1074,13 @@ function ScreenTrip() {
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
-          {/* Row 2: Search */}
-          <div style={{padding:'0 16px 10px',position:'relative',display:'flex',alignItems:'center'}}>
-            <svg style={{position:'absolute',left:28,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Hudud yoki davlat...',hotel:'Mehmonxona qidirish...',aviabilet:'Shahar yoki aeroport...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 40px',border:'none',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#F4F5FA',outline:'none',boxSizing:'border-box'}}/>
-          </div>
+          {/* Row 2: Search (hidden on aviabilet) */}
+          {page!=='aviabilet' && (
+            <div style={{padding:'0 16px 10px',position:'relative',display:'flex',alignItems:'center'}}>
+              <svg style={{position:'absolute',left:28,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Davlat qidirish...',hotel:'Mehmonxona qidirish...',rentcar:'Avtomobil yoki davlat...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 40px',border:'none',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#F4F5FA',outline:'none',boxSizing:'border-box'}}/>
+            </div>
+          )}
           {/* Aviabilet — airline chips + time grid */}
           {page==='aviabilet' && (
             <>
@@ -1233,8 +1236,58 @@ function ScreenTrip() {
             </div>
           ))}
 
-          {/* OTHERS (turlar/excur/esim/hotel/rentcar) — generic card with photo */}
-          {page !== 'aviabilet' && items.map((it,i)=>(
+          {/* eSIM — country grid (when no country selected) */}
+          {page==='esim' && !esimCountry && [
+            {flag:'🇺🇸',name:'United States',plans:8,from:'2.4 mln'},
+            {flag:'🇦🇪',name:'United Arab Emirates',plans:6,from:'880 ming'},
+            {flag:'🇹🇷',name:'Türkiye',plans:7,from:'770 ming'},
+            {flag:'🇬🇧',name:'United Kingdom',plans:5,from:'1.8 mln'},
+            {flag:'🇩🇪',name:'Germany',plans:6,from:'1.9 mln'},
+            {flag:'🇫🇷',name:'France',plans:5,from:'1.9 mln'},
+            {flag:'🇯🇵',name:'Japan',plans:4,from:'2.1 mln'},
+            {flag:'🇰🇷',name:'Korea',plans:5,from:'1.7 mln'},
+            {flag:'🇨🇳',name:'China',plans:4,from:'1.5 mln'},
+            {flag:'🇹🇭',name:'Thailand',plans:6,from:'990 ming'},
+            {flag:'🇸🇬',name:'Singapore',plans:4,from:'1.6 mln'},
+            {flag:'🌍',name:'Global (150+ davlat)',plans:3,from:'4.4 mln'},
+          ].map((c,i)=>(
+            <button key={i} onClick={()=>setEsimCountry(c.name)} style={{width:'100%',background:'#fff',borderRadius:18,marginBottom:10,boxShadow:'0 2px 12px rgba(10,31,33,0.06)',border:'1px solid rgba(0,153,168,0.06)',padding:'14px 16px',display:'flex',alignItems:'center',gap:14,cursor:'pointer',textAlign:'left'}}>
+              <div style={{width:46,height:46,borderRadius:14,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,flexShrink:0}}>{c.flag}</div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:14,fontWeight:700,color:'#0A1F21',marginBottom:2}}>{c.name}</div>
+                <div style={{fontSize:11,color:'#9AA1B8'}}>{c.plans} reja · dan {c.from} so'm</div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          ))}
+
+          {/* eSIM — plans for selected country */}
+          {page==='esim' && esimCountry && items.map((it,i)=>(
+            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)'}}>
+              <div style={{width:'100%',height:200,overflow:'hidden',position:'relative'}}>
+                <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+              </div>
+              <div style={{padding:'14px 16px 14px'}}>
+                <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.3}}>{esimCountry} · {it.title.split(' · ')[1] || it.title}</div>
+                <div style={{fontSize:12,color:'#9AA1B8',marginTop:3}}>{it.sub}</div>
+                <div style={{height:1,background:'#F0F2F8',margin:'12px 0'}}/>
+                <div style={{textAlign:'right',marginBottom:10}}>
+                  <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>dan {fmtPrice(it.regular)}</span>
+                </div>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:8}}>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:7,background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:999,padding:'7px 14px',boxShadow:'0 2px 8px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                    <span style={{fontSize:12,fontWeight:600,color:'#fff'}}>Premium narx: </span>
+                    <span style={{fontSize:13,fontWeight:800,color:'#fff'}}>dan {fmtPrice(it.premium)}</span>
+                  </div>
+                  <button style={{width:30,height:30,borderRadius:999,background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:16,fontWeight:700,padding:0,flexShrink:0}}>···</button>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* OTHERS (turlar/excur/hotel/rentcar) — generic card with photo */}
+          {page !== 'aviabilet' && page !== 'esim' && items.map((it,i)=>(
             <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)'}}>
               {/* Photo with dot indicator (hotel) */}
               <div style={{width:'100%',height:200,overflow:'hidden',position:'relative'}}>
@@ -1402,33 +1455,33 @@ function ScreenTrip() {
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
                 <div style={{width:'100%',aspectRatio:'16/9',borderRadius:16,overflow:'hidden',position:'relative',marginBottom:10,border:'1px solid rgba(0,153,168,0.12)'}}>
-                  <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=700" alt="Toyota Camry" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                  <div style={{position:'absolute',top:8,left:8,background:T,color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>Komfort</div>
+                  <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=700" alt="Uzbekistan" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                  <div style={{position:'absolute',top:8,left:8,background:T,color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>🇺🇿 Mahalliy</div>
                 </div>
                 <div style={{padding:'0 4px 8px'}}>
-                  <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>Sedan klassi</div>
-                  <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>Toyota Camry, Hyundai Sonata</div>
+                  <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>Uzbekistan</div>
+                  <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>Toshkent · Samarqand · Buxoro</div>
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
-                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Kunlik</div><div style={{fontSize:11,fontWeight:700,color:T}}>450 000 so'm</div></div>
-                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Haftalik</div><div style={{fontSize:11,fontWeight:700,color:T}}>2.8 mln so'm</div></div>
-                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Yoqilg'i</div><div style={{fontSize:11,fontWeight:700,color:T}}>Cheksiz km</div></div>
-                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Sug'urta</div><div style={{fontSize:11,fontWeight:700,color:T}}>Bepul</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Sedan</div><div style={{fontSize:11,fontWeight:700,color:T}}>450 000 so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Krossover</div><div style={{fontSize:11,fontWeight:700,color:T}}>700 000 so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Biznes</div><div style={{fontSize:11,fontWeight:700,color:T}}>950 000 so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Premium</div><div style={{fontSize:11,fontWeight:700,color:T}}>1.5 mln so'm</div></div>
                   </div>
                 </div>
               </div>
               <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
                 <div style={{width:'100%',aspectRatio:'16/9',borderRadius:16,overflow:'hidden',position:'relative',marginBottom:10,border:'1px solid rgba(0,153,168,0.12)'}}>
-                  <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=700" alt="Mercedes" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                  <div style={{position:'absolute',top:8,left:8,background:'#F08A2C',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>Premium</div>
+                  <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=700" alt="UAE" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                  <div style={{position:'absolute',top:8,left:8,background:'#F08A2C',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>🇦🇪 Xalqaro</div>
                 </div>
                 <div style={{padding:'0 4px 8px'}}>
-                  <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>Biznes klass</div>
-                  <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>Mercedes E, BMW 5</div>
+                  <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>United Arab Emirates</div>
+                  <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>Dubai · Abu Dhabi · Sharjah</div>
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
-                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Kunlik</div><div style={{fontSize:11,fontWeight:700,color:T}}>950 000 so'm</div></div>
-                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Haftalik</div><div style={{fontSize:11,fontWeight:700,color:T}}>5.8 mln so'm</div></div>
-                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Avtomatik</div><div style={{fontSize:11,fontWeight:700,color:T}}>Bor</div></div>
-                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Yetkazib berish</div><div style={{fontSize:11,fontWeight:700,color:T}}>Bepul</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Sedan</div><div style={{fontSize:11,fontWeight:700,color:T}}>1.2 mln so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Krossover</div><div style={{fontSize:11,fontWeight:700,color:T}}>1.8 mln so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Biznes</div><div style={{fontSize:11,fontWeight:700,color:T}}>2.4 mln so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Sport</div><div style={{fontSize:11,fontWeight:700,color:T}}>4.5 mln so'm</div></div>
                   </div>
                 </div>
               </div>
