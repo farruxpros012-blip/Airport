@@ -888,7 +888,14 @@ const TRIP_RESULTS = {
 function ScreenTrip() {
   const [open, setOpen] = React.useState({ turlar: true, aviabilet: true });
   const [page, setPage] = React.useState(null);
-  const [sheet, setSheet] = React.useState(null); // 'route'|'dates'|'guests'
+  const [sheet, setSheet] = React.useState(null); // 'all'
+  const [hintShown, setHintShown] = React.useState(true);
+  React.useEffect(() => {
+    if (page && hintShown) {
+      const t = setTimeout(() => setHintShown(false), 5000);
+      return () => clearTimeout(t);
+    }
+  }, [page, hintShown]);
   const [route, setRoute] = React.useState({ from:'Toshkent', to:'Dubai' });
   const [dates, setDates] = React.useState({ start:'15 May', end:'20 May', nights:5 });
   const [guests, setGuests] = React.useState({ adults:2, children:0 });
@@ -1032,16 +1039,32 @@ function ScreenTrip() {
             <button onClick={()=>setPage(null)} style={{background:'none',border:'none',cursor:'pointer',padding:'4px 6px',flexShrink:0,display:'flex',alignItems:'center'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             </button>
-            {/* Whole center is one tap target */}
-            <button onClick={()=>setSheet('all')} style={{flex:1,background:'none',border:'none',cursor:'pointer',padding:0,textAlign:'center'}}>
-              <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',lineHeight:1.25}}>{route.from} — {route.to}</div>
-              <div style={{fontSize:12,color:T,fontWeight:500,marginTop:2}}>{dates.start}–{dates.end} · {dates.nights} kecha · {guests.adults + guests.children} kishi</div>
+            {/* Whole center is one tap target — pill background + edit icon to signal tappability */}
+            <button onClick={()=>setSheet('all')} style={{flex:1,background:TBG,border:'none',cursor:'pointer',padding:'8px 14px',textAlign:'center',borderRadius:14,display:'flex',alignItems:'center',justifyContent:'center',gap:10,position:'relative'}}>
+              <div>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6,fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.2}}>
+                  {route.from} — {route.to}
+                </div>
+                <div style={{fontSize:11,color:T,fontWeight:600,marginTop:2}}>{dates.start}–{dates.end} · {dates.nights} kecha · {guests.adults + guests.children} kishi</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:0.85}}>
+                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
             </button>
             <button style={{display:'flex',alignItems:'center',gap:2,background:'none',border:'none',cursor:'pointer',padding:'4px 6px',flexShrink:0}}>
               <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>UZS</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
+          {/* Tappable hint — auto-hides after 5s */}
+          {hintShown && (
+            <div style={{display:'flex',justifyContent:'center',padding:'0 16px 8px',animation:'fadeIn 0.3s ease'}}>
+              <div style={{display:'flex',alignItems:'center',gap:6,background:'#FFF8EC',border:'1px solid rgba(240,138,44,0.25)',borderRadius:999,padding:'5px 12px',fontSize:11,color:'#92520C',fontWeight:600,boxShadow:'0 2px 8px rgba(240,138,44,0.12)'}}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92520C" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12l5 5L20 7" transform="rotate(-90 12 12)"/></svg>
+                Bosing — sana, mehmonlar va yo'nalishni o'zgartiring
+              </div>
+            </div>
+          )}
           {/* Row 2: Search */}
           <div style={{padding:'0 16px 10px',position:'relative',display:'flex',alignItems:'center'}}>
             <svg style={{position:'absolute',left:28,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
