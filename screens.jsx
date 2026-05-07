@@ -416,228 +416,22 @@ function ScreenHome() {
 // SCREEN 2 — SERVICES
 // ═════════════════════════════════════════════════════════════
 function ScreenServices() {
-  const [open, setOpen] = React.useState({ turlar: true, aviabilet: true });
-  const toggle = (key) => setOpen(o => ({ ...o, [key]: !o[key] }));
-
-  const TEAL_SVC = '#0099A8';
-  const TEAL_BG = '#E0F2F3';
-  const CARD_SHADOW = '0 8px 24px rgba(0,153,168,0.10)';
-  const cardStyle = { background: '#fff', borderRadius: 24, boxShadow: CARD_SHADOW, border: '1px solid rgba(0,153,168,0.10)', overflow: 'hidden', marginBottom: 16 };
-  const summaryStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', cursor: 'pointer' };
-  const iconBox = { width: 44, height: 44, borderRadius: 14, background: TEAL_SVC, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 };
-  const chevron = (isOpen) => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.25s' }}>
-      <path d="M6 9l6 6 6-6"/>
-    </svg>
-  );
-  const primaryBtn = { width: '100%', background: TEAL_SVC, color: '#fff', border: 'none', borderRadius: 20, padding: '13px 0', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 16 };
-  const miniCard = { background: '#E0F2F3', padding: '8px 10px', borderRadius: 14, border: '1px solid rgba(0,153,168,0.15)' };
-
-  const SlideCard = ({ img, badge, title, sub, prices }) => (
-    <div style={{ flexShrink: 0, width: '85%', scrollSnapAlign: 'center' }}>
-      <div style={{ width: '100%', aspectRatio: '16/9', borderRadius: 16, overflow: 'hidden', position: 'relative', marginBottom: 10, border: '1px solid rgba(0,153,168,0.12)' }}>
-        <img src={img} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
-        {badge && <div style={{ position: 'absolute', top: 8, left: 8, background: TEAL_SVC, color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999 }}>{badge}</div>}
-      </div>
-      <div style={{ padding: '0 4px 8px' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: '#0A1F21', marginBottom: 2 }}>{title}</div>
-        <div style={{ fontSize: 11, color: '#5C7577', marginBottom: 8 }}>{sub}</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-          {prices.map((p, i) => (
-            <div key={i} style={miniCard}>
-              <div style={{ fontSize: 10, color: '#5C7577', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.label}</div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: TEAL_SVC }}>{p.price}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const AccordionHeader = ({ icon, label, isOpen, onToggle }) => (
-    <div onClick={onToggle} style={summaryStyle}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={iconBox}>{icon}</div>
-        <span style={{ fontSize: 15, fontWeight: 600, color: '#0A1F21' }}>{label}</span>
-      </div>
-      {chevron(isOpen)}
-    </div>
-  );
-
-  const iconSvg = (d, size=22) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d={d}/>
-    </svg>
-  );
-  const planeIcon = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>;
-  const compassIcon = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>;
-  const mapPinIcon = iconSvg("M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z");
-  const globeIcon = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/></svg>;
-  const hotelIcon = iconSvg("M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10");
-  const carIcon = iconSvg("M5 17H3v-5l2-5h14l2 5v5h-2m-1 0H7m10 0a1 1 0 1 0 2 0 1 1 0 0 0-2 0M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0");
-  const taxiIcon = iconSvg("M5 17H3v-5l2-5h14l2 5v5h-2M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M15 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0");
-  const busIcon = iconSvg("M8 6v6m8-6v6M3 6h18M3 10h18M3 14h18M5 18l1 2h12l1-2M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14H6V4z");
-
+  const services = [
+    { icon: <IconBolt size={22} color={C.brand}/>,    title: 'Fast Track',        sub: 'Priority Lane' },
+    { icon: <IconCrown size={22} color={C.brand}/>,   title: 'Concierge',         sub: 'Персональное сопровождение, помощь с багажом и…' },
+    { icon: <IconCar size={22} color={C.brand}/>,     title: 'Airport Taxi',      sub: 'Заказ официального такси с фиксированной ценой до любого…' },
+    { icon: <IconLounge size={22} color={C.brand}/>,  title: 'CIP Lounge',        sub: 'Business and First class access' },
+    { icon: <IconBed size={22} color={C.brand}/>,     title: 'Airport Hotel',     sub: 'Капсулы, номера и душ прямо в терминале — для ожидания,…' },
+    { icon: <IconBag size={22} color={C.brand}/>,     title: 'Хранение багажа',   sub: 'Безопасное хранение в аэропорту. Видеонаблюдение 24/7, страховка…' },
+  ];
   return (
     <Frame>
-      {/* Header */}
-      <div style={{ padding: '16px 20px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #ECEEF6', background: C.bg, position: 'sticky', top: 0, zIndex: 10 }}>
-        <div style={{ width: 32, height: 32 }}/>
-        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#0A1F21' }}>Xizmatlar</h1>
-        <div style={{ width: 36, height: 36, borderRadius: '50%', background: `linear-gradient(135deg, ${TEAL_SVC} 0%, #067865 100%)`, boxShadow: '0 2px 8px rgba(0,153,168,0.25)' }}/>
-      </div>
-
+      <PageHeader title="Услуги аэропорта"/>
       <Scroll>
-        {/* Turlar */}
-        <div style={cardStyle}>
-          <AccordionHeader icon={compassIcon} label="Turlar" isOpen={open.turlar} onToggle={() => toggle('turlar')}/>
-          {open.turlar && (
-            <div style={{ paddingBottom: 20 }}>
-              <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', padding: '0 20px' }}>
-                <SlideCard img="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600" badge="Turkiya" title="Turkiya: 5 100 000 so'mdan" sub="7 kecha · 2 kishi uchun · Ultra All Inclusive" prices={[{label:'Antaliya',price:'7.2 mln'},{label:'Istanbul',price:'5.1 mln'},{label:'Bodrum',price:'8.4 mln'},{label:'Izmir',price:'6.2 mln'}]}/>
-                <SlideCard img="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600" badge="BAA (Dubay)" title="Dubay: 6 800 000 so'mdan" sub="5 kecha · Premium mehmonxonalar" prices={[{label:'Jumeirah Beach',price:'9.8 mln'},{label:'Marina View',price:'7.5 mln'},{label:'Downtown',price:'11.2 mln'},{label:'Palm Island',price:'15.4 mln'}]}/>
-              </div>
-              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha turlarni ko'rish</button></div>
-            </div>
-          )}
-        </div>
-
-        {/* Ekskursiya */}
-        <div style={cardStyle}>
-          <AccordionHeader icon={mapPinIcon} label="Ekskursiya" isOpen={open.excur} onToggle={() => toggle('excur')}/>
-          {open.excur && (
-            <div style={{ paddingBottom: 20 }}>
-              <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', padding: '0 20px' }}>
-                <SlideCard img="https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600" badge="O'zbekiston" title="Tarixiy shaharlar bo'ylab" sub="Eng mashhur yo'nalishlar" prices={[{label:"Xiva safari",price:'450 000'},{label:'Eski Buxoro',price:'380 000'},{label:'Samarqand',price:'520 000'},{label:'Tashkent City',price:'250 000'}]}/>
-              </div>
-              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha ekskursiyalarni ko'rish</button></div>
-            </div>
-          )}
-        </div>
-
-        {/* eSIM */}
-        <div style={cardStyle}>
-          <AccordionHeader icon={globeIcon} label="eSIM" isOpen={open.esim} onToggle={() => toggle('esim')}/>
-          {open.esim && (
-            <div style={{ paddingBottom: 20 }}>
-              <div style={{ margin: '0 20px', background: '#EDF7F8', borderRadius: 16, padding: 16, position: 'relative', overflow: 'hidden', border: '1px solid rgba(0,153,168,0.15)' }}>
-                <div style={{ position: 'absolute', top: 8, right: 8, opacity: 0.08 }}>
-                  <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
-                </div>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-                  <span style={{ background: '#1D4ED8', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999 }}>YEVROPA</span>
-                  <span style={{ background: TEAL_BG, color: TEAL_SVC, fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999, border: '1px solid rgba(0,153,168,0.2)' }}>34 Davlat</span>
-                </div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#0A1F21', marginBottom: 4 }}>Cheksiz</div>
-                <div style={{ fontSize: 11, color: '#5C7577', marginBottom: 12 }}>Cheksiz internet + 5G tezlik</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                  <span style={{ fontSize: 15, fontWeight: 700, color: '#0A1F21' }}>7 kun</span>
-                  <span style={{ fontSize: 15, fontWeight: 700, color: TEAL_SVC }}>150 000 so'm</span>
-                </div>
-              </div>
-              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha eSIMlarni ko'rish</button></div>
-            </div>
-          )}
-        </div>
-
-        {/* Mehmonxona */}
-        <div style={cardStyle}>
-          <AccordionHeader icon={hotelIcon} label="Mehmonxona" isOpen={open.hotel} onToggle={() => toggle('hotel')}/>
-          {open.hotel && (
-            <div style={{ paddingBottom: 20 }}>
-              <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', padding: '0 20px' }}>
-                <SlideCard img="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" badge="Ommabop" title="Toshkent" sub="Premium dam olish maskanlari" prices={[{label:'Hyatt Regency',price:'2.4 mln'},{label:'Hilton Tashkent',price:'2.1 mln'}]}/>
-              </div>
-              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha mehmonxonalarni ko'rish</button></div>
-            </div>
-          )}
-        </div>
-
-        {/* Aviabilet */}
-        <div style={cardStyle}>
-          <AccordionHeader icon={planeIcon} label="Aviabilet" isOpen={open.aviabilet} onToggle={() => toggle('aviabilet')}/>
-          {open.aviabilet && (
-            <div style={{ paddingBottom: 20 }}>
-              <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', padding: '0 20px' }}>
-                <SlideCard img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600" badge="BAA (Dubay)" title="Dubay — Toshkent" sub="Mashhur yo'nalishlar" prices={[{label:'DXB → TAS',price:'3.1 mln'},{label:'TAS → DXB',price:'3.4 mln'}]}/>
-              </div>
-              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha chiptalarni ko'rish</button></div>
-            </div>
-          )}
-        </div>
-
-        {/* Airport taxi */}
-        <div style={cardStyle}>
-          <AccordionHeader icon={taxiIcon} label="Airport taxi" isOpen={open.taxi} onToggle={() => toggle('taxi')}/>
-          {open.taxi && (
-            <div style={{ padding: '0 20px 20px' }}>
-              <div style={{ display: 'flex', background: '#F0F2F8', borderRadius: 12, padding: 4, marginBottom: 16 }}>
-                <button style={{ flex: 1, padding: '8px 0', fontSize: 11, fontWeight: 700, background: '#fff', borderRadius: 10, border: 'none', color: TEAL_SVC, boxShadow: '0 1px 4px rgba(0,0,0,0.08)', cursor: 'pointer' }}>Aeroportga borish</button>
-                <button style={{ flex: 1, padding: '8px 0', fontSize: 11, fontWeight: 600, background: 'none', border: 'none', color: '#9AA1B8', cursor: 'pointer' }}>Aeroportdan ketish</button>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: TEAL_BG, borderRadius: 16, border: '1px solid rgba(0,153,168,0.15)', marginBottom: 4 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={TEAL_SVC} strokeWidth="2" strokeLinecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                <div>
-                  <div style={{ fontSize: 10, color: '#5C7577', textTransform: 'uppercase' }}>Qayerdan</div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: '#0A1F21' }}>O'z manzilingizni kiriting</div>
-                </div>
-              </div>
-              <button style={primaryBtn}>Taksi buyurtma qilish</button>
-            </div>
-          )}
-        </div>
-
-        {/* Transfer */}
-        <div style={cardStyle}>
-          <AccordionHeader icon={busIcon} label="Transfer" isOpen={open.transfer} onToggle={() => toggle('transfer')}/>
-          {open.transfer && (
-            <div style={{ padding: '0 20px 20px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 4 }}>
-                <div style={{ padding: 12, background: TEAL_BG, borderRadius: 16, border: '1px solid rgba(0,153,168,0.15)' }}>
-                  <div style={{ fontSize: 10, color: '#5C7577', textTransform: 'uppercase', marginBottom: 4 }}>Qayerdan</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1F21' }}>Toshkent</div>
-                </div>
-                <div style={{ padding: 12, background: TEAL_BG, borderRadius: 16, border: '1px solid rgba(0,153,168,0.15)' }}>
-                  <div style={{ fontSize: 10, color: '#5C7577', textTransform: 'uppercase', marginBottom: 4 }}>Qayerga</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1F21' }}>Samarqand</div>
-                </div>
-              </div>
-              <button style={primaryBtn}>Transferni band qilish</button>
-            </div>
-          )}
-        </div>
-
-        {/* Mashhur yo'nalishlar */}
-        <div style={{ fontSize: 20, fontWeight: 700, color: '#0A1F21', margin: '8px 0 12px', letterSpacing: -0.3 }}>Mashhur yo'nalishlar</div>
-        <div style={{ background: '#fff', borderRadius: 16, padding: 16, boxShadow: CARD_SHADOW, border: '1px solid rgba(0,153,168,0.10)', marginBottom: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: TEAL_SVC, marginTop: 6, flexShrink: 0 }}/>
-          <div>
-            <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 600, color: '#5C7577', marginBottom: 4 }}>O'zbekistondan</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: '#0A1F21', marginBottom: 2 }}>Samarqand — Rim</div>
-            <div style={{ fontSize: 13, color: '#5C7577', marginBottom: 4 }}>2 soat 40 daqiqa</div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: TEAL_SVC }}>3 450 000 so'm dan</div>
-          </div>
-        </div>
-
-        {/* Promo grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24, height: 180 }}>
-          <div style={{ background: TEAL_BG, borderRadius: 20, padding: 16, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid rgba(0,153,168,0.15)', boxShadow: CARD_SHADOW }}>
-            <div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: TEAL_SVC, marginBottom: 8, lineHeight: 1.3 }}>Global eSIM xizmati</div>
-              <div style={{ fontSize: 11, color: '#5C7577', lineHeight: 1.5 }}>Dunyoning 150+ davlatida aloqada bo'ling.</div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: TEAL_SVC, fontWeight: 700, fontSize: 13 }}>
-              Batafsil
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={TEAL_SVC} strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </div>
-          </div>
-          <div style={{ borderRadius: 20, overflow: 'hidden', position: 'relative', border: '1px solid rgba(0,153,168,0.10)', boxShadow: CARD_SHADOW }}>
-            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400" alt="eSIM" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.35), transparent)' }}/>
-          </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {services.map((s, i) => <ServiceRow key={i} {...s}/>)}
         </div>
       </Scroll>
-
       <TabBar active="serv"/>
     </Frame>
   );
@@ -1050,719 +844,188 @@ const DEST_LABEL = {
 };
 const FROM_LABEL = { flight: 'Qayerdan?', taxi: 'Qaysi aeroportdan?', xfer: 'Qayerdan?' };
 
+// ═════════════════════════════════════════════════════════════
+// SCREEN — LET'S TRIP (accordion services)
+// ═════════════════════════════════════════════════════════════
 function ScreenTrip() {
-  const [view, setView] = React.useState('home'); // 'home' | 'searchAll' | 'category' | 'results'
-  const [catView, setCatView] = React.useState(null); // category id for category view
-  const [activeService, setActiveService] = React.useState(null);
-  const [searchParams, setSearchParams] = React.useState(null);
+  const [open, setOpen] = React.useState({ turlar: true, aviabilet: true });
+  const toggle = (key) => setOpen(o => ({ ...o, [key]: !o[key] }));
 
-  if (view === 'results') {
-    return <TripResultsView params={searchParams || {}} onBack={() => setView('home')}/>;
-  }
+  const T = '#0099A8';
+  const TBG = '#E0F2F3';
+  const SH = '0 8px 24px rgba(0,153,168,0.10)';
+  const card = { background:'#fff', borderRadius:24, boxShadow:SH, border:'1px solid rgba(0,153,168,0.10)', overflow:'hidden', marginBottom:16 };
+  const row = { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', cursor:'pointer' };
+  const iBox = { width:44, height:44, borderRadius:14, background:T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 };
+  const btn = { width:'100%', background:T, color:'#fff', border:'none', borderRadius:20, padding:'13px 0', fontSize:14, fontWeight:600, cursor:'pointer', marginTop:16 };
+  const mc = { background:TBG, padding:'8px 10px', borderRadius:14, border:'1px solid rgba(0,153,168,0.15)' };
 
-  if (view === 'searchAll') {
-    return (
-      <SearchAllScreen
-        title="Sayohat qilmoqchiman"
-        services={ALL_SERVICES}
-        active={activeService || 'flight'}
-        onSelect={setActiveService}
-        onBack={() => { setView('home'); setActiveService(null); }}
-        onSearch={(p) => { setSearchParams(p); setView('results'); }}
-      />
-    );
-  }
-
-  if (view === 'searchAllLogo') {
-    return (
-      <SearchAllScreen
-        title="Sayohat qilmoqchiman"
-        services={ALL_SERVICES}
-        active={activeService || 'flight'}
-        onSelect={setActiveService}
-        onBack={() => { setView('home'); setActiveService(null); }}
-        onSearch={(p) => { setSearchParams(p); setView('results'); }}
-        logoHeader
-      />
-    );
-  }
-
-  if (view === 'category') {
-    const cat = TRIP_CATS_NEW.find(c => c.id === catView) || TRIP_CATS_NEW[0];
-    return (
-      <SearchAllScreen
-        title={cat.label}
-        services={cat.services}
-        active={activeService || cat.services[0]}
-        onSelect={setActiveService}
-        onBack={() => { setView('home'); setActiveService(null); }}
-        onSearch={(p) => { setSearchParams(p); setView('results'); }}
-      />
-    );
-  }
-
-  return (
-    <Frame>
-      {/* Hero */}
-      <div style={{ position: 'relative' }}>
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'linear-gradient(45deg, #4A6BD4 0%, #1F9FBE 35%, #2DD4DC 70%, #7EE0E6 100%)',
-          pointerEvents: 'none', zIndex: 0,
-        }}/>
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          {/* Logo row */}
-          <button onClick={() => { setActiveService(null); setView('searchAllLogo'); }} style={{ padding: '20px 20px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', width: '100%' }}>
-            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src="assets/lets-trip-logo.png?v=3" alt="Let's Trip" style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
-            </div>
-            <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, color: '#FFFFFF' }}>Let's Trip</div>
-          </button>
-
-          {/* Search bar */}
-          <div style={{ padding: '0 20px 20px' }}>
-            <button
-              onClick={() => { setActiveService('flight'); setView('searchAll'); }}
-              style={{
-                width: '100%', padding: '14px 18px',
-                background: '#fff', borderRadius: 999, border: 'none',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                boxShadow: '0 4px 20px rgba(0,0,0,0.14)',
-                cursor: 'pointer',
-              }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={TRIP_INK} strokeWidth="2.2" strokeLinecap="round">
-                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>
-              </svg>
-              <span style={{ color: TRIP_INK, fontSize: 15, fontWeight: 600 }}>Qayerga sayohat?</span>
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Categories — outside hero, on page bg */}
-      <div style={{ padding: '24px 20px 12px' }}>
-        <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2 }}>
-          Kategoriyalar
-        </div>
-      </div>
-      <div style={{ padding: '0 16px 0', display: 'flex', gap: 10 }}>
-        {TRIP_CATS_NEW.map(cat => (
-          <button key={cat.id}
-            onClick={() => { setCatView(cat.id); setActiveService(cat.services[0]); setView('category'); }}
-            style={{
-              flex: 1, border: 'none', cursor: 'pointer',
-              background: 'transparent', padding: 0,
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
-            }}>
-            <div style={{
-              width: '100%', padding: '16px 8px',
-              background: '#fff', borderRadius: 999,
-              boxShadow: '0 4px 14px rgba(15,42,74,0.08)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-              minHeight: 56,
-            }}>
-              {cat.services.map(svcId => (
-                <span key={svcId} style={{
-                  display: 'inline-flex',
-                  filter: 'brightness(0) saturate(100%) invert(35%) sepia(60%) saturate(900%) hue-rotate(155deg) brightness(85%) contrast(95%)',
-                }}>
-                  {CAT_DEF[svcId].icon}
-                </span>
-              ))}
-            </div>
-            <span style={{
-              fontSize: 11, fontWeight: 800, color: TRIP_INK,
-              letterSpacing: 1.2, textTransform: 'uppercase',
-            }}>{cat.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Recent searches */}
-      <div style={{ padding: '24px 20px 0' }}>
-        <div style={{ fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2, marginBottom: 12 }}>
-          So'nggi qidiruvlar
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {RECENT_SEARCHES.map((r, i) => (
-            <button key={i} onClick={() => { setSearchParams({ to: r.to, from: r.from }); setView('results'); }}
-              style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#fff', border: 'none', borderRadius: 14, padding: '12px 14px', cursor: 'pointer', boxShadow: '0 2px 8px rgba(15,42,74,0.07)', textAlign: 'left' }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: 11, flexShrink: 0,
-                background: 'linear-gradient(155deg, #FFFFFF 0%, #EEF1FB 50%, #DDE3F4 100%)',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 2px rgba(59,71,200,0.06), 0 2px 6px rgba(59,71,200,0.10), 0 0 0 1px rgba(59,71,200,0.04)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A7E8A" strokeWidth="2.4" strokeLinecap="round">
-                  <circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>
-                </svg>
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: TRIP_INK }}>{r.from} → {r.to}</div>
-                <div style={{ fontSize: 12, fontWeight: 500, color: '#7A8499', marginTop: 1 }}>{r.date}</div>
-              </div>
-              <span style={{
-                fontSize: 11, fontWeight: 700, color: '#1A7E8A',
-                padding: '5px 11px', borderRadius: 999,
-                background: 'linear-gradient(155deg, #FFFFFF 0%, #EEF1FB 50%, #DDE3F4 100%)',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 2px rgba(59,71,200,0.06), 0 2px 6px rgba(59,71,200,0.10), 0 0 0 1px rgba(59,71,200,0.04)',
-                textTransform: 'uppercase', letterSpacing: 0.4,
-              }}>{r.service}</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4C9DB" strokeWidth="2.4" strokeLinecap="round">
-                <path d="M9 6l6 6-6 6"/>
-              </svg>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Popular destinations */}
-      <div style={{ padding: '24px 0 0' }}>
-        <div style={{ padding: '0 20px 12px', fontSize: 18, fontWeight: 700, color: TRIP_INK, letterSpacing: -0.2 }}>
-          Mashhur yo'nalishlar
-        </div>
-        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingLeft: 20, paddingRight: 20, paddingBottom: 4, scrollbarWidth: 'none' }}>
-          {POPULAR_DESTS.map(dest => (
-            <div key={dest.id} onClick={() => { setSearchParams({ to: dest.city, toCountry: dest.country }); setView('results'); }}
-              style={{ flexShrink: 0, width: 160, borderRadius: 20, overflow: 'hidden', position: 'relative', cursor: 'pointer', boxShadow: '0 6px 20px rgba(15,42,74,0.14)' }}>
-              <img src={dest.img} alt={dest.city} style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }}/>
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(10,25,50,0.78) 100%)' }}/>
-              <div style={{ position: 'absolute', bottom: 44, left: 12, right: 12 }}>
-                <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', letterSpacing: -0.3 }}>{dest.city}</div>
-                <div style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.80)', marginTop: 2 }}>{dest.country}</div>
-              </div>
-              <div style={{ position: 'absolute', bottom: 10, left: 10, right: 10 }}>
-                <div style={{ background: 'rgba(255,255,255,0.22)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.35)', borderRadius: 999, padding: '7px 0', textAlign: 'center', fontSize: 12, fontWeight: 700, color: '#fff' }}>Ko'rish</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <TabBar active="trip"/>
-    </Frame>
+  const Chevron = ({on}) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round" style={{transform:on?'rotate(180deg)':'none',transition:'0.25s'}}>
+      <path d="M6 9l6 6 6-6"/>
+    </svg>
   );
-}
+  const Ico = ({d}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
+  const Head = ({icon,label,k}) => (
+    <div onClick={()=>toggle(k)} style={row}>
+      <div style={{display:'flex',alignItems:'center',gap:12}}>
+        <div style={iBox}>{icon}</div>
+        <span style={{fontSize:15,fontWeight:600,color:'#0A1F21'}}>{label}</span>
+      </div>
+      <Chevron on={open[k]}/>
+    </div>
+  );
+  const Slide = ({img,badge,title,sub,prices}) => (
+    <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
+      <div style={{width:'100%',aspectRatio:'16/9',borderRadius:16,overflow:'hidden',position:'relative',marginBottom:10,border:'1px solid rgba(0,153,168,0.12)'}}>
+        <img src={img} alt={title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+        {badge && <div style={{position:'absolute',top:8,left:8,background:T,color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>{badge}</div>}
+      </div>
+      <div style={{padding:'0 4px 8px'}}>
+        <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>{title}</div>
+        <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>{sub}</div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
+          {prices.map((p,i)=><div key={i} style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{p.label}</div><div style={{fontSize:11,fontWeight:700,color:T}}>{p.price}</div></div>)}
+        </div>
+      </div>
+    </div>
+  );
 
-// Full-screen search: all 8 services + adaptive form below
-function SearchAllScreen({ active, onSelect, onBack, onSearch, services = ALL_SERVICES, title = 'Sayohat qilmoqchiman', logoHeader = false }) {
+  const planeIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>;
+  const compassIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>;
+  const globeIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/></svg>;
+
   return (
     <Frame>
       {/* Header */}
-      {logoHeader ? (
-        <button onClick={onBack} style={{ width: '100%', padding: '20px 20px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', position: 'sticky', top: 0, zIndex: 10, backgroundColor: C.bg }}>
-          <img src="assets/lets-trip-logo-brand.png?v=1" alt="Let's Trip" style={{ height: 40, width: 40, objectFit: 'contain', display: 'block' }}/>
-          <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, color: TRIP_INK }}>Let's Trip</div>
-        </button>
-      ) : (
-        <div style={{ padding: '16px 20px 12px', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, zIndex: 10, background: C.bg }}>
-          <button onClick={onBack} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(15,42,74,0.08)', cursor: 'pointer', flexShrink: 0 }}>
-            <IconBack size={20} color={TRIP_INK}/>
-          </button>
-          <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: -0.4, color: TRIP_INK }}>
-            {title}
-          </h1>
+      <div style={{padding:'16px 20px 12px',display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid #ECEEF6',background:C.bg,position:'sticky',top:0,zIndex:10}}>
+        <div style={{width:32}}/>
+        <h1 style={{margin:0,fontSize:18,fontWeight:700,color:'#0A1F21'}}>Let's Trip</h1>
+        <div style={{width:36,height:36,borderRadius:'50%',background:`linear-gradient(135deg, ${T} 0%, #067865 100%)`,boxShadow:'0 2px 8px rgba(0,153,168,0.25)'}}/>
+      </div>
+
+      <Scroll>
+        {/* Turlar */}
+        <div style={card}>
+          <Head icon={compassIco} label="Turlar" k="turlar"/>
+          {open.turlar && <div style={{paddingBottom:20}}>
+            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
+              <Slide img="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600" badge="Turkiya" title="Turkiya: 5 100 000 so'mdan" sub="7 kecha · 2 kishi · Ultra All Inclusive" prices={[{label:'Antaliya',price:'7.2 mln'},{label:'Istanbul',price:'5.1 mln'},{label:'Bodrum',price:'8.4 mln'},{label:'Izmir',price:'6.2 mln'}]}/>
+              <Slide img="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600" badge="BAA (Dubay)" title="Dubay: 6 800 000 so'mdan" sub="5 kecha · Premium mehmonxonalar" prices={[{label:'Jumeirah Beach',price:'9.8 mln'},{label:'Marina View',price:'7.5 mln'},{label:'Downtown',price:'11.2 mln'},{label:'Palm Island',price:'15.4 mln'}]}/>
+            </div>
+            <div style={{padding:'0 20px'}}><button style={btn}>Barcha turlarni ko'rish</button></div>
+          </div>}
         </div>
-      )}
 
-      {/* Service icons grid */}
-      <div style={{ padding: '4px 20px 20px', display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: services.length < 4 ? 'center' : 'flex-start' }}>
-        {services.map(svcId => {
-          const on = active === svcId;
-          return (
-            <button key={svcId} onClick={() => onSelect(svcId)}
-              style={{ width: 'calc(25% - 9px)', border: 'none', background: 'transparent', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-              <div style={{
-                width: 56, height: 56, borderRadius: 999,
-                background: on ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)` : '#fff',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: on ? '0 6px 16px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.4)' : '0 2px 8px rgba(15,42,74,0.08)',
-                transition: 'all 0.15s',
-              }}>
-                <span style={{ filter: on ? 'brightness(0) invert(1)' : 'none', display: 'inline-flex' }}>
-                  {CAT_DEF[svcId].icon}
-                </span>
+        {/* Ekskursiya */}
+        <div style={card}>
+          <Head icon={<Ico d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>} label="Ekskursiya" k="excur"/>
+          {open.excur && <div style={{paddingBottom:20}}>
+            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
+              <Slide img="https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600" badge="O'zbekiston" title="Tarixiy shaharlar bo'ylab" sub="Eng mashhur yo'nalishlar" prices={[{label:"Xiva safari",price:'450 000'},{label:'Eski Buxoro',price:'380 000'},{label:'Samarqand',price:'520 000'},{label:'Tashkent City',price:'250 000'}]}/>
+            </div>
+            <div style={{padding:'0 20px'}}><button style={btn}>Barcha ekskursiyalarni ko'rish</button></div>
+          </div>}
+        </div>
+
+        {/* eSIM */}
+        <div style={card}>
+          <Head icon={globeIco} label="eSIM" k="esim"/>
+          {open.esim && <div style={{paddingBottom:20}}>
+            <div style={{margin:'0 20px',background:'#EDF7F8',borderRadius:16,padding:16,position:'relative',overflow:'hidden',border:'1px solid rgba(0,153,168,0.15)'}}>
+              <div style={{position:'absolute',top:8,right:8,opacity:0.08}}><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></div>
+              <div style={{display:'flex',gap:8,marginBottom:12}}>
+                <span style={{background:'#1D4ED8',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>YEVROPA</span>
+                <span style={{background:TBG,color:T,fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999,border:'1px solid rgba(0,153,168,0.2)'}}>34 Davlat</span>
               </div>
-              <span style={{ fontSize: 11, fontWeight: 600, color: on ? TEAL : TRIP_INK, textAlign: 'center' }}>{CAT_DEF[svcId].label}</span>
-            </button>
-          );
-        })}
-      </div>
+              <div style={{fontSize:16,fontWeight:700,color:'#0A1F21',marginBottom:4}}>Cheksiz</div>
+              <div style={{fontSize:11,color:'#5C7577',marginBottom:12}}>Cheksiz internet + 5G tezlik</div>
+              <div style={{display:'flex',justifyContent:'space-between'}}><span style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>7 kun</span><span style={{fontSize:15,fontWeight:700,color:T}}>150 000 so'm</span></div>
+            </div>
+            <div style={{padding:'0 20px'}}><button style={btn}>Barcha eSIMlarni ko'rish</button></div>
+          </div>}
+        </div>
 
-      {/* Adaptive service form */}
-      <div style={{ padding: '0 20px' }}>
-        <ServiceForm serviceId={active} onSearch={onSearch}/>
-      </div>
+        {/* Mehmonxona */}
+        <div style={card}>
+          <Head icon={<Ico d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10"/>} label="Mehmonxona" k="hotel"/>
+          {open.hotel && <div style={{paddingBottom:20}}>
+            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
+              <Slide img="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" badge="Ommabop" title="Toshkent" sub="Premium dam olish maskanlari" prices={[{label:'Hyatt Regency',price:'2.4 mln'},{label:'Hilton Tashkent',price:'2.1 mln'}]}/>
+            </div>
+            <div style={{padding:'0 20px'}}><button style={btn}>Barcha mehmonxonalarni ko'rish</button></div>
+          </div>}
+        </div>
+
+        {/* Aviabilet */}
+        <div style={card}>
+          <Head icon={planeIco} label="Aviabilet" k="aviabilet"/>
+          {open.aviabilet && <div style={{paddingBottom:20}}>
+            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
+              <Slide img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600" badge="BAA (Dubay)" title="Dubay — Toshkent" sub="Mashhur yo'nalishlar" prices={[{label:'DXB → TAS',price:'3.1 mln'},{label:'TAS → DXB',price:'3.4 mln'}]}/>
+            </div>
+            <div style={{padding:'0 20px'}}><button style={btn}>Barcha chiptalarni ko'rish</button></div>
+          </div>}
+        </div>
+
+        {/* Airport taxi */}
+        <div style={card}>
+          <Head icon={<Ico d="M5 17H3v-5l2-5h14l2 5v5h-2M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M15 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/>} label="Airport taxi" k="taxi"/>
+          {open.taxi && <div style={{padding:'0 20px 20px'}}>
+            <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginBottom:16}}>
+              <button style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:700,background:'#fff',borderRadius:10,border:'none',color:T,boxShadow:'0 1px 4px rgba(0,0,0,0.08)',cursor:'pointer'}}>Aeroportga borish</button>
+              <button style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:600,background:'none',border:'none',color:'#9AA1B8',cursor:'pointer'}}>Aeroportdan ketish</button>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:12,padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)',marginBottom:4}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <div><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase'}}>Qayerdan</div><div style={{fontSize:12,fontWeight:600,color:'#0A1F21'}}>O'z manzilingizni kiriting</div></div>
+            </div>
+            <button style={btn}>Taksi buyurtma qilish</button>
+          </div>}
+        </div>
+
+        {/* Transfer */}
+        <div style={card}>
+          <Head icon={<Ico d="M8 6v6m8-6v6M3 6h18M3 10h18M3 14h18M5 18l1 2h12l1-2M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14H6V4z"/>} label="Transfer" k="transfer"/>
+          {open.transfer && <div style={{padding:'0 20px 20px'}}>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:4}}>
+              <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerdan</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Toshkent</div></div>
+              <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerga</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Samarqand</div></div>
+            </div>
+            <button style={btn}>Transferni band qilish</button>
+          </div>}
+        </div>
+
+        {/* Mashhur yo'nalishlar */}
+        <div style={{fontSize:20,fontWeight:700,color:'#0A1F21',margin:'8px 0 12px',letterSpacing:-0.3}}>Mashhur yo'nalishlar</div>
+        <div style={{background:'#fff',borderRadius:16,padding:16,boxShadow:SH,border:'1px solid rgba(0,153,168,0.10)',marginBottom:16,display:'flex',alignItems:'flex-start',gap:12}}>
+          <div style={{width:8,height:8,borderRadius:'50%',background:T,marginTop:6,flexShrink:0}}/>
+          <div>
+            <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:1,fontWeight:600,color:'#5C7577',marginBottom:4}}>O'zbekistondan</div>
+            <div style={{fontSize:16,fontWeight:600,color:'#0A1F21',marginBottom:2}}>Samarqand — Rim</div>
+            <div style={{fontSize:13,color:'#5C7577',marginBottom:4}}>2 soat 40 daqiqa</div>
+            <div style={{fontSize:12,fontWeight:700,color:T}}>3 450 000 so'm dan</div>
+          </div>
+        </div>
+
+        {/* Promo */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:24,height:180}}>
+          <div style={{background:TBG,borderRadius:20,padding:16,display:'flex',flexDirection:'column',justifyContent:'space-between',border:'1px solid rgba(0,153,168,0.15)',boxShadow:SH}}>
+            <div><div style={{fontSize:15,fontWeight:700,color:T,marginBottom:8,lineHeight:1.3}}>Global eSIM xizmati</div><div style={{fontSize:11,color:'#5C7577',lineHeight:1.5}}>Dunyoning 150+ davlatida aloqada bo'ling.</div></div>
+            <div style={{display:'flex',alignItems:'center',gap:4,color:T,fontWeight:700,fontSize:13}}>Batafsil <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div style={{borderRadius:20,overflow:'hidden',position:'relative',border:'1px solid rgba(0,153,168,0.10)',boxShadow:SH}}>
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400" alt="eSIM" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to top, rgba(0,0,0,0.35), transparent)'}}/>
+          </div>
+        </div>
+      </Scroll>
 
       <TabBar active="trip"/>
     </Frame>
   );
 }
 
-// Adaptive search form — fields change based on selected service
-function ServiceForm({ serviceId, onSearch }) {
-  const [from, setFrom] = React.useState('Tashkent');
-  const [to, setTo] = React.useState('');
-  const [departDate, setDepartDate] = React.useState(null);
-  const [returnDate, setReturnDate] = React.useState(null);
-  const [duration, setDuration] = React.useState('7 kun');
-  const [sheetOpen, setSheetOpen] = React.useState(false);
-
-  const needsFrom = NEEDS_FROM.has(serviceId);
-  const usesDuration = USES_DURATION.has(serviceId);
-  const destLabel = DEST_LABEL[serviceId] || 'Qayerga?';
-  const fromLabel = FROM_LABEL[serviceId] || 'Qayerdan?';
-
-  const fmtRange = () => {
-    const f = (d) => d.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'short' });
-    if (!returnDate) return `${f(departDate)} · faqat ketish`;
-    return `${f(departDate)} — ${f(returnDate)}`;
-  };
-
-  const handleSearch = () => {
-    onSearch && onSearch({ serviceId, from, to, departDate, returnDate, duration, oneWay: !returnDate });
-  };
-
-  const inputStyle = { width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 17, fontWeight: 700, color: TRIP_INK, fontFamily: 'inherit', padding: 0 };
-  const labelStyle = { fontSize: 11, fontWeight: 600, color: '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 3 };
-  const divider = <div style={{ height: 1, background: '#ECEEF6', marginLeft: 60, marginRight: 20 }}/>;
-
-  return (
-    <Card style={{ padding: 0, borderRadius: 28, overflow: 'hidden' }}>
-      {needsFrom && <>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 20px' }}>
-          <FigTakeoff size={24}/>
-          <div style={{ flex: 1 }}>
-            <div style={labelStyle}>{fromLabel}</div>
-            <input value={from} onChange={e => setFrom(e.target.value)} placeholder="Toshkent" style={inputStyle}/>
-          </div>
-        </div>
-        {divider}
-      </>}
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 20px' }}>
-        <FigLanding size={24}/>
-        <div style={{ flex: 1 }}>
-          <div style={labelStyle}>{destLabel}</div>
-          <input value={to} onChange={e => setTo(e.target.value)} placeholder="Dubai, Istanbul, Misr..." style={inputStyle}/>
-        </div>
-      </div>
-
-      {!usesDuration ? <>
-        {divider}
-        <div onClick={() => setSheetOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 20px', cursor: 'pointer' }}>
-          <span style={{ display: 'inline-flex', opacity: 0.8 }}><FigCalendar size={22}/></span>
-          <div style={{ flex: 1 }}>
-            <div style={labelStyle}>Sana</div>
-            <div style={{ fontSize: 17, fontWeight: 700, color: departDate ? TRIP_INK : '#C4C9DB' }}>
-              {departDate ? fmtRange() : 'Qachondan — qachongacha'}
-            </div>
-          </div>
-        </div>
-      </> : <>
-        {divider}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 20px' }}>
-          <FigCalendar size={22}/>
-          <div style={{ flex: 1 }}>
-            <div style={labelStyle}>Muddat</div>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', paddingTop: 4 }}>
-              {['7 kun', '15 kun', '30 kun', 'Limitlanmagan'].map(d => (
-                <button key={d} onClick={() => setDuration(d)} style={{
-                  padding: '5px 12px', borderRadius: 999, border: 'none', cursor: 'pointer',
-                  background: duration === d ? TEAL : '#F1F4FA',
-                  color: duration === d ? '#fff' : TRIP_INK,
-                  fontSize: 12, fontWeight: 700,
-                }}>{d}</button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </>}
-
-      <div style={{ padding: '12px 16px 16px' }}>
-        <button onClick={handleSearch} style={{
-          width: '100%', padding: '14px', border: 'none', borderRadius: 999,
-          background: `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`,
-          color: '#fff', fontSize: 15, fontWeight: 700,
-          boxShadow: '0 8px 20px rgba(31,191,201,0.35), inset 0 1px 0 rgba(255,255,255,0.35)',
-          cursor: 'pointer',
-        }}>Qidirish</button>
-      </div>
-
-      {sheetOpen && (
-        <CalendarRangeSheet
-          depart={departDate} returnDate={returnDate}
-          onClose={() => setSheetOpen(false)}
-          onApply={(d, r) => { setDepartDate(d); setReturnDate(r); setSheetOpen(false); }}
-        />
-      )}
-    </Card>
-  );
-}
-
-// Bottom-sheet date range picker. Focus auto-advances: depart first, then
-// return. Picking the return date auto-applies and closes. A separate
-// "Faqat ketish" button lets users commit a one-way trip with just depart.
-// Sheet sits above the bottom tab bar (z-index 100).
-function CalendarRangeSheet({ depart, returnDate, onClose, onApply }) {
-  const [d1, setD1] = React.useState(depart);
-  const [d2, setD2] = React.useState(returnDate);
-  const [focused, setFocused] = React.useState(depart && !returnDate ? 'return' : 'depart');
-
-  const today = React.useMemo(() => {
-    const t = new Date(); t.setHours(0,0,0,0); return t;
-  }, []);
-
-  const months = React.useMemo(() => {
-    const arr = [];
-    const start = new Date(today.getFullYear(), today.getMonth(), 1);
-    for (let i = 0; i < 6; i++) {
-      arr.push(new Date(start.getFullYear(), start.getMonth() + i, 1));
-    }
-    return arr;
-  }, [today]);
-
-  const sameDay = (a, b) => a && b && a.toDateString() === b.toDateString();
-  const inRange = (d) => d1 && d2 && d > d1 && d < d2;
-
-  const pick = (d) => {
-    if (focused === 'depart') {
-      // Setting depart resets return if it would now be invalid.
-      setD1(d);
-      if (d2 && d2 <= d) setD2(null);
-      setFocused('return');
-      return;
-    }
-    // focused === 'return'
-    if (!d1) { setD1(d); setFocused('return'); return; }
-    if (d <= d1) {
-      // Picking a date earlier than depart re-anchors depart, stays on return.
-      setD1(d); setD2(null);
-      return;
-    }
-    setD2(d);
-    // Auto-apply both dates and close — saves users an extra confirm tap.
-    setTimeout(() => onApply(d1, d), 180);
-  };
-
-  const monthName = (m) => m.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-  const weekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-
-  const renderMonth = (m) => {
-    const year = m.getFullYear();
-    const month = m.getMonth();
-    const firstDow = (new Date(year, month, 1).getDay() + 6) % 7; // Mon=0
-    const days = new Date(year, month + 1, 0).getDate();
-    const cells = [];
-    for (let i = 0; i < firstDow; i++) cells.push(null);
-    for (let d = 1; d <= days; d++) cells.push(new Date(year, month, d));
-    return (
-      <div key={m.toISOString()} style={{ marginBottom: 18 }}>
-        <div style={{ fontSize: 15, fontWeight: 800, color: TRIP_INK, padding: '0 4px 10px' }}>
-          {monthName(m)}
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
-          {weekdays.map((w, i) => (
-            <div key={'h'+i} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: '#9AA1B8', padding: '4px 0' }}>{w}</div>
-          ))}
-          {cells.map((c, i) => {
-            if (!c) return <div key={'e'+i}/>;
-            const past = c < today;
-            const isStart = sameDay(c, d1);
-            const isEnd = sameDay(c, d2);
-            const between = inRange(c);
-            const selected = isStart || isEnd;
-            return (
-              <button
-                key={c.toISOString()}
-                disabled={past}
-                onClick={() => pick(c)}
-                style={{
-                  height: 38, border: 'none', cursor: past ? 'default' : 'pointer',
-                  background: selected
-                    ? `linear-gradient(180deg, ${TEAL2} 0%, ${TEAL} 100%)`
-                    : between ? 'rgba(31,191,201,0.14)' : 'transparent',
-                  color: past ? '#D5D9E5' : selected ? '#fff' : TRIP_INK,
-                  fontSize: 14, fontWeight: selected ? 800 : 600,
-                  borderRadius: selected ? 999 : (between ? 0 : 999),
-                  padding: 0,
-                }}>
-                {c.getDate()}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  const fieldStyle = (isOn, hasValue) => ({
-    flex: 1, padding: '10px 14px', borderRadius: 14,
-    background: isOn ? 'rgba(31,191,201,0.10)' : '#F4F5FA',
-    border: isOn ? `1.5px solid ${TEAL}` : '1.5px solid transparent',
-    cursor: 'pointer', textAlign: 'left',
-    transition: 'all 0.15s',
-  });
-
-  return (
-    <div
-      onClick={onClose}
-      style={{
-        position: 'fixed', inset: 0, background: 'rgba(15,27,61,0.45)',
-        zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-      }}>
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: '#fff', width: '100%', maxWidth: 460,
-          borderTopLeftRadius: 28, borderTopRightRadius: 28,
-          padding: '14px 20px 20px',
-          display: 'flex', flexDirection: 'column',
-          maxHeight: '92vh',
-        }}>
-        {/* Grab handle + header */}
-        <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 8 }}>
-          <div style={{ width: 40, height: 4, borderRadius: 2, background: '#E0E4F0' }}/>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12 }}>
-          <div style={{ fontSize: 17, fontWeight: 800, color: TRIP_INK }}>Sanani tanlang</div>
-          <button onClick={onClose} aria-label="Yopish" style={{ width: 32, height: 32, borderRadius: 999, border: 'none', background: '#F4F5FA', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={TRIP_INK} strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-          </button>
-        </div>
-
-        {/* Range summary — tap to refocus a field */}
-        <div style={{ display: 'flex', gap: 8, paddingBottom: 14 }}>
-          <button onClick={() => setFocused('depart')} style={fieldStyle(focused === 'depart', !!d1)}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: focused === 'depart' ? TEAL : '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>Qachondan</div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: d1 ? TRIP_INK : '#C4C9DB', marginTop: 2 }}>
-              {d1 ? d1.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : '—'}
-            </div>
-          </button>
-          <button onClick={() => setFocused('return')} style={fieldStyle(focused === 'return', !!d2)}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: focused === 'return' ? TEAL : '#9AA1B8', textTransform: 'uppercase', letterSpacing: 0.4 }}>Qachongacha</div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: d2 ? TRIP_INK : '#C4C9DB', marginTop: 2 }}>
-              {d2 ? d2.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : '—'}
-            </div>
-          </button>
-        </div>
-
-        {/* Months scroll */}
-        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', paddingBottom: 12 }}>
-          {months.map(renderMonth)}
-        </div>
-
-        <button
-          onClick={() => d1 && onApply(d1, null)}
-          disabled={!d1}
-          style={{
-            width: '100%', padding: '14px',
-            border: '1.5px solid ' + (d1 ? TEAL : '#E0E4F0'),
-            borderRadius: 999,
-            background: '#fff',
-            color: d1 ? TEAL : '#C4C9DB',
-            fontSize: 15, fontWeight: 700,
-            cursor: d1 ? 'pointer' : 'default',
-          }}>
-          Faqat ketish sanasi bilan davom etish
-        </button>
-      </div>
-    </div>
-  );
-}
-
-
-// Excursions view: country picker on top, excursion cards below
-const EXCURSIONS = [
-  { id: 'pyr',  name: 'Pyramids of Giza',     loc: 'Cairo, Egypt',    retail: 89,  premium: 64,
-    img: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=800&q=80&auto=format&fit=crop' },
-  { id: 'red',  name: 'Red Sea Diving Tour',  loc: 'Hurghada, Egypt', retail: 145, premium: 99,
-    img: 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=600&q=80&auto=format&fit=crop' },
-  { id: 'lux',  name: 'Luxor Temple Walk',    loc: 'Luxor, Egypt',    retail: 72,  premium: 49,
-    img: 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=600&q=80&auto=format&fit=crop' },
-  { id: 'nile', name: 'Nile Sunset Cruise',   loc: 'Aswan, Egypt',    retail: 110, premium: 78,
-    img: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=600&q=80&auto=format&fit=crop' },
-];
-
-function ExcursionsView() {
-  const [country, setCountry] = React.useState('Egypt');
-  const cardsRef = React.useRef(null);
-  const [innerScrolled, setInnerScrolled] = React.useState(false);
-
-  React.useEffect(() => {
-    const el = cardsRef.current;
-    if (!el) return;
-    const onScroll = () => setInnerScrolled(el.scrollTop > 4);
-    el.addEventListener('scroll', onScroll, { passive: true });
-
-    // Page-first scroll: while the page can still scroll down, redirect wheel
-    // and touch deltas to window — categories collapse first, then inner scrolls.
-    const onWheel = (ev) => {
-      const dy = ev.deltaY;
-      const docEl = document.documentElement;
-      const maxPageScroll = docEl.scrollHeight - window.innerHeight;
-      const pageY = window.scrollY;
-      if (dy > 0 && pageY < maxPageScroll - 1) {
-        // scrolling down but page not yet at bottom of cat-collapse — let page eat it
-        ev.preventDefault();
-        window.scrollBy({ top: dy, behavior: 'auto' });
-      } else if (dy < 0 && el.scrollTop <= 0 && pageY > 0) {
-        ev.preventDefault();
-        window.scrollBy({ top: dy, behavior: 'auto' });
-      }
-    };
-    el.addEventListener('wheel', onWheel, { passive: false });
-
-    let touchY = null;
-    const onTouchStart = (e) => { touchY = e.touches[0].clientY; };
-    const onTouchMove = (e) => {
-      if (touchY == null) return;
-      const cy = e.touches[0].clientY;
-      const dy = touchY - cy; // positive = swipe up = scroll down
-      const docEl = document.documentElement;
-      const maxPageScroll = docEl.scrollHeight - window.innerHeight;
-      const pageY = window.scrollY;
-      if (dy > 0 && pageY < maxPageScroll - 1) {
-        e.preventDefault();
-        window.scrollBy({ top: dy, behavior: 'auto' });
-        touchY = cy;
-      } else if (dy < 0 && el.scrollTop <= 0 && pageY > 0) {
-        e.preventDefault();
-        window.scrollBy({ top: dy, behavior: 'auto' });
-        touchY = cy;
-      } else {
-        touchY = cy;
-      }
-    };
-    el.addEventListener('touchstart', onTouchStart, { passive: true });
-    el.addEventListener('touchmove', onTouchMove, { passive: false });
-
-    return () => {
-      el.removeEventListener('scroll', onScroll);
-      el.removeEventListener('wheel', onWheel);
-      el.removeEventListener('touchstart', onTouchStart);
-      el.removeEventListener('touchmove', onTouchMove);
-    };
-  }, []);
-
-  return (
-    <div style={{
-      background: '#fff',
-      borderRadius: 32,
-      position: 'sticky',
-      top: 68,
-      height: 'calc(100vh - 68px - 80px)',
-      display: 'flex', flexDirection: 'column',
-      overflow: 'hidden',
-    }}>
-      {/* Pinned country picker inside the white card */}
-      <div style={{
-        padding: 10,
-        background: innerScrolled ? '#fff' : 'transparent',
-        flexShrink: 0,
-        boxShadow: innerScrolled ? '0 6px 16px rgba(15,42,74,0.08)' : 'none',
-        transition: 'background 0.2s ease, box-shadow 0.2s ease',
-        zIndex: 2,
-      }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 12,
-          padding: '14px 16px',
-          borderRadius: 22,
-          background: 'linear-gradient(180deg, #EEF2F8 0%, #E4EAF3 100%)',
-          border: '1px solid rgba(15,42,74,0.05)',
-        }}>
-          <span style={{ display: 'inline-flex', color: '#41668B', opacity: 0.78 }}>
-            <IconGlobe size={22} color="currentColor" stroke={2}/>
-          </span>
-          <div style={{ flex: 1, fontSize: 16, fontWeight: 700, color: TRIP_INK }}>{country}</div>
-          <span style={{ display: 'inline-flex', transform: 'rotate(90deg)' }}>
-            <Icon size={16} color="#41668B" stroke={2.4} d="M9 6l6 6-6 6"/>
-          </span>
-        </div>
-      </div>
-
-      {/* Inner-scrolled cards */}
-      <div ref={cardsRef} style={{
-        flex: 1,
-        overflowY: 'auto',
-        padding: '0 10px 14px',
-        display: 'flex', flexDirection: 'column', gap: 12,
-        WebkitOverflowScrolling: 'touch',
-      }}>
-        {EXCURSIONS.map(e => (
-          <div key={e.id} style={{
-            background: '#fff',
-            borderRadius: 22,
-            boxShadow: '0 8px 22px rgba(15,42,74,0.12), 0 2px 6px rgba(15,42,74,0.06)',
-            border: '1px solid rgba(15,42,74,0.05)',
-            overflow: 'hidden',
-            flexShrink: 0,
-          }}>
-            <ExcursionCard {...e}/>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ExcursionCard({ name, loc, retail, premium, img }) {
-  return (
-    <div style={{
-      display: 'flex', flexDirection: 'column',
-      padding: 12,
-    }}>
-      {/* 2.5:1 image */}
-      <div style={{
-        position: 'relative', overflow: 'hidden',
-        background: '#E8EEF5',
-        aspectRatio: '2.5 / 1',
-        borderRadius: 14,
-      }}>
-        <img src={img} alt={name} style={{
-          width: '100%', height: '100%', objectFit: 'cover', display: 'block',
-        }}/>
-      </div>
-
-      <div style={{ padding: '10px 4px 2px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 10 }}>
-        {/* Left: name + loc */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: TRIP_INK, lineHeight: 1.2 }}>{name}</div>
-          <div style={{ fontSize: 11.5, color: '#6B7894', display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
-            <Icon size={11} color="#6B7894" stroke={2}>
-              <path d="M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12z"/>
-              <circle cx="12" cy="10" r="2.5"/>
-            </Icon>
-            {loc}
-          </div>
-        </div>
-
-        {/* Right: prices stacked, right-aligned */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-          <div style={{ fontSize: 11.5, color: '#6B7894', fontWeight: 600 }}>
-            from <span style={{ color: TRIP_INK }}>${retail}</span>
-          </div>
-          <div style={{
-            background: 'linear-gradient(135deg, #FFE9A8 0%, #E8B852 45%, #B8862A 100%)',
-            borderRadius: 999,
-            padding: '4px 10px',
-            display: 'inline-flex', alignItems: 'center', gap: 5,
-            boxShadow: '0 3px 8px rgba(184,134,42,0.32), inset 0 1px 0 rgba(255,255,255,0.5)',
-            position: 'relative', overflow: 'hidden',
-          }}>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="#5A3A0A" stroke="none" style={{ flexShrink: 0 }}>
-              <path d="M12 2l2.39 7.36H22l-6.18 4.49L18.21 21 12 16.51 5.79 21l2.39-7.15L2 9.36h7.61L12 2z"/>
-            </svg>
-            <span style={{ fontSize: 12, fontWeight: 800, color: '#3A2606', whiteSpace: 'nowrap', letterSpacing: -0.1 }}>
-              Premium price: from ${premium}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ═════════════════════════════════════════════════════════════
 // SCREEN 5 — FLIGHT DETAIL
