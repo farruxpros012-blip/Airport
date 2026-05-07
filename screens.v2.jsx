@@ -1077,13 +1077,13 @@ function ScreenTrip() {
     return (
       <Frame>
         {/* Sticky top: only back + currency */}
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 16px',background:'#F4F5FA',position:'sticky',top:0,zIndex:20,marginBottom:20}}>
-          <button onClick={()=>{setEsimCountry(null);setEsimSelected(null);}} style={{width:38,height:38,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 16px 20px',background:'#F4F5FA',position:'sticky',top:0,zIndex:20,marginBottom:0}}>
+          <button onClick={()=>{setEsimCountry(null);setEsimSelected(null);}} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </button>
-          <button style={{display:'flex',alignItems:'center',gap:5,padding:'8px 14px',borderRadius:999,background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
-            <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>UZS</span>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+          <button style={{display:'flex',alignItems:'center',gap:5,padding:'11px 18px',borderRadius:999,background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
+            <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>UZS</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
           </button>
         </div>
 
