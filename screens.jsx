@@ -1076,27 +1076,26 @@ function ScreenTrip() {
     const plans = ESIM_PLANS[esimTab] || [];
     return (
       <Frame>
-        {/* Hero with flag */}
-        <div style={{background:'linear-gradient(180deg, #F4F5FA 0%, #fff 100%)',padding:'14px 16px 20px',position:'sticky',top:0,zIndex:20}}>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
-            <button onClick={()=>{setEsimCountry(null);setEsimSelected(null);}} style={{width:38,height:38,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            </button>
-            <button style={{display:'flex',alignItems:'center',gap:5,padding:'8px 14px',borderRadius:999,background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
-              <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>UZS</span>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-          </div>
-          {/* eSIM card style hero */}
-          <div style={{position:'relative',background:`linear-gradient(135deg, ${T} 0%, #067865 60%, #0A4F4A 100%)`,borderRadius:18,padding:'16px 18px',margin:'8px 0 14px',color:'#fff',overflow:'hidden',boxShadow:'0 10px 24px rgba(0,153,168,0.28), inset 0 1px 0 rgba(255,255,255,0.18)'}}>
-            {/* Decorative ringed circles */}
-            <div style={{position:'absolute',top:-30,right:-30,width:120,height:120,borderRadius:'50%',border:'1px solid rgba(255,255,255,0.12)'}}/>
-            <div style={{position:'absolute',top:-50,right:-50,width:160,height:160,borderRadius:'50%',border:'1px solid rgba(255,255,255,0.08)'}}/>
-            <div style={{position:'absolute',bottom:-40,left:-20,width:100,height:100,borderRadius:'50%',background:'rgba(255,255,255,0.05)'}}/>
+        {/* Sticky top: only back + currency */}
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 16px',background:'#F4F5FA',position:'sticky',top:0,zIndex:20,marginBottom:20}}>
+          <button onClick={()=>{setEsimCountry(null);setEsimSelected(null);}} style={{width:38,height:38,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <button style={{display:'flex',alignItems:'center',gap:5,padding:'8px 14px',borderRadius:999,background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
+            <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>UZS</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+
+        <Scroll style={{background:'#F4F5FA',padding:'0 16px 16px'}}>
+          {/* eSIM card style hero — brand teal gradient */}
+          <div style={{position:'relative',background:`linear-gradient(135deg, #00B4C5 0%, ${T} 50%, #007D89 100%)`,borderRadius:20,padding:'18px 20px',marginBottom:18,color:'#fff',overflow:'hidden',boxShadow:'0 12px 28px rgba(0,153,168,0.32), inset 0 1px 0 rgba(255,255,255,0.22)'}}>
+            <div style={{position:'absolute',top:-30,right:-30,width:120,height:120,borderRadius:'50%',border:'1px solid rgba(255,255,255,0.14)'}}/>
+            <div style={{position:'absolute',top:-50,right:-50,width:160,height:160,borderRadius:'50%',border:'1px solid rgba(255,255,255,0.10)'}}/>
+            <div style={{position:'absolute',bottom:-40,left:-20,width:100,height:100,borderRadius:'50%',background:'rgba(255,255,255,0.08)'}}/>
 
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14,position:'relative'}}>
               <div style={{display:'flex',alignItems:'center',gap:8}}>
-                {/* SIM chip */}
                 <div style={{width:32,height:24,borderRadius:5,background:'linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%)',position:'relative',boxShadow:'0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4)'}}>
                   <div style={{position:'absolute',inset:3,border:'1px solid rgba(146,80,14,0.4)',borderRadius:3,display:'grid',gridTemplateColumns:'1fr 1fr',gridTemplateRows:'1fr 1fr',gap:1}}>
                     <div style={{borderRight:'1px solid rgba(146,80,14,0.4)',borderBottom:'1px solid rgba(146,80,14,0.4)'}}/>
@@ -1105,44 +1104,42 @@ function ScreenTrip() {
                     <div/>
                   </div>
                 </div>
-                <span style={{fontSize:11,fontWeight:700,letterSpacing:1.5,opacity:0.85}}>eSIM</span>
+                <span style={{fontSize:11,fontWeight:700,letterSpacing:1.5,opacity:0.9}}>eSIM</span>
               </div>
-              {/* Signal */}
               <div style={{display:'flex',alignItems:'flex-end',gap:2}}>
-                {[7,11,15,19].map((h,i)=>(<div key={i} style={{width:3,height:h,borderRadius:1,background:'rgba(255,255,255,0.85)'}}/>))}
+                {[7,11,15,19].map((h,i)=>(<div key={i} style={{width:3,height:h,borderRadius:1,background:'rgba(255,255,255,0.9)'}}/>))}
               </div>
             </div>
 
-            <div style={{display:'flex',alignItems:'center',gap:12,position:'relative'}}>
-              <div style={{width:54,height:54,borderRadius:'50%',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:30,boxShadow:'0 4px 12px rgba(0,0,0,0.20), inset 0 0 0 2px rgba(255,255,255,0.4)',flexShrink:0}}>
+            <div style={{display:'flex',alignItems:'center',gap:14,position:'relative'}}>
+              <div style={{width:58,height:58,borderRadius:'50%',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:32,boxShadow:'0 4px 12px rgba(0,0,0,0.20), inset 0 0 0 2px rgba(255,255,255,0.4)',flexShrink:0}}>
                 {ESIM_COUNTRY_FLAGS[esimCountry] || '🌍'}
               </div>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:10,fontWeight:600,letterSpacing:1.2,opacity:0.7,textTransform:'uppercase'}}>Yo'nalish</div>
-                <div style={{fontSize:18,fontWeight:800,letterSpacing:-0.3,marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{esimCountry}</div>
+                <div style={{fontSize:22,fontWeight:800,letterSpacing:-0.4,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{esimCountry}</div>
+                <div style={{fontSize:12,fontWeight:500,opacity:0.85,marginTop:2}}>Sayohatda doim aloqada</div>
               </div>
             </div>
 
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginTop:14,paddingTop:12,borderTop:'1px dashed rgba(255,255,255,0.18)',position:'relative'}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginTop:14,paddingTop:12,borderTop:'1px dashed rgba(255,255,255,0.22)',position:'relative'}}>
               <div>
-                <div style={{fontSize:9,fontWeight:600,letterSpacing:1,opacity:0.6,textTransform:'uppercase'}}>Provider</div>
-                <div style={{fontSize:13,fontWeight:700,letterSpacing:0.5}}>Let's Trip · Global</div>
+                <div style={{fontSize:9,fontWeight:600,letterSpacing:1,opacity:0.7,textTransform:'uppercase'}}>Provider</div>
+                <div style={{fontSize:13,fontWeight:700,letterSpacing:0.3}}>Let's Trip · Global</div>
               </div>
               <div style={{textAlign:'right'}}>
-                <div style={{fontSize:9,fontWeight:600,letterSpacing:1,opacity:0.6,textTransform:'uppercase'}}>5G ready</div>
+                <div style={{fontSize:9,fontWeight:600,letterSpacing:1,opacity:0.7,textTransform:'uppercase'}}>5G ready</div>
                 <div style={{fontSize:13,fontWeight:700}}>⚡ Tezkor</div>
               </div>
             </div>
           </div>
-          {/* Tabs */}
-          <div style={{display:'flex',background:'#ECEEF6',borderRadius:14,padding:4}}>
+
+          {/* Tabs — above plans */}
+          <div style={{display:'flex',background:'#ECEEF6',borderRadius:14,padding:4,marginBottom:14}}>
             {[{k:'standard',l:'Standard'},{k:'unlimited',l:'Cheksiz'}].map(t=>(
               <button key={t.k} onClick={()=>setEsimTab(t.k)} style={{flex:1,padding:'10px 0',fontSize:13,fontWeight:700,background:esimTab===t.k?'#fff':'none',borderRadius:11,border:'none',color:esimTab===t.k?'#0A1F21':'#9AA1B8',boxShadow:esimTab===t.k?'0 2px 6px rgba(10,31,33,0.08)':'none',cursor:'pointer',transition:'all 0.15s'}}>{t.l}</button>
             ))}
           </div>
-        </div>
 
-        <Scroll style={{background:'#F4F5FA',padding:'0 16px 16px'}}>
           {plans.map((p,i)=>{
             const sel = esimSelected===i;
             return (
@@ -1156,7 +1153,7 @@ function ScreenTrip() {
                   <div style={{display:'flex',alignItems:'center',gap:6}}>
                     <div style={{display:'inline-flex',alignItems:'center',gap:4,background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:999,padding:'4px 10px',boxShadow:'0 2px 6px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
-                      <span style={{fontSize:11,fontWeight:800,color:'#fff'}}>{p.premium}</span>
+                      <span style={{fontSize:11,fontWeight:800,color:'#fff'}}>{p.premium} so'm</span>
                     </div>
                     <span style={{width:24,height:24,borderRadius:999,background:'#F4F5FA',display:'inline-flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:12,fontWeight:700}}>···</span>
                   </div>
