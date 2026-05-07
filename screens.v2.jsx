@@ -913,7 +913,7 @@ function ScreenTrip() {
   const SH = '0 8px 24px rgba(0,153,168,0.10)';
   const card = { background:'#fff', borderRadius:24, boxShadow:SH, border:'1px solid rgba(0,153,168,0.10)', overflow:'hidden', marginBottom:16 };
   const rowStyle = { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', cursor:'pointer' };
-  const iBox = { width:44, height:44, borderRadius:14, background:T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 };
+  const iBox = { width:44, height:44, borderRadius:'50%', background:T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 6px 16px rgba(0,153,168,0.35), 0 2px 4px rgba(0,153,168,0.18), inset 0 1px 0 rgba(255,255,255,0.18)' };
   const mkBtn = (mt=16) => ({ width:'100%', background:T, color:'#fff', border:'none', borderRadius:20, padding:'13px 0', fontSize:14, fontWeight:600, cursor:'pointer', marginTop:mt });
   const mc = { background:TBG, padding:'8px 10px', borderRadius:14, border:'1px solid rgba(0,153,168,0.15)' };
 
