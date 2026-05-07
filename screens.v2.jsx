@@ -872,21 +872,27 @@ const TRIP_RESULTS = {
     { img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600', title:'BAA & Turkiya · 7 kun', sub:'2 davlat · Cheksiz', regular:"121 000 so'm", premium:"110 000 so'm" },
   ],
   hotel: [
-    { img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600', title:'Hyatt Regency Tashkent', sub:'5★ · Toshkent markazida', regular:"2 640 000 so'm", premium:"2 400 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600', title:'Hilton Tashkent City', sub:'5★ · Shahar markazi', regular:"2 310 000 so'm", premium:"2 100 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600', title:'Jumeirah Beach Hotel', sub:'5★ · Dubai, dengiz yoqasida', regular:"10 780 000 so'm", premium:"9 800 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600', title:'Rixos Premium Antalya', sub:'5★ · Antaliya · Ultra AI', regular:"8 800 000 so'm", premium:"8 000 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600', title:'5★ Atlantis, The Palm', sub:'Crescent Road, The Palm, Dubai', rating:9.3, reviews:'5,820', regular:"40 304 000 so'm", premium:"38 477 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600', title:'5★ Hyatt Regency Tashkent', sub:"Navoiy ko'chasi, Toshkent", rating:8.9, reviews:'2,140', regular:"2 640 000 so'm", premium:"2 400 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600', title:'5★ Hilton Tashkent City', sub:"Shahar markazi, Toshkent", rating:9.1, reviews:'3,205', regular:"2 310 000 so'm", premium:"2 100 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600', title:'5★ Rixos Premium Antalya', sub:'Konyaaltı sohili, Antaliya', rating:9.4, reviews:'7,910', regular:"8 800 000 so'm", premium:"8 000 000 so'm" },
   ],
   aviabilet: [
-    { img:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600', title:'TAS → DXB', sub:"Toshkent — Dubai · To'g'ri reys", regular:"3 740 000 so'm", premium:"3 400 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=600', title:'TAS → IST', sub:"Toshkent — Istanbul · To'g'ri", regular:"2 750 000 so'm", premium:"2 500 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600', title:'TAS → CDG', sub:'Toshkent — Paris · 1 transit', regular:"5 500 000 so'm", premium:"5 000 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600', title:'DXB → TAS', sub:"Dubai — Toshkent · To'g'ri reys", regular:"3 410 000 so'm", premium:"3 100 000 so'm" },
+    { airline:'Uzbekistan Airways', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Uzbekistan_Airways_logo.svg/200px-Uzbekistan_Airways_logo.svg.png', tag:'Eng arzon', from:'TAS', to:'DXB', dep:'07:15', arr:'11:00', depDate:'8 May, Ju', arrDate:'8 May, Ju', dur:'4s 45m', stops:'to\'g\'ri', baggage:false, retDep:'12:30', retArr:'17:30', retDur:'4s', retDate:'20 May, Ch', regular:"9 480 000 so'm", premium:"8 619 000 so'm" },
+    { airline:'Emirates', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Emirates_logo.svg/200px-Emirates_logo.svg.png', tag:'Premium', from:'TAS', to:'DXB', dep:'04:05', arr:'07:50', depDate:'8 May, Ju', arrDate:'8 May, Ju', dur:'3s 45m', stops:'to\'g\'ri', baggage:true, retDep:'21:30', retArr:'01:25', retDur:'3s 55m', retDate:'20 May, Ch', regular:"14 300 000 so'm", premium:"13 000 000 so'm" },
+    { airline:'Fly Dubai', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Flydubai_logo.svg/200px-Flydubai_logo.svg.png', tag:'Kechki', from:'TAS', to:'DXB', dep:'08:05', arr:'21:50', depDate:'8 May, Ju', arrDate:'8 May, Ju', dur:'14s 45m', stops:'1 transit', baggage:false, retDep:'13:00', retArr:'09:35', retDur:'15s', retDate:'20 May, Ch', regular:"7 920 000 so'm", premium:"7 200 000 so'm" },
+    { airline:'Air India', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Air_India_Logo.svg/200px-Air_India_Logo.svg.png', tag:'Tejamkor', from:'TAS', to:'DXB', dep:'15:20', arr:'06:30', depDate:'8 May, Ju', arrDate:'9 May, Sh', dur:'12s 10m', stops:'1 transit', baggage:true, retDep:'07:50', retArr:'20:40', retDur:'10s 50m', retDate:'20 May, Ch', regular:"6 600 000 so'm", premium:"6 000 000 so'm" },
+  ],
+  rentcar: [
+    { img:'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600', title:'Toyota Camry', sub:'Sedan · Avtomatik · 5 kishi', regular:"495 000 so'm", premium:"450 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600', title:'Mercedes-Benz E-Class', sub:'Biznes · Avtomatik · 5 kishi', regular:"1 045 000 so'm", premium:"950 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1568844293986-8d0400bd4745?w=600', title:'Hyundai Sonata', sub:'Sedan · Avtomatik · 5 kishi', regular:"385 000 so'm", premium:"350 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600', title:'BMW X5', sub:'Krossover · 7 kishi · 4WD', regular:"1 540 000 so'm", premium:"1 400 000 so'm" },
   ],
 };
 
 function ScreenTrip() {
-  const [open, setOpen] = React.useState({ turlar: true, aviabilet: true });
+  const [open, setOpen] = React.useState({ turlar: true, aviabilet: true, rentcar: false });
   const [page, setPage] = React.useState(null);
   const [sheet, setSheet] = React.useState(null); // 'all'
   const [hintShown, setHintShown] = React.useState(true);
@@ -946,7 +952,7 @@ function ScreenTrip() {
   const globeIco = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/></svg>;
 
   const PAGE_LABELS = { turlar:'Turlar', excur:'Ekskursiyalar', esim:'eSIM', hotel:'Mehmonxonalar', aviabilet:'Aviabiletlar' };
-  const FILTERS = { turlar:['Arzon narx','Ovqat','Yulduz','Narx'], excur:['Arzon narx','Davlat','Davomiylik'], esim:['Arzon narx','Hudud','GB'], hotel:['Arzon narx','Ovqat','Yulduz'], aviabilet:['Arzon narx','To\'g\'ri reys','Vaqt'] };
+  const FILTERS = { turlar:['Arzon narx','Ovqat','Yulduz','Narx'], excur:['Arzon narx','Davlat','Davomiylik'], esim:['Arzon narx','Hudud','GB'], hotel:['Saralash','Yulduz','Bekor qilish bepul'], aviabilet:['Bagaj','To\'g\'ri reyslar'], rentcar:['Arzon narx','Klass','Avtomatik'] };
 
   /* ── Bottom Sheet ── */
   /* ── Unified Bottom Sheet ── */
@@ -1072,6 +1078,38 @@ function ScreenTrip() {
             <svg style={{position:'absolute',left:28,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
             <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Hudud yoki davlat...',hotel:'Mehmonxona qidirish...',aviabilet:'Shahar yoki aeroport...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 40px',border:'none',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#F4F5FA',outline:'none',boxSizing:'border-box'}}/>
           </div>
+          {/* Aviabilet — airline chips + time grid */}
+          {page==='aviabilet' && (
+            <>
+              <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 10px',WebkitOverflowScrolling:'touch'}}>
+                {[{n:'Air India',c:'#FBBF24'},{n:'Emirates',c:'#DC2626'},{n:'Fly Dubai',c:'#1E40AF'},{n:'Uzbekistan Airways',c:'#16A34A'}].map((a,i)=>(
+                  <button key={i} style={{flexShrink:0,display:'flex',alignItems:'center',gap:6,padding:'6px 12px 6px 6px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>
+                    <span style={{width:20,height:20,borderRadius:'50%',background:a.c,display:'inline-flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:10,fontWeight:800}}>{a.n.slice(0,1)}</span>
+                    {a.n}
+                  </button>
+                ))}
+              </div>
+              {/* Time grid */}
+              <div style={{padding:'0 16px 10px'}}>
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
+                  <span style={{fontSize:13,fontWeight:700,color:'#0A1F21',width:60,flexShrink:0}}>Borish</span>
+                  <div style={{display:'flex',gap:5,overflowX:'auto',WebkitOverflowScrolling:'touch'}}>
+                    {['07:15','04:05','15:20','17:45','08:05','01:25','08:15'].map((t,i)=>(
+                      <button key={i} style={{flexShrink:0,padding:'5px 10px',borderRadius:8,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer'}}>{t}</button>
+                    ))}
+                  </div>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:6}}>
+                  <span style={{fontSize:13,fontWeight:700,color:'#0A1F21',width:60,flexShrink:0}}>Qaytish</span>
+                  <div style={{display:'flex',gap:5,overflowX:'auto',WebkitOverflowScrolling:'touch'}}>
+                    {['13:10','12:30','07:50','13:00','21:30','09:35','20:40'].map((t,i)=>(
+                      <button key={i} style={{flexShrink:0,padding:'5px 10px',borderRadius:8,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer'}}>{t}</button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
           {/* Row 3: Filters */}
           <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
             <div style={{flexShrink:0,width:36,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
@@ -1086,24 +1124,143 @@ function ScreenTrip() {
         </div>
 
         <Scroll style={{background:'#F4F5FA',padding:16}}>
-          {items.map((it,i)=>(
-            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)'}}>
-              {/* Photo */}
-              <div style={{width:'100%',height:180,overflow:'hidden',position:'relative'}}>
-                <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+          {/* AVIABILET — flight-style cards */}
+          {page === 'aviabilet' && items.map((it,i) => (
+            <div key={i} style={{background:'#fff',borderRadius:20,marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)',overflow:'hidden'}}>
+              {/* Tag */}
+              <div style={{padding:'14px 16px 0'}}>
+                <span style={{display:'inline-block',background:T,color:'#fff',fontSize:11,fontWeight:700,padding:'4px 12px',borderRadius:999}}>{it.tag}</span>
               </div>
-              {/* Info */}
+              {/* Onward */}
+              <div style={{padding:'12px 16px 14px'}}>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
+                  <div style={{width:26,height:26,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,overflow:'hidden'}}>
+                    <span style={{fontSize:11,fontWeight:900,color:'#0A1F21'}}>{it.airline.slice(0,1)}</span>
+                  </div>
+                  <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.airline}</span>
+                </div>
+                <div style={{fontSize:11,color:'#9AA1B8',marginBottom:6}}>Borish</div>
+                <div style={{display:'flex',alignItems:'center',gap:10}}>
+                  <div style={{textAlign:'left'}}>
+                    <div style={{fontSize:22,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.dep}</div>
+                  </div>
+                  <div style={{flex:1,position:'relative',padding:'0 4px'}}>
+                    <div style={{textAlign:'center',fontSize:10,color:'#9AA1B8',marginBottom:2}}>Yo'l vaqti: {it.dur}</div>
+                    <div style={{display:'flex',alignItems:'center'}}>
+                      <div style={{width:8,height:8,borderRadius:'50%',background:T,flexShrink:0}}/>
+                      <div style={{flex:1,height:1,background:'#E8EAF3'}}/>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                      <div style={{flex:1,height:1,background:'#E8EAF3'}}/>
+                      <div style={{width:8,height:8,borderRadius:'50%',background:'#F08A2C',flexShrink:0}}/>
+                    </div>
+                    <div style={{textAlign:'center',fontSize:10,color:'#9AA1B8',marginTop:2}}>{it.stops}</div>
+                  </div>
+                  <div style={{textAlign:'right'}}>
+                    <div style={{fontSize:22,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.arr}</div>
+                  </div>
+                </div>
+                <div style={{display:'flex',justifyContent:'space-between',marginTop:6}}>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.from}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8'}}>{it.depDate}</div>
+                  </div>
+                  <div style={{textAlign:'right'}}>
+                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.to}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8'}}>{it.arrDate}</div>
+                  </div>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:6,marginTop:10}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={it.baggage?T:'#9AA1B8'} strokeWidth="2"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
+                  <span style={{fontSize:11,color:it.baggage?'#0A1F21':'#9AA1B8'}}>{it.baggage?'Bagaj kiritilgan':"Bagajsiz"}</span>
+                </div>
+              </div>
+              {/* Dashed divider */}
+              <div style={{borderTop:'1.5px dashed #E8EAF3',margin:'0 16px',position:'relative'}}>
+                <div style={{position:'absolute',left:-22,top:-9,width:18,height:18,borderRadius:'50%',background:'#F4F5FA'}}/>
+                <div style={{position:'absolute',right:-22,top:-9,width:18,height:18,borderRadius:'50%',background:'#F4F5FA'}}/>
+              </div>
+              {/* Return */}
+              <div style={{padding:'14px 16px'}}>
+                <div style={{fontSize:11,color:'#9AA1B8',marginBottom:6}}>Qaytish</div>
+                <div style={{display:'flex',alignItems:'center',gap:10}}>
+                  <div style={{textAlign:'left'}}>
+                    <div style={{fontSize:22,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.retDep}</div>
+                  </div>
+                  <div style={{flex:1,position:'relative',padding:'0 4px'}}>
+                    <div style={{textAlign:'center',fontSize:10,color:'#9AA1B8',marginBottom:2}}>Yo'l vaqti: {it.retDur}</div>
+                    <div style={{display:'flex',alignItems:'center'}}>
+                      <div style={{width:8,height:8,borderRadius:'50%',background:T,flexShrink:0}}/>
+                      <div style={{flex:1,height:1,background:'#E8EAF3'}}/>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                      <div style={{flex:1,height:1,background:'#E8EAF3'}}/>
+                      <div style={{width:8,height:8,borderRadius:'50%',background:'#F08A2C',flexShrink:0}}/>
+                    </div>
+                    <div style={{textAlign:'center',fontSize:10,color:'#9AA1B8',marginTop:2}}>{it.stops}</div>
+                  </div>
+                  <div style={{textAlign:'right'}}>
+                    <div style={{fontSize:22,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.retArr}</div>
+                  </div>
+                </div>
+                <div style={{display:'flex',justifyContent:'space-between',marginTop:6}}>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.to}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8'}}>{it.retDate}</div>
+                  </div>
+                  <div style={{textAlign:'right'}}>
+                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.from}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8'}}>{it.retDate}</div>
+                  </div>
+                </div>
+              </div>
+              {/* Price footer */}
+              <div style={{borderTop:'1px solid #F0F2F8',padding:'12px 16px',display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8}}>
+                <div style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{fmtPrice(it.regular)}</div>
+                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:7,background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:999,padding:'6px 12px',boxShadow:'0 2px 8px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                    <span style={{fontSize:11,fontWeight:600,color:'#fff'}}>Premium: </span>
+                    <span style={{fontSize:12,fontWeight:800,color:'#fff'}}>{fmtPrice(it.premium)}</span>
+                  </div>
+                  <button style={{width:28,height:28,borderRadius:999,background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:14,fontWeight:700,padding:0,flexShrink:0}}>···</button>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:6}}>
+                  <div style={{width:16,height:16,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                    <span style={{fontSize:8,fontWeight:900,color:'#92400E'}}>C</span>
+                  </div>
+                  <span style={{fontSize:11,color:'#5C7577'}}>{Math.floor(parseInt(it.premium.replace(/\D/g,''))/10000)} Coins bonus</span>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* OTHERS (turlar/excur/esim/hotel/rentcar) — generic card with photo */}
+          {page !== 'aviabilet' && items.map((it,i)=>(
+            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)'}}>
+              {/* Photo with dot indicator (hotel) */}
+              <div style={{width:'100%',height:200,overflow:'hidden',position:'relative'}}>
+                <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                {page==='hotel' && (
+                  <div style={{position:'absolute',bottom:10,left:'50%',transform:'translateX(-50%)',display:'flex',gap:5}}>
+                    {[0,1,2,3].map(d=>(<div key={d} style={{width:6,height:6,borderRadius:'50%',background:d===0?'#fff':'rgba(255,255,255,0.5)'}}/>))}
+                  </div>
+                )}
+              </div>
               <div style={{padding:'14px 16px 14px'}}>
-                {/* Title */}
                 <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.3}}>{it.title}</div>
                 <div style={{fontSize:12,color:'#9AA1B8',marginTop:3}}>{it.sub}</div>
-                {/* Divider */}
+                {/* Hotel rating badge */}
+                {page==='hotel' && it.rating && (
+                  <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10}}>
+                    <div style={{background:'#22C55E',borderRadius:8,padding:'3px 8px',display:'inline-flex'}}>
+                      <span style={{fontSize:11,fontWeight:800,color:'#fff'}}>{it.rating}</span>
+                    </div>
+                    <span style={{fontSize:12,color:'#5C7577'}}>{it.reviews} sharh</span>
+                  </div>
+                )}
                 <div style={{height:1,background:'#F0F2F8',margin:'12px 0'}}/>
-                {/* Regular price — right-aligned */}
                 <div style={{textAlign:'right',marginBottom:10}}>
                   <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>dan {fmtPrice(it.regular)}</span>
                 </div>
-                {/* Premium pill row — right-aligned, hug content, gold gradient */}
                 <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:8}}>
                   <div style={{display:'inline-flex',alignItems:'center',gap:7,background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:999,padding:'7px 14px',boxShadow:'0 2px 8px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
@@ -1112,7 +1269,6 @@ function ScreenTrip() {
                   </div>
                   <button style={{width:30,height:30,borderRadius:999,background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:16,fontWeight:700,padding:0,flexShrink:0}}>···</button>
                 </div>
-                {/* Coins — right-aligned */}
                 <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:8,marginTop:10}}>
                   <div style={{width:18,height:18,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,boxShadow:'inset 0 -1px 0 rgba(0,0,0,0.1)'}}>
                     <span style={{fontSize:9,fontWeight:900,color:'#92400E'}}>C</span>
@@ -1236,6 +1392,48 @@ function ScreenTrip() {
               <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerga</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Samarqand</div></div>
             </div>
             <button style={mkBtn()}>Transferni band qilish</button>
+          </div>}
+        </div>
+
+        {/* Rent Car */}
+        <div style={card}>
+          <Head icon={<Ico d="M5 17H3v-5l2-5h14l2 5v5h-2M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M15 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M5 12h14"/>} label="Rent a Car" k="rentcar"/>
+          {open.rentcar && <div style={{paddingBottom:20}}>
+            <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
+              <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
+                <div style={{width:'100%',aspectRatio:'16/9',borderRadius:16,overflow:'hidden',position:'relative',marginBottom:10,border:'1px solid rgba(0,153,168,0.12)'}}>
+                  <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=700" alt="Toyota Camry" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                  <div style={{position:'absolute',top:8,left:8,background:T,color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>Komfort</div>
+                </div>
+                <div style={{padding:'0 4px 8px'}}>
+                  <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>Sedan klassi</div>
+                  <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>Toyota Camry, Hyundai Sonata</div>
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Kunlik</div><div style={{fontSize:11,fontWeight:700,color:T}}>450 000 so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Haftalik</div><div style={{fontSize:11,fontWeight:700,color:T}}>2.8 mln so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Yoqilg'i</div><div style={{fontSize:11,fontWeight:700,color:T}}>Cheksiz km</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Sug'urta</div><div style={{fontSize:11,fontWeight:700,color:T}}>Bepul</div></div>
+                  </div>
+                </div>
+              </div>
+              <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
+                <div style={{width:'100%',aspectRatio:'16/9',borderRadius:16,overflow:'hidden',position:'relative',marginBottom:10,border:'1px solid rgba(0,153,168,0.12)'}}>
+                  <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=700" alt="Mercedes" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                  <div style={{position:'absolute',top:8,left:8,background:'#F08A2C',color:'#fff',fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:999}}>Premium</div>
+                </div>
+                <div style={{padding:'0 4px 8px'}}>
+                  <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:2}}>Biznes klass</div>
+                  <div style={{fontSize:11,color:'#5C7577',marginBottom:8}}>Mercedes E, BMW 5</div>
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Kunlik</div><div style={{fontSize:11,fontWeight:700,color:T}}>950 000 so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Haftalik</div><div style={{fontSize:11,fontWeight:700,color:T}}>5.8 mln so'm</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Avtomatik</div><div style={{fontSize:11,fontWeight:700,color:T}}>Bor</div></div>
+                    <div style={mc}><div style={{fontSize:10,color:'#5C7577',marginBottom:2}}>Yetkazib berish</div><div style={{fontSize:11,fontWeight:700,color:T}}>Bepul</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('rentcar')} style={mkBtn()}>Barcha avtomobillarni ko'rish</button></div>
           </div>}
         </div>
 
