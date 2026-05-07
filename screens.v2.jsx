@@ -1083,34 +1083,39 @@ function ScreenTrip() {
           </div>
         </div>
 
-        <Scroll style={{background:'#F4F5FA',padding:'12px 16px'}}>
+        <Scroll style={{background:'#F4F5FA',padding:'18px 16px 16px'}}>
           {items.map((it,i)=>(
-            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)'}}>
+            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)'}}>
               {/* Photo */}
-              <div style={{width:'100%',height:170,overflow:'hidden',position:'relative'}}>
+              <div style={{width:'100%',height:180,overflow:'hidden',position:'relative'}}>
                 <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
               </div>
               {/* Info */}
-              <div style={{padding:'12px 14px'}}>
-                {/* Title + regular price */}
-                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
-                  <div style={{flex:1}}>
-                    <div style={{fontSize:14,fontWeight:700,color:'#0A1F21',lineHeight:1.3}}>{it.title}</div>
-                    <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>{it.sub}</div>
-                  </div>
-                  <div style={{textAlign:'right',flexShrink:0}}>
-                    <div style={{fontSize:10,color:'#9AA1B8'}}>dan</div>
-                    <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{it.regular}</div>
-                  </div>
+              <div style={{padding:'14px 16px 14px'}}>
+                {/* Title */}
+                <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.3}}>{it.title}</div>
+                <div style={{fontSize:12,color:'#9AA1B8',marginTop:3}}>{it.sub}</div>
+                {/* Divider */}
+                <div style={{height:1,background:'#F0F2F8',margin:'12px 0'}}/>
+                {/* Regular price — right-aligned */}
+                <div style={{textAlign:'right',marginBottom:10}}>
+                  <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>dan {it.regular}</span>
                 </div>
-                {/* Premium + button row */}
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginTop:10,padding:'8px 10px',background:'#FFF8EC',borderRadius:12,border:'1px solid rgba(240,138,44,0.15)'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:6}}>
-                    <span style={{fontSize:12}}>👑</span>
-                    <span style={{fontSize:11,color:'#9AA1B8'}}>Premium: </span>
-                    <span style={{fontSize:12,fontWeight:800,color:'#F08A2C'}}>{it.premium}</span>
+                {/* Premium pill row */}
+                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                  <div style={{flex:1,display:'flex',alignItems:'center',gap:6,background:'#F08A2C',borderRadius:999,padding:'7px 14px'}}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                    <span style={{fontSize:12,fontWeight:600,color:'#fff'}}>Premium narx: </span>
+                    <span style={{fontSize:13,fontWeight:800,color:'#fff'}}>dan {it.premium}</span>
                   </div>
-                  <button style={{padding:'7px 14px',borderRadius:10,background:T,border:'none',color:'#fff',fontSize:12,fontWeight:700,cursor:'pointer'}}>Buyurtma</button>
+                  <button style={{width:30,height:30,borderRadius:999,background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:16,fontWeight:700,padding:0,flexShrink:0}}>···</button>
+                </div>
+                {/* Coins */}
+                <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10}}>
+                  <div style={{width:18,height:18,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,boxShadow:'inset 0 -1px 0 rgba(0,0,0,0.1)'}}>
+                    <span style={{fontSize:9,fontWeight:900,color:'#92400E'}}>C</span>
+                  </div>
+                  <span style={{fontSize:12,color:'#5C7577'}}>{Math.floor(parseInt(it.premium.replace(/\D/g,''))/10000)} Coins — band qilganingiz uchun bonus</span>
                 </div>
               </div>
             </div>
