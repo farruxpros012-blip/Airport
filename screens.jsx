@@ -913,7 +913,7 @@ function ScreenTrip() {
   const SH = '0 8px 24px rgba(0,153,168,0.10)';
   const card = { background:'#fff', borderRadius:24, boxShadow:SH, border:'1px solid rgba(0,153,168,0.10)', overflow:'hidden', marginBottom:16 };
   const rowStyle = { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', cursor:'pointer' };
-  const iBox = { width:44, height:44, borderRadius:'50%', background:T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 6px 16px rgba(0,153,168,0.35), 0 2px 4px rgba(0,153,168,0.18), inset 0 1px 0 rgba(255,255,255,0.18)' };
+  const iBox = { width:46, height:46, borderRadius:'50%', background:'#fff', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 6px 16px rgba(0,153,168,0.28), 0 2px 6px rgba(0,153,168,0.14), inset 0 0 0 1px rgba(0,153,168,0.10)' };
   const mkBtn = (mt=16) => ({ width:'100%', background:T, color:'#fff', border:'none', borderRadius:20, padding:'13px 0', fontSize:14, fontWeight:600, cursor:'pointer', marginTop:mt });
   const mc = { background:TBG, padding:'8px 10px', borderRadius:14, border:'1px solid rgba(0,153,168,0.15)' };
 
@@ -1346,7 +1346,7 @@ function ScreenTrip() {
       <Scroll>
         {/* Turlar */}
         <div style={card}>
-          <Head icon={compassIco} label="Turlar" k="turlar"/>
+          <Head icon={<FigTours size={26}/>} label="Turlar" k="turlar"/>
           {open.turlar && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <Slide img="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600" badge="Turkiya" title="Turkiya: 5 100 000 so'mdan" sub="7 kecha · 2 kishi · Ultra All Inclusive" prices={[{label:'Antaliya',price:"7.2 mln so'm"},{label:'Istanbul',price:"5.1 mln so'm"},{label:'Bodrum',price:"8.4 mln so'm"},{label:'Izmir',price:"6.2 mln so'm"}]}/>
@@ -1358,7 +1358,7 @@ function ScreenTrip() {
 
         {/* Ekskursiya */}
         <div style={card}>
-          <Head icon={<Ico d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>} label="Ekskursiya" k="excur"/>
+          <Head icon={<FigExcursions size={26}/>} label="Ekskursiya" k="excur"/>
           {open.excur && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <Slide img="https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600" badge="O'zbekiston" title="Tarixiy shaharlar bo'ylab" sub="Eng mashhur yo'nalishlar" prices={[{label:"Xiva safari",price:"450 000 so'm"},{label:'Eski Buxoro',price:"380 000 so'm"},{label:'Samarqand',price:"520 000 so'm"},{label:'Tashkent City',price:"250 000 so'm"}]}/>
@@ -1370,7 +1370,7 @@ function ScreenTrip() {
 
         {/* eSIM */}
         <div style={card}>
-          <Head icon={globeIco} label="eSIM" k="esim"/>
+          <Head icon={<FigEsim size={26}/>} label="eSIM" k="esim"/>
           {open.esim && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
@@ -1398,7 +1398,7 @@ function ScreenTrip() {
 
         {/* Mehmonxona */}
         <div style={card}>
-          <Head icon={<Ico d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10"/>} label="Mehmonxona" k="hotel"/>
+          <Head icon={<FigHotel size={26}/>} label="Mehmonxona" k="hotel"/>
           {open.hotel && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <Slide img="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" badge="Toshkent" title="Toshkent mehmonxonalari" sub="Premium dam olish maskanlari" prices={[{label:'Hyatt Regency',price:"2.4 mln so'm"},{label:'Hilton Tashkent',price:"2.1 mln so'm"},{label:'Wyndham',price:"1.8 mln so'm"},{label:'Ramada',price:"1.5 mln so'm"}]}/>
@@ -1410,7 +1410,7 @@ function ScreenTrip() {
 
         {/* Aviabilet */}
         <div style={card}>
-          <Head icon={planeIco} label="Aviabilet" k="aviabilet"/>
+          <Head icon={<FigFlight size={26}/>} label="Aviabilet" k="aviabilet"/>
           {open.aviabilet && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <Slide img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600" badge="Dubai" title="Dubai" sub="Mashhur yo'nalishlar" prices={[{label:'TAS → DXB',price:"3.4 mln so'm"},{label:'DXB → TAS',price:"3.1 mln so'm"},{label:"To'g'ri reys",price:'5 soat'},{label:'Biznes klass',price:"9.8 mln so'm"}]}/>
@@ -1422,7 +1422,7 @@ function ScreenTrip() {
 
         {/* Airport taxi */}
         <div style={card}>
-          <Head icon={<Ico d="M5 17H3v-5l2-5h14l2 5v5h-2M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M15 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/>} label="Airport taxi" k="taxi"/>
+          <Head icon={<FigAirportTaxi size={26}/>} label="Airport taxi" k="taxi"/>
           {open.taxi && <div style={{padding:'0 20px 20px'}}>
             <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginBottom:16}}>
               <button style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:700,background:'#fff',borderRadius:10,border:'none',color:T,boxShadow:'0 1px 4px rgba(0,0,0,0.08)',cursor:'pointer'}}>Aeroportga borish</button>
@@ -1438,7 +1438,7 @@ function ScreenTrip() {
 
         {/* Transfer */}
         <div style={card}>
-          <Head icon={<Ico d="M8 6v6m8-6v6M3 6h18M3 10h18M3 14h18M5 18l1 2h12l1-2M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14H6V4z"/>} label="Transfer" k="transfer"/>
+          <Head icon={<FigTransfer size={26}/>} label="Transfer" k="transfer"/>
           {open.transfer && <div style={{padding:'0 20px 20px'}}>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:4}}>
               <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerdan</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Toshkent</div></div>
@@ -1450,7 +1450,7 @@ function ScreenTrip() {
 
         {/* Rent Car */}
         <div style={card}>
-          <Head icon={<Ico d="M5 17H3v-5l2-5h14l2 5v5h-2M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M15 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M5 12h14"/>} label="Rent a Car" k="rentcar"/>
+          <Head icon={<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="fg_car" x1="0" y1="0" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop stopColor="#41668B"/><stop offset="1" stopColor="#A5BDD5"/></linearGradient></defs><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11M5 11h14M5 11v6h2v1.5a1.5 1.5 0 0 0 3 0V17h4v1.5a1.5 1.5 0 0 0 3 0V17h2v-6M8 14h.01M16 14h.01" stroke="url(#fg_car)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>} label="Rent a Car" k="rentcar"/>
           {open.rentcar && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
