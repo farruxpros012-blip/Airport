@@ -1108,12 +1108,12 @@ function ScreenTrip() {
                 <div style={{fontSize:12,color:'#9AA1B8',marginTop:3}}>{it.sub}</div>
                 {/* Divider */}
                 <div style={{height:1,background:'#F0F2F8',margin:'12px 0'}}/>
-                {/* Regular price — left-aligned */}
-                <div style={{marginBottom:10}}>
+                {/* Regular price — right-aligned */}
+                <div style={{textAlign:'right',marginBottom:10}}>
                   <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>dan {fmtPrice(it.regular)}</span>
                 </div>
-                {/* Premium pill row — hug content, gold gradient */}
-                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                {/* Premium pill row — right-aligned, hug content, gold gradient */}
+                <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:8}}>
                   <div style={{display:'inline-flex',alignItems:'center',gap:7,background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:999,padding:'7px 14px',boxShadow:'0 2px 8px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
                     <span style={{fontSize:12,fontWeight:600,color:'#fff'}}>Premium narx: </span>
@@ -1121,8 +1121,8 @@ function ScreenTrip() {
                   </div>
                   <button style={{width:30,height:30,borderRadius:999,background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:16,fontWeight:700,padding:0,flexShrink:0}}>···</button>
                 </div>
-                {/* Coins */}
-                <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10}}>
+                {/* Coins — right-aligned */}
+                <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:8,marginTop:10}}>
                   <div style={{width:18,height:18,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,boxShadow:'inset 0 -1px 0 rgba(0,0,0,0.1)'}}>
                     <span style={{fontSize:9,fontWeight:900,color:'#92400E'}}>C</span>
                   </div>
