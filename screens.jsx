@@ -416,22 +416,228 @@ function ScreenHome() {
 // SCREEN 2 — SERVICES
 // ═════════════════════════════════════════════════════════════
 function ScreenServices() {
-  const services = [
-    { icon: <IconBolt size={22} color={C.brand}/>,    title: 'Fast Track',        sub: 'Priority Lane' },
-    { icon: <IconCrown size={22} color={C.brand}/>,   title: 'Concierge',         sub: 'Персональное сопровождение, помощь с багажом и…' },
-    { icon: <IconCar size={22} color={C.brand}/>,     title: 'Airport Taxi',      sub: 'Заказ официального такси с фиксированной ценой до любого…' },
-    { icon: <IconLounge size={22} color={C.brand}/>,  title: 'CIP Lounge',        sub: 'Business and First class access' },
-    { icon: <IconBed size={22} color={C.brand}/>,     title: 'Airport Hotel',     sub: 'Капсулы, номера и душ прямо в терминале — для ожидания,…' },
-    { icon: <IconBag size={22} color={C.brand}/>,     title: 'Хранение багажа',   sub: 'Безопасное хранение в аэропорту. Видеонаблюдение 24/7, страховка…' },
-  ];
+  const [open, setOpen] = React.useState({ turlar: true, aviabilet: true });
+  const toggle = (key) => setOpen(o => ({ ...o, [key]: !o[key] }));
+
+  const TEAL_SVC = '#0099A8';
+  const TEAL_BG = '#E0F2F3';
+  const CARD_SHADOW = '0 8px 24px rgba(0,153,168,0.10)';
+  const cardStyle = { background: '#fff', borderRadius: 24, boxShadow: CARD_SHADOW, border: '1px solid rgba(0,153,168,0.10)', overflow: 'hidden', marginBottom: 16 };
+  const summaryStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', cursor: 'pointer' };
+  const iconBox = { width: 44, height: 44, borderRadius: 14, background: TEAL_SVC, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 };
+  const chevron = (isOpen) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.25s' }}>
+      <path d="M6 9l6 6 6-6"/>
+    </svg>
+  );
+  const primaryBtn = { width: '100%', background: TEAL_SVC, color: '#fff', border: 'none', borderRadius: 20, padding: '13px 0', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 16 };
+  const miniCard = { background: '#E0F2F3', padding: '8px 10px', borderRadius: 14, border: '1px solid rgba(0,153,168,0.15)' };
+
+  const SlideCard = ({ img, badge, title, sub, prices }) => (
+    <div style={{ flexShrink: 0, width: '85%', scrollSnapAlign: 'center' }}>
+      <div style={{ width: '100%', aspectRatio: '16/9', borderRadius: 16, overflow: 'hidden', position: 'relative', marginBottom: 10, border: '1px solid rgba(0,153,168,0.12)' }}>
+        <img src={img} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+        {badge && <div style={{ position: 'absolute', top: 8, left: 8, background: TEAL_SVC, color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999 }}>{badge}</div>}
+      </div>
+      <div style={{ padding: '0 4px 8px' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: '#0A1F21', marginBottom: 2 }}>{title}</div>
+        <div style={{ fontSize: 11, color: '#5C7577', marginBottom: 8 }}>{sub}</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+          {prices.map((p, i) => (
+            <div key={i} style={miniCard}>
+              <div style={{ fontSize: 10, color: '#5C7577', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.label}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: TEAL_SVC }}>{p.price}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const AccordionHeader = ({ icon, label, isOpen, onToggle }) => (
+    <div onClick={onToggle} style={summaryStyle}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={iconBox}>{icon}</div>
+        <span style={{ fontSize: 15, fontWeight: 600, color: '#0A1F21' }}>{label}</span>
+      </div>
+      {chevron(isOpen)}
+    </div>
+  );
+
+  const iconSvg = (d, size=22) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d={d}/>
+    </svg>
+  );
+  const planeIcon = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>;
+  const compassIcon = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>;
+  const mapPinIcon = iconSvg("M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z");
+  const globeIcon = <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/></svg>;
+  const hotelIcon = iconSvg("M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10");
+  const carIcon = iconSvg("M5 17H3v-5l2-5h14l2 5v5h-2m-1 0H7m10 0a1 1 0 1 0 2 0 1 1 0 0 0-2 0M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0");
+  const taxiIcon = iconSvg("M5 17H3v-5l2-5h14l2 5v5h-2M7 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0M15 17a1 1 0 1 0 2 0 1 1 0 0 0-2 0");
+  const busIcon = iconSvg("M8 6v6m8-6v6M3 6h18M3 10h18M3 14h18M5 18l1 2h12l1-2M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14H6V4z");
+
   return (
     <Frame>
-      <PageHeader title="Услуги аэропорта"/>
+      {/* Header */}
+      <div style={{ padding: '16px 20px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #ECEEF6', background: C.bg, position: 'sticky', top: 0, zIndex: 10 }}>
+        <div style={{ width: 32, height: 32 }}/>
+        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#0A1F21' }}>Xizmatlar</h1>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', background: `linear-gradient(135deg, ${TEAL_SVC} 0%, #067865 100%)`, boxShadow: '0 2px 8px rgba(0,153,168,0.25)' }}/>
+      </div>
+
       <Scroll>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {services.map((s, i) => <ServiceRow key={i} {...s}/>)}
+        {/* Turlar */}
+        <div style={cardStyle}>
+          <AccordionHeader icon={compassIcon} label="Turlar" isOpen={open.turlar} onToggle={() => toggle('turlar')}/>
+          {open.turlar && (
+            <div style={{ paddingBottom: 20 }}>
+              <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', padding: '0 20px' }}>
+                <SlideCard img="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600" badge="Turkiya" title="Turkiya: 5 100 000 so'mdan" sub="7 kecha · 2 kishi uchun · Ultra All Inclusive" prices={[{label:'Antaliya',price:'7.2 mln'},{label:'Istanbul',price:'5.1 mln'},{label:'Bodrum',price:'8.4 mln'},{label:'Izmir',price:'6.2 mln'}]}/>
+                <SlideCard img="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600" badge="BAA (Dubay)" title="Dubay: 6 800 000 so'mdan" sub="5 kecha · Premium mehmonxonalar" prices={[{label:'Jumeirah Beach',price:'9.8 mln'},{label:'Marina View',price:'7.5 mln'},{label:'Downtown',price:'11.2 mln'},{label:'Palm Island',price:'15.4 mln'}]}/>
+              </div>
+              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha turlarni ko'rish</button></div>
+            </div>
+          )}
+        </div>
+
+        {/* Ekskursiya */}
+        <div style={cardStyle}>
+          <AccordionHeader icon={mapPinIcon} label="Ekskursiya" isOpen={open.excur} onToggle={() => toggle('excur')}/>
+          {open.excur && (
+            <div style={{ paddingBottom: 20 }}>
+              <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', padding: '0 20px' }}>
+                <SlideCard img="https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600" badge="O'zbekiston" title="Tarixiy shaharlar bo'ylab" sub="Eng mashhur yo'nalishlar" prices={[{label:"Xiva safari",price:'450 000'},{label:'Eski Buxoro',price:'380 000'},{label:'Samarqand',price:'520 000'},{label:'Tashkent City',price:'250 000'}]}/>
+              </div>
+              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha ekskursiyalarni ko'rish</button></div>
+            </div>
+          )}
+        </div>
+
+        {/* eSIM */}
+        <div style={cardStyle}>
+          <AccordionHeader icon={globeIcon} label="eSIM" isOpen={open.esim} onToggle={() => toggle('esim')}/>
+          {open.esim && (
+            <div style={{ paddingBottom: 20 }}>
+              <div style={{ margin: '0 20px', background: '#EDF7F8', borderRadius: 16, padding: 16, position: 'relative', overflow: 'hidden', border: '1px solid rgba(0,153,168,0.15)' }}>
+                <div style={{ position: 'absolute', top: 8, right: 8, opacity: 0.08 }}>
+                  <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+                </div>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                  <span style={{ background: '#1D4ED8', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999 }}>YEVROPA</span>
+                  <span style={{ background: TEAL_BG, color: TEAL_SVC, fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999, border: '1px solid rgba(0,153,168,0.2)' }}>34 Davlat</span>
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#0A1F21', marginBottom: 4 }}>Cheksiz</div>
+                <div style={{ fontSize: 11, color: '#5C7577', marginBottom: 12 }}>Cheksiz internet + 5G tezlik</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: '#0A1F21' }}>7 kun</span>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: TEAL_SVC }}>150 000 so'm</span>
+                </div>
+              </div>
+              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha eSIMlarni ko'rish</button></div>
+            </div>
+          )}
+        </div>
+
+        {/* Mehmonxona */}
+        <div style={cardStyle}>
+          <AccordionHeader icon={hotelIcon} label="Mehmonxona" isOpen={open.hotel} onToggle={() => toggle('hotel')}/>
+          {open.hotel && (
+            <div style={{ paddingBottom: 20 }}>
+              <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', padding: '0 20px' }}>
+                <SlideCard img="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" badge="Ommabop" title="Toshkent" sub="Premium dam olish maskanlari" prices={[{label:'Hyatt Regency',price:'2.4 mln'},{label:'Hilton Tashkent',price:'2.1 mln'}]}/>
+              </div>
+              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha mehmonxonalarni ko'rish</button></div>
+            </div>
+          )}
+        </div>
+
+        {/* Aviabilet */}
+        <div style={cardStyle}>
+          <AccordionHeader icon={planeIcon} label="Aviabilet" isOpen={open.aviabilet} onToggle={() => toggle('aviabilet')}/>
+          {open.aviabilet && (
+            <div style={{ paddingBottom: 20 }}>
+              <div style={{ display: 'flex', gap: 16, overflowX: 'auto', scrollSnapType: 'x mandatory', padding: '0 20px' }}>
+                <SlideCard img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600" badge="BAA (Dubay)" title="Dubay — Toshkent" sub="Mashhur yo'nalishlar" prices={[{label:'DXB → TAS',price:'3.1 mln'},{label:'TAS → DXB',price:'3.4 mln'}]}/>
+              </div>
+              <div style={{ padding: '0 20px' }}><button style={primaryBtn}>Barcha chiptalarni ko'rish</button></div>
+            </div>
+          )}
+        </div>
+
+        {/* Airport taxi */}
+        <div style={cardStyle}>
+          <AccordionHeader icon={taxiIcon} label="Airport taxi" isOpen={open.taxi} onToggle={() => toggle('taxi')}/>
+          {open.taxi && (
+            <div style={{ padding: '0 20px 20px' }}>
+              <div style={{ display: 'flex', background: '#F0F2F8', borderRadius: 12, padding: 4, marginBottom: 16 }}>
+                <button style={{ flex: 1, padding: '8px 0', fontSize: 11, fontWeight: 700, background: '#fff', borderRadius: 10, border: 'none', color: TEAL_SVC, boxShadow: '0 1px 4px rgba(0,0,0,0.08)', cursor: 'pointer' }}>Aeroportga borish</button>
+                <button style={{ flex: 1, padding: '8px 0', fontSize: 11, fontWeight: 600, background: 'none', border: 'none', color: '#9AA1B8', cursor: 'pointer' }}>Aeroportdan ketish</button>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: TEAL_BG, borderRadius: 16, border: '1px solid rgba(0,153,168,0.15)', marginBottom: 4 }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={TEAL_SVC} strokeWidth="2" strokeLinecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                <div>
+                  <div style={{ fontSize: 10, color: '#5C7577', textTransform: 'uppercase' }}>Qayerdan</div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: '#0A1F21' }}>O'z manzilingizni kiriting</div>
+                </div>
+              </div>
+              <button style={primaryBtn}>Taksi buyurtma qilish</button>
+            </div>
+          )}
+        </div>
+
+        {/* Transfer */}
+        <div style={cardStyle}>
+          <AccordionHeader icon={busIcon} label="Transfer" isOpen={open.transfer} onToggle={() => toggle('transfer')}/>
+          {open.transfer && (
+            <div style={{ padding: '0 20px 20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 4 }}>
+                <div style={{ padding: 12, background: TEAL_BG, borderRadius: 16, border: '1px solid rgba(0,153,168,0.15)' }}>
+                  <div style={{ fontSize: 10, color: '#5C7577', textTransform: 'uppercase', marginBottom: 4 }}>Qayerdan</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1F21' }}>Toshkent</div>
+                </div>
+                <div style={{ padding: 12, background: TEAL_BG, borderRadius: 16, border: '1px solid rgba(0,153,168,0.15)' }}>
+                  <div style={{ fontSize: 10, color: '#5C7577', textTransform: 'uppercase', marginBottom: 4 }}>Qayerga</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#0A1F21' }}>Samarqand</div>
+                </div>
+              </div>
+              <button style={primaryBtn}>Transferni band qilish</button>
+            </div>
+          )}
+        </div>
+
+        {/* Mashhur yo'nalishlar */}
+        <div style={{ fontSize: 20, fontWeight: 700, color: '#0A1F21', margin: '8px 0 12px', letterSpacing: -0.3 }}>Mashhur yo'nalishlar</div>
+        <div style={{ background: '#fff', borderRadius: 16, padding: 16, boxShadow: CARD_SHADOW, border: '1px solid rgba(0,153,168,0.10)', marginBottom: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: TEAL_SVC, marginTop: 6, flexShrink: 0 }}/>
+          <div>
+            <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, fontWeight: 600, color: '#5C7577', marginBottom: 4 }}>O'zbekistondan</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: '#0A1F21', marginBottom: 2 }}>Samarqand — Rim</div>
+            <div style={{ fontSize: 13, color: '#5C7577', marginBottom: 4 }}>2 soat 40 daqiqa</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: TEAL_SVC }}>3 450 000 so'm dan</div>
+          </div>
+        </div>
+
+        {/* Promo grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24, height: 180 }}>
+          <div style={{ background: TEAL_BG, borderRadius: 20, padding: 16, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid rgba(0,153,168,0.15)', boxShadow: CARD_SHADOW }}>
+            <div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: TEAL_SVC, marginBottom: 8, lineHeight: 1.3 }}>Global eSIM xizmati</div>
+              <div style={{ fontSize: 11, color: '#5C7577', lineHeight: 1.5 }}>Dunyoning 150+ davlatida aloqada bo'ling.</div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: TEAL_SVC, fontWeight: 700, fontSize: 13 }}>
+              Batafsil
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={TEAL_SVC} strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+          <div style={{ borderRadius: 20, overflow: 'hidden', position: 'relative', border: '1px solid rgba(0,153,168,0.10)', boxShadow: CARD_SHADOW }}>
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400" alt="eSIM" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.35), transparent)' }}/>
+          </div>
         </div>
       </Scroll>
+
       <TabBar active="serv"/>
     </Frame>
   );
