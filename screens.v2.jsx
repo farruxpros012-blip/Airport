@@ -1067,15 +1067,6 @@ function ScreenTrip() {
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
-          {/* Tappable hint — auto-hides after 5s */}
-          {hintShown && (
-            <div style={{display:'flex',justifyContent:'center',padding:'0 16px 8px',animation:'fadeIn 0.3s ease'}}>
-              <div style={{display:'flex',alignItems:'center',gap:6,background:'#FFF8EC',border:'1px solid rgba(240,138,44,0.25)',borderRadius:999,padding:'5px 12px',fontSize:11,color:'#92520C',fontWeight:600,boxShadow:'0 2px 8px rgba(240,138,44,0.12)'}}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92520C" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12l5 5L20 7" transform="rotate(-90 12 12)"/></svg>
-                Bosing — sana, mehmonlar va yo'nalishni o'zgartiring
-              </div>
-            </div>
-          )}
           {/* Row 2: Search */}
           <div style={{padding:'0 16px 10px',position:'relative',display:'flex',alignItems:'center'}}>
             <svg style={{position:'absolute',left:28,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -1094,7 +1085,7 @@ function ScreenTrip() {
           </div>
         </div>
 
-        <Scroll style={{background:'#F4F5FA',padding:'18px 16px 16px'}}>
+        <Scroll style={{background:'#F4F5FA',padding:16}}>
           {items.map((it,i)=>(
             <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)'}}>
               {/* Photo */}
