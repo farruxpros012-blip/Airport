@@ -897,6 +897,8 @@ function ScreenTrip() {
   const [sheet, setSheet] = React.useState(null); // 'all'
   const [hintShown, setHintShown] = React.useState(true);
   const [esimCountry, setEsimCountry] = React.useState(null);
+  const [esimTab, setEsimTab] = React.useState('standard');
+  const [esimSelected, setEsimSelected] = React.useState(null);
   React.useEffect(() => {
     if (page && hintShown) {
       const t = setTimeout(() => setHintShown(false), 5000);
@@ -1046,6 +1048,89 @@ function ScreenTrip() {
     if (n >= 1000) return (n/1000).toFixed(0) + " ming so'm";
     return s;
   };
+
+  /* ── eSIM country detail ── */
+  const ESIM_COUNTRY_FLAGS = {
+    'United States':'🇺🇸','United Arab Emirates':'🇦🇪','Türkiye':'🇹🇷','United Kingdom':'🇬🇧',
+    'Germany':'🇩🇪','France':'🇫🇷','Japan':'🇯🇵','Korea':'🇰🇷','China':'🇨🇳',
+    'Thailand':'🇹🇭','Singapore':'🇸🇬','Global (150+ davlat)':'🌍'
+  };
+  const ESIM_PLANS = {
+    standard: [
+      { gb:'1 GB', days:'7 kun', regular:'220 ming', premium:'198 ming' },
+      { gb:'2 GB', days:'15 kun', regular:'275 ming', premium:'253 ming' },
+      { gb:'10 GB', days:'15 kun', regular:'550 ming', premium:'517 ming' },
+      { gb:'20 GB', days:'15 kun', regular:'858 ming', premium:'803 ming' },
+      { gb:'3 GB', days:'30 kun', regular:'286 ming', premium:'264 ming' },
+      { gb:'5 GB', days:'30 kun', regular:'363 ming', premium:'341 ming' },
+      { gb:'10 GB', days:'30 kun', regular:'517 ming', premium:'484 ming' },
+    ],
+    unlimited: [
+      { gb:'Cheksiz', days:'7 kun', regular:'880 ming', premium:'792 ming' },
+      { gb:'Cheksiz', days:'15 kun', regular:'1.4 mln', premium:'1.3 mln' },
+      { gb:'Cheksiz', days:'30 kun', regular:'2.2 mln', premium:'2.0 mln' },
+    ]
+  };
+
+  if (page === 'esim' && esimCountry) {
+    const plans = ESIM_PLANS[esimTab] || [];
+    return (
+      <Frame>
+        {/* Hero with flag */}
+        <div style={{background:'linear-gradient(180deg, #F4F5FA 0%, #fff 100%)',padding:'14px 16px 20px',position:'sticky',top:0,zIndex:20}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+            <button onClick={()=>{setEsimCountry(null);setEsimSelected(null);}} style={{width:38,height:38,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <button style={{display:'flex',alignItems:'center',gap:5,padding:'8px 14px',borderRadius:999,background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
+              <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>UZS</span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',alignItems:'center',padding:'12px 0 18px'}}>
+            <div style={{width:62,height:62,borderRadius:'50%',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:38,boxShadow:'0 6px 20px rgba(10,31,33,0.10), 0 2px 6px rgba(10,31,33,0.06)',marginBottom:10}}>
+              {ESIM_COUNTRY_FLAGS[esimCountry] || '🌍'}
+            </div>
+            <div style={{fontSize:18,fontWeight:800,color:'#0A1F21'}}>{esimCountry}</div>
+          </div>
+          {/* Tabs */}
+          <div style={{display:'flex',background:'#ECEEF6',borderRadius:14,padding:4}}>
+            {[{k:'standard',l:'Standard'},{k:'unlimited',l:'Cheksiz'}].map(t=>(
+              <button key={t.k} onClick={()=>setEsimTab(t.k)} style={{flex:1,padding:'10px 0',fontSize:13,fontWeight:700,background:esimTab===t.k?'#fff':'none',borderRadius:11,border:'none',color:esimTab===t.k?'#0A1F21':'#9AA1B8',boxShadow:esimTab===t.k?'0 2px 6px rgba(10,31,33,0.08)':'none',cursor:'pointer',transition:'all 0.15s'}}>{t.l}</button>
+            ))}
+          </div>
+        </div>
+
+        <Scroll style={{background:'#F4F5FA',padding:'0 16px 16px'}}>
+          {plans.map((p,i)=>{
+            const sel = esimSelected===i;
+            return (
+              <button key={i} onClick={()=>setEsimSelected(i)} style={{width:'100%',display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:18,padding:'14px 16px',marginBottom:10,border:`1.5px solid ${sel?T:'rgba(0,153,168,0.08)'}`,boxShadow:sel?'0 4px 16px rgba(0,153,168,0.18)':'0 2px 8px rgba(10,31,33,0.05)',cursor:'pointer',textAlign:'left',transition:'all 0.15s'}}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:18,fontWeight:800,color:'#0A1F21'}}>{p.gb}</div>
+                  <div style={{fontSize:12,color:'#9AA1B8',marginTop:2}}>{p.days}</div>
+                </div>
+                <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>
+                  <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>{p.regular} so'm</div>
+                  <div style={{display:'flex',alignItems:'center',gap:6}}>
+                    <div style={{display:'inline-flex',alignItems:'center',gap:4,background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:999,padding:'4px 10px',boxShadow:'0 2px 6px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                      <span style={{fontSize:11,fontWeight:800,color:'#fff'}}>{p.premium}</span>
+                    </div>
+                    <span style={{width:24,height:24,borderRadius:999,background:'#F4F5FA',display:'inline-flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:12,fontWeight:700}}>···</span>
+                  </div>
+                </div>
+                <div style={{width:22,height:22,borderRadius:'50%',border:`2px solid ${sel?T:'#DDE0EB'}`,background:sel?T:'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginLeft:4}}>
+                  {sel && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round"><path d="M5 12l5 5L20 7"/></svg>}
+                </div>
+              </button>
+            );
+          })}
+        </Scroll>
+        <TabBar active="trip"/>
+      </Frame>
+    );
+  }
 
   if (page) {
     const items = TRIP_RESULTS[page] || [];
