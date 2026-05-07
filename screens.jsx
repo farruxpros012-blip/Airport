@@ -892,7 +892,7 @@ const TRIP_RESULTS = {
 };
 
 function ScreenTrip() {
-  const [open, setOpen] = React.useState({ turlar: true, aviabilet: true, rentcar: false });
+  const [open, setOpen] = React.useState({});
   const [page, setPage] = React.useState(null);
   const [sheet, setSheet] = React.useState(null); // 'all'
   const [hintShown, setHintShown] = React.useState(true);
