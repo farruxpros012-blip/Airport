@@ -1042,210 +1042,210 @@ function ScreenTrip() {
     );
   };
 
-  /* ── Pre-Search Bottom Sheet ── */
+  /* ── Pre-Search Bottom Sheet (compact) ── */
   const PreSheet = () => {
     const [taxiTab, setTaxiTab] = React.useState('pickup');
     const [fromVal, setFromVal] = React.useState('');
     const [toVal, setToVal] = React.useState('');
     const [dateStart, setDateStart] = React.useState('');
     const [dateEnd, setDateEnd] = React.useState('');
-    const [nights, setNights] = React.useState(5);
+    const [nights, setNights] = React.useState(7);
     const [adults, setAdults] = React.useState(2);
     const [children, setChildren] = React.useState(0);
     const [infants, setInfants] = React.useState(0);
-    const [hotelClass, setHotelClass] = React.useState('');
+    const [hotels, setHotels] = React.useState([]);
     const [flightClass, setFlightClass] = React.useState('econom');
     const [country, setCountry] = React.useState('');
     const [passengerCount, setPassengerCount] = React.useState(1);
     const [pickupTime, setPickupTime] = React.useState('');
-    const [pickupLoc, setPickupLoc] = React.useState('City');
+    const [pickupLoc, setPickupLoc] = React.useState('Shahar');
     const [rentFrom, setRentFrom] = React.useState('');
     const [rentTo, setRentTo] = React.useState('');
     const [rentPickupLoc, setRentPickupLoc] = React.useState('');
     if (!preSheet) return null;
     const close = () => setPreSheet(null);
-    const inp = { width:'100%', padding:'13px 16px', border:'1.5px solid #E8EAF3', borderRadius:14, fontSize:14, color:'#0A1F21', outline:'none', boxSizing:'border-box', background:'#F4F5FA', fontFamily:'inherit' };
-    const sec = (t) => <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.8,marginBottom:8,marginTop:18}}>{t}</div>;
+
+    // Compact unified row inside a card
+    const cardWrap = { background:'#F7F8FB', borderRadius:16, padding:'0 14px', marginBottom:10 };
+    const row = (i, last) => ({ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'11px 0', borderBottom: last ? 'none' : '1px solid #E8EAF3', minHeight:22 });
+    const lab = { fontSize:12, color:'#7A8190', fontWeight:600, flexShrink:0, marginRight:12 };
+    const valIn = { flex:1, border:'none', background:'none', fontSize:14, fontWeight:600, color:'#0A1F21', outline:'none', textAlign:'right', fontFamily:'inherit', minWidth:0 };
     const cnt = (val, set, min=0) => (
-      <div style={{display:'flex',alignItems:'center',gap:0,border:'1.5px solid #E8EAF3',borderRadius:12,overflow:'hidden'}}>
-        <button onClick={()=>set(v=>Math.max(min,v-1))} style={{width:40,height:40,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',lineHeight:1}}>−</button>
-        <span style={{fontSize:16,fontWeight:700,color:'#0A1F21',width:28,textAlign:'center'}}>{val}</span>
-        <button onClick={()=>set(v=>v+1)} style={{width:40,height:40,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',lineHeight:1}}>+</button>
+      <div style={{display:'flex',alignItems:'center',gap:0}}>
+        <button onClick={()=>set(v=>Math.max(min,v-1))} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',lineHeight:1,padding:0}}>−</button>
+        <span style={{fontSize:15,fontWeight:700,color:'#0A1F21',width:28,textAlign:'center'}}>{val}</span>
+        <button onClick={()=>set(v=>v+1)} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',lineHeight:1,padding:0}}>+</button>
       </div>
     );
-    const guestRow = (label, sub, val, set, min=0) => (
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid #F0F2F5'}}>
-        <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{label}</div>{sub&&<div style={{fontSize:11,color:'#9AA1B8'}}>{sub}</div>}</div>
-        {cnt(val,set,min)}
-      </div>
-    );
-    const routeBox = (fLabel='Qayerdan', tLabel='Qayerga', showSwap=true) => (
-      <div style={{background:'#F4F5FA',borderRadius:16,overflow:'hidden',position:'relative'}}>
-        <div style={{display:'flex',alignItems:'center',padding:'13px 16px'}}>
-          <div style={{width:8,height:8,borderRadius:'50%',background:T,flexShrink:0,marginRight:12}}/>
-          <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder={fLabel} style={{flex:1,border:'none',background:'none',fontSize:14,fontWeight:600,color:'#0A1F21',outline:'none',fontFamily:'inherit'}}/>
+
+    // Route card with two stacked rows + swap
+    const routeCard = (fLabel='Qayerdan', tLabel='Qayerga') => (
+      <div style={{background:'#F7F8FB',borderRadius:16,padding:'4px 14px',marginBottom:10,position:'relative'}}>
+        <div style={{display:'flex',alignItems:'center',padding:'10px 0',borderBottom:'1px solid #E8EAF3'}}>
+          <div style={{width:7,height:7,borderRadius:'50%',background:T,marginRight:10}}/>
+          <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder={fLabel} style={{flex:1,border:'none',background:'none',fontSize:14,fontWeight:600,color:'#0A1F21',outline:'none',fontFamily:'inherit',paddingRight:40}}/>
         </div>
-        <div style={{height:1,background:'#E8EAF3',marginLeft:36}}/>
-        <div style={{display:'flex',alignItems:'center',padding:'13px 16px'}}>
-          <div style={{width:8,height:8,borderRadius:'50%',background:'#DDE0EB',flexShrink:0,marginRight:12}}/>
-          <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder={tLabel} style={{flex:1,border:'none',background:'none',fontSize:14,fontWeight:600,color:'#0A1F21',outline:'none',fontFamily:'inherit'}}/>
+        <div style={{display:'flex',alignItems:'center',padding:'10px 0'}}>
+          <div style={{width:7,height:7,borderRadius:'50%',background:'#DDE0EB',marginRight:10}}/>
+          <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder={tLabel} style={{flex:1,border:'none',background:'none',fontSize:14,fontWeight:600,color:'#0A1F21',outline:'none',fontFamily:'inherit',paddingRight:40}}/>
         </div>
-        {showSwap && <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:14,top:'50%',transform:'translateY(-50%)',width:32,height:32,borderRadius:999,background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.06)'}}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.3" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
-        </button>}
+        <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.05)'}}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+        </button>
       </div>
     );
-    const chipRow = (label, options, val, set) => (
-      <div>
-        {sec(label)}
-        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-          {options.map(o=>(
-            <button key={o.v} onClick={()=>set(o.v)} style={{padding:'8px 16px',borderRadius:999,border:'1.5px solid',borderColor:val===o.v?T:'#E8EAF3',background:val===o.v?T:'#fff',color:val===o.v?'#fff':'#5C7577',fontSize:13,fontWeight:600,cursor:'pointer'}}>{o.l}</button>
-          ))}
+
+    // Compact 2-col split row (used for date+nights, datetime, etc)
+    const splitCard = (a, b) => (
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
+        <div style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px'}}>
+          <div style={lab}>{a.label}</div>
+          <input value={a.val} onChange={e=>a.set(e.target.value)} placeholder={a.ph} style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:2}}/>
+        </div>
+        <div style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px'}}>
+          <div style={lab}>{b.label}</div>
+          <input value={b.val} onChange={e=>b.set(e.target.value)} placeholder={b.ph} style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:2}}/>
         </div>
       </div>
     );
+
+    // Single inline input row in a card
+    const singleCard = (label, val, set, ph, readOnly=false) => (
+      <div style={{...cardWrap, padding:'10px 14px'}}>
+        <div style={lab}>{label}</div>
+        <input value={val} onChange={set?(e=>set(e.target.value)):undefined} readOnly={readOnly} placeholder={ph} style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color: readOnly?T:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:2}}/>
+      </div>
+    );
+
+    // Guests block (compact, all in one card)
+    const guestsCard = (showInfants=true) => (
+      <div style={cardWrap}>
+        <div style={row(0)}>
+          <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Kattalar</div><div style={{fontSize:11,color:'#9AA1B8'}}>12+</div></div>
+          {cnt(adults,setAdults,1)}
+        </div>
+        <div style={row(1, !showInfants)}>
+          <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Bolalar</div><div style={{fontSize:11,color:'#9AA1B8'}}>2–11</div></div>
+          {cnt(children,setChildren,0)}
+        </div>
+        {showInfants && (
+          <div style={row(2, true)}>
+            <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Chaqaloq</div><div style={{fontSize:11,color:'#9AA1B8'}}>0–2</div></div>
+            {cnt(infants,setInfants,0)}
+          </div>
+        )}
+      </div>
+    );
+
+    const chipPill = (sel, label, onClick) => (
+      <button onClick={onClick} style={{padding:'7px 14px',borderRadius:999,border:'1.5px solid',borderColor:sel?T:'#E8EAF3',background:sel?T:'#fff',color:sel?'#fff':'#5C7577',fontSize:12,fontWeight:600,cursor:'pointer'}}>{label}</button>
+    );
+
     const submit = () => {
       if (preSheet === 'esim') { setEsimCountry(country||'Global'); }
       setPage(preSheet);
       setPreSheet(null);
     };
-    const titles = { turlar:"Tur qidirish", excur:"Ekskursiya qidirish", esim:"eSIM qidirish", hotel:"Mehmonxona qidirish", aviabilet:"Aviabilet qidirish", taxi:"Airport taxi", transfer:"Transfer qidirish", rentcar:"Avtomobil ijarasi" };
+    const titles = { turlar:"Tur qidirish", excur:"Ekskursiya", esim:"eSIM", hotel:"Mehmonxona", aviabilet:"Aviabilet", taxi:"Airport taxi", transfer:"Transfer", rentcar:"Avtomobil ijarasi" };
 
     const renderFields = () => {
       if (preSheet === 'turlar') return (
-        <div>
-          {sec('Yo\'nalish')}{routeBox('Qayerdan','Qayerga')}
-          {sec('Sana')}<input value={dateStart} onChange={e=>setDateStart(e.target.value)} placeholder="Qachon (masalan: 15 May)" style={inp}/>
-          {sec('Qancha kun')}<input value={nights} onChange={e=>setNights(e.target.value)} placeholder="Necha kun" type="number" min="1" style={inp}/>
-          {sec('Mehmonlar')}
-          <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
-            {guestRow('Kattalar','12+',adults,setAdults,1)}
-            {guestRow('Bolalar','2–11',children,setChildren,0)}
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0'}}>
-              <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Chaqaloq</div><div style={{fontSize:11,color:'#9AA1B8'}}>0–2</div></div>
-              {cnt(infants,setInfants,0)}
-            </div>
+        <>
+          {routeCard()}
+          {splitCard(
+            {label:'QACHON', val:dateStart, set:setDateStart, ph:'15 May'},
+            {label:'NECHA KUN', val:nights, set:v=>setNights(v.replace(/\D/g,'')||1), ph:'7'}
+          )}
+          {guestsCard(true)}
+          <div style={{display:'flex',gap:6,flexWrap:'wrap',marginTop:4}}>
+            {['3★','4★','5★','All Inclusive','Ultra All Inc'].map(h=>
+              chipPill(hotels.includes(h), h, ()=>setHotels(v=>v.includes(h)?v.filter(x=>x!==h):[...v,h]))
+            )}
           </div>
-          {sec('Hotel turi')}
-          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-            {['3★','4★','5★','All Inclusive','Ultra All Inclusive'].map(h=>(
-              <button key={h} onClick={()=>setHotelClass(v=>v===h?'':h)} style={{padding:'8px 14px',borderRadius:999,border:'1.5px solid',borderColor:hotelClass===h?T:'#E8EAF3',background:hotelClass===h?T:'#fff',color:hotelClass===h?'#fff':'#5C7577',fontSize:12,fontWeight:600,cursor:'pointer'}}>{h}</button>
-            ))}
-          </div>
-        </div>
+        </>
       );
       if (preSheet === 'aviabilet') return (
-        <div>
-          {sec('Yo\'nalish')}{routeBox('Qayerdan','Qayerga')}
-          {sec('Ketish sanasi')}<input value={dateStart} onChange={e=>setDateStart(e.target.value)} placeholder="Qachon ketiladi" style={inp}/>
-          {sec('Qaytish sanasi')}<input value={dateEnd} onChange={e=>setDateEnd(e.target.value)} placeholder="Qachon qaytiladi" style={inp}/>
-          {sec('Yo\'lovchilar')}
-          <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
-            {guestRow('Kattalar','12+',adults,setAdults,1)}
-            {guestRow('Bolalar','2–11',children,setChildren,0)}
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0'}}>
-              <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Chaqaloq</div><div style={{fontSize:11,color:'#9AA1B8'}}>0–2</div></div>
-              {cnt(infants,setInfants,0)}
-            </div>
+        <>
+          {routeCard()}
+          {splitCard(
+            {label:'KETISH', val:dateStart, set:setDateStart, ph:'15 May'},
+            {label:'QAYTISH', val:dateEnd, set:setDateEnd, ph:'20 May'}
+          )}
+          {guestsCard(true)}
+          <div style={{display:'flex',gap:6,flexWrap:'wrap',marginTop:4}}>
+            {[{v:'econom',l:'Econom'},{v:'business',l:'Business'},{v:'premium',l:'Premium Economy'}].map(o=>
+              chipPill(flightClass===o.v, o.l, ()=>setFlightClass(o.v))
+            )}
           </div>
-          {chipRow('Bilet klassi',[{v:'econom',l:'Econom'},{v:'business',l:'Business'},{v:'premium',l:'Premium Economy'}],flightClass,setFlightClass)}
-        </div>
+        </>
       );
       if (preSheet === 'hotel') return (
-        <div>
-          {sec('Shahar')}<input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Qayerda" style={inp}/>
-          {sec('Sana')}<div style={{display:'flex',gap:8}}>
-            <input value={dateStart} onChange={e=>setDateStart(e.target.value)} placeholder="Qachondan" style={{...inp,flex:1}}/>
-            <input value={dateEnd} onChange={e=>setDateEnd(e.target.value)} placeholder="Qachongacha" style={{...inp,flex:1}}/>
-          </div>
-          {sec('Mijoz davlati')}<input value={country} onChange={e=>setCountry(e.target.value)} placeholder="Davlat" style={inp}/>
-          {sec('Xonada kim bor?')}
-          <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
-            {guestRow('Kattalar','12+',adults,setAdults,1)}
-            {guestRow('Bolalar','0–11',children,setChildren,0)}
-          </div>
-        </div>
+        <>
+          {singleCard('SHAHAR', fromVal, setFromVal, 'Qayerda')}
+          {splitCard(
+            {label:'QACHONDAN', val:dateStart, set:setDateStart, ph:'15 May'},
+            {label:'QACHONGACHA', val:dateEnd, set:setDateEnd, ph:'20 May'}
+          )}
+          {singleCard('MIJOZ DAVLATI', country, setCountry, 'Davlat')}
+          {guestsCard(false)}
+        </>
       );
-      if (preSheet === 'esim') return (
-        <div>
-          {sec('Davlat')}<input value={country} onChange={e=>setCountry(e.target.value)} placeholder="Davlatni kiriting (masalan: UAE)" style={inp}/>
-        </div>
-      );
-      if (preSheet === 'excur') return (
-        <div>
-          {sec('Davlat')}<input value={country} onChange={e=>setCountry(e.target.value)} placeholder="Davlatni tanlang" style={inp}/>
-        </div>
-      );
+      if (preSheet === 'esim') return singleCard('DAVLAT', country, setCountry, 'Davlatni kiriting');
+      if (preSheet === 'excur') return singleCard('DAVLAT', country, setCountry, 'Davlatni tanlang');
       if (preSheet === 'taxi') return (
-        <div>
-          <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginTop:4,marginBottom:16}}>
-            <button onClick={()=>setTaxiTab('pickup')} style={{flex:1,padding:'9px 0',fontSize:12,fontWeight:700,background:taxiTab==='pickup'?'#fff':'none',borderRadius:10,border:'none',color:taxiTab==='pickup'?T:'#9AA1B8',boxShadow:taxiTab==='pickup'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Pickup</button>
-            <button onClick={()=>setTaxiTab('dropoff')} style={{flex:1,padding:'9px 0',fontSize:12,fontWeight:700,background:taxiTab==='dropoff'?'#fff':'none',borderRadius:10,border:'none',color:taxiTab==='dropoff'?T:'#9AA1B8',boxShadow:taxiTab==='dropoff'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Drop-off</button>
+        <>
+          <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginBottom:10}}>
+            <button onClick={()=>setTaxiTab('pickup')} style={{flex:1,padding:'8px 0',fontSize:12,fontWeight:700,background:taxiTab==='pickup'?'#fff':'none',borderRadius:10,border:'none',color:taxiTab==='pickup'?T:'#9AA1B8',boxShadow:taxiTab==='pickup'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Pickup</button>
+            <button onClick={()=>setTaxiTab('dropoff')} style={{flex:1,padding:'8px 0',fontSize:12,fontWeight:700,background:taxiTab==='dropoff'?'#fff':'none',borderRadius:10,border:'none',color:taxiTab==='dropoff'?T:'#9AA1B8',boxShadow:taxiTab==='dropoff'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Drop-off</button>
           </div>
           {taxiTab==='pickup' ? (
-            <div>
-              {sec('Olib ketish joyi')}<input value="Aeroport" readOnly style={{...inp,color:T,fontWeight:600}}/>
-              {sec('Qayerga')}<input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder="Manzilni kiriting" style={inp}/>
-              {sec('Yo\'lovchilar soni')}
-              <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0'}}>
-                  <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</div>
-                  {cnt(passengerCount,setPassengerCount,1)}
-                </div>
-              </div>
-            </div>
+            <>
+              {singleCard('QAYERDAN', 'Aeroport', null, '', true)}
+              {singleCard('QAYERGA', toVal, setToVal, 'Manzilni kiriting')}
+              <div style={cardWrap}><div style={row(0,true)}><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</span>{cnt(passengerCount,setPassengerCount,1)}</div></div>
+            </>
           ) : (
-            <div>
-              {sec('Olib ketish joyi')}<input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Manzilni kiriting" style={inp}/>
-              {sec('Qayerga')}<input value="Aeroport" readOnly style={{...inp,color:T,fontWeight:600}}/>
-              {sec('Sana va vaqt')}<div style={{display:'flex',gap:8}}>
-                <input value={dateStart} onChange={e=>setDateStart(e.target.value)} placeholder="Qachon" style={{...inp,flex:1}}/>
-                <input value={pickupTime} onChange={e=>setPickupTime(e.target.value)} placeholder="Soat (10:30)" style={{...inp,flex:1}}/>
-              </div>
-              {sec('Yo\'lovchilar soni')}
-              <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0'}}>
-                  <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</div>
-                  {cnt(passengerCount,setPassengerCount,1)}
-                </div>
-              </div>
-            </div>
+            <>
+              {singleCard('QAYERDAN', fromVal, setFromVal, 'Manzilni kiriting')}
+              {singleCard('QAYERGA', 'Aeroport', null, '', true)}
+              {splitCard(
+                {label:'QACHON', val:dateStart, set:setDateStart, ph:'15 May'},
+                {label:'SOAT', val:pickupTime, set:setPickupTime, ph:'10:30'}
+              )}
+              <div style={cardWrap}><div style={row(0,true)}><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</span>{cnt(passengerCount,setPassengerCount,1)}</div></div>
+            </>
           )}
-        </div>
+        </>
       );
       if (preSheet === 'transfer') return (
-        <div>
-          {sec('Qayerdan (tur)')}
-          <div style={{display:'flex',gap:8,marginBottom:8}}>
-            {['Shahar','Aeroport','Mehmonxona'].map(t=>(
-              <button key={t} onClick={()=>setPickupLoc(t)} style={{padding:'8px 14px',borderRadius:999,border:'1.5px solid',borderColor:pickupLoc===t?T:'#E8EAF3',background:pickupLoc===t?T:'#fff',color:pickupLoc===t?'#fff':'#5C7577',fontSize:12,fontWeight:600,cursor:'pointer'}}>{t}</button>
-            ))}
+        <>
+          <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:10}}>
+            {['Shahar','Aeroport','Mehmonxona'].map(t=>chipPill(pickupLoc===t,t,()=>setPickupLoc(t)))}
           </div>
-          <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Manzilni kiriting" style={inp}/>
-          {sec('Qayerga')}
-          <input value="Aeroport" readOnly style={{...inp,color:T,fontWeight:600}}/>
-        </div>
+          {singleCard('QAYERDAN', fromVal, setFromVal, pickupLoc+' manzili')}
+          {singleCard('QAYERGA', 'Aeroport', null, '', true)}
+        </>
       );
       if (preSheet === 'rentcar') return (
-        <div>
-          {sec('Davlat')}<input value={country} onChange={e=>setCountry(e.target.value)} placeholder="Davlatni kiriting" style={inp}/>
-          {sec('Olib ketish manzili')}<input value={rentPickupLoc} onChange={e=>setRentPickupLoc(e.target.value)} placeholder="Olib ketish joyi" style={inp}/>
-          {sec('Ijara muddati')}<div style={{display:'flex',gap:8}}>
-            <input value={rentFrom} onChange={e=>setRentFrom(e.target.value)} placeholder="Qachondan, soat" style={{...inp,flex:1}}/>
-            <input value={rentTo} onChange={e=>setRentTo(e.target.value)} placeholder="Qachongacha, soat" style={{...inp,flex:1}}/>
-          </div>
-        </div>
+        <>
+          {singleCard('DAVLAT', country, setCountry, 'Davlatni kiriting')}
+          {singleCard('OLIB KETISH MANZILI', rentPickupLoc, setRentPickupLoc, 'Manzil')}
+          {splitCard(
+            {label:'QACHONDAN, SOAT', val:rentFrom, set:setRentFrom, ph:'10:00'},
+            {label:'QACHONGACHA, SOAT', val:rentTo, set:setRentTo, ph:'18:00'}
+          )}
+        </>
       );
       return null;
     };
+
     return (
       <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
-        <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 20px 36px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'88vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
-          <div style={{width:40,height:4,borderRadius:999,background:'#DDE0EB',margin:'14px auto 4px'}}/>
-          <div style={{fontSize:18,fontWeight:800,color:'#0A1F21',marginTop:12,marginBottom:4}}>{titles[preSheet]||'Qidirish'}</div>
+        <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 28px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+          <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
+          <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'14px 0 12px'}}>{titles[preSheet]||'Qidirish'}</div>
           {renderFields()}
-          <button onClick={submit} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',marginTop:20}}>Qidirish</button>
+          <button onClick={submit} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',marginTop:14,boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Qidirish</button>
         </div>
       </div>
     );
