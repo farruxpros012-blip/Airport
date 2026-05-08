@@ -1078,18 +1078,18 @@ function ScreenTrip() {
       </div>
     );
 
-    // Route card with two stacked rows + swap
+    // Route card with two tappable rows + swap (opens city picker)
     const routeCard = (fLabel='Qayerdan', tLabel='Qayerga') => (
       <div style={{background:'#F7F8FB',borderRadius:16,padding:'4px 14px',marginBottom:10,position:'relative'}}>
-        <div style={{display:'flex',alignItems:'center',padding:'10px 0',borderBottom:'1px solid #E8EAF3'}}>
+        <div onClick={()=>setNested('route-from')} style={{display:'flex',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #E8EAF3',cursor:'pointer'}}>
           <div style={{width:7,height:7,borderRadius:'50%',background:T,marginRight:10}}/>
-          <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder={fLabel} style={{flex:1,border:'none',background:'none',fontSize:14,fontWeight:600,color:'#0A1F21',outline:'none',fontFamily:'inherit',paddingRight:40}}/>
+          <span style={{flex:1,fontSize:14,fontWeight:600,color:fromVal?'#0A1F21':'#9AA1B8',paddingRight:40,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{fromVal||fLabel}</span>
         </div>
-        <div style={{display:'flex',alignItems:'center',padding:'10px 0'}}>
+        <div onClick={()=>setNested('route-to')} style={{display:'flex',alignItems:'center',padding:'12px 0',cursor:'pointer'}}>
           <div style={{width:7,height:7,borderRadius:'50%',background:'#DDE0EB',marginRight:10}}/>
-          <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder={tLabel} style={{flex:1,border:'none',background:'none',fontSize:14,fontWeight:600,color:'#0A1F21',outline:'none',fontFamily:'inherit',paddingRight:40}}/>
+          <span style={{flex:1,fontSize:14,fontWeight:600,color:toVal?'#0A1F21':'#9AA1B8',paddingRight:40,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{toVal||tLabel}</span>
         </div>
-        <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.05)'}}>
+        <button onClick={(e)=>{e.stopPropagation();const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.05)'}}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
         </button>
       </div>
@@ -1183,6 +1183,75 @@ function ScreenTrip() {
     };
     const flagOf = (name) => FLAGS[name] || '🏳️';
     const HOTEL_LIST = ['Hilton Tashkent','Hyatt Regency','Ramada','Wyndham','Radisson Blu','Lotte City','Movenpick','Marriott','Sheraton','InterContinental','Burj Al Arab','Atlantis Palm','Jumeirah Beach','Address Downtown','Four Seasons'];
+
+    // ── Countries with their main cities (route, rentcar, hotel-country pickers) ──
+    const COUNTRY_CITY = [
+      {flag:'🇺🇿', country:'Uzbekistan', cities:['Tashkent','Samarkand','Bukhara','Khiva','Namangan']},
+      {flag:'🇦🇲', country:'Armenia',    cities:['Yerevan','Gyumri']},
+      {flag:'🇦🇹', country:'Austria',    cities:['Vienna','Salzburg','Innsbruck']},
+      {flag:'🇦🇿', country:'Azerbaijan', cities:['Baku','Ganja']},
+      {flag:'🇧🇭', country:'Bahrain',    cities:['Manama']},
+      {flag:'🇨🇿', country:'Czechia',    cities:['Prague','Brno']},
+      {flag:'🇪🇬', country:'Egypt',      cities:['Cairo','Alexandria','Hurghada','Sharm El Sheikh']},
+      {flag:'🇫🇷', country:'France',     cities:['Paris','Nice','Marseille']},
+      {flag:'🇩🇪', country:'Germany',    cities:['Berlin','Munich','Frankfurt']},
+      {flag:'🇮🇳', country:'India',      cities:['Delhi','Mumbai','Goa']},
+      {flag:'🇮🇩', country:'Indonesia',  cities:['Jakarta','Bali','Surabaya']},
+      {flag:'🇮🇹', country:'Italy',      cities:['Rome','Milan','Venice']},
+      {flag:'🇯🇵', country:'Japan',      cities:['Tokyo','Osaka','Kyoto']},
+      {flag:'🇰🇷', country:'Korea',      cities:['Seoul','Busan']},
+      {flag:'🇲🇾', country:'Malaysia',   cities:['Kuala Lumpur','Penang']},
+      {flag:'🇷🇺', country:'Russia',     cities:['Moscow','Saint Petersburg']},
+      {flag:'🇪🇸', country:'Spain',      cities:['Madrid','Barcelona','Valencia']},
+      {flag:'🇹🇭', country:'Thailand',   cities:['Bangkok','Phuket','Pattaya']},
+      {flag:'🇹🇷', country:'Türkiye',    cities:['Istanbul','Antalya','Ankara','Bodrum']},
+      {flag:'🇦🇪', country:'UAE',        cities:['Dubai','Abu Dhabi','Sharjah']},
+      {flag:'🇺🇸', country:'USA',        cities:['New York','Los Angeles','Miami']},
+      {flag:'🇻🇳', country:'Vietnam',    cities:['Hanoi','Ho Chi Minh','Da Nang']},
+    ];
+
+    // ── Reusable scroll-fade sheet shell with country/city picker ──
+    const CityCountryPicker = ({onPick, mode='city'}) => {
+      // mode: 'city' → returns "City, Country"; 'country' → returns "Country"
+      const [s, setS] = React.useState('');
+      const [scrolled, setScrolled] = React.useState(false);
+      const q = s.toLowerCase().trim();
+      const filtered = q ? COUNTRY_CITY.map(g => ({
+        ...g,
+        match: g.country.toLowerCase().includes(q),
+        cities: g.cities.filter(c => c.toLowerCase().includes(q) || g.country.toLowerCase().includes(q))
+      })).filter(g => g.match || g.cities.length>0) : COUNTRY_CITY;
+      return (
+        <div onScroll={e=>setScrolled(e.currentTarget.scrollTop > 4)} style={{margin:'-14px -18px 0',padding:'0 18px',maxHeight:'76vh',overflowY:'auto'}}>
+          <div style={{position:'sticky',top:0,padding:'12px 0',background: scrolled ? '#fff' : 'transparent',transition:'background 0.18s', boxShadow: scrolled ? '0 4px 14px rgba(10,31,33,0.06)' : 'none', marginLeft:-18, marginRight:-18, paddingLeft:18, paddingRight:18, zIndex:5}}>
+            <div style={{display:'flex',alignItems:'center',background:scrolled?'#F4F5FA':'#F7F8FB',borderRadius:14,padding:'10px 14px',transition:'background 0.18s'}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input autoFocus value={s} onChange={e=>setS(e.target.value)} placeholder="Davlat yoki shahar..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+            </div>
+          </div>
+          <div style={{paddingBottom:24}}>
+            {filtered.map(g => (
+              <div key={g.country} style={{marginBottom:6}}>
+                <div onClick={mode==='country'?()=>onPick(g.country):undefined} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 4px',cursor:mode==='country'?'pointer':'default',justifyContent:'space-between'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:10}}>
+                    <span style={{fontSize:22,lineHeight:1}}>{g.flag}</span>
+                    <span style={{fontSize:13,fontWeight:700,color:'#0A1F21',letterSpacing:0.2}}>{g.country}</span>
+                  </div>
+                  {mode==='country' && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>}
+                </div>
+                {mode==='city' && g.cities.map(city => (
+                  <div key={city} onClick={()=>onPick(`${city}, ${g.country}`)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 4px 10px 36px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
+                    <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{city}</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+                  </div>
+                ))}
+              </div>
+            ))}
+            {filtered.length===0 && <div style={{padding:'30px 0',textAlign:'center',color:'#9AA1B8',fontSize:13}}>Topilmadi</div>}
+          </div>
+        </div>
+      );
+    };
 
     // ── Country / hotel search-list helper ──
     const SearchList = ({items, onPick, placeholder='Qidiruv...', selected=[], multi=false, withFlags=false}) => {
@@ -1292,48 +1361,55 @@ function ScreenTrip() {
     };
 
     // ── eSIM: full bottom-sheet country picker (Global / Popular / All) ──
+    const ESimSheet = ({onPick}) => {
+      const [s, setS] = React.useState('');
+      const [scrolled, setScrolled] = React.useState(false);
+      const filt = (arr) => arr.filter(c => c.toLowerCase().includes(s.toLowerCase()));
+      return (
+        <div onScroll={e=>setScrolled(e.currentTarget.scrollTop>4)} style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+          <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
+          <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 10px'}}>Davlat tanlang</div>
+          <div style={{position:'sticky',top:0,padding:'10px 0 12px',marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,background:scrolled?'#fff':'transparent',transition:'background 0.18s',boxShadow:scrolled?'0 4px 14px rgba(10,31,33,0.06)':'none',zIndex:5}}>
+            <div style={{display:'flex',alignItems:'center',background:scrolled?'#F4F5FA':'#F7F8FB',borderRadius:14,padding:'10px 14px',transition:'background 0.18s'}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input autoFocus value={s} onChange={e=>setS(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+            </div>
+          </div>
+          {!s && (
+            <div onClick={()=>onPick('Global')} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px',background:'linear-gradient(135deg, #007684, #0099A8)',borderRadius:14,marginBottom:14,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.25)'}}>
+              <div>
+                <div style={{fontSize:15,fontWeight:700,color:'#fff'}}>🌍 Global</div>
+                <div style={{fontSize:11,color:'rgba(255,255,255,0.85)'}}>150+ davlatda ishlaydi</div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+          )}
+          {!s && <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginBottom:6}}>Mashhur davlatlar</div>}
+          {filt(s?ESIM_ALL:ESIM_POPULAR).map((c) => (
+            <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
+              <div style={{display:'flex',alignItems:'center',gap:12}}><span style={{fontSize:22,lineHeight:1}}>{flagOf(c)}</span><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span></div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+          ))}
+          {!s && (
+            <>
+              <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginTop:14,marginBottom:6}}>Barcha davlatlar</div>
+              {ESIM_ALL.filter(c=>!ESIM_POPULAR.includes(c)).map(c => (
+                <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:12}}><span style={{fontSize:22,lineHeight:1}}>{flagOf(c)}</span><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span></div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      );
+    };
     if (preSheet === 'esim') {
-      const filt = (arr) => arr.filter(c => c.toLowerCase().includes(search.toLowerCase()));
       const onPick = (name) => { setEsimCountry(name); setPage('esim'); setPreSheet(null); };
       return (
         <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
-          <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
-            <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
-            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 10px'}}>Davlat tanlang</div>
-            <div style={{position:'sticky',top:0,background:'#fff',padding:'14px 0 12px',marginTop:-2,zIndex:5}}>
-              <div style={{display:'flex',alignItems:'center',background:'#F7F8FB',borderRadius:14,padding:'10px 14px'}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-                <input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
-              </div>
-            </div>
-            {!search && (
-              <div onClick={()=>onPick('Global')} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px',background:'linear-gradient(135deg, #007684, #0099A8)',borderRadius:14,marginBottom:14,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.25)'}}>
-                <div>
-                  <div style={{fontSize:15,fontWeight:700,color:'#fff'}}>🌍 Global</div>
-                  <div style={{fontSize:11,color:'rgba(255,255,255,0.85)'}}>150+ davlatda ishlaydi</div>
-                </div>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
-              </div>
-            )}
-            {!search && <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginBottom:6}}>Mashhur davlatlar</div>}
-            {filt(search?ESIM_ALL:ESIM_POPULAR).map((c) => (
-              <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
-                <div style={{display:'flex',alignItems:'center',gap:12}}><span style={{fontSize:22,lineHeight:1}}>{flagOf(c)}</span><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span></div>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
-              </div>
-            ))}
-            {!search && (
-              <>
-                <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginTop:14,marginBottom:6}}>Barcha davlatlar</div>
-                {ESIM_ALL.filter(c=>!ESIM_POPULAR.includes(c)).map(c => (
-                  <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
-                    <div style={{display:'flex',alignItems:'center',gap:12}}><span style={{fontSize:22,lineHeight:1}}>{flagOf(c)}</span><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span></div>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
-                  </div>
-                ))}
-              </>
-            )}
-          </div>
+          <ESimSheet onPick={onPick}/>
         </div>
       );
     }
@@ -1359,6 +1435,10 @@ function ScreenTrip() {
       if (nested === 'date-end')   return <DatePicker onPick={v=>{setDateEnd(v);setNested(null);}}/>;
       if (nested === 'rent-from')  return <DatePicker withTime onPick={v=>{setRentFrom(v);setNested(null);}}/>;
       if (nested === 'rent-to')    return <DatePicker withTime onPick={v=>{setRentTo(v);setNested(null);}}/>;
+      if (nested === 'route-from') return <CityCountryPicker onPick={v=>{setFromVal(v);setNested(null);}}/>;
+      if (nested === 'route-to')   return <CityCountryPicker onPick={v=>{setToVal(v);setNested(null);}}/>;
+      if (nested === 'rent-loc')   return <CityCountryPicker onPick={v=>{setRentPickupLoc(v);setNested(null);}}/>;
+      if (nested === 'hotel-country') return <CityCountryPicker mode="country" onPick={v=>{setCountry(v);setNested(null);}}/>;
       if (nested === 'hotels') return (
         <div>
           <SearchList items={HOTEL_LIST} multi selected={hotels} placeholder="Hotelni qidirish..."
@@ -1395,19 +1475,18 @@ function ScreenTrip() {
       );
       if (preSheet === 'hotel') return (
         <>
-          {singleCard('SHAHAR', fromVal, setFromVal, 'Qayerda')}
+          {tapCard('SHAHAR', fromVal, 'Davlat va shaharni tanlang', ()=>setNested('route-from'))}
           {tapSplit(
             {label:'QACHONDAN', val:dateStart, ph:'Sana', onClick:()=>setNested('date-start')},
             {label:'QACHONGACHA', val:dateEnd, ph:'Sana', onClick:()=>setNested('date-end')}
           )}
-          {singleCard('MIJOZ DAVLATI', country, setCountry, 'Davlat')}
+          {tapCard('MIJOZ DAVLATI', country, 'Davlatni tanlang', ()=>setNested('hotel-country'))}
           {guestsCard(false)}
         </>
       );
       if (preSheet === 'rentcar') return (
         <>
-          {singleCard('DAVLAT', country, setCountry, 'Davlatni kiriting')}
-          {singleCard('OLIB KETISH MANZILI', rentPickupLoc, setRentPickupLoc, 'Manzil')}
+          {tapCard('OLIB KETISH MANZILI', rentPickupLoc, 'Davlat va shaharni tanlang', ()=>setNested('rent-loc'))}
           {tapSplit(
             {label:'QACHONDAN', val:rentFrom, ph:'8-may, 2026 · 10:00', onClick:()=>setNested('rent-from')},
             {label:'QACHONGACHA', val:rentTo, ph:'10-may, 2026 · 18:00', onClick:()=>setNested('rent-to')}
@@ -1423,7 +1502,7 @@ function ScreenTrip() {
           <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
           <div style={{display:'flex',alignItems:'center',gap:10,margin:'14px 0 12px'}}>
             {nested && <button onClick={()=>setNested(null)} style={{width:30,height:30,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',padding:0}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>}
-            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21'}}>{nested?(nested==='hotels'?'Hotel tanlash':'Sana tanlang'):(titles[preSheet]||'Qidirish')}</div>
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21'}}>{nested?({hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','rent-loc':'Davlat va shahar','hotel-country':'Davlat tanlang'}[nested]||'Sana tanlang'):(titles[preSheet]||'Qidirish')}</div>
           </div>
           {nested ? renderNested() : <>
             {renderFields()}
