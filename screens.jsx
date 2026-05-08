@@ -913,7 +913,7 @@ function ScreenTrip() {
 
   const T = '#0099A8';
   const TBG = '#E0F2F3';
-  const SH = '0 8px 24px rgba(0,153,168,0.10)';
+  const SH = '0 14px 36px rgba(0,153,168,0.18), 0 4px 12px rgba(10,31,33,0.06)';
   const card = { background:'#fff', borderRadius:24, boxShadow:SH, border:'1px solid rgba(0,153,168,0.10)', overflow:'hidden', marginBottom:16 };
   const rowStyle = { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', cursor:'pointer' };
   const iBox = { width:46, height:46, borderRadius:'50%', background:T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 6px 16px rgba(0,153,168,0.35), 0 2px 6px rgba(0,153,168,0.20), inset 0 1px 0 rgba(255,255,255,0.25)' };
@@ -1172,17 +1172,29 @@ function ScreenTrip() {
     const ESIM_POPULAR = ['Misr','Tailand','Turkiya','BAA','Vietnam'];
     const ESIM_ALL = ['Albaniya','Avstraliya','Avstriya','Belgiya','Filippin','Fransiya','Germaniya','Hindiston','Indoneziya','Italiya','Janubiy Koreya','Kanada','Malayziya','Misr','Niderlandiya','Polsha','Portugaliya','Singapur','Ispaniya','Shveytsariya','Tailand','Turkiya','BAA','Vietnam','AQSh','Buyuk Britaniya','Yaponiya','Xitoy'];
     const EXCUR_LIST = ["O'zbekiston",'Turkiya','Birlashgan Arab Amirliklari','Misr','Vietnam','Tailand'];
+    const FLAGS = {
+      "O'zbekiston":'🇺🇿', 'Turkiya':'🇹🇷', 'Birlashgan Arab Amirliklari':'🇦🇪', 'BAA':'🇦🇪',
+      'Misr':'🇪🇬', 'Vietnam':'🇻🇳', 'Tailand':'🇹🇭', 'Albaniya':'🇦🇱', 'Avstraliya':'🇦🇺',
+      'Avstriya':'🇦🇹', 'Belgiya':'🇧🇪', 'Filippin':'🇵🇭', 'Fransiya':'🇫🇷', 'Germaniya':'🇩🇪',
+      'Hindiston':'🇮🇳', 'Indoneziya':'🇮🇩', 'Italiya':'🇮🇹', 'Janubiy Koreya':'🇰🇷',
+      'Kanada':'🇨🇦', 'Malayziya':'🇲🇾', 'Niderlandiya':'🇳🇱', 'Polsha':'🇵🇱',
+      'Portugaliya':'🇵🇹', 'Singapur':'🇸🇬', 'Ispaniya':'🇪🇸', 'Shveytsariya':'🇨🇭',
+      'AQSh':'🇺🇸', 'Buyuk Britaniya':'🇬🇧', 'Yaponiya':'🇯🇵', 'Xitoy':'🇨🇳'
+    };
+    const flagOf = (name) => FLAGS[name] || '🏳️';
     const HOTEL_LIST = ['Hilton Tashkent','Hyatt Regency','Ramada','Wyndham','Radisson Blu','Lotte City','Movenpick','Marriott','Sheraton','InterContinental','Burj Al Arab','Atlantis Palm','Jumeirah Beach','Address Downtown','Four Seasons'];
 
     // ── Country / hotel search-list helper ──
-    const SearchList = ({items, onPick, placeholder='Qidiruv...', selected=[], multi=false}) => {
+    const SearchList = ({items, onPick, placeholder='Qidiruv...', selected=[], multi=false, withFlags=false}) => {
       const [s, setS] = React.useState('');
       const filtered = items.filter(i => (typeof i==='string'?i:i.name).toLowerCase().includes(s.toLowerCase()));
       return (
         <>
-          <div style={{display:'flex',alignItems:'center',background:'#F7F8FB',borderRadius:14,padding:'10px 14px',marginBottom:10}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-            <input autoFocus value={s} onChange={e=>setS(e.target.value)} placeholder={placeholder} style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+          <div style={{position:'sticky',top:0,background:'#fff',padding:'4px 0 12px',marginTop:-2,zIndex:5}}>
+            <div style={{display:'flex',alignItems:'center',background:'#F7F8FB',borderRadius:14,padding:'10px 14px'}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input autoFocus value={s} onChange={e=>setS(e.target.value)} placeholder={placeholder} style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+            </div>
           </div>
           <div style={{maxHeight:'52vh',overflowY:'auto',margin:'0 -4px'}}>
             {filtered.map((it, i) => {
@@ -1190,7 +1202,10 @@ function ScreenTrip() {
               const isSel = selected.includes(name);
               return (
                 <div key={i} onClick={()=>onPick(name)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 10px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
-                  <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{name}</span>
+                  <div style={{display:'flex',alignItems:'center',gap:12}}>
+                    {withFlags && <span style={{fontSize:22,lineHeight:1}}>{flagOf(name)}</span>}
+                    <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{name}</span>
+                  </div>
                   {multi ? (
                     <div style={{width:22,height:22,borderRadius:6,border:'2px solid',borderColor:isSel?T:'#DDE0EB',background:isSel?T:'#fff',display:'flex',alignItems:'center',justifyContent:'center'}}>
                       {isSel && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round"><path d="M5 12l5 5L20 7"/></svg>}
@@ -1207,34 +1222,71 @@ function ScreenTrip() {
       );
     };
 
-    // ── Date picker (next 60 days) ──
+    // ── Calendar grid ──
     const monthsUz = ['yanv','fevr','mart','apr','may','iyun','iyul','avg','sent','okt','noya','dek'];
-    const monthsFull = ['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentabr','oktabr','noyabr','dekabr'];
-    const fmtDate = (d, full=false) => `${d.getDate()}-${full?monthsFull[d.getMonth()]:monthsUz[d.getMonth()]}, ${d.getFullYear()}`;
-    const DatePicker = ({onPick, withTime=false}) => {
-      const [time, setTime] = React.useState('10:00');
-      const [picked, setPicked] = React.useState(null);
-      const days = Array.from({length:60}, (_,i) => { const d=new Date(); d.setDate(d.getDate()+i); return d; });
+    const monthsFull = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
+    const fmtDate = (d) => `${d.getDate()}-${monthsUz[d.getMonth()]}, ${d.getFullYear()}`;
+    const Calendar = ({picked, setPicked}) => {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const [view, setView] = React.useState(() => ({y: today.getFullYear(), m: today.getMonth()}));
+      const first = new Date(view.y, view.m, 1);
+      const last = new Date(view.y, view.m+1, 0);
+      const startDow = (first.getDay()+6)%7; // Mon=0
+      const cells = [];
+      for (let i=0; i<startDow; i++) cells.push(null);
+      for (let d=1; d<=last.getDate(); d++) cells.push(new Date(view.y, view.m, d));
+      const navBtn = { width:32, height:32, borderRadius:'50%', border:'1.5px solid #E8EAF3', background:'#fff', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', padding:0, color:'#0A1F21', fontSize:18, fontWeight:600 };
       return (
         <div>
-          <div style={{maxHeight: withTime?'40vh':'56vh',overflowY:'auto',margin:'0 -4px 8px'}}>
-            {days.map((d,i) => {
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+            <button onClick={()=>setView(v=>v.m===0?{y:v.y-1,m:11}:{y:v.y,m:v.m-1})} style={navBtn}>‹</button>
+            <div style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>{monthsFull[view.m]} {view.y}</div>
+            <button onClick={()=>setView(v=>v.m===11?{y:v.y+1,m:0}:{y:v.y,m:v.m+1})} style={navBtn}>›</button>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:4,marginBottom:6}}>
+            {['Du','Se','Cho','Pa','Ju','Sh','Ya'].map(d=><div key={d} style={{textAlign:'center',fontSize:11,fontWeight:700,color:'#9AA1B8',padding:'4px 0'}}>{d}</div>)}
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:4}}>
+            {cells.map((d,i) => {
+              if (!d) return <div key={i}/>;
+              const past = d < today;
               const sel = picked && d.toDateString()===picked.toDateString();
+              const isToday = d.toDateString()===today.toDateString();
               return (
-                <div key={i} onClick={()=>setPicked(d)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 10px',cursor:'pointer',borderBottom:'1px solid #F0F2F5',background:sel?'#E0F2F3':'none',borderRadius:sel?10:0}}>
-                  <span style={{fontSize:14,fontWeight:600,color:sel?T:'#0A1F21'}}>{fmtDate(d, true)}</span>
-                  <span style={{fontSize:11,color:'#9AA1B8'}}>{['yak','dush','sesh','chor','pay','jum','shan'][d.getDay()]}</span>
-                </div>
+                <button key={i} disabled={past} onClick={()=>setPicked(d)} style={{aspectRatio:'1',border:isToday&&!sel?'1.5px solid '+T:'none',borderRadius:10,background:sel?T:'transparent',color:sel?'#fff':(past?'#DDE0EB':'#0A1F21'),fontSize:13,fontWeight:sel?700:500,cursor:past?'default':'pointer',padding:0}}>{d.getDate()}</button>
               );
             })}
           </div>
+        </div>
+      );
+    };
+    const DatePicker = ({onPick, withTime=false, withNights=false}) => {
+      const [time, setTime] = React.useState('10:00');
+      const [picked, setPicked] = React.useState(null);
+      const [n, setN] = React.useState(7);
+      return (
+        <div>
+          <Calendar picked={picked} setPicked={setPicked}/>
           {withTime && (
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 14px',background:'#F7F8FB',borderRadius:14,marginBottom:10}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 14px',background:'#F7F8FB',borderRadius:14,marginTop:14}}>
               <span style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Soat</span>
               <input value={time} onChange={e=>setTime(e.target.value)} placeholder="10:00" style={{border:'none',background:'#fff',padding:'8px 12px',borderRadius:10,fontSize:14,fontWeight:700,color:'#0A1F21',width:80,textAlign:'center',outline:'none',fontFamily:'inherit'}}/>
             </div>
           )}
-          <button disabled={!picked} onClick={()=>onPick(withTime?`${fmtDate(picked)} · ${time}`:fmtDate(picked))} style={{width:'100%',background:picked?T:'#DDE0EB',color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:picked?'pointer':'default',boxShadow:picked?'0 6px 16px rgba(0,153,168,0.30)':'none'}}>Tanlash</button>
+          {withNights && (
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 14px',background:'#F7F8FB',borderRadius:14,marginTop:14}}>
+              <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Necha kun dam olib kelishi</div><div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>{n} kun</div></div>
+              <div style={{display:'flex',alignItems:'center',gap:0}}>
+                <button onClick={()=>setN(v=>Math.max(1,v-1))} style={{width:30,height:30,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>−</button>
+                <span style={{fontSize:15,fontWeight:700,width:32,textAlign:'center'}}>{n}</span>
+                <button onClick={()=>setN(v=>v+1)} style={{width:30,height:30,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>+</button>
+              </div>
+            </div>
+          )}
+          <button disabled={!picked} onClick={()=>{
+            const v = withTime ? `${fmtDate(picked)} · ${time}` : fmtDate(picked);
+            onPick(withNights ? {date:v, nights:n} : v);
+          }} style={{width:'100%',background:picked?T:'#DDE0EB',color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:picked?'pointer':'default',marginTop:14,boxShadow:picked?'0 6px 16px rgba(0,153,168,0.30)':'none'}}>Tanlash</button>
         </div>
       );
     };
@@ -1248,9 +1300,11 @@ function ScreenTrip() {
           <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
             <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
             <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 10px'}}>Davlat tanlang</div>
-            <div style={{display:'flex',alignItems:'center',background:'#F7F8FB',borderRadius:14,padding:'10px 14px',marginBottom:14,position:'sticky',top:0}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-              <input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+            <div style={{position:'sticky',top:0,background:'#fff',padding:'14px 0 12px',marginTop:-2,zIndex:5}}>
+              <div style={{display:'flex',alignItems:'center',background:'#F7F8FB',borderRadius:14,padding:'10px 14px'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+              </div>
             </div>
             {!search && (
               <div onClick={()=>onPick('Global')} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px',background:'linear-gradient(135deg, #007684, #0099A8)',borderRadius:14,marginBottom:14,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.25)'}}>
@@ -1262,9 +1316,9 @@ function ScreenTrip() {
               </div>
             )}
             {!search && <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginBottom:6}}>Mashhur davlatlar</div>}
-            {filt(search?ESIM_ALL:ESIM_POPULAR).map((c,i,arr) => (
+            {filt(search?ESIM_ALL:ESIM_POPULAR).map((c) => (
               <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
-                <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span>
+                <div style={{display:'flex',alignItems:'center',gap:12}}><span style={{fontSize:22,lineHeight:1}}>{flagOf(c)}</span><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span></div>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
               </div>
             ))}
@@ -1273,7 +1327,7 @@ function ScreenTrip() {
                 <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginTop:14,marginBottom:6}}>Barcha davlatlar</div>
                 {ESIM_ALL.filter(c=>!ESIM_POPULAR.includes(c)).map(c => (
                   <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
-                    <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span>
+                    <div style={{display:'flex',alignItems:'center',gap:12}}><span style={{fontSize:22,lineHeight:1}}>{flagOf(c)}</span><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span></div>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
                   </div>
                 ))}
@@ -1292,7 +1346,7 @@ function ScreenTrip() {
           <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
             <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
             <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 10px'}}>Davlat tanlang</div>
-            <SearchList items={EXCUR_LIST} onPick={onPick} placeholder="Davlatni qidirish..."/>
+            <SearchList items={EXCUR_LIST} onPick={onPick} placeholder="Davlatni qidirish..." withFlags/>
           </div>
         </div>
       );
@@ -1300,6 +1354,7 @@ function ScreenTrip() {
 
     // ── Nested sheets (date picker / hotel multi-select) ──
     const renderNested = () => {
+      if (nested === 'tour-date') return <DatePicker withNights onPick={v=>{setDateStart(v.date);setNights(v.nights);setNested(null);}}/>;
       if (nested === 'date-start') return <DatePicker onPick={v=>{setDateStart(v);setNested(null);}}/>;
       if (nested === 'date-end')   return <DatePicker onPick={v=>{setDateEnd(v);setNested(null);}}/>;
       if (nested === 'rent-from')  return <DatePicker withTime onPick={v=>{setRentFrom(v);setNested(null);}}/>;
@@ -1318,22 +1373,7 @@ function ScreenTrip() {
       if (preSheet === 'turlar') return (
         <>
           {routeCard()}
-          <div style={{display:'grid',gridTemplateColumns:'1.3fr 1fr',gap:8,marginBottom:10}}>
-            <div onClick={()=>setNested('date-start')} style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px',cursor:'pointer'}}>
-              <div style={lab}>QACHON</div>
-              <div style={{fontSize:14,fontWeight:700,color:dateStart?'#0A1F21':'#9AA1B8',marginTop:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{dateStart||'Sanani tanlang'}</div>
-            </div>
-            <div style={{background:'#F7F8FB',borderRadius:14,padding:'8px 12px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-              <div>
-                <div style={lab}>KUN</div>
-                <div style={{fontSize:14,fontWeight:700,color:'#0A1F21',marginTop:2}}>{nights||0}</div>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:0}}>
-                <button onClick={()=>setNights(v=>Math.max(1,(parseInt(v)||1)-1))} style={{width:26,height:26,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:14,color:T,cursor:'pointer',padding:0}}>−</button>
-                <button onClick={()=>setNights(v=>(parseInt(v)||0)+1)} style={{width:26,height:26,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:14,color:T,cursor:'pointer',padding:0,marginLeft:4}}>+</button>
-              </div>
-            </div>
-          </div>
+          {tapCard('QACHON · NECHA KUN', dateStart?`${dateStart} · ${nights} kun`:'', 'Sana va davomiylikni tanlang', ()=>setNested('tour-date'))}
           {guestsCard(true)}
           {tapCard('HOTEL TANLASH', hotels.length?`${hotels.length} ta hotel tanlandi`:'', 'Hotelni tanlang (bir nechta mumkin)', ()=>setNested('hotels'))}
         </>
