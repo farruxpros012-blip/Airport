@@ -1141,35 +1141,209 @@ function ScreenTrip() {
       <button onClick={onClick} style={{padding:'7px 14px',borderRadius:999,border:'1.5px solid',borderColor:sel?T:'#E8EAF3',background:sel?T:'#fff',color:sel?'#fff':'#5C7577',fontSize:12,fontWeight:600,cursor:'pointer'}}>{label}</button>
     );
 
-    const submit = () => {
-      if (preSheet === 'esim') { setEsimCountry(country||'Global'); }
-      setPage(preSheet);
-      setPreSheet(null);
+    const [nested, setNested] = React.useState(null);
+    const [search, setSearch] = React.useState('');
+    const [hotelSearch, setHotelSearch] = React.useState('');
+
+    const submit = () => { setPage(preSheet); setPreSheet(null); };
+    const titles = { turlar:"Tur qidirish", excur:"Davlat tanlang", esim:"Davlat tanlang", hotel:"Mehmonxona", aviabilet:"Aviabilet", rentcar:"Avtomobil ijarasi" };
+
+    // ── Clickable display card (used for hotel multiselect, dates) ──
+    const tapCard = (label, value, ph, onClick) => (
+      <div onClick={onClick} style={{...cardWrap, padding:'10px 14px', cursor:'pointer'}}>
+        <div style={lab}>{label}</div>
+        <div style={{fontSize:14,fontWeight:700,color: value?'#0A1F21':'#9AA1B8',marginTop:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{value||ph}</div>
+      </div>
+    );
+    const tapSplit = (a, b) => (
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
+        <div onClick={a.onClick} style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px',cursor:'pointer'}}>
+          <div style={lab}>{a.label}</div>
+          <div style={{fontSize:14,fontWeight:700,color:a.val?'#0A1F21':'#9AA1B8',marginTop:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{a.val||a.ph}</div>
+        </div>
+        <div onClick={b.onClick} style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px',cursor:'pointer'}}>
+          <div style={lab}>{b.label}</div>
+          <div style={{fontSize:14,fontWeight:700,color:b.val?'#0A1F21':'#9AA1B8',marginTop:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.val||b.ph}</div>
+        </div>
+      </div>
+    );
+
+    // ── Country lists ──
+    const ESIM_POPULAR = ['Misr','Tailand','Turkiya','BAA','Vietnam'];
+    const ESIM_ALL = ['Albaniya','Avstraliya','Avstriya','Belgiya','Filippin','Fransiya','Germaniya','Hindiston','Indoneziya','Italiya','Janubiy Koreya','Kanada','Malayziya','Misr','Niderlandiya','Polsha','Portugaliya','Singapur','Ispaniya','Shveytsariya','Tailand','Turkiya','BAA','Vietnam','AQSh','Buyuk Britaniya','Yaponiya','Xitoy'];
+    const EXCUR_LIST = ["O'zbekiston",'Turkiya','Birlashgan Arab Amirliklari','Misr','Vietnam','Tailand'];
+    const HOTEL_LIST = ['Hilton Tashkent','Hyatt Regency','Ramada','Wyndham','Radisson Blu','Lotte City','Movenpick','Marriott','Sheraton','InterContinental','Burj Al Arab','Atlantis Palm','Jumeirah Beach','Address Downtown','Four Seasons'];
+
+    // ── Country / hotel search-list helper ──
+    const SearchList = ({items, onPick, placeholder='Qidiruv...', selected=[], multi=false}) => {
+      const [s, setS] = React.useState('');
+      const filtered = items.filter(i => (typeof i==='string'?i:i.name).toLowerCase().includes(s.toLowerCase()));
+      return (
+        <>
+          <div style={{display:'flex',alignItems:'center',background:'#F7F8FB',borderRadius:14,padding:'10px 14px',marginBottom:10}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input autoFocus value={s} onChange={e=>setS(e.target.value)} placeholder={placeholder} style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+          </div>
+          <div style={{maxHeight:'52vh',overflowY:'auto',margin:'0 -4px'}}>
+            {filtered.map((it, i) => {
+              const name = typeof it==='string'?it:it.name;
+              const isSel = selected.includes(name);
+              return (
+                <div key={i} onClick={()=>onPick(name)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 10px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
+                  <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{name}</span>
+                  {multi ? (
+                    <div style={{width:22,height:22,borderRadius:6,border:'2px solid',borderColor:isSel?T:'#DDE0EB',background:isSel?T:'#fff',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      {isSel && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round"><path d="M5 12l5 5L20 7"/></svg>}
+                    </div>
+                  ) : (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+                  )}
+                </div>
+              );
+            })}
+            {filtered.length===0 && <div style={{padding:'20px 10px',textAlign:'center',color:'#9AA1B8',fontSize:13}}>Topilmadi</div>}
+          </div>
+        </>
+      );
     };
-    const titles = { turlar:"Tur qidirish", excur:"Ekskursiya", esim:"eSIM", hotel:"Mehmonxona", aviabilet:"Aviabilet", taxi:"Airport taxi", transfer:"Transfer", rentcar:"Avtomobil ijarasi" };
+
+    // ── Date picker (next 60 days) ──
+    const monthsUz = ['yanv','fevr','mart','apr','may','iyun','iyul','avg','sent','okt','noya','dek'];
+    const monthsFull = ['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentabr','oktabr','noyabr','dekabr'];
+    const fmtDate = (d, full=false) => `${d.getDate()}-${full?monthsFull[d.getMonth()]:monthsUz[d.getMonth()]}, ${d.getFullYear()}`;
+    const DatePicker = ({onPick, withTime=false}) => {
+      const [time, setTime] = React.useState('10:00');
+      const [picked, setPicked] = React.useState(null);
+      const days = Array.from({length:60}, (_,i) => { const d=new Date(); d.setDate(d.getDate()+i); return d; });
+      return (
+        <div>
+          <div style={{maxHeight: withTime?'40vh':'56vh',overflowY:'auto',margin:'0 -4px 8px'}}>
+            {days.map((d,i) => {
+              const sel = picked && d.toDateString()===picked.toDateString();
+              return (
+                <div key={i} onClick={()=>setPicked(d)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 10px',cursor:'pointer',borderBottom:'1px solid #F0F2F5',background:sel?'#E0F2F3':'none',borderRadius:sel?10:0}}>
+                  <span style={{fontSize:14,fontWeight:600,color:sel?T:'#0A1F21'}}>{fmtDate(d, true)}</span>
+                  <span style={{fontSize:11,color:'#9AA1B8'}}>{['yak','dush','sesh','chor','pay','jum','shan'][d.getDay()]}</span>
+                </div>
+              );
+            })}
+          </div>
+          {withTime && (
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 14px',background:'#F7F8FB',borderRadius:14,marginBottom:10}}>
+              <span style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Soat</span>
+              <input value={time} onChange={e=>setTime(e.target.value)} placeholder="10:00" style={{border:'none',background:'#fff',padding:'8px 12px',borderRadius:10,fontSize:14,fontWeight:700,color:'#0A1F21',width:80,textAlign:'center',outline:'none',fontFamily:'inherit'}}/>
+            </div>
+          )}
+          <button disabled={!picked} onClick={()=>onPick(withTime?`${fmtDate(picked)} · ${time}`:fmtDate(picked))} style={{width:'100%',background:picked?T:'#DDE0EB',color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:picked?'pointer':'default',boxShadow:picked?'0 6px 16px rgba(0,153,168,0.30)':'none'}}>Tanlash</button>
+        </div>
+      );
+    };
+
+    // ── eSIM: full bottom-sheet country picker (Global / Popular / All) ──
+    if (preSheet === 'esim') {
+      const filt = (arr) => arr.filter(c => c.toLowerCase().includes(search.toLowerCase()));
+      const onPick = (name) => { setEsimCountry(name); setPage('esim'); setPreSheet(null); };
+      return (
+        <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
+          <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+            <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 10px'}}>Davlat tanlang</div>
+            <div style={{display:'flex',alignItems:'center',background:'#F7F8FB',borderRadius:14,padding:'10px 14px',marginBottom:14,position:'sticky',top:0}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+            </div>
+            {!search && (
+              <div onClick={()=>onPick('Global')} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px',background:'linear-gradient(135deg, #007684, #0099A8)',borderRadius:14,marginBottom:14,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.25)'}}>
+                <div>
+                  <div style={{fontSize:15,fontWeight:700,color:'#fff'}}>🌍 Global</div>
+                  <div style={{fontSize:11,color:'rgba(255,255,255,0.85)'}}>150+ davlatda ishlaydi</div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+              </div>
+            )}
+            {!search && <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginBottom:6}}>Mashhur davlatlar</div>}
+            {filt(search?ESIM_ALL:ESIM_POPULAR).map((c,i,arr) => (
+              <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
+                <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+              </div>
+            ))}
+            {!search && (
+              <>
+                <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginTop:14,marginBottom:6}}>Barcha davlatlar</div>
+                {ESIM_ALL.filter(c=>!ESIM_POPULAR.includes(c)).map(c => (
+                  <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
+                    <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{c}</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ── Excursion: flat country list ──
+    if (preSheet === 'excur') {
+      const onPick = () => { setPage('excur'); setPreSheet(null); };
+      return (
+        <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
+          <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+            <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 10px'}}>Davlat tanlang</div>
+            <SearchList items={EXCUR_LIST} onPick={onPick} placeholder="Davlatni qidirish..."/>
+          </div>
+        </div>
+      );
+    }
+
+    // ── Nested sheets (date picker / hotel multi-select) ──
+    const renderNested = () => {
+      if (nested === 'date-start') return <DatePicker onPick={v=>{setDateStart(v);setNested(null);}}/>;
+      if (nested === 'date-end')   return <DatePicker onPick={v=>{setDateEnd(v);setNested(null);}}/>;
+      if (nested === 'rent-from')  return <DatePicker withTime onPick={v=>{setRentFrom(v);setNested(null);}}/>;
+      if (nested === 'rent-to')    return <DatePicker withTime onPick={v=>{setRentTo(v);setNested(null);}}/>;
+      if (nested === 'hotels') return (
+        <div>
+          <SearchList items={HOTEL_LIST} multi selected={hotels} placeholder="Hotelni qidirish..."
+            onPick={(name)=>setHotels(v=>v.includes(name)?v.filter(x=>x!==name):[...v,name])}/>
+          <button onClick={()=>setNested(null)} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',marginTop:12,boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tanlash ({hotels.length})</button>
+        </div>
+      );
+      return null;
+    };
 
     const renderFields = () => {
       if (preSheet === 'turlar') return (
         <>
           {routeCard()}
-          {splitCard(
-            {label:'QACHON', val:dateStart, set:setDateStart, ph:'15 May'},
-            {label:'NECHA KUN', val:nights, set:v=>setNights(v.replace(/\D/g,'')||1), ph:'7'}
-          )}
-          {guestsCard(true)}
-          <div style={{display:'flex',gap:6,flexWrap:'wrap',marginTop:4}}>
-            {['3★','4★','5★','All Inclusive','Ultra All Inc'].map(h=>
-              chipPill(hotels.includes(h), h, ()=>setHotels(v=>v.includes(h)?v.filter(x=>x!==h):[...v,h]))
-            )}
+          <div style={{display:'grid',gridTemplateColumns:'1.3fr 1fr',gap:8,marginBottom:10}}>
+            <div onClick={()=>setNested('date-start')} style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px',cursor:'pointer'}}>
+              <div style={lab}>QACHON</div>
+              <div style={{fontSize:14,fontWeight:700,color:dateStart?'#0A1F21':'#9AA1B8',marginTop:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{dateStart||'Sanani tanlang'}</div>
+            </div>
+            <div style={{background:'#F7F8FB',borderRadius:14,padding:'8px 12px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <div>
+                <div style={lab}>KUN</div>
+                <div style={{fontSize:14,fontWeight:700,color:'#0A1F21',marginTop:2}}>{nights||0}</div>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:0}}>
+                <button onClick={()=>setNights(v=>Math.max(1,(parseInt(v)||1)-1))} style={{width:26,height:26,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:14,color:T,cursor:'pointer',padding:0}}>−</button>
+                <button onClick={()=>setNights(v=>(parseInt(v)||0)+1)} style={{width:26,height:26,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:14,color:T,cursor:'pointer',padding:0,marginLeft:4}}>+</button>
+              </div>
+            </div>
           </div>
+          {guestsCard(true)}
+          {tapCard('HOTEL TANLASH', hotels.length?`${hotels.length} ta hotel tanlandi`:'', 'Hotelni tanlang (bir nechta mumkin)', ()=>setNested('hotels'))}
         </>
       );
       if (preSheet === 'aviabilet') return (
         <>
           {routeCard()}
-          {splitCard(
-            {label:'KETISH', val:dateStart, set:setDateStart, ph:'15 May'},
-            {label:'QAYTISH', val:dateEnd, set:setDateEnd, ph:'20 May'}
+          {tapSplit(
+            {label:'KETISH', val:dateStart, ph:'Sana', onClick:()=>setNested('date-start')},
+            {label:'QAYTISH', val:dateEnd, ph:'Sana', onClick:()=>setNested('date-end')}
           )}
           {guestsCard(true)}
           <div style={{display:'flex',gap:6,flexWrap:'wrap',marginTop:4}}>
@@ -1182,57 +1356,21 @@ function ScreenTrip() {
       if (preSheet === 'hotel') return (
         <>
           {singleCard('SHAHAR', fromVal, setFromVal, 'Qayerda')}
-          {splitCard(
-            {label:'QACHONDAN', val:dateStart, set:setDateStart, ph:'15 May'},
-            {label:'QACHONGACHA', val:dateEnd, set:setDateEnd, ph:'20 May'}
+          {tapSplit(
+            {label:'QACHONDAN', val:dateStart, ph:'Sana', onClick:()=>setNested('date-start')},
+            {label:'QACHONGACHA', val:dateEnd, ph:'Sana', onClick:()=>setNested('date-end')}
           )}
           {singleCard('MIJOZ DAVLATI', country, setCountry, 'Davlat')}
           {guestsCard(false)}
-        </>
-      );
-      if (preSheet === 'esim') return singleCard('DAVLAT', country, setCountry, 'Davlatni kiriting');
-      if (preSheet === 'excur') return singleCard('DAVLAT', country, setCountry, 'Davlatni tanlang');
-      if (preSheet === 'taxi') return (
-        <>
-          <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginBottom:10}}>
-            <button onClick={()=>setTaxiTab('pickup')} style={{flex:1,padding:'8px 0',fontSize:12,fontWeight:700,background:taxiTab==='pickup'?'#fff':'none',borderRadius:10,border:'none',color:taxiTab==='pickup'?T:'#9AA1B8',boxShadow:taxiTab==='pickup'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Pickup</button>
-            <button onClick={()=>setTaxiTab('dropoff')} style={{flex:1,padding:'8px 0',fontSize:12,fontWeight:700,background:taxiTab==='dropoff'?'#fff':'none',borderRadius:10,border:'none',color:taxiTab==='dropoff'?T:'#9AA1B8',boxShadow:taxiTab==='dropoff'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Drop-off</button>
-          </div>
-          {taxiTab==='pickup' ? (
-            <>
-              {singleCard('QAYERDAN', 'Aeroport', null, '', true)}
-              {singleCard('QAYERGA', toVal, setToVal, 'Manzilni kiriting')}
-              <div style={cardWrap}><div style={row(0,true)}><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</span>{cnt(passengerCount,setPassengerCount,1)}</div></div>
-            </>
-          ) : (
-            <>
-              {singleCard('QAYERDAN', fromVal, setFromVal, 'Manzilni kiriting')}
-              {singleCard('QAYERGA', 'Aeroport', null, '', true)}
-              {splitCard(
-                {label:'QACHON', val:dateStart, set:setDateStart, ph:'15 May'},
-                {label:'SOAT', val:pickupTime, set:setPickupTime, ph:'10:30'}
-              )}
-              <div style={cardWrap}><div style={row(0,true)}><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</span>{cnt(passengerCount,setPassengerCount,1)}</div></div>
-            </>
-          )}
-        </>
-      );
-      if (preSheet === 'transfer') return (
-        <>
-          <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:10}}>
-            {['Shahar','Aeroport','Mehmonxona'].map(t=>chipPill(pickupLoc===t,t,()=>setPickupLoc(t)))}
-          </div>
-          {singleCard('QAYERDAN', fromVal, setFromVal, pickupLoc+' manzili')}
-          {singleCard('QAYERGA', 'Aeroport', null, '', true)}
         </>
       );
       if (preSheet === 'rentcar') return (
         <>
           {singleCard('DAVLAT', country, setCountry, 'Davlatni kiriting')}
           {singleCard('OLIB KETISH MANZILI', rentPickupLoc, setRentPickupLoc, 'Manzil')}
-          {splitCard(
-            {label:'QACHONDAN, SOAT', val:rentFrom, set:setRentFrom, ph:'10:00'},
-            {label:'QACHONGACHA, SOAT', val:rentTo, set:setRentTo, ph:'18:00'}
+          {tapSplit(
+            {label:'QACHONDAN', val:rentFrom, ph:'8-may, 2026 · 10:00', onClick:()=>setNested('rent-from')},
+            {label:'QACHONGACHA', val:rentTo, ph:'10-may, 2026 · 18:00', onClick:()=>setNested('rent-to')}
           )}
         </>
       );
@@ -1243,10 +1381,80 @@ function ScreenTrip() {
       <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
         <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 28px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
           <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
-          <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'14px 0 12px'}}>{titles[preSheet]||'Qidirish'}</div>
-          {renderFields()}
-          <button onClick={submit} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',marginTop:14,boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Qidirish</button>
+          <div style={{display:'flex',alignItems:'center',gap:10,margin:'14px 0 12px'}}>
+            {nested && <button onClick={()=>setNested(null)} style={{width:30,height:30,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',padding:0}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>}
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21'}}>{nested?(nested==='hotels'?'Hotel tanlash':'Sana tanlang'):(titles[preSheet]||'Qidirish')}</div>
+          </div>
+          {nested ? renderNested() : <>
+            {renderFields()}
+            <button onClick={submit} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',marginTop:14,boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Qidirish</button>
+          </>}
         </div>
+      </div>
+    );
+  };
+
+  // ── Inline Taxi form (in accordion body) ──
+  const TaxiForm = () => {
+    const [tab, setTab] = React.useState('pickup');
+    const [from, setFrom] = React.useState('');
+    const [to, setTo] = React.useState('');
+    const [date, setDate] = React.useState('');
+    const [time, setTime] = React.useState('');
+    const [pax, setPax] = React.useState(1);
+    const T = '#0099A8';
+    const cell = { background:'#F7F8FB', borderRadius:14, padding:'10px 14px', marginBottom:8 };
+    const labS = { fontSize:11, color:'#7A8190', fontWeight:600, textTransform:'uppercase', letterSpacing:0.4 };
+    const inputS = { width:'100%', border:'none', background:'none', fontSize:14, fontWeight:700, color:'#0A1F21', outline:'none', fontFamily:'inherit', marginTop:2 };
+    const ro = { ...inputS, color:T };
+    return (
+      <div style={{padding:'0 20px 20px'}}>
+        <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginBottom:12}}>
+          <button onClick={()=>setTab('pickup')} style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:700,background:tab==='pickup'?'#fff':'none',borderRadius:10,border:'none',color:tab==='pickup'?T:'#9AA1B8',boxShadow:tab==='pickup'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Pickup</button>
+          <button onClick={()=>setTab('dropoff')} style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:700,background:tab==='dropoff'?'#fff':'none',borderRadius:10,border:'none',color:tab==='dropoff'?T:'#9AA1B8',boxShadow:tab==='dropoff'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Drop-off</button>
+        </div>
+        {tab==='pickup' ? <>
+          <div style={cell}><div style={labS}>QAYERDAN</div><input value="Aeroport" readOnly style={ro}/></div>
+          <div style={cell}><div style={labS}>QAYERGA</div><input value={to} onChange={e=>setTo(e.target.value)} placeholder="Manzilni kiriting" style={inputS}/></div>
+          <div style={{...cell, display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+            <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</span>
+            <div style={{display:'flex',alignItems:'center',gap:0}}>
+              <button onClick={()=>setPax(v=>Math.max(1,v-1))} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>−</button>
+              <span style={{fontSize:15,fontWeight:700,width:28,textAlign:'center'}}>{pax}</span>
+              <button onClick={()=>setPax(v=>v+1)} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>+</button>
+            </div>
+          </div>
+        </> : <>
+          <div style={cell}><div style={labS}>QAYERDAN</div><input value={from} onChange={e=>setFrom(e.target.value)} placeholder="Manzilni kiriting" style={inputS}/></div>
+          <div style={cell}><div style={labS}>QAYERGA</div><input value="Aeroport" readOnly style={ro}/></div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}}>
+            <div style={{...cell,marginBottom:0}}><div style={labS}>QACHON</div><input value={date} onChange={e=>setDate(e.target.value)} placeholder="15 May" style={inputS}/></div>
+            <div style={{...cell,marginBottom:0}}><div style={labS}>SOAT</div><input value={time} onChange={e=>setTime(e.target.value)} placeholder="10:30" style={inputS}/></div>
+          </div>
+          <div style={{...cell, display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+            <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</span>
+            <div style={{display:'flex',alignItems:'center',gap:0}}>
+              <button onClick={()=>setPax(v=>Math.max(1,v-1))} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>−</button>
+              <span style={{fontSize:15,fontWeight:700,width:28,textAlign:'center'}}>{pax}</span>
+              <button onClick={()=>setPax(v=>v+1)} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>+</button>
+            </div>
+          </div>
+        </>}
+        <button style={mkBtn(8)}>Taksi buyurtma qilish</button>
+      </div>
+    );
+  };
+
+  // ── Inline Transfer form ──
+  const TransferForm = () => {
+    const [from, setFrom] = React.useState('');
+    const cell = { background:'#F7F8FB', borderRadius:14, padding:'10px 14px', marginBottom:8 };
+    const labS = { fontSize:11, color:'#7A8190', fontWeight:600, textTransform:'uppercase', letterSpacing:0.4 };
+    return (
+      <div style={{padding:'0 20px 20px'}}>
+        <div style={cell}><div style={labS}>QAYERDAN</div><input value={from} onChange={e=>setFrom(e.target.value)} placeholder="Shahar, Aeroport va/yoki mehmonxona" style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:2}}/></div>
+        <div style={cell}><div style={labS}>QAYERGA</div><input value="Aeroport" readOnly style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color:T,outline:'none',fontFamily:'inherit',marginTop:2}}/></div>
+        <button style={mkBtn(4)}>Transferni band qilish</button>
       </div>
     );
   };
@@ -1830,29 +2038,13 @@ function ScreenTrip() {
         {/* Airport taxi */}
         <div style={card}>
           <Head icon={<FigAirportTaxi size={26}/>} label="Airport taxi" desc="Aeroportdan va aeroportga tez yetkazish" k="taxi"/>
-          {open.taxi && <div style={{padding:'0 20px 20px'}}>
-            <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginBottom:16}}>
-              <button style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:700,background:'#fff',borderRadius:10,border:'none',color:T,boxShadow:'0 1px 4px rgba(0,0,0,0.08)',cursor:'pointer'}}>Aeroportga borish</button>
-              <button style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:600,background:'none',border:'none',color:'#9AA1B8',cursor:'pointer'}}>Aeroportdan ketish</button>
-            </div>
-            <div style={{display:'flex',alignItems:'center',gap:12,padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)',marginBottom:4}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              <div><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase'}}>Qayerdan</div><div style={{fontSize:12,fontWeight:600,color:'#0A1F21'}}>O'z manzilingizni kiriting</div></div>
-            </div>
-            <button onClick={()=>setPreSheet('taxi')} style={mkBtn()}>Taksi buyurtma qilish</button>
-          </div>}
+          {open.taxi && <TaxiForm/>}
         </div>
 
         {/* Transfer */}
         <div style={card}>
           <Head icon={<FigTransfer size={26}/>} label="Transfer" desc="Shaharlararo qulay transfer xizmati" k="transfer"/>
-          {open.transfer && <div style={{padding:'0 20px 20px'}}>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:4}}>
-              <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerdan</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Toshkent</div></div>
-              <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerga</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Samarqand</div></div>
-            </div>
-            <button onClick={()=>setPreSheet('transfer')} style={mkBtn()}>Transferni band qilish</button>
-          </div>}
+          {open.transfer && <TransferForm/>}
         </div>
 
         {/* Rent Car */}
