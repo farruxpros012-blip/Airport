@@ -891,6 +891,20 @@ const TRIP_RESULTS = {
   ],
 };
 
+function useSheetViewport() {
+  const [vvh, setVvh] = React.useState(typeof window !== 'undefined' ? (window.visualViewport?.height || window.innerHeight) : 800);
+  const [kbOffset, setKbOffset] = React.useState(0);
+  React.useEffect(() => {
+    const vv = typeof window !== 'undefined' ? window.visualViewport : null;
+    if (!vv) return;
+    const handler = () => { setVvh(vv.height); setKbOffset(Math.max(0, window.innerHeight - vv.height)); };
+    vv.addEventListener('resize', handler);
+    vv.addEventListener('scroll', handler);
+    return () => { vv.removeEventListener('resize', handler); vv.removeEventListener('scroll', handler); };
+  }, []);
+  return { sheetH: Math.round(vvh * 0.88), sheetXform: kbOffset > 0 ? `translateY(-${kbOffset}px)` : 'none' };
+}
+
 function ScreenTrip() {
   const [open, setOpen] = React.useState({});
   const [page, setPage] = React.useState(null);
@@ -912,19 +926,6 @@ function ScreenTrip() {
     window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
   }, []);
-  // Track visual viewport (for mobile keyboard)
-  const [vvh, setVvh] = React.useState(typeof window !== 'undefined' ? (window.visualViewport?.height || window.innerHeight) : 800);
-  const [kbOffset, setKbOffset] = React.useState(0);
-  React.useEffect(() => {
-    const vv = typeof window !== 'undefined' ? window.visualViewport : null;
-    if (!vv) return;
-    const handler = () => { setVvh(vv.height); setKbOffset(Math.max(0, window.innerHeight - vv.height)); };
-    vv.addEventListener('resize', handler);
-    vv.addEventListener('scroll', handler);
-    return () => { vv.removeEventListener('resize', handler); vv.removeEventListener('scroll', handler); };
-  }, []);
-  const sheetH = Math.round(vvh * 0.88);
-  const sheetXform = kbOffset>0 ? `translateY(-${kbOffset}px)` : 'none';
   const [route, setRoute] = React.useState({ from:'Toshkent', to:'Dubai' });
   const [dates, setDates] = React.useState({ start:'15 May', end:'20 May', nights:5 });
   const [guests, setGuests] = React.useState({ adults:2, children:0 });
@@ -984,6 +985,7 @@ function ScreenTrip() {
   /* ── Bottom Sheet ── */
   /* ── Unified Bottom Sheet ── */
   const BottomSheet = () => {
+    const { sheetH, sheetXform } = useSheetViewport();
     const [fromVal, setFromVal] = React.useState(route.from);
     const [toVal, setToVal] = React.useState(route.to);
     const [nightsVal, setNightsVal] = React.useState(dates.nights);
@@ -1063,6 +1065,7 @@ function ScreenTrip() {
 
   /* ── Pre-Search Bottom Sheet (compact) ── */
   const PreSheet = () => {
+    const { sheetH, sheetXform } = useSheetViewport();
     const [taxiTab, setTaxiTab] = React.useState('pickup');
     const [fromVal, setFromVal] = React.useState('');
     const [toVal, setToVal] = React.useState('');
@@ -1381,6 +1384,7 @@ function ScreenTrip() {
 
     // ── eSIM: full bottom-sheet country picker (Global / Popular / All) ──
     const ESimSheet = ({onPick}) => {
+      const { sheetH, sheetXform } = useSheetViewport();
       const [s, setS] = React.useState('');
       const [scrolled, setScrolled] = React.useState(false);
       const filt = (arr) => arr.filter(c => c.toLowerCase().includes(s.toLowerCase()));
@@ -1705,7 +1709,7 @@ function ScreenTrip() {
       <Frame>
         {/* Sticky top: only back + currency */}
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 16px 20px',background:'#F4F5FA',position:'sticky',top:0,zIndex:20,marginBottom:0}}>
-          <button onClick={()=>{setEsimCountry(null);setEsimSelected(null);}} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
+          <button onClick={()=>{setPage(null);setEsimCountry(null);setEsimSelected(null);}} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </button>
           <button style={{display:'flex',alignItems:'center',gap:5,padding:'11px 18px',borderRadius:999,background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
