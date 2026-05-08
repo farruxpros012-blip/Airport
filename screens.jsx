@@ -920,6 +920,7 @@ function ScreenTrip() {
     }
   }, [page, hintShown]);
   const [preSheet, setPreSheet] = React.useState(null);
+  const [tripQuery, setTripQuery] = React.useState({});
   const [topScrolled, setTopScrolled] = React.useState(false);
   React.useEffect(() => {
     const on = () => setTopScrolled(window.scrollY > 4);
@@ -1167,7 +1168,11 @@ function ScreenTrip() {
     const [search, setSearch] = React.useState('');
     const [hotelSearch, setHotelSearch] = React.useState('');
 
-    const submit = () => { setPage(preSheet); setPreSheet(null); };
+    const submit = () => {
+      setTripQuery({ from:fromVal, to:toVal, dateStart, dateEnd, nights, adults, children, infants, hotels:[...hotels], flightClass, country, rentFrom, rentTo, rentLoc:rentPickupLoc });
+      setPage(preSheet);
+      setPreSheet(null);
+    };
     const titles = { turlar:"Tur qidirish", excur:"Davlat tanlang", esim:"Davlat tanlang", hotel:"Mehmonxona", aviabilet:"Aviabilet", rentcar:"Avtomobil ijarasi" };
 
     // ── Clickable display card (used for hotel multiselect, dates) ──
@@ -1429,7 +1434,7 @@ function ScreenTrip() {
       );
     };
     if (preSheet === 'esim') {
-      const onPick = (name) => { setEsimCountry(name); setPage('esim'); setPreSheet(null); };
+      const onPick = (name) => { setTripQuery({country:name}); setEsimCountry(name); setPage('esim'); setPreSheet(null); };
       return (
         <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
           <ESimSheet onPick={onPick}/>
@@ -1439,7 +1444,7 @@ function ScreenTrip() {
 
     // ── Excursion: flat country list ──
     if (preSheet === 'excur') {
-      const onPick = () => { setPage('excur'); setPreSheet(null); };
+      const onPick = (name) => { setTripQuery({country:name}); setPage('excur'); setPreSheet(null); };
       return (
         <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
           <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:sheetH,overflowY:'auto',transform:sheetXform,transition:'transform 0.18s'}} onClick={e=>e.stopPropagation()}>
@@ -1821,12 +1826,21 @@ function ScreenTrip() {
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             </button>
             {/* Whole center is one tap target — pill background + edit icon to signal tappability */}
-            <button onClick={()=>setSheet('all')} style={{flex:1,background:TBG,border:'none',cursor:'pointer',padding:'8px 14px',textAlign:'center',borderRadius:14,display:'flex',alignItems:'center',justifyContent:'center',gap:10,position:'relative'}}>
+            <button onClick={()=>setPreSheet(page==='esim'?'esim':page)} style={{flex:1,background:TBG,border:'none',cursor:'pointer',padding:'8px 14px',textAlign:'center',borderRadius:14,display:'flex',alignItems:'center',justifyContent:'center',gap:10,position:'relative'}}>
               <div>
-                <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6,fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.2}}>
-                  {route.from} — {route.to}
-                </div>
-                <div style={{fontSize:11,color:T,fontWeight:600,marginTop:2}}>{dates.start}–{dates.end} · {dates.nights} kecha · {guests.adults + guests.children} kishi</div>
+                {(() => {
+                  const q = tripQuery || {};
+                  const ppl = (q.adults||0) + (q.children||0) + (q.infants||0);
+                  const top = (t) => <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6,fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.2}}>{t}</div>;
+                  const sub = (t) => <div style={{fontSize:11,color:T,fontWeight:600,marginTop:2}}>{t}</div>;
+                  if (page === 'turlar') return <>{top(<>{q.from || 'Qayerdan'} — {q.to || 'Qayerga'}</>)}{sub(<>{q.dateStart || 'Sana'} · {q.nights||0} kun · {ppl||1} kishi{q.hotels && q.hotels.length ? ` · ${q.hotels.length} hotel` : ''}</>)}</>;
+                  if (page === 'aviabilet') return <>{top(<>{q.from || 'Qayerdan'} — {q.to || 'Qayerga'}</>)}{sub(<>{q.dateStart || 'Ketish'}{q.dateEnd?` – ${q.dateEnd}`:''} · {ppl||1} kishi · {{econom:'Econom',business:'Business',premium:'Premium'}[q.flightClass]||'Econom'}</>)}</>;
+                  if (page === 'hotel') return <>{top(q.from || 'Shahar')}{sub(<>{q.dateStart || 'Sana'}{q.dateEnd?`–${q.dateEnd}`:''} · {ppl||1} kishi</>)}</>;
+                  if (page === 'excur') return <>{top(<>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || 'Davlat tanlang'}</>)}{sub('Ekskursiya')}</>;
+                  if (page === 'esim') return <>{top(<>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || esimCountry || 'Davlat'}</>)}{sub('eSIM')}</>;
+                  if (page === 'rentcar') return <>{top(q.rentLoc || 'Manzil')}{sub(<>{q.rentFrom || 'Boshlanish'}{q.rentTo?` → ${q.rentTo}`:''}</>)}</>;
+                  return null;
+                })()}
               </div>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:0.85}}>
                 <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
