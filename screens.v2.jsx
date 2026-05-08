@@ -906,6 +906,12 @@ function ScreenTrip() {
     }
   }, [page, hintShown]);
   const [preSheet, setPreSheet] = React.useState(null);
+  const [topScrolled, setTopScrolled] = React.useState(false);
+  React.useEffect(() => {
+    const on = () => setTopScrolled(window.scrollY > 4);
+    window.addEventListener('scroll', on, { passive: true });
+    return () => window.removeEventListener('scroll', on);
+  }, []);
   const [route, setRoute] = React.useState({ from:'Toshkent', to:'Dubai' });
   const [dates, setDates] = React.useState({ start:'15 May', end:'20 May', nights:5 });
   const [guests, setGuests] = React.useState({ adults:2, children:0 });
@@ -2074,7 +2080,7 @@ function ScreenTrip() {
 
   return (
     <Frame>
-      <div style={{padding:'24px 20px 20px',display:'flex',alignItems:'center',justifyContent:'center',background:C.bg,position:'sticky',top:0,zIndex:10}}>
+      <div style={{padding:'24px 20px 20px',display:'flex',alignItems:'center',justifyContent:'center',background:topScrolled?C.bg:'transparent',position:'sticky',top:0,zIndex:10,transition:'background 0.18s',boxShadow:topScrolled?'0 4px 14px rgba(10,31,33,0.06)':'none'}}>
         <h1 style={{margin:0,fontSize:24,fontWeight:800,color:'#0A1F21',letterSpacing:-0.5}}>Let's Trip</h1>
       </div>
       <Scroll>
