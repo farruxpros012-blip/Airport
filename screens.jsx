@@ -1248,7 +1248,7 @@ function ScreenTrip() {
           <div style={{position:'sticky',top:0,padding:'12px 0',background: scrolled ? '#fff' : 'transparent',transition:'background 0.18s', boxShadow: scrolled ? '0 4px 14px rgba(10,31,33,0.06)' : 'none', marginLeft:-18, marginRight:-18, paddingLeft:18, paddingRight:18, zIndex:5}}>
             <div style={{display:'flex',alignItems:'center',background:scrolled?'#F4F5FA':'#F7F8FB',borderRadius:14,padding:'10px 14px',transition:'background 0.18s'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-              <input autoFocus value={s} onChange={e=>setS(e.target.value)} placeholder="Davlat yoki shahar..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+              <input value={s} onChange={e=>setS(e.target.value)} placeholder="Davlat yoki shahar..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
             </div>
           </div>
           <div style={{paddingBottom:24}}>
@@ -1284,7 +1284,7 @@ function ScreenTrip() {
           <div style={{position:'sticky',top:0,background:'#fff',padding:'4px 0 12px',marginTop:-2,zIndex:5}}>
             <div style={{display:'flex',alignItems:'center',background:'#F7F8FB',borderRadius:14,padding:'10px 14px'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-              <input autoFocus value={s} onChange={e=>setS(e.target.value)} placeholder={placeholder} style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+              <input value={s} onChange={e=>setS(e.target.value)} placeholder={placeholder} style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
             </div>
           </div>
           <div style={{maxHeight:'52vh',overflowY:'auto',margin:'0 -4px'}}>
@@ -1395,7 +1395,7 @@ function ScreenTrip() {
           <div style={{position:'sticky',top:0,padding:'10px 0 12px',marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,background:scrolled?'#fff':'transparent',transition:'background 0.18s',boxShadow:scrolled?'0 4px 14px rgba(10,31,33,0.06)':'none',zIndex:5}}>
             <div style={{display:'flex',alignItems:'center',background:scrolled?'#F4F5FA':'#F7F8FB',borderRadius:14,padding:'10px 14px',transition:'background 0.18s'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-              <input autoFocus value={s} onChange={e=>setS(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+              <input value={s} onChange={e=>setS(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
             </div>
           </div>
           {!s && (
@@ -1466,7 +1466,7 @@ function ScreenTrip() {
         <div>
           <SearchList items={HOTEL_LIST} multi selected={hotels} placeholder="Hotelni qidirish..."
             onPick={(name)=>setHotels(v=>v.includes(name)?v.filter(x=>x!==name):[...v,name])}/>
-          {hotels.length > 0 && <button onClick={()=>setNested(null)} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',marginTop:12,boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tanlash ({hotels.length})</button>}
+          {hotels.length > 0 && <div style={{position:'sticky',bottom:0,marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,paddingTop:12,paddingBottom:6,background:'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 30%)'}}><button onClick={()=>setNested(null)} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tanlash ({hotels.length})</button></div>}
         </div>
       );
       return null;
@@ -1529,7 +1529,7 @@ function ScreenTrip() {
           </div>
           {nested ? renderNested() : <>
             {renderFields()}
-            <button onClick={submit} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',marginTop:14,boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Qidirish</button>
+            <div style={{position:'sticky',bottom:0,marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,paddingTop:12,paddingBottom:6,background:'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 30%)',marginTop:8}}><button onClick={submit} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Qidirish</button></div>
           </>}
         </div>
       </div>
