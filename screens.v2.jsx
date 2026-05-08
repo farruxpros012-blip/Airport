@@ -1257,24 +1257,50 @@ function ScreenTrip() {
             </div>
           </div>
           <div style={{paddingBottom:24}}>
-            {filtered.map(g => (
-              <div key={g.country} style={{marginBottom:6}}>
-                <div onClick={mode==='country'?()=>onPick(g.country):undefined} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 4px',cursor:mode==='country'?'pointer':'default',justifyContent:'space-between'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:10}}>
-                    <span style={{fontSize:22,lineHeight:1}}>{g.flag}</span>
-                    <span style={{fontSize:13,fontWeight:700,color:'#0A1F21',letterSpacing:0.2}}>{g.country}</span>
-                  </div>
-                  {mode==='country' && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>}
-                </div>
-                {mode==='city' && g.cities.map(city => (
-                  <div key={city} onClick={()=>onPick(`${city}, ${g.country}`)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 4px 10px 36px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
-                    <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{city}</span>
+            {q ? (
+              // FLAT search results
+              (() => {
+                const flat = mode==='country'
+                  ? COUNTRY_CITY.filter(g => g.country.toLowerCase().includes(q)).map(g=>({flag:g.flag,primary:g.country,secondary:''}))
+                  : COUNTRY_CITY.flatMap(g =>
+                      g.cities
+                        .filter(c => c.toLowerCase().includes(q) || g.country.toLowerCase().includes(q))
+                        .map(c => ({flag:g.flag,primary:c,secondary:g.country,country:g.country}))
+                    );
+                if (flat.length===0) return <div style={{padding:'30px 0',textAlign:'center',color:'#9AA1B8',fontSize:13}}>Topilmadi</div>;
+                return flat.map((r,i)=>(
+                  <div key={i} onClick={()=>onPick(mode==='country'?r.primary:`${r.primary}, ${r.country}`)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 4px',cursor:'pointer',borderBottom:i<flat.length-1?'1px solid #F0F2F5':'none'}}>
+                    <div style={{display:'flex',alignItems:'center',gap:12}}>
+                      <span style={{fontSize:22,lineHeight:1}}>{r.flag}</span>
+                      <div>
+                        <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{r.primary}</div>
+                        {r.secondary && <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>{r.secondary}</div>}
+                      </div>
+                    </div>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
                   </div>
-                ))}
-              </div>
-            ))}
-            {filtered.length===0 && <div style={{padding:'30px 0',textAlign:'center',color:'#9AA1B8',fontSize:13}}>Topilmadi</div>}
+                ));
+              })()
+            ) : (
+              // GROUPED list
+              COUNTRY_CITY.map(g => (
+                <div key={g.country} style={{marginBottom:6}}>
+                  <div onClick={mode==='country'?()=>onPick(g.country):undefined} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 4px',cursor:mode==='country'?'pointer':'default',justifyContent:'space-between'}}>
+                    <div style={{display:'flex',alignItems:'center',gap:10}}>
+                      <span style={{fontSize:22,lineHeight:1}}>{g.flag}</span>
+                      <span style={{fontSize:13,fontWeight:700,color:'#0A1F21',letterSpacing:0.2}}>{g.country}</span>
+                    </div>
+                    {mode==='country' && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>}
+                  </div>
+                  {mode==='city' && g.cities.map(city => (
+                    <div key={city} onClick={()=>onPick(`${city}, ${g.country}`)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 4px 10px 36px',cursor:'pointer',borderBottom:'1px solid #F0F2F5'}}>
+                      <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{city}</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+                    </div>
+                  ))}
+                </div>
+              ))
+            )}
           </div>
         </div>
       );
