@@ -905,6 +905,7 @@ function ScreenTrip() {
       return () => clearTimeout(t);
     }
   }, [page, hintShown]);
+  const [preSheet, setPreSheet] = React.useState(null);
   const [route, setRoute] = React.useState({ from:'Toshkent', to:'Dubai' });
   const [dates, setDates] = React.useState({ start:'15 May', end:'20 May', nights:5 });
   const [guests, setGuests] = React.useState({ adults:2, children:0 });
@@ -926,11 +927,14 @@ function ScreenTrip() {
     </svg>
   );
   const Ico = ({d}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d}/></svg>;
-  const Head = ({icon,label,k}) => (
+  const Head = ({icon,label,desc,k}) => (
     <div onClick={()=>toggle(k)} style={rowStyle}>
       <div style={{display:'flex',alignItems:'center',gap:12}}>
         <div style={iBox}><span style={iWrap}>{icon}</span></div>
-        <span style={{fontSize:15,fontWeight:600,color:'#0A1F21'}}>{label}</span>
+        <div>
+          <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.2}}>{label}</div>
+          {desc && <div style={{fontSize:11,color:'#7A9EA2',marginTop:1,fontWeight:400}}>{desc}</div>}
+        </div>
       </div>
       <Chevron on={open[k]}/>
     </div>
@@ -1033,6 +1037,215 @@ function ScreenTrip() {
           </div>
 
           <button onClick={save} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',marginTop:8}}>Qidirish</button>
+        </div>
+      </div>
+    );
+  };
+
+  /* ── Pre-Search Bottom Sheet ── */
+  const PreSheet = () => {
+    const [taxiTab, setTaxiTab] = React.useState('pickup');
+    const [fromVal, setFromVal] = React.useState('');
+    const [toVal, setToVal] = React.useState('');
+    const [dateStart, setDateStart] = React.useState('');
+    const [dateEnd, setDateEnd] = React.useState('');
+    const [nights, setNights] = React.useState(5);
+    const [adults, setAdults] = React.useState(2);
+    const [children, setChildren] = React.useState(0);
+    const [infants, setInfants] = React.useState(0);
+    const [hotelClass, setHotelClass] = React.useState('');
+    const [flightClass, setFlightClass] = React.useState('econom');
+    const [country, setCountry] = React.useState('');
+    const [passengerCount, setPassengerCount] = React.useState(1);
+    const [pickupTime, setPickupTime] = React.useState('');
+    const [pickupLoc, setPickupLoc] = React.useState('City');
+    const [rentFrom, setRentFrom] = React.useState('');
+    const [rentTo, setRentTo] = React.useState('');
+    const [rentPickupLoc, setRentPickupLoc] = React.useState('');
+    if (!preSheet) return null;
+    const close = () => setPreSheet(null);
+    const inp = { width:'100%', padding:'13px 16px', border:'1.5px solid #E8EAF3', borderRadius:14, fontSize:14, color:'#0A1F21', outline:'none', boxSizing:'border-box', background:'#F4F5FA', fontFamily:'inherit' };
+    const sec = (t) => <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.8,marginBottom:8,marginTop:18}}>{t}</div>;
+    const cnt = (val, set, min=0) => (
+      <div style={{display:'flex',alignItems:'center',gap:0,border:'1.5px solid #E8EAF3',borderRadius:12,overflow:'hidden'}}>
+        <button onClick={()=>set(v=>Math.max(min,v-1))} style={{width:40,height:40,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',lineHeight:1}}>−</button>
+        <span style={{fontSize:16,fontWeight:700,color:'#0A1F21',width:28,textAlign:'center'}}>{val}</span>
+        <button onClick={()=>set(v=>v+1)} style={{width:40,height:40,border:'none',background:'none',fontSize:22,color:T,cursor:'pointer',lineHeight:1}}>+</button>
+      </div>
+    );
+    const guestRow = (label, sub, val, set, min=0) => (
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid #F0F2F5'}}>
+        <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{label}</div>{sub&&<div style={{fontSize:11,color:'#9AA1B8'}}>{sub}</div>}</div>
+        {cnt(val,set,min)}
+      </div>
+    );
+    const routeBox = (fLabel='Qayerdan', tLabel='Qayerga', showSwap=true) => (
+      <div style={{background:'#F4F5FA',borderRadius:16,overflow:'hidden',position:'relative'}}>
+        <div style={{display:'flex',alignItems:'center',padding:'13px 16px'}}>
+          <div style={{width:8,height:8,borderRadius:'50%',background:T,flexShrink:0,marginRight:12}}/>
+          <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder={fLabel} style={{flex:1,border:'none',background:'none',fontSize:14,fontWeight:600,color:'#0A1F21',outline:'none',fontFamily:'inherit'}}/>
+        </div>
+        <div style={{height:1,background:'#E8EAF3',marginLeft:36}}/>
+        <div style={{display:'flex',alignItems:'center',padding:'13px 16px'}}>
+          <div style={{width:8,height:8,borderRadius:'50%',background:'#DDE0EB',flexShrink:0,marginRight:12}}/>
+          <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder={tLabel} style={{flex:1,border:'none',background:'none',fontSize:14,fontWeight:600,color:'#0A1F21',outline:'none',fontFamily:'inherit'}}/>
+        </div>
+        {showSwap && <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:14,top:'50%',transform:'translateY(-50%)',width:32,height:32,borderRadius:999,background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.06)'}}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.3" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+        </button>}
+      </div>
+    );
+    const chipRow = (label, options, val, set) => (
+      <div>
+        {sec(label)}
+        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+          {options.map(o=>(
+            <button key={o.v} onClick={()=>set(o.v)} style={{padding:'8px 16px',borderRadius:999,border:'1.5px solid',borderColor:val===o.v?T:'#E8EAF3',background:val===o.v?T:'#fff',color:val===o.v?'#fff':'#5C7577',fontSize:13,fontWeight:600,cursor:'pointer'}}>{o.l}</button>
+          ))}
+        </div>
+      </div>
+    );
+    const submit = () => {
+      if (preSheet === 'esim') { setEsimCountry(country||'Global'); }
+      setPage(preSheet);
+      setPreSheet(null);
+    };
+    const titles = { turlar:"Tur qidirish", excur:"Ekskursiya qidirish", esim:"eSIM qidirish", hotel:"Mehmonxona qidirish", aviabilet:"Aviabilet qidirish", taxi:"Airport taxi", transfer:"Transfer qidirish", rentcar:"Avtomobil ijarasi" };
+
+    const renderFields = () => {
+      if (preSheet === 'turlar') return (
+        <div>
+          {sec('Yo\'nalish')}{routeBox('Qayerdan','Qayerga')}
+          {sec('Sana')}<input value={dateStart} onChange={e=>setDateStart(e.target.value)} placeholder="Qachon (masalan: 15 May)" style={inp}/>
+          {sec('Qancha kun')}<input value={nights} onChange={e=>setNights(e.target.value)} placeholder="Necha kun" type="number" min="1" style={inp}/>
+          {sec('Mehmonlar')}
+          <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
+            {guestRow('Kattalar','12+',adults,setAdults,1)}
+            {guestRow('Bolalar','2–11',children,setChildren,0)}
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0'}}>
+              <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Chaqaloq</div><div style={{fontSize:11,color:'#9AA1B8'}}>0–2</div></div>
+              {cnt(infants,setInfants,0)}
+            </div>
+          </div>
+          {sec('Hotel turi')}
+          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+            {['3★','4★','5★','All Inclusive','Ultra All Inclusive'].map(h=>(
+              <button key={h} onClick={()=>setHotelClass(v=>v===h?'':h)} style={{padding:'8px 14px',borderRadius:999,border:'1.5px solid',borderColor:hotelClass===h?T:'#E8EAF3',background:hotelClass===h?T:'#fff',color:hotelClass===h?'#fff':'#5C7577',fontSize:12,fontWeight:600,cursor:'pointer'}}>{h}</button>
+            ))}
+          </div>
+        </div>
+      );
+      if (preSheet === 'aviabilet') return (
+        <div>
+          {sec('Yo\'nalish')}{routeBox('Qayerdan','Qayerga')}
+          {sec('Ketish sanasi')}<input value={dateStart} onChange={e=>setDateStart(e.target.value)} placeholder="Qachon ketiladi" style={inp}/>
+          {sec('Qaytish sanasi')}<input value={dateEnd} onChange={e=>setDateEnd(e.target.value)} placeholder="Qachon qaytiladi" style={inp}/>
+          {sec('Yo\'lovchilar')}
+          <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
+            {guestRow('Kattalar','12+',adults,setAdults,1)}
+            {guestRow('Bolalar','2–11',children,setChildren,0)}
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0'}}>
+              <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Chaqaloq</div><div style={{fontSize:11,color:'#9AA1B8'}}>0–2</div></div>
+              {cnt(infants,setInfants,0)}
+            </div>
+          </div>
+          {chipRow('Bilet klassi',[{v:'econom',l:'Econom'},{v:'business',l:'Business'},{v:'premium',l:'Premium Economy'}],flightClass,setFlightClass)}
+        </div>
+      );
+      if (preSheet === 'hotel') return (
+        <div>
+          {sec('Shahar')}<input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Qayerda" style={inp}/>
+          {sec('Sana')}<div style={{display:'flex',gap:8}}>
+            <input value={dateStart} onChange={e=>setDateStart(e.target.value)} placeholder="Qachondan" style={{...inp,flex:1}}/>
+            <input value={dateEnd} onChange={e=>setDateEnd(e.target.value)} placeholder="Qachongacha" style={{...inp,flex:1}}/>
+          </div>
+          {sec('Mijoz davlati')}<input value={country} onChange={e=>setCountry(e.target.value)} placeholder="Davlat" style={inp}/>
+          {sec('Xonada kim bor?')}
+          <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
+            {guestRow('Kattalar','12+',adults,setAdults,1)}
+            {guestRow('Bolalar','0–11',children,setChildren,0)}
+          </div>
+        </div>
+      );
+      if (preSheet === 'esim') return (
+        <div>
+          {sec('Davlat')}<input value={country} onChange={e=>setCountry(e.target.value)} placeholder="Davlatni kiriting (masalan: UAE)" style={inp}/>
+        </div>
+      );
+      if (preSheet === 'excur') return (
+        <div>
+          {sec('Davlat')}<input value={country} onChange={e=>setCountry(e.target.value)} placeholder="Davlatni tanlang" style={inp}/>
+        </div>
+      );
+      if (preSheet === 'taxi') return (
+        <div>
+          <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginTop:4,marginBottom:16}}>
+            <button onClick={()=>setTaxiTab('pickup')} style={{flex:1,padding:'9px 0',fontSize:12,fontWeight:700,background:taxiTab==='pickup'?'#fff':'none',borderRadius:10,border:'none',color:taxiTab==='pickup'?T:'#9AA1B8',boxShadow:taxiTab==='pickup'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Pickup</button>
+            <button onClick={()=>setTaxiTab('dropoff')} style={{flex:1,padding:'9px 0',fontSize:12,fontWeight:700,background:taxiTab==='dropoff'?'#fff':'none',borderRadius:10,border:'none',color:taxiTab==='dropoff'?T:'#9AA1B8',boxShadow:taxiTab==='dropoff'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Drop-off</button>
+          </div>
+          {taxiTab==='pickup' ? (
+            <div>
+              {sec('Olib ketish joyi')}<input value="Aeroport" readOnly style={{...inp,color:T,fontWeight:600}}/>
+              {sec('Qayerga')}<input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder="Manzilni kiriting" style={inp}/>
+              {sec('Yo\'lovchilar soni')}
+              <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0'}}>
+                  <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</div>
+                  {cnt(passengerCount,setPassengerCount,1)}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div>
+              {sec('Olib ketish joyi')}<input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Manzilni kiriting" style={inp}/>
+              {sec('Qayerga')}<input value="Aeroport" readOnly style={{...inp,color:T,fontWeight:600}}/>
+              {sec('Sana va vaqt')}<div style={{display:'flex',gap:8}}>
+                <input value={dateStart} onChange={e=>setDateStart(e.target.value)} placeholder="Qachon" style={{...inp,flex:1}}/>
+                <input value={pickupTime} onChange={e=>setPickupTime(e.target.value)} placeholder="Soat (10:30)" style={{...inp,flex:1}}/>
+              </div>
+              {sec('Yo\'lovchilar soni')}
+              <div style={{background:'#F4F5FA',borderRadius:14,padding:'0 12px'}}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0'}}>
+                  <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</div>
+                  {cnt(passengerCount,setPassengerCount,1)}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+      if (preSheet === 'transfer') return (
+        <div>
+          {sec('Qayerdan (tur)')}
+          <div style={{display:'flex',gap:8,marginBottom:8}}>
+            {['Shahar','Aeroport','Mehmonxona'].map(t=>(
+              <button key={t} onClick={()=>setPickupLoc(t)} style={{padding:'8px 14px',borderRadius:999,border:'1.5px solid',borderColor:pickupLoc===t?T:'#E8EAF3',background:pickupLoc===t?T:'#fff',color:pickupLoc===t?'#fff':'#5C7577',fontSize:12,fontWeight:600,cursor:'pointer'}}>{t}</button>
+            ))}
+          </div>
+          <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Manzilni kiriting" style={inp}/>
+          {sec('Qayerga')}
+          <input value="Aeroport" readOnly style={{...inp,color:T,fontWeight:600}}/>
+        </div>
+      );
+      if (preSheet === 'rentcar') return (
+        <div>
+          {sec('Davlat')}<input value={country} onChange={e=>setCountry(e.target.value)} placeholder="Davlatni kiriting" style={inp}/>
+          {sec('Olib ketish manzili')}<input value={rentPickupLoc} onChange={e=>setRentPickupLoc(e.target.value)} placeholder="Olib ketish joyi" style={inp}/>
+          {sec('Ijara muddati')}<div style={{display:'flex',gap:8}}>
+            <input value={rentFrom} onChange={e=>setRentFrom(e.target.value)} placeholder="Qachondan, soat" style={{...inp,flex:1}}/>
+            <input value={rentTo} onChange={e=>setRentTo(e.target.value)} placeholder="Qachongacha, soat" style={{...inp,flex:1}}/>
+          </div>
+        </div>
+      );
+      return null;
+    };
+    return (
+      <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
+        <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 20px 36px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'88vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+          <div style={{width:40,height:4,borderRadius:999,background:'#DDE0EB',margin:'14px auto 4px'}}/>
+          <div style={{fontSize:18,fontWeight:800,color:'#0A1F21',marginTop:12,marginBottom:4}}>{titles[preSheet]||'Qidirish'}</div>
+          {renderFields()}
+          <button onClick={submit} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:18,padding:'15px 0',fontSize:15,fontWeight:700,cursor:'pointer',marginTop:20}}>Qidirish</button>
         </div>
       </div>
     );
@@ -1527,6 +1740,7 @@ function ScreenTrip() {
         </Scroll>
         <TabBar active="trip"/>
         <BottomSheet/>
+        <PreSheet/>
       </Frame>
     );
   }
@@ -1539,31 +1753,31 @@ function ScreenTrip() {
       <Scroll>
         {/* Turlar */}
         <div style={card}>
-          <Head icon={<FigTours size={26}/>} label="Turlar" k="turlar"/>
+          <Head icon={<FigTours size={26}/>} label="Turlar" desc="Dunyoning istalgan nuqtasiga tur paketlari" k="turlar"/>
           {open.turlar && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <Slide img="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600" badge="Turkiya" title="Turkiya: 5 100 000 so'mdan" sub="7 kecha · 2 kishi · Ultra All Inclusive" prices={[{label:'Antaliya',price:"7.2 mln so'm"},{label:'Istanbul',price:"5.1 mln so'm"},{label:'Bodrum',price:"8.4 mln so'm"},{label:'Izmir',price:"6.2 mln so'm"}]}/>
               <Slide img="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600" badge="Dubai" title="Dubai: 6 800 000 so'mdan" sub="5 kecha · Premium mehmonxonalar" prices={[{label:'Jumeirah Beach',price:"9.8 mln so'm"},{label:'Marina View',price:"7.5 mln so'm"},{label:'Downtown',price:"11.2 mln so'm"},{label:'Palm Island',price:"15.4 mln so'm"}]}/>
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('turlar')} style={mkBtn()}>Barcha turlarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPreSheet('turlar')} style={mkBtn()}>Barcha turlarni ko'rish</button></div>
           </div>}
         </div>
 
         {/* Ekskursiya */}
         <div style={card}>
-          <Head icon={<FigExcursions size={26}/>} label="Ekskursiya" k="excur"/>
+          <Head icon={<FigExcursions size={26}/>} label="Ekskursiya" desc="Qiziqarli ziyoratlar va shahar sayohatlari" k="excur"/>
           {open.excur && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <Slide img="https://images.unsplash.com/photo-1547555999-14e818e09e33?w=600" badge="O'zbekiston" title="Tarixiy shaharlar bo'ylab" sub="Eng mashhur yo'nalishlar" prices={[{label:"Xiva safari",price:"450 000 so'm"},{label:'Eski Buxoro',price:"380 000 so'm"},{label:'Samarqand',price:"520 000 so'm"},{label:'Tashkent City',price:"250 000 so'm"}]}/>
               <Slide img="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=600" badge="Xalqaro" title="Xorijiy shaharlar" sub="Istanbul, Dubai va boshqalar" prices={[{label:'Istanbul',price:"600 000 so'm"},{label:'Dubai',price:"800 000 so'm"},{label:'Bangkok',price:"550 000 so'm"},{label:'Bali',price:"720 000 so'm"}]}/>
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('excur')} style={mkBtn()}>Barcha ekskursiyalarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPreSheet('excur')} style={mkBtn()}>Barcha ekskursiyalarni ko'rish</button></div>
           </div>}
         </div>
 
         {/* eSIM */}
         <div style={card}>
-          <Head icon={<FigEsim size={26}/>} label="eSIM" k="esim"/>
+          <Head icon={<FigEsim size={26}/>} label="eSIM" desc="150+ davlatda uzluksiz internet aloqasi" k="esim"/>
           {open.esim && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
@@ -1585,37 +1799,37 @@ function ScreenTrip() {
                 </div>
               </div>
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('esim')} style={mkBtn()}>Barcha eSIMlarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPreSheet('esim')} style={mkBtn()}>Barcha eSIMlarni ko'rish</button></div>
           </div>}
         </div>
 
         {/* Mehmonxona */}
         <div style={card}>
-          <Head icon={<FigHotel size={26}/>} label="Mehmonxona" k="hotel"/>
+          <Head icon={<FigHotel size={26}/>} label="Mehmonxona" desc="Har qanday byudjetga mos mehmonxonalar" k="hotel"/>
           {open.hotel && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <Slide img="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" badge="Toshkent" title="Toshkent mehmonxonalari" sub="Premium dam olish maskanlari" prices={[{label:'Hyatt Regency',price:"2.4 mln so'm"},{label:'Hilton Tashkent',price:"2.1 mln so'm"},{label:'Wyndham',price:"1.8 mln so'm"},{label:'Ramada',price:"1.5 mln so'm"}]}/>
               <Slide img="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600" badge="Dubai" title="Dubai mehmonxonalari" sub="Dengiz yoqasidagi 5★ oteller" prices={[{label:'Jumeirah Beach',price:"9.8 mln so'm"},{label:'Atlantis Palm',price:"14.2 mln so'm"},{label:'Burj Al Arab',price:"38 mln so'm"},{label:'Address DT',price:"11.5 mln so'm"}]}/>
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('hotel')} style={mkBtn()}>Barcha mehmonxonalarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPreSheet('hotel')} style={mkBtn()}>Barcha mehmonxonalarni ko'rish</button></div>
           </div>}
         </div>
 
         {/* Aviabilet */}
         <div style={card}>
-          <Head icon={<FigFlight size={26}/>} label="Aviabilet" k="aviabilet"/>
+          <Head icon={<FigFlight size={26}/>} label="Aviabilet" desc="Arzon aviabiletlar, qulay yo'nalishlar" k="aviabilet"/>
           {open.aviabilet && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <Slide img="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600" badge="Dubai" title="Dubai" sub="Mashhur yo'nalishlar" prices={[{label:'TAS → DXB',price:"3.4 mln so'm"},{label:'DXB → TAS',price:"3.1 mln so'm"},{label:"To'g'ri reys",price:'5 soat'},{label:'Biznes klass',price:"9.8 mln so'm"}]}/>
               <Slide img="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=600" badge="Istanbul" title="Istanbul" sub="Mashhur yo'nalishlar" prices={[{label:'TAS → IST',price:"2.5 mln so'm"},{label:'IST → TAS',price:"2.3 mln so'm"},{label:"To'g'ri reys",price:'4 soat'},{label:'Biznes klass',price:"7.2 mln so'm"}]}/>
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('aviabilet')} style={mkBtn()}>Barcha aviabiletlarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPreSheet('aviabilet')} style={mkBtn()}>Barcha aviabiletlarni ko'rish</button></div>
           </div>}
         </div>
 
         {/* Airport taxi */}
         <div style={card}>
-          <Head icon={<FigAirportTaxi size={26}/>} label="Airport taxi" k="taxi"/>
+          <Head icon={<FigAirportTaxi size={26}/>} label="Airport taxi" desc="Aeroportdan va aeroportga tez yetkazish" k="taxi"/>
           {open.taxi && <div style={{padding:'0 20px 20px'}}>
             <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginBottom:16}}>
               <button style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:700,background:'#fff',borderRadius:10,border:'none',color:T,boxShadow:'0 1px 4px rgba(0,0,0,0.08)',cursor:'pointer'}}>Aeroportga borish</button>
@@ -1625,25 +1839,25 @@ function ScreenTrip() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
               <div><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase'}}>Qayerdan</div><div style={{fontSize:12,fontWeight:600,color:'#0A1F21'}}>O'z manzilingizni kiriting</div></div>
             </div>
-            <button style={mkBtn()}>Taksi buyurtma qilish</button>
+            <button onClick={()=>setPreSheet('taxi')} style={mkBtn()}>Taksi buyurtma qilish</button>
           </div>}
         </div>
 
         {/* Transfer */}
         <div style={card}>
-          <Head icon={<FigTransfer size={26}/>} label="Transfer" k="transfer"/>
+          <Head icon={<FigTransfer size={26}/>} label="Transfer" desc="Shaharlararo qulay transfer xizmati" k="transfer"/>
           {open.transfer && <div style={{padding:'0 20px 20px'}}>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:4}}>
               <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerdan</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Toshkent</div></div>
               <div style={{padding:12,background:TBG,borderRadius:16,border:'1px solid rgba(0,153,168,0.15)'}}><div style={{fontSize:10,color:'#5C7577',textTransform:'uppercase',marginBottom:4}}>Qayerga</div><div style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>Samarqand</div></div>
             </div>
-            <button style={mkBtn()}>Transferni band qilish</button>
+            <button onClick={()=>setPreSheet('transfer')} style={mkBtn()}>Transferni band qilish</button>
           </div>}
         </div>
 
         {/* Rent Car */}
         <div style={card}>
-          <Head icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" width="26" height="26"><path fill="#79808a" d="M28.96 16.18c-.21-2.36-.56-2.82-.69-3-.3-.4-.78-.66-1.3-.94a.2.2 0 0 1-.05-.33.93.93 0 0 0-.04-1.35 1 1 0 0 0-.65-.25h-.91l-.12.01-.08-.03c-.55-1.14-1.29-2.7-2.82-3.47-2.28-1.14-6.48-1.2-7.3-1.2s-5.02.06-7.3 1.2c-1.53.76-2.27 2.33-2.81 3.47v.01l-.09.02H3.77a.95.95 0 0 0-.96.86 1 1 0 0 0 .27.73.2.2 0 0 1 .02.27l-.07.06c-.51.28-1 .54-1.3.94-.13.17-.48.63-.69 3a21 21 0 0 0-.04 3.6c.2 1.85.55 2.96.57 3a.9.9 0 0 0 .77.65.94.94 0 0 0 .94.95h3.28a.94.94 0 0 0 .94-.94c.5 0 .86-.1 1.23-.19a10 10 0 0 1 1.64-.29 53 53 0 0 1 4.63-.23c1.04 0 2.9.06 4.7.23q.83.07 1.64.3c.35.08.7.17 1.16.18a.94.94 0 0 0 .94.94h3.28a.94.94 0 0 0 .94-.94.9.9 0 0 0 .77-.65c.02-.04.38-1.16.57-3 .1-.9.08-2.27-.04-3.6M6.58 11.1c.47-1 1-2.12 1.96-2.6 1.38-.68 4.24-1 6.46-1s5.08.31 6.46 1c.95.48 1.49 1.6 1.96 2.6l.06.13a.47.47 0 0 1-.44.67c-1.95-.05-6.05-.22-8.04-.22-2 0-6.1.17-8.04.22a.47.47 0 0 1-.44-.67zm.7 4.67q-1.5.18-3.04.18c-.62 0-1.26-.18-1.38-.73a2 2 0 0 1-.03-.8c.04-.17.1-.3.4-.35.75-.12 1.18.03 2.43.4.82.24 1.42.57 1.76.82.17.13.08.46-.14.48m12.97 4.8c-.77.09-2.31.06-5.23.06s-4.47.03-5.24-.06c-.8-.08-1.8-.84-1.11-1.5.46-.45 1.53-.78 2.96-.97 1.44-.18 2.04-.28 3.38-.28s1.88.06 3.38.29 2.62.55 2.97.95c.63.72-.31 1.42-1.1 1.52m6.89-5.35c-.12.55-.77.73-1.38.73q-1.56 0-3.1-.18c-.18-.02-.26-.33-.08-.48a6 6 0 0 1 1.76-.82c1.25-.37 1.97-.52 2.59-.4.15.04.23.2.23.3q.07.42-.02.85"/></svg>} label="Rent a Car" k="rentcar"/>
+          <Head icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" width="26" height="26"><path fill="#79808a" d="M28.96 16.18c-.21-2.36-.56-2.82-.69-3-.3-.4-.78-.66-1.3-.94a.2.2 0 0 1-.05-.33.93.93 0 0 0-.04-1.35 1 1 0 0 0-.65-.25h-.91l-.12.01-.08-.03c-.55-1.14-1.29-2.7-2.82-3.47-2.28-1.14-6.48-1.2-7.3-1.2s-5.02.06-7.3 1.2c-1.53.76-2.27 2.33-2.81 3.47v.01l-.09.02H3.77a.95.95 0 0 0-.96.86 1 1 0 0 0 .27.73.2.2 0 0 1 .02.27l-.07.06c-.51.28-1 .54-1.3.94-.13.17-.48.63-.69 3a21 21 0 0 0-.04 3.6c.2 1.85.55 2.96.57 3a.9.9 0 0 0 .77.65.94.94 0 0 0 .94.95h3.28a.94.94 0 0 0 .94-.94c.5 0 .86-.1 1.23-.19a10 10 0 0 1 1.64-.29 53 53 0 0 1 4.63-.23c1.04 0 2.9.06 4.7.23q.83.07 1.64.3c.35.08.7.17 1.16.18a.94.94 0 0 0 .94.94h3.28a.94.94 0 0 0 .94-.94.9.9 0 0 0 .77-.65c.02-.04.38-1.16.57-3 .1-.9.08-2.27-.04-3.6M6.58 11.1c.47-1 1-2.12 1.96-2.6 1.38-.68 4.24-1 6.46-1s5.08.31 6.46 1c.95.48 1.49 1.6 1.96 2.6l.06.13a.47.47 0 0 1-.44.67c-1.95-.05-6.05-.22-8.04-.22-2 0-6.1.17-8.04.22a.47.47 0 0 1-.44-.67zm.7 4.67q-1.5.18-3.04.18c-.62 0-1.26-.18-1.38-.73a2 2 0 0 1-.03-.8c.04-.17.1-.3.4-.35.75-.12 1.18.03 2.43.4.82.24 1.42.57 1.76.82.17.13.08.46-.14.48m12.97 4.8c-.77.09-2.31.06-5.23.06s-4.47.03-5.24-.06c-.8-.08-1.8-.84-1.11-1.5.46-.45 1.53-.78 2.96-.97 1.44-.18 2.04-.28 3.38-.28s1.88.06 3.38.29 2.62.55 2.97.95c.63.72-.31 1.42-1.1 1.52m6.89-5.35c-.12.55-.77.73-1.38.73q-1.56 0-3.1-.18c-.18-.02-.26-.33-.08-.48a6 6 0 0 1 1.76-.82c1.25-.37 1.97-.52 2.59-.4.15.04.23.2.23.3q.07.42-.02.85"/></svg>} label="Rent a Car" desc="Ixtiyoriy mamlakatda avtomobil ijarasi" k="rentcar"/>
           {open.rentcar && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
               <div style={{flexShrink:0,width:'85%',scrollSnapAlign:'center'}}>
@@ -1679,7 +1893,7 @@ function ScreenTrip() {
                 </div>
               </div>
             </div>
-            <div style={{padding:'0 20px'}}><button onClick={()=>setPage('rentcar')} style={mkBtn()}>Barcha avtomobillarni ko'rish</button></div>
+            <div style={{padding:'0 20px'}}><button onClick={()=>setPreSheet('rentcar')} style={mkBtn()}>Barcha avtomobillarni ko'rish</button></div>
           </div>}
         </div>
 
