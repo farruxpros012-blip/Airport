@@ -1922,6 +1922,8 @@ function ScreenTrip() {
         </div>
       </Scroll>
       <TabBar active="trip"/>
+      <BottomSheet/>
+      <PreSheet/>
     </Frame>
   );
 }
