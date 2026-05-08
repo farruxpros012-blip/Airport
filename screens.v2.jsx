@@ -912,6 +912,19 @@ function ScreenTrip() {
     window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
   }, []);
+  // Track visual viewport (for mobile keyboard)
+  const [vvh, setVvh] = React.useState(typeof window !== 'undefined' ? (window.visualViewport?.height || window.innerHeight) : 800);
+  const [kbOffset, setKbOffset] = React.useState(0);
+  React.useEffect(() => {
+    const vv = typeof window !== 'undefined' ? window.visualViewport : null;
+    if (!vv) return;
+    const handler = () => { setVvh(vv.height); setKbOffset(Math.max(0, window.innerHeight - vv.height)); };
+    vv.addEventListener('resize', handler);
+    vv.addEventListener('scroll', handler);
+    return () => { vv.removeEventListener('resize', handler); vv.removeEventListener('scroll', handler); };
+  }, []);
+  const sheetH = Math.round(vvh * 0.88);
+  const sheetXform = kbOffset>0 ? `translateY(-${kbOffset}px)` : 'none';
   const [route, setRoute] = React.useState({ from:'Toshkent', to:'Dubai' });
   const [dates, setDates] = React.useState({ start:'15 May', end:'20 May', nights:5 });
   const [guests, setGuests] = React.useState({ adults:2, children:0 });
@@ -995,7 +1008,7 @@ function ScreenTrip() {
     };
     return (
       <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:100,display:'flex',alignItems:'flex-end'}} onClick={close}>
-        <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 20px 36px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'90vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+        <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 20px 36px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:sheetH,overflowY:'auto',transform:sheetXform,transition:'transform 0.18s'}} onClick={e=>e.stopPropagation()}>
           <div style={{width:40,height:4,borderRadius:999,background:'#DDE0EB',margin:'14px auto 4px'}}/>
           <div style={{fontSize:18,fontWeight:800,color:'#0A1F21',marginTop:16,marginBottom:4}}>Qidiruvni sozlash</div>
 
@@ -1372,7 +1385,7 @@ function ScreenTrip() {
       const [scrolled, setScrolled] = React.useState(false);
       const filt = (arr) => arr.filter(c => c.toLowerCase().includes(s.toLowerCase()));
       return (
-        <div onScroll={e=>setScrolled(e.currentTarget.scrollTop>4)} style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+        <div onScroll={e=>setScrolled(e.currentTarget.scrollTop>4)} style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:sheetH,overflowY:'auto',transform:sheetXform,transition:'transform 0.18s'}} onClick={e=>e.stopPropagation()}>
           <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
           <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 10px'}}>Davlat tanlang</div>
           <div style={{position:'sticky',top:0,padding:'10px 0 12px',marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,background:scrolled?'#fff':'transparent',transition:'background 0.18s',boxShadow:scrolled?'0 4px 14px rgba(10,31,33,0.06)':'none',zIndex:5}}>
@@ -1425,7 +1438,7 @@ function ScreenTrip() {
       const onPick = () => { setPage('excur'); setPreSheet(null); };
       return (
         <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
-          <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+          <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:sheetH,overflowY:'auto',transform:sheetXform,transition:'transform 0.18s'}} onClick={e=>e.stopPropagation()}>
             <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
             <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 10px'}}>Davlat tanlang</div>
             <SearchList items={EXCUR_LIST} onPick={onPick} placeholder="Davlatni qidirish..." withFlags/>
@@ -1449,7 +1462,7 @@ function ScreenTrip() {
         <div>
           <SearchList items={HOTEL_LIST} multi selected={hotels} placeholder="Hotelni qidirish..."
             onPick={(name)=>setHotels(v=>v.includes(name)?v.filter(x=>x!==name):[...v,name])}/>
-          <button onClick={()=>setNested(null)} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',marginTop:12,boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tanlash ({hotels.length})</button>
+          {hotels.length > 0 && <button onClick={()=>setNested(null)} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',marginTop:12,boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tanlash ({hotels.length})</button>}
         </div>
       );
       return null;
@@ -1504,7 +1517,7 @@ function ScreenTrip() {
 
     return (
       <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
-        <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 28px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:'85vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+        <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 28px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:sheetH,overflowY:'auto',transform:sheetXform,transition:'transform 0.18s'}} onClick={e=>e.stopPropagation()}>
           <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
           <div style={{display:'flex',alignItems:'center',gap:10,margin:'14px 0 12px'}}>
             {nested && <button onClick={()=>setNested(null)} style={{width:30,height:30,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',padding:0}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>}
