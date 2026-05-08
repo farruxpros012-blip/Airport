@@ -1612,7 +1612,14 @@ function ScreenTrip() {
   const ESIM_COUNTRY_FLAGS = {
     'United States':'🇺🇸','United Arab Emirates':'🇦🇪','Türkiye':'🇹🇷','United Kingdom':'🇬🇧',
     'Germany':'🇩🇪','France':'🇫🇷','Japan':'🇯🇵','Korea':'🇰🇷','China':'🇨🇳',
-    'Thailand':'🇹🇭','Singapore':'🇸🇬','Global (150+ davlat)':'🌍'
+    'Thailand':'🇹🇭','Singapore':'🇸🇬','Global (150+ davlat)':'🌍','Global':'🌍',
+    "O'zbekiston":'🇺🇿','Turkiya':'🇹🇷','Birlashgan Arab Amirliklari':'🇦🇪','BAA':'🇦🇪',
+    'Misr':'🇪🇬','Vietnam':'🇻🇳','Tailand':'🇹🇭','Albaniya':'🇦🇱','Avstraliya':'🇦🇺',
+    'Avstriya':'🇦🇹','Belgiya':'🇧🇪','Filippin':'🇵🇭','Fransiya':'🇫🇷','Germaniya':'🇩🇪',
+    'Hindiston':'🇮🇳','Indoneziya':'🇮🇩','Italiya':'🇮🇹','Janubiy Koreya':'🇰🇷',
+    'Kanada':'🇨🇦','Malayziya':'🇲🇾','Niderlandiya':'🇳🇱','Polsha':'🇵🇱',
+    'Portugaliya':'🇵🇹','Singapur':'🇸🇬','Ispaniya':'🇪🇸','Shveytsariya':'🇨🇭',
+    'AQSh':'🇺🇸','Buyuk Britaniya':'🇬🇧','Yaponiya':'🇯🇵','Xitoy':'🇨🇳','Egypt':'🇪🇬'
   };
   const ESIM_PLANS = {
     standard: [
