@@ -939,7 +939,7 @@ function ScreenTrip() {
   const rowStyle = { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', cursor:'pointer' };
   const iBox = { width:46, height:46, borderRadius:'50%', background:T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 6px 16px rgba(0,153,168,0.35), 0 2px 6px rgba(0,153,168,0.20), inset 0 1px 0 rgba(255,255,255,0.25)' };
   const iWrap = { display:'flex', filter:'brightness(0) invert(1)' };
-  const mkBtn = (mt=16) => ({ width:'100%', background:T, color:'#fff', border:'none', borderRadius:20, padding:'13px 0', fontSize:14, fontWeight:600, cursor:'pointer', marginTop:mt });
+  const mkBtn = (mt=16) => ({ width:'100%', background:T, color:'#fff', border:'none', borderRadius:20, padding:'13px 0', fontSize:14, fontWeight:600, cursor:'pointer', marginTop:mt, boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)' });
   const mc = { background:TBG, padding:'8px 10px', borderRadius:14, border:'1px solid rgba(0,153,168,0.15)' };
 
   const Chevron = ({on}) => (
@@ -1570,16 +1570,11 @@ function ScreenTrip() {
   // ── Inline Taxi form (in accordion body) ──
   const TaxiForm = () => {
     const [tab, setTab] = React.useState('pickup');
-    const [from, setFrom] = React.useState('');
-    const [to, setTo] = React.useState('');
-    const [date, setDate] = React.useState('');
-    const [time, setTime] = React.useState('');
     const [pax, setPax] = React.useState(1);
-    const T = '#0099A8';
-    const cell = { background:'#F7F8FB', borderRadius:14, padding:'10px 14px', marginBottom:8 };
+    const cell = { background:'#F7F8FB', borderRadius:14, padding:'10px 14px', marginBottom:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'space-between' };
     const labS = { fontSize:11, color:'#7A8190', fontWeight:600, textTransform:'uppercase', letterSpacing:0.4 };
-    const inputS = { width:'100%', border:'none', background:'none', fontSize:14, fontWeight:700, color:'#0A1F21', outline:'none', fontFamily:'inherit', marginTop:2 };
-    const ro = { ...inputS, color:T };
+    const chevron = <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>;
+    const airport = <div style={{fontSize:14,fontWeight:700,color:T,marginTop:2}}>Toshkent Xalqaro Aeroporti</div>;
     return (
       <div style={{padding:'0 20px 20px'}}>
         <div style={{display:'flex',background:'#F0F2F8',borderRadius:12,padding:4,marginBottom:12}}>
@@ -1587,36 +1582,31 @@ function ScreenTrip() {
           <button onClick={()=>setTab('dropoff')} style={{flex:1,padding:'8px 0',fontSize:11,fontWeight:700,background:tab==='dropoff'?'#fff':'none',borderRadius:10,border:'none',color:tab==='dropoff'?T:'#9AA1B8',boxShadow:tab==='dropoff'?'0 1px 4px rgba(0,0,0,0.08)':'none',cursor:'pointer'}}>Airport Drop-off</button>
         </div>
         {tab==='pickup' ? <>
-          <div style={cell}><div style={labS}>QAYERDAN</div><input value="Aeroport" readOnly style={ro}/></div>
-          <div style={cell}><div style={labS}>QAYERGA</div><input value={to} onChange={e=>setTo(e.target.value)} placeholder="Manzilni kiriting" style={inputS}/></div>
-          <div style={{...cell, display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-            <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</span>
-            <div style={{display:'flex',alignItems:'center',gap:0}}>
-              <button onClick={()=>setPax(v=>Math.max(1,v-1))} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>−</button>
-              <span style={{fontSize:15,fontWeight:700,width:28,textAlign:'center'}}>{pax}</span>
-              <button onClick={()=>setPax(v=>v+1)} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>+</button>
-            </div>
-          </div>
+          <div style={{...cell, cursor:'default'}}><div><div style={labS}>QAYERDAN</div>{airport}</div></div>
+          <div style={cell} onClick={()=>setTaxiFromSheet('to')}><div><div style={labS}>QAYERGA</div><div style={{fontSize:14,fontWeight:700,color:taxiToVal?'#0A1F21':'#C0C5D4',marginTop:2}}>{taxiToVal||'Manzilni tanlang'}</div></div>{chevron}</div>
         </> : <>
-          <div style={cell}><div style={labS}>QAYERDAN</div><input value={from} onChange={e=>setFrom(e.target.value)} placeholder="Manzilni kiriting" style={inputS}/></div>
-          <div style={cell}><div style={labS}>QAYERGA</div><input value="Aeroport" readOnly style={ro}/></div>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}}>
-            <div style={{...cell,marginBottom:0}}><div style={labS}>QACHON</div><input value={date} onChange={e=>setDate(e.target.value)} placeholder="15 May" style={inputS}/></div>
-            <div style={{...cell,marginBottom:0}}><div style={labS}>SOAT</div><input value={time} onChange={e=>setTime(e.target.value)} placeholder="10:30" style={inputS}/></div>
-          </div>
-          <div style={{...cell, display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-            <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</span>
-            <div style={{display:'flex',alignItems:'center',gap:0}}>
-              <button onClick={()=>setPax(v=>Math.max(1,v-1))} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>−</button>
-              <span style={{fontSize:15,fontWeight:700,width:28,textAlign:'center'}}>{pax}</span>
-              <button onClick={()=>setPax(v=>v+1)} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>+</button>
-            </div>
-          </div>
+          <div style={cell} onClick={()=>setTaxiFromSheet('from')}><div><div style={labS}>QAYERDAN</div><div style={{fontSize:14,fontWeight:700,color:taxiFromVal?'#0A1F21':'#C0C5D4',marginTop:2}}>{taxiFromVal||'Manzilni tanlang'}</div></div>{chevron}</div>
+          <div style={{...cell, cursor:'default'}}><div><div style={labS}>QAYERGA</div>{airport}</div></div>
         </>}
+        <div style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px',marginBottom:8,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Yo'lovchilar</span>
+          <div style={{display:'flex',alignItems:'center',gap:0}}>
+            <button onClick={()=>setPax(v=>Math.max(1,v-1))} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>−</button>
+            <span style={{fontSize:15,fontWeight:700,width:28,textAlign:'center'}}>{pax}</span>
+            <button onClick={()=>setPax(v=>v+1)} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',padding:0}}>+</button>
+          </div>
+        </div>
         <button style={mkBtn(8)}>Taksi buyurtma qilish</button>
       </div>
     );
   };
+
+  // ── Taxi location states ──
+  const [taxiFromSheet, setTaxiFromSheet] = React.useState(null); // null | 'from' | 'to'
+  const [taxiFromVal, setTaxiFromVal] = React.useState('');
+  const [taxiToVal, setTaxiToVal] = React.useState('');
+  const [taxiMapPage, setTaxiMapPage] = React.useState(null);
+  const [taxiMapAddr, setTaxiMapAddr] = React.useState("Toshkent Xalqaro Aeroporti");
 
   // ── Transfer: from-picker bottom sheet ──
   const [xferFromSheet, setXferFromSheet] = React.useState(null); // null | 'from' | 'to'
@@ -1628,42 +1618,104 @@ function ScreenTrip() {
   const [xferCarType, setXferCarType] = React.useState('');
   const [xferMapAddr, setXferMapAddr] = React.useState("Chilonzor ko'chasi 5, Toshkent");
 
-  // Transfer map page (full screen)
-  if (xferMapPage) {
-    const mapTarget = xferMapPage; // 'from' or 'to'
+  // Taxi map page (full screen)
+  if (taxiMapPage) {
+    const taxiTarget = taxiMapPage;
     return (
       <Frame>
-        <div style={{position:'relative',height:'100vh',background:'#E8EDF0',overflow:'hidden'}}>
-          {/* Fake map tiles */}
-          <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(0deg,rgba(0,0,0,0.04) 0 1px,transparent 1px 60px),repeating-linear-gradient(90deg,rgba(0,0,0,0.04) 0 1px,transparent 1px 60px)',backgroundSize:'60px 60px'}}/>
-          <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(0deg,rgba(0,0,0,0.025) 0 1px,transparent 1px 200px),repeating-linear-gradient(90deg,rgba(0,0,0,0.025) 0 1px,transparent 1px 200px)',backgroundSize:'200px 200px'}}/>
-          {/* Road stripes */}
-          <div style={{position:'absolute',top:'38%',left:0,right:0,height:32,background:'rgba(255,255,255,0.55)',borderTop:'1.5px solid #d0d5db',borderBottom:'1.5px solid #d0d5db'}}/>
-          <div style={{position:'absolute',top:'0',bottom:0,left:'30%',width:28,background:'rgba(255,255,255,0.55)',borderLeft:'1.5px solid #d0d5db',borderRight:'1.5px solid #d0d5db'}}/>
-          {/* Pin */}
-          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',display:'flex',flexDirection:'column',alignItems:'center',filter:'drop-shadow(0 4px 12px rgba(0,0,0,0.25))'}}>
-            <div style={{width:44,height:44,background:T,borderRadius:'50% 50% 50% 0',transform:'rotate(-45deg)',display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <div style={{transform:'rotate(45deg)',width:16,height:16,background:'#fff',borderRadius:'50%'}}/>
-            </div>
-            <div style={{width:8,height:8,background:'rgba(0,0,0,0.25)',borderRadius:'50%',marginTop:2,filter:'blur(2px)'}}/>
-          </div>
-          {/* Top bar */}
-          <div style={{position:'absolute',top:0,left:0,right:0,padding:'54px 16px 12px',background:'linear-gradient(to bottom,rgba(255,255,255,0.95),transparent)'}}>
-            <button onClick={()=>setXferMapPage(null)} style={{width:36,height:36,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(0,0,0,0.12)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
-            </button>
-          </div>
-          {/* Bottom panel */}
-          <div style={{position:'absolute',bottom:0,left:0,right:0,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 32px',boxShadow:'0 -8px 30px rgba(0,0,0,0.15)'}}>
-            <div style={{width:36,height:4,background:'#DDE0EB',borderRadius:999,margin:'0 auto 16px'}}/>
-            <div style={{display:'flex',alignItems:'flex-start',gap:10,marginBottom:16,background:'#F4F5FA',borderRadius:14,padding:'12px 14px'}}>
-              <svg style={{marginTop:2,flexShrink:0}} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
-              <div>
-                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{xferMapAddr}</div>
-                <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>Pinni suring yoki manzilni o'zgartiring</div>
+        <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
+          <div style={{position:'absolute',inset:0,background:'#E8EFF0'}}/>
+          <div style={{position:'absolute',top:'10%',left:'5%',width:'22%',height:'18%',background:'#C8DEC9',borderRadius:12}}/>
+          <div style={{position:'absolute',top:'55%',right:'8%',width:'18%',height:'14%',background:'#C8DEC9',borderRadius:10}}/>
+          <div style={{position:'absolute',top:'28%',right:'15%',width:'12%',height:'8%',background:'#BDD5E8',borderRadius:999}}/>
+          <div style={{position:'absolute',top:'42%',left:0,right:0,height:18,background:'#fff',borderTop:'1px solid #d4d9df',borderBottom:'1px solid #d4d9df'}}/>
+          <div style={{position:'absolute',top:'62%',left:0,right:0,height:10,background:'#fff',borderTop:'1px solid #dde0e5',borderBottom:'1px solid #dde0e5'}}/>
+          <div style={{position:'absolute',top:0,bottom:0,left:'35%',width:16,background:'#fff',borderLeft:'1px solid #d4d9df',borderRight:'1px solid #d4d9df'}}/>
+          <div style={{position:'absolute',top:0,bottom:0,left:'60%',width:10,background:'#f5f5f3',borderLeft:'1px solid #dde0e5',borderRight:'1px solid #dde0e5'}}/>
+          {[[8,70,14,10],[25,72,18,8],[48,68,12,12],[70,72,16,8],[8,48,16,12],[48,50,14,10],[68,50,12,8],[25,25,14,12]].map(([l,t,w,h],i)=>(
+            <div key={i} style={{position:'absolute',left:`${l}%`,top:`${t}%`,width:`${w}%`,height:`${h}%`,background:'#D0D8DC',borderRadius:2,opacity:0.7}}/>
+          ))}
+          <div style={{position:'absolute',top:'48%',left:'50%',transform:'translate(-50%,-100%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none'}}>
+            <div style={{filter:'drop-shadow(0 6px 16px rgba(0,153,168,0.45))'}}>
+              <div style={{width:48,height:48,background:T,borderRadius:'50% 50% 50% 4px',transform:'rotate(-45deg)',display:'flex',alignItems:'center',justifyContent:'center',border:'3px solid #fff'}}>
+                <div style={{transform:'rotate(45deg)',width:14,height:14,background:'#fff',borderRadius:'50%'}}/>
               </div>
             </div>
-            <button onClick={()=>{if(mapTarget==='from')setXferFrom(xferMapAddr);else setXferTo(xferMapAddr);setXferMapPage(null);}} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tanlash</button>
+            <div style={{width:10,height:6,background:'rgba(0,0,0,0.18)',borderRadius:'50%',marginTop:3,filter:'blur(3px)'}}/>
+          </div>
+          <div style={{position:'fixed',top:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'52px 18px 12px',background:'linear-gradient(to bottom,rgba(255,255,255,0.96) 60%,transparent)'}}>
+            <button onClick={()=>setTaxiMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.08)'}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+          </div>
+          <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
+            <div style={{width:36,height:4,background:'#DDE0EB',borderRadius:999,margin:'0 auto 14px'}}/>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'#F4F5FA',borderRadius:14,padding:'12px 14px',marginBottom:14}}>
+              <svg style={{flexShrink:0}} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
+              <div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{taxiMapAddr}</div>
+                <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>Pinni suring va manzilni belgilang</div>
+              </div>
+            </div>
+            <button onClick={()=>{if(taxiTarget==='from')setTaxiFromVal(taxiMapAddr);else setTaxiToVal(taxiMapAddr);setTaxiMapPage(null);}} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Tanlash</button>
+          </div>
+        </div>
+      </Frame>
+    );
+  }
+
+  // Transfer map page (full screen)
+  if (xferMapPage) {
+    const mapTarget = xferMapPage;
+    return (
+      <Frame>
+        <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
+          {/* Map background — block colors like a real map */}
+          <div style={{position:'absolute',inset:0,background:'#E8EFF0'}}/>
+          {/* Green park areas */}
+          <div style={{position:'absolute',top:'10%',left:'5%',width:'22%',height:'18%',background:'#C8DEC9',borderRadius:12}}/>
+          <div style={{position:'absolute',top:'55%',right:'8%',width:'18%',height:'14%',background:'#C8DEC9',borderRadius:10}}/>
+          <div style={{position:'absolute',bottom:'18%',left:'12%',width:'14%',height:'12%',background:'#C8DEC9',borderRadius:8}}/>
+          {/* Water */}
+          <div style={{position:'absolute',top:'28%',right:'15%',width:'12%',height:'8%',background:'#BDD5E8',borderRadius:999}}/>
+          {/* Roads — major horizontal */}
+          <div style={{position:'absolute',top:'42%',left:0,right:0,height:18,background:'#fff',borderTop:'1px solid #d4d9df',borderBottom:'1px solid #d4d9df'}}/>
+          <div style={{position:'absolute',top:'62%',left:0,right:0,height:10,background:'#fff',borderTop:'1px solid #dde0e5',borderBottom:'1px solid #dde0e5'}}/>
+          <div style={{position:'absolute',top:'22%',left:0,right:0,height:8,background:'#f5f5f3',borderTop:'1px solid #e5e8ec',borderBottom:'1px solid #e5e8ec'}}/>
+          {/* Roads — vertical */}
+          <div style={{position:'absolute',top:0,bottom:0,left:'35%',width:16,background:'#fff',borderLeft:'1px solid #d4d9df',borderRight:'1px solid #d4d9df'}}/>
+          <div style={{position:'absolute',top:0,bottom:0,left:'60%',width:10,background:'#f5f5f3',borderLeft:'1px solid #dde0e5',borderRight:'1px solid #dde0e5'}}/>
+          <div style={{position:'absolute',top:0,bottom:0,left:'15%',width:8,background:'#f5f5f3',borderLeft:'1px solid #e5e8ec',borderRight:'1px solid #e5e8ec'}}/>
+          {/* Block buildings */}
+          {[[8,70,14,10],[25,72,18,8],[48,68,12,12],[70,72,16,8],[80,65,10,10],[8,48,16,12],[25,50,10,8],[48,50,14,10],[68,50,12,8],[80,50,10,10],[8,28,10,8],[25,25,14,12],[48,28,10,8],[68,25,12,10]].map(([l,t,w,h],i)=>(
+            <div key={i} style={{position:'absolute',left:`${l}%`,top:`${t}%`,width:`${w}%`,height:`${h}%`,background:'#D0D8DC',borderRadius:2,opacity:0.7}}/>
+          ))}
+          {/* Center pin */}
+          <div style={{position:'absolute',top:'48%',left:'50%',transform:'translate(-50%,-100%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none'}}>
+            <div style={{filter:'drop-shadow(0 6px 16px rgba(0,153,168,0.45))'}}>
+              <div style={{width:48,height:48,background:T,borderRadius:'50% 50% 50% 4px',transform:'rotate(-45deg)',display:'flex',alignItems:'center',justifyContent:'center',border:'3px solid #fff'}}>
+                <div style={{transform:'rotate(45deg)',width:14,height:14,background:'#fff',borderRadius:'50%'}}/>
+              </div>
+            </div>
+            <div style={{width:10,height:6,background:'rgba(0,0,0,0.18)',borderRadius:'50%',marginTop:3,filter:'blur(3px)'}}/>
+          </div>
+          {/* Fixed top bar */}
+          <div style={{position:'fixed',top:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'52px 18px 12px',background:'linear-gradient(to bottom,rgba(255,255,255,0.96) 60%,transparent)'}}>
+            <button onClick={()=>setXferMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.08)'}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+          </div>
+          {/* Fixed bottom panel */}
+          <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
+            <div style={{width:36,height:4,background:'#DDE0EB',borderRadius:999,margin:'0 auto 14px'}}/>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'#F4F5FA',borderRadius:14,padding:'12px 14px',marginBottom:14}}>
+              <svg style={{flexShrink:0}} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
+              <div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{xferMapAddr}</div>
+                <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>Pinni suring va manzilni belgilang</div>
+              </div>
+            </div>
+            <button onClick={()=>{if(mapTarget==='from')setXferFrom(xferMapAddr);else setXferTo(xferMapAddr);setXferMapPage(null);}} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Tanlash</button>
           </div>
         </div>
       </Frame>
@@ -1802,29 +1854,88 @@ function ScreenTrip() {
       <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:300,display:'flex',alignItems:'flex-end'}} onClick={()=>setXferFromSheet(null)}>
         <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:sheetH,overflowY:'auto',transform:sheetXform,transition:'transform 0.18s'}} onClick={e=>e.stopPropagation()} onScroll={e=>setScrolled(e.currentTarget.scrollTop>4)}>
           <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
+          {/* Sticky header: title + search input + map button */}
           <div style={{position:'sticky',top:0,background:scrolled?'#fff':'transparent',transition:'background 0.18s',boxShadow:scrolled?'0 4px 14px rgba(10,31,33,0.06)':'none',marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,paddingBottom:12,paddingTop:12,zIndex:5}}>
             <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:10}}>{xferFromSheet==='to'?'Qayerga':'Qayerdan'}</div>
-            <div style={{display:'flex',alignItems:'center',background:'#F4F5FA',borderRadius:14,padding:'10px 14px'}}>
+            <div style={{display:'flex',alignItems:'center',background:'#F4F5FA',borderRadius:14,padding:'10px 14px',marginBottom:10}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
               <input ref={inputRef} value={s} onChange={e=>setS(e.target.value)} placeholder="Shahar, aeroport yoki manzil..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
               {s && <button onClick={()=>setS('')} style={{border:'none',background:'none',padding:0,cursor:'pointer',color:'#9AA1B8',fontSize:16,lineHeight:1}}>×</button>}
             </div>
+            {/* Map button — always visible in sticky header */}
+            <button onClick={()=>{const t=xferFromSheet;setXferFromSheet(null);setXferMapPage(t);}} style={{width:'100%',display:'flex',alignItems:'center',gap:10,background:'#EDF7F8',border:'1px solid rgba(0,153,168,0.18)',borderRadius:14,padding:'11px 14px',cursor:'pointer'}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+              <span style={{fontSize:14,fontWeight:600,color:T}}>Xaritadan belgilash</span>
+            </button>
           </div>
-          {/* Map button */}
-          <div onClick={()=>{const t=xferFromSheet;setXferFromSheet(null);setXferMapPage(t);}} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5',marginBottom:4}}>
-            <div style={{width:38,height:38,borderRadius:12,background:'#EDF7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
-            </div>
-            <div>
-              <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Xaritadan tanlang</div>
-              <div style={{fontSize:11,color:'#9AA1B8'}}>Pinni suring va manzilni belgilang</div>
-            </div>
-            <svg style={{marginLeft:'auto'}} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
-          </div>
-          {/* Results */}
-          <div>
+          {/* Results list */}
+          <div style={{marginTop:4}}>
             {filtered.map((loc,i)=>(
               <div key={i} onClick={()=>{const v=loc.name;if(xferFromSheet==='to')setXferTo(v);else setXferFrom(v);setXferFromSheet(null);}} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 4px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
+                <div style={{width:38,height:38,borderRadius:12,background:'#EDF7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><LocIcon type={loc.type}/></div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{loc.name}</div>
+                  <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>{loc.sub}</div>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Taxi location picker sheet (mirrors XferFromSheet but for taxi)
+  const TaxiLocSheet = () => {
+    const { sheetH, sheetXform } = useSheetViewport();
+    const [s, setS] = React.useState('');
+    const [scrolled, setScrolled] = React.useState(false);
+    const inputRef = React.useRef(null);
+    React.useEffect(() => { setTimeout(() => inputRef.current?.focus(), 200); }, []);
+    const q = s.toLowerCase().trim();
+    const LOCATIONS = [
+      {type:'plane', name:'Toshkent Xalqaro Aeroporti', sub:'Airport · TAS'},
+      {type:'plane', name:'Samarqand Xalqaro Aeroporti', sub:'Airport · SKD'},
+      {type:'hotel', name:'Hyatt Regency Toshkent', sub:'Mehmonxona · Chilonzor'},
+      {type:'hotel', name:'Hilton Toshkent City', sub:'Mehmonxona · Yunusobod'},
+      {type:'pin', name:'Chilonzor', sub:'Toshkent tumani'},
+      {type:'pin', name:'Yunusobod', sub:'Toshkent tumani'},
+      {type:'pin', name:"Mirzo Ulug'bek", sub:'Toshkent tumani'},
+      {type:'pin', name:'Sergeli', sub:'Toshkent tumani'},
+      {type:'pin', name:'Yakkasaroy', sub:'Toshkent tumani'},
+      {type:'city', name:'Samarqand', sub:'Shahar'},
+      {type:'city', name:'Buxoro', sub:'Shahar'},
+      {type:'city', name:'Namangan', sub:'Shahar'},
+      {type:'city', name:'Andijon', sub:'Shahar'},
+    ];
+    const LocIcon = ({type}) => {
+      const sv = {width:18,height:18,flexShrink:0};
+      if (type==='plane') return <svg {...sv} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.98-.98a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.04z"/></svg>;
+      if (type==='hotel') return <svg {...sv} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/><rect x="11" y="8" width="2" height="2"/></svg>;
+      if (type==='city') return <svg {...sv} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 22V10l7-7 7 7v12"/><path d="M9 22v-6h6v6"/><path d="M14 5v17"/></svg>;
+      return <svg {...sv} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>;
+    };
+    const filtered = q ? LOCATIONS.filter(l=>l.name.toLowerCase().includes(q)||(l.sub||'').toLowerCase().includes(q)) : LOCATIONS.slice(0,8);
+    return (
+      <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:300,display:'flex',alignItems:'flex-end'}} onClick={()=>setTaxiFromSheet(null)}>
+        <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:sheetH,overflowY:'auto',transform:sheetXform,transition:'transform 0.18s'}} onClick={e=>e.stopPropagation()} onScroll={e=>setScrolled(e.currentTarget.scrollTop>4)}>
+          <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
+          <div style={{position:'sticky',top:0,background:scrolled?'#fff':'transparent',transition:'background 0.18s',boxShadow:scrolled?'0 4px 14px rgba(10,31,33,0.06)':'none',marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,paddingBottom:12,paddingTop:12,zIndex:5}}>
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:10}}>{taxiFromSheet==='to'?'Qayerga':'Qayerdan'}</div>
+            <div style={{display:'flex',alignItems:'center',background:'#F4F5FA',borderRadius:14,padding:'10px 14px',marginBottom:10}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input ref={inputRef} value={s} onChange={e=>setS(e.target.value)} placeholder="Shahar, aeroport yoki manzil..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+              {s && <button onClick={()=>setS('')} style={{border:'none',background:'none',padding:0,cursor:'pointer',color:'#9AA1B8',fontSize:16,lineHeight:1}}>×</button>}
+            </div>
+            <button onClick={()=>{const t=taxiFromSheet;setTaxiFromSheet(null);setTaxiMapPage(t);}} style={{width:'100%',display:'flex',alignItems:'center',gap:10,background:'#EDF7F8',border:'1px solid rgba(0,153,168,0.18)',borderRadius:14,padding:'11px 14px',cursor:'pointer'}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+              <span style={{fontSize:14,fontWeight:600,color:T}}>Xaritadan belgilash</span>
+            </button>
+          </div>
+          <div style={{marginTop:4}}>
+            {filtered.map((loc,i)=>(
+              <div key={i} onClick={()=>{const v=loc.name;if(taxiFromSheet==='to')setTaxiToVal(v);else setTaxiFromVal(v);setTaxiFromSheet(null);}} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 4px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
                 <div style={{width:38,height:38,borderRadius:12,background:'#EDF7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><LocIcon type={loc.type}/></div>
                 <div style={{flex:1}}>
                   <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{loc.name}</div>
@@ -2513,6 +2624,7 @@ function ScreenTrip() {
       <BottomSheet/>
       <PreSheet/>
       {xferFromSheet && <XferFromSheet/>}
+      {taxiFromSheet && <TaxiLocSheet/>}
     </Frame>
   );
 }
