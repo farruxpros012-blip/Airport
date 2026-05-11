@@ -2107,25 +2107,15 @@ function ScreenTrip() {
             </div>
           </div>
 
-          {/* 8. Xona tanlash button */}
-          <div style={{margin:'16px 16px 0'}}>
-            <button onClick={()=>setHotelRoomsPage(true)} style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',background:'#fff',border:'none',borderRadius:18,padding:'16px 18px',cursor:'pointer',boxShadow:'0 2px 10px rgba(10,31,33,0.05)'}}>
-              <div style={{display:'flex',alignItems:'center',gap:12}}>
-                <div style={{width:42,height:42,borderRadius:12,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
-                </div>
-                <div style={{textAlign:'left'}}>
-                  <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Xona tanlash</div>
-                  <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>{HROOMS.length} ta xona turi mavjud</div>
-                </div>
-              </div>
-              <div style={{width:32,height:32,borderRadius:'50%',background:T,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,boxShadow:'0 3px 10px rgba(0,153,168,0.30)'}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-              </div>
-            </button>
-          </div>
+          <div style={{height:100}}/>
+        </div>
 
-          <div style={{height:16}}/>
+        {/* Fixed bottom primary CTA */}
+        <div style={{position:'fixed',left:0,right:0,bottom:0,maxWidth:460,margin:'0 auto',padding:'12px 16px',background:'linear-gradient(to bottom, rgba(247,249,251,0) 0%, #F7F9FB 30%)',zIndex:40,pointerEvents:'none'}}>
+          <button onClick={()=>setHotelRoomsPage(true)} style={{pointerEvents:'auto',width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'15px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 8px 22px rgba(0,153,168,0.35)',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>
+            Xona tanlash
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
         </div>
 
         {/* Hotel rooms full-page overlay */}
