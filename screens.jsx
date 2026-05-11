@@ -914,6 +914,7 @@ function ScreenTrip() {
   const [esimTab, setEsimTab] = React.useState('standard');
   const [esimSelected, setEsimSelected] = React.useState(null);
   const [flightDetail, setFlightDetail] = React.useState(null);
+  const [tourDetail, setTourDetail] = React.useState(null);
   React.useEffect(() => {
     if (page && hintShown) {
       const t = setTimeout(() => setHintShown(false), 5000);
@@ -1765,6 +1766,201 @@ function ScreenTrip() {
     );
   }
 
+  // Tour detail page
+  if (tourDetail) {
+    const td = tourDetail;
+    const nights = parseInt((td.sub||'').match(/(\d+)\s*kecha/)?.[1]||'5');
+    const SERVICES = ['Parvoz kiritilgan','Transfer bepul','Ovqatlanish kiritilgan','Mehmonxona ★★★★★','Sug\'urta bepul','Gid xizmati'];
+    const GALLERY = [td.img,
+      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600',
+      'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600',
+    ];
+    const [activeGallery, setActiveGallery] = React.useState(0);
+    const city = (td.title||'').split(',')[0];
+    const country = (td.title||'').split(',')[1]?.trim()||'';
+    return (
+      <Frame>
+        <div style={{background:'#F4F5FA',minHeight:'100vh',paddingBottom:100}}>
+          {/* Hero image strip */}
+          <div style={{position:'relative',height:300,overflow:'hidden',flexShrink:0}}>
+            <img src={GALLERY[activeGallery]} alt={td.title}
+              style={{width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'opacity 0.3s'}}/>
+            {/* gradient overlay */}
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.28) 0%,transparent 40%,transparent 55%,rgba(0,0,0,0.55) 100%)'}}/>
+            {/* Back button */}
+            <button onClick={()=>setTourDetail(null)} style={{position:'absolute',top:18,left:18,width:40,height:40,borderRadius:'50%',background:'rgba(255,255,255,0.22)',backdropFilter:'blur(12px)',border:'1px solid rgba(255,255,255,0.35)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            {/* Gallery dots */}
+            <div style={{position:'absolute',bottom:14,left:'50%',transform:'translateX(-50%)',display:'flex',gap:5}}>
+              {GALLERY.map((_,i)=>(
+                <div key={i} onClick={()=>setActiveGallery(i)} style={{width:i===activeGallery?20:6,height:6,borderRadius:999,background:i===activeGallery?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.25s',cursor:'pointer'}}/>
+              ))}
+            </div>
+            {/* Bottom-left: city + country */}
+            <div style={{position:'absolute',bottom:28,left:20}}>
+              <div style={{fontSize:26,fontWeight:900,color:'#fff',lineHeight:1.1,textShadow:'0 2px 8px rgba(0,0,0,0.3)'}}>{city}</div>
+              <div style={{fontSize:14,color:'rgba(255,255,255,0.85)',fontWeight:500,marginTop:2}}>{country}</div>
+            </div>
+            {/* Bottom-right: price pill */}
+            <div style={{position:'absolute',bottom:28,right:18,background:'rgba(0,153,168,0.92)',backdropFilter:'blur(8px)',borderRadius:14,padding:'6px 12px',border:'1px solid rgba(255,255,255,0.2)'}}>
+              <div style={{fontSize:10,color:'rgba(255,255,255,0.75)',fontWeight:600,textTransform:'uppercase',letterSpacing:0.5}}>dan</div>
+              <div style={{fontSize:15,fontWeight:800,color:'#fff'}}>{(td.premium||td.regular||'').replace('so\'m','')}<span style={{fontSize:10,fontWeight:500}}> so'm</span></div>
+            </div>
+          </div>
+
+          {/* Pill row: nights, pax, meal */}
+          <div style={{display:'flex',gap:8,padding:'16px 16px 0',overflowX:'auto',scrollbarWidth:'none'}}>
+            {[
+              {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg>, label:`${nights} kecha`},
+              {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, label:'2 kishi'},
+              {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M3 2h18M3 8h18M3 14h10M3 20h6"/></svg>, label:'Ultra AI'},
+              {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.68 12 19.79 19.79 0 0 1 1.63 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>, label:'+99812 345 67'},
+            ].map((p,i)=>(
+              <div key={i} style={{display:'inline-flex',alignItems:'center',gap:6,background:'#fff',borderRadius:999,padding:'7px 12px',boxShadow:'0 1px 6px rgba(10,31,33,0.06)',border:'1px solid rgba(0,153,168,0.10)',flexShrink:0}}>
+                {p.icon}
+                <span style={{fontSize:12,fontWeight:600,color:'#0A1F21',whiteSpace:'nowrap'}}>{p.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Flight timeline */}
+          <div style={{margin:'16px 16px 0',background:'#fff',borderRadius:20,padding:'16px 18px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <div style={{fontSize:12,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.8,marginBottom:14}}>Parvoz</div>
+            {/* Outbound */}
+            <div style={{display:'flex',alignItems:'center',gap:0}}>
+              <div style={{textAlign:'center',minWidth:48}}>
+                <div style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>07:15</div>
+                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>TAS</div>
+              </div>
+              <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:3,padding:'0 10px'}}>
+                <div style={{fontSize:10,color:'#9AA1B8'}}>4s 45m · to'g'ri</div>
+                <div style={{width:'100%',height:1,background:'linear-gradient(to right,#0099A8,#9AA1B8)',position:'relative'}}>
+                  <div style={{position:'absolute',right:-4,top:-3,width:7,height:7,borderRadius:'50%',background:'#9AA1B8'}}/>
+                  <svg style={{position:'absolute',left:'40%',top:-8}} width="16" height="16" viewBox="0 0 24 24" fill={T}><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+                </div>
+              </div>
+              <div style={{textAlign:'center',minWidth:48}}>
+                <div style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>11:00</div>
+                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>{(td.title||'').replace(/[^A-Z]/g,'').slice(0,3)||'DXB'}</div>
+              </div>
+            </div>
+            <div style={{height:1,background:'#F0F2F8',margin:'12px 0'}}/>
+            {/* Return */}
+            <div style={{display:'flex',alignItems:'center',gap:0}}>
+              <div style={{textAlign:'center',minWidth:48}}>
+                <div style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>18:30</div>
+                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>{(td.title||'').replace(/[^A-Z]/g,'').slice(0,3)||'DXB'}</div>
+              </div>
+              <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:3,padding:'0 10px'}}>
+                <div style={{fontSize:10,color:'#9AA1B8'}}>4s 45m · qaytish</div>
+                <div style={{width:'100%',height:1,background:'linear-gradient(to right,#9AA1B8,#0099A8)',position:'relative'}}>
+                  <div style={{position:'absolute',left:-4,top:-3,width:7,height:7,borderRadius:'50%',background:'#9AA1B8'}}/>
+                  <svg style={{position:'absolute',left:'40%',top:-8,transform:'scaleX(-1)'}} width="16" height="16" viewBox="0 0 24 24" fill={T}><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+                </div>
+              </div>
+              <div style={{textAlign:'center',minWidth:48}}>
+                <div style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>22:15</div>
+                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>TAS</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Hotel card */}
+          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,overflow:'hidden',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <div style={{position:'relative',height:130,overflow:'hidden'}}>
+              <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600" alt="hotel" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+              <div style={{position:'absolute',inset:0,background:'linear-gradient(to right,rgba(0,0,0,0.5) 0%,transparent 60%)'}}/>
+              <div style={{position:'absolute',bottom:12,left:14}}>
+                <div style={{fontSize:15,fontWeight:800,color:'#fff'}}>Rixos Premium</div>
+                <div style={{display:'flex',gap:2,marginTop:4}}>
+                  {[0,1,2,3,4].map(s=><svg key={s} width="11" height="11" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}
+                </div>
+              </div>
+              <div style={{position:'absolute',top:10,right:10,background:'rgba(0,153,168,0.9)',borderRadius:10,padding:'4px 8px'}}>
+                <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>★ 9.4</span>
+              </div>
+            </div>
+            <div style={{padding:'12px 14px'}}>
+              <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+                {['Ultra All Inclusive','Dengiz ko\'rinishi','Shaxsiy plyaj','Spa & Wellness'].map(tag=>(
+                  <div key={tag} style={{background:'#F0F9FA',borderRadius:999,padding:'4px 10px',border:'1px solid rgba(0,153,168,0.15)'}}>
+                    <span style={{fontSize:11,fontWeight:600,color:T}}>{tag}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Included services */}
+          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,padding:'16px 18px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <div style={{fontSize:12,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.8,marginBottom:14}}>Narxga kiritilgan</div>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+              {SERVICES.map((s,i)=>(
+                <div key={i} style={{display:'flex',alignItems:'center',gap:8}}>
+                  <div style={{width:22,height:22,borderRadius:'50%',background:'#E0F7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="3" strokeLinecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  </div>
+                  <span style={{fontSize:12,fontWeight:500,color:'#3A4A55',lineHeight:1.3}}>{s}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Price breakdown */}
+          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,padding:'16px 18px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <div style={{fontSize:12,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.8,marginBottom:12}}>Narx tarkibi</div>
+            {[
+              {label:'Parvoz (2 kishi)',val:'3 200 000'},
+              {label:'Mehmonxona (7 kecha)',val:'3 500 000'},
+              {label:'Transfer',val:'Bepul'},
+              {label:'Sug\'urta',val:'Bepul'},
+            ].map((r,i)=>(
+              <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 0',borderBottom:i<3?'1px solid #F5F6FA':'none'}}>
+                <span style={{fontSize:13,color:'#5C7577'}}>{r.label}</span>
+                <span style={{fontSize:13,fontWeight:700,color:r.val==='Bepul'?'#22C55E':'#0A1F21'}}>{r.val}{r.val!=='Bepul'?' so\'m':''}</span>
+              </div>
+            ))}
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:10,padding:'12px 14px',background:'#F0F9FA',borderRadius:14}}>
+              <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Jami</span>
+              <span style={{fontSize:16,fontWeight:900,color:T}}>{(td.premium||td.regular||'')}</span>
+            </div>
+            {/* Coins */}
+            <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10}}>
+              <div style={{width:20,height:20,borderRadius:'50%',background:'linear-gradient(135deg,#FBBF24,#D97706)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <span style={{fontSize:10,fontWeight:900,color:'#fff'}}>C</span>
+              </div>
+              <span style={{fontSize:12,color:'#5C7577'}}>Band qilsangiz <strong>{Math.floor(parseInt((td.premium||td.regular||'').replace(/\D/g,''))/10000)} Coins</strong> bonus to'planadi</span>
+            </div>
+          </div>
+
+          {/* Premium upsell */}
+          <div style={{margin:'14px 16px 0',background:'linear-gradient(135deg,#0099A8 0%,#006A74 100%)',borderRadius:20,padding:'16px 18px',boxShadow:'0 6px 20px rgba(0,153,168,0.30)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+              <div style={{background:'rgba(255,255,255,0.2)',borderRadius:10,padding:'6px 10px',display:'inline-flex',alignItems:'center',gap:6}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                <span style={{fontSize:12,fontWeight:700,color:'#fff'}}>Premium</span>
+              </div>
+            </div>
+            <div style={{fontSize:13,color:'rgba(255,255,255,0.85)',lineHeight:1.5,marginBottom:10}}>Biznes klass + Premium mehmonxona + Shaxsiy transfer + Ajratilgan gid</div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <div>
+                <div style={{fontSize:11,color:'rgba(255,255,255,0.6)'}}>Oddiy narx: <span style={{textDecoration:'line-through'}}>{td.regular}</span></div>
+                <div style={{fontSize:18,fontWeight:900,color:'#fff'}}>{td.premium}</div>
+              </div>
+              <button style={{background:'#fff',border:'none',borderRadius:14,padding:'10px 16px',fontSize:13,fontWeight:700,color:T,cursor:'pointer'}}>Tanlash</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Fixed CTA */}
+        <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:20,padding:'12px 20px 30px',background:'linear-gradient(to bottom,rgba(244,245,250,0),#F4F5FA 30%)'}}>
+          <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Band qilish</button>
+        </div>
+      </Frame>
+    );
+  }
+
   // Transfer map page (full screen)
   if (xferMapPage) {
     const mapTarget = xferMapPage;
@@ -2492,7 +2688,7 @@ function ScreenTrip() {
 
           {/* OTHERS (turlar/excur/hotel/rentcar) — generic card with photo */}
           {page !== 'aviabilet' && page !== 'esim' && items.map((it,i)=>(
-            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)'}}>
+            <div key={i} onClick={page==='turlar'?()=>setTourDetail(it):undefined} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)',cursor:page==='turlar'?'pointer':'default'}}>
               {/* Photo with dot indicator (hotel) */}
               <div style={{width:'100%',height:200,overflow:'hidden',position:'relative'}}>
                 <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
