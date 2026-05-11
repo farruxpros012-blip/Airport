@@ -1619,9 +1619,10 @@ function ScreenTrip() {
   };
 
   // ── Transfer: from-picker bottom sheet ──
-  const [xferFromSheet, setXferFromSheet] = React.useState(false);
+  const [xferFromSheet, setXferFromSheet] = React.useState(null); // null | 'from' | 'to'
   const [xferFrom, setXferFrom] = React.useState('');
-  const [xferMapPage, setXferMapPage] = React.useState(false);
+  const [xferTo, setXferTo] = React.useState('');
+  const [xferMapPage, setXferMapPage] = React.useState(null); // null | 'from' | 'to'
   const [xferSearchPage, setXferSearchPage] = React.useState(false);
   const [xferPickupDate, setXferPickupDate] = React.useState('');
   const [xferCarType, setXferCarType] = React.useState('');
@@ -1629,6 +1630,7 @@ function ScreenTrip() {
 
   // Transfer map page (full screen)
   if (xferMapPage) {
+    const mapTarget = xferMapPage; // 'from' or 'to'
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',background:'#E8EDF0',overflow:'hidden'}}>
@@ -1647,7 +1649,7 @@ function ScreenTrip() {
           </div>
           {/* Top bar */}
           <div style={{position:'absolute',top:0,left:0,right:0,padding:'54px 16px 12px',background:'linear-gradient(to bottom,rgba(255,255,255,0.95),transparent)'}}>
-            <button onClick={()=>setXferMapPage(false)} style={{width:36,height:36,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(0,0,0,0.12)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <button onClick={()=>setXferMapPage(null)} style={{width:36,height:36,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(0,0,0,0.12)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
           </div>
@@ -1661,7 +1663,7 @@ function ScreenTrip() {
                 <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>Pinni suring yoki manzilni o'zgartiring</div>
               </div>
             </div>
-            <button onClick={()=>{setXferFrom(xferMapAddr);setXferMapPage(false);}} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tanlash</button>
+            <button onClick={()=>{if(mapTarget==='from')setXferFrom(xferMapAddr);else setXferTo(xferMapAddr);setXferMapPage(null);}} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tanlash</button>
           </div>
         </div>
       </Frame>
@@ -1693,9 +1695,9 @@ function ScreenTrip() {
           {/* Route summary */}
           <div style={{background:'#F4F5FA',borderRadius:16,padding:'14px 16px',marginBottom:16,display:'flex',alignItems:'center',gap:10}}>
             <div style={{flex:1}}>
-              <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{xferFrom||'Manzil tanlanmagan'}</div>
+              <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{xferFrom||'Qayerdan'}</div>
               <div style={{width:1,height:16,background:'#DDE0EB',margin:'4px 0 4px 6px'}}/>
-              <div style={{fontSize:13,fontWeight:700,color:T}}>Belgilangan manzil</div>
+              <div style={{fontSize:13,fontWeight:700,color:T}}>{xferTo||'Qayerga'}</div>
             </div>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
           </div>
@@ -1740,11 +1742,17 @@ function ScreenTrip() {
     const labS = { fontSize:11, color:'#7A8190', fontWeight:600, textTransform:'uppercase', letterSpacing:0.4 };
     return (
       <div style={{padding:'0 20px 20px'}}>
-        {/* Qayerdan tap card */}
-        <div onClick={()=>setXferFromSheet(true)} style={{...cell, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+        <div onClick={()=>setXferFromSheet('from')} style={{...cell, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
           <div>
             <div style={labS}>QAYERDAN</div>
             <div style={{fontSize:14,fontWeight:700,color:xferFrom?'#0A1F21':'#C0C5D4',marginTop:2}}>{xferFrom||'Manzilni tanlang'}</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+        </div>
+        <div onClick={()=>setXferFromSheet('to')} style={{...cell, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+          <div>
+            <div style={labS}>QAYERGA</div>
+            <div style={{fontSize:14,fontWeight:700,color:xferTo?'#0A1F21':'#C0C5D4',marginTop:2}}>{xferTo||'Manzilni tanlang'}</div>
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </div>
@@ -1769,11 +1777,11 @@ function ScreenTrip() {
     ];
     const filtered = q ? LOCATIONS.filter(l=>l.name.toLowerCase().includes(q)||(l.sub||'').toLowerCase().includes(q)) : LOCATIONS.slice(0,8);
     return (
-      <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:300,display:'flex',alignItems:'flex-end'}} onClick={()=>setXferFromSheet(false)}>
+      <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:300,display:'flex',alignItems:'flex-end'}} onClick={()=>setXferFromSheet(null)}>
         <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:sheetH,overflowY:'auto',transform:sheetXform,transition:'transform 0.18s'}} onClick={e=>e.stopPropagation()} onScroll={e=>setScrolled(e.currentTarget.scrollTop>4)}>
           <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
           <div style={{position:'sticky',top:0,background:scrolled?'#fff':'transparent',transition:'background 0.18s',boxShadow:scrolled?'0 4px 14px rgba(10,31,33,0.06)':'none',marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,paddingBottom:12,paddingTop:12,zIndex:5}}>
-            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:10}}>Qayerdan</div>
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',marginBottom:10}}>{xferFromSheet==='to'?'Qayerga':'Qayerdan'}</div>
             <div style={{display:'flex',alignItems:'center',background:'#F4F5FA',borderRadius:14,padding:'10px 14px'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
               <input ref={inputRef} value={s} onChange={e=>setS(e.target.value)} placeholder="Shahar, aeroport yoki manzil..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
@@ -1781,7 +1789,7 @@ function ScreenTrip() {
             </div>
           </div>
           {/* Map button */}
-          <div onClick={()=>{setXferFromSheet(false);setXferMapPage(true);}} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5',marginBottom:4}}>
+          <div onClick={()=>{const t=xferFromSheet;setXferFromSheet(null);setXferMapPage(t);}} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 4px',cursor:'pointer',borderBottom:'1px solid #F0F2F5',marginBottom:4}}>
             <div style={{width:38,height:38,borderRadius:12,background:'#EDF7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
             </div>
@@ -1794,7 +1802,7 @@ function ScreenTrip() {
           {/* Results */}
           <div>
             {filtered.map((loc,i)=>(
-              <div key={i} onClick={()=>{setXferFrom(loc.flag?`${loc.name}, ${loc.sub}`:loc.name);setXferFromSheet(false);}} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 4px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
+              <div key={i} onClick={()=>{const v=loc.flag?`${loc.name}, ${loc.sub}`:loc.name;if(xferFromSheet==='to')setXferTo(v);else setXferFrom(v);setXferFromSheet(null);}} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 4px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
                 <div style={{width:38,height:38,borderRadius:12,background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{loc.flag||loc.icon}</div>
                 <div style={{flex:1}}>
                   <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{loc.name}</div>
