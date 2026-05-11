@@ -915,6 +915,7 @@ function ScreenTrip() {
   const [esimSelected, setEsimSelected] = React.useState(null);
   const [flightDetail, setFlightDetail] = React.useState(null);
   const [tourDetail, setTourDetail] = React.useState(null);
+  const [tourGallery, setTourGallery] = React.useState(0);
   React.useEffect(() => {
     if (page && hintShown) {
       const t = setTimeout(() => setHintShown(false), 5000);
@@ -1775,7 +1776,8 @@ function ScreenTrip() {
       'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600',
       'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600',
     ];
-    const [activeGallery, setActiveGallery] = React.useState(0);
+    const activeGallery = tourGallery;
+    const setActiveGallery = setTourGallery;
     const city = (td.title||'').split(',')[0];
     const country = (td.title||'').split(',')[1]?.trim()||'';
     return (
