@@ -922,6 +922,7 @@ function ScreenTrip() {
   const [tourSelDay, setTourSelDay] = React.useState(17);
   const [tourMonthOffset, setTourMonthOffset] = React.useState(0);
   const [tourExpanded, setTourExpanded] = React.useState(false);
+  const [tourRoomImg, setTourRoomImg] = React.useState({0:0,1:0});
   const tourSwipeX = React.useRef(0);
   React.useEffect(() => {
     if (page && hintShown) {
@@ -1787,7 +1788,7 @@ function ScreenTrip() {
           <div style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{r.type}</div>
         </div>
         <div style={{flex:1,overflowY:'auto',paddingBottom:30}}>
-          <img src={r.photo||'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=700'} alt={r.type} style={{width:'100%',height:220,objectFit:'cover',display:'block'}}/>
+          <img src={(r.photos&&r.photos[0])||'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=700'} alt={r.type} style={{width:'100%',height:220,objectFit:'cover',display:'block'}}/>
           <div style={{padding:'16px'}}>
             <div style={{fontSize:13,color:'#5C7577',lineHeight:1.65,marginBottom:18}}>24 kv.m. xona, queen-size krovat, {r.type.toLowerCase()}, balkon va konditsioner bilan. Maksimal mehmon soni — 2 kishi.</div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:18}}>
@@ -1857,16 +1858,20 @@ function ScreenTrip() {
     }));
     const selBar = CHART_BARS.find(b=>b.day===tourSelDay)||CHART_BARS[3];
 
-    const ROOM_PHOTOS = [
-      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600',
-      'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600',
-    ];
     const ROOMS = [
-      {type:'Basseynga ko\'rinishi',meal:'Nonushta kiritilgan',guests:'2 kattalar',dates:'22-29 sentyabr',nights:7,airline:'Fly Emirates',price:regPrice,prem:premPrice,photo:ROOM_PHOTOS[0]},
-      {type:'Dengizga ko\'rinishi',meal:'Ultra All Inclusive',guests:'2 kattalar',dates:'22-29 sentyabr',nights:7,airline:'Fly Emirates',price:Math.round(regPrice*1.12),prem:Math.round(premPrice*1.1),photo:ROOM_PHOTOS[1]},
+      {type:'Basseynga ko\'rinishi',meal:'Nonushta kiritilgan',guests:'2 kattalar',dates:'22-29 sentyabr',nights:7,airline:'Fly Emirates',price:regPrice,prem:premPrice,photos:[
+        'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700',
+        'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=700',
+        'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700',
+      ]},
+      {type:'Dengizga ko\'rinishi',meal:'Ultra All Inclusive',guests:'2 kattalar',dates:'22-29 sentyabr',nights:7,airline:'Fly Emirates',price:Math.round(regPrice*1.12),prem:Math.round(premPrice*1.1),photos:[
+        'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=700',
+        'https://images.unsplash.com/photo-1591088398332-8a7791972843?w=700',
+        'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=700',
+      ]},
     ];
 
-    const cardStyle = {background:'#fff',borderRadius:20,margin:'10px 16px 0',boxShadow:'0 2px 10px rgba(10,31,33,0.05)',overflow:'hidden'};
+    const cardStyle = {background:'#fff',borderRadius:20,margin:'16px 16px 0',boxShadow:'0 2px 10px rgba(10,31,33,0.05)',overflow:'hidden'};
     const secLabel = {fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.8,marginBottom:12};
 
     return (
@@ -1874,7 +1879,7 @@ function ScreenTrip() {
         <div style={{flex:1,overflowY:'auto',paddingBottom:30}}>
 
           {/* ── 1. CAROUSEL ── */}
-          <div style={{margin:'12px 16px 0',borderRadius:20,overflow:'hidden',position:'relative',background:'#000'}}>
+          <div style={{margin:'16px 16px 0',borderRadius:20,overflow:'hidden',position:'relative',background:'#000'}}>
             <img
               src={GALLERY[tourGallery]} alt=""
               style={{width:'100%',height:260,objectFit:'cover',display:'block',userSelect:'none'}}
@@ -2022,7 +2027,7 @@ function ScreenTrip() {
                   return (
                     <div key={i} onClick={()=>setTourSelDay(b.day)} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'flex-end',cursor:'pointer',height:'100%',position:'relative'}}>
                       {active && (
-                        <div style={{position:'absolute',top:-(80-b.h)-28,left:'50%',transform:'translateX(-50%)',background:T,color:'#fff',borderRadius:8,padding:'3px 7px',fontSize:10,fontWeight:700,whiteSpace:'nowrap',boxShadow:'0 2px 8px rgba(0,153,168,0.4)',zIndex:2}}>
+                        <div style={{position:'absolute',bottom:b.h+6,left:'50%',transform:'translateX(-50%)',background:T,color:'#fff',borderRadius:8,padding:'3px 7px',fontSize:10,fontWeight:700,whiteSpace:'nowrap',boxShadow:'0 2px 8px rgba(0,153,168,0.4)',zIndex:2}}>
                           ${b.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ')}
                           <div style={{position:'absolute',bottom:-5,left:'50%',transform:'translateX(-50%)',width:0,height:0,borderLeft:'5px solid transparent',borderRight:'5px solid transparent',borderTop:`5px solid ${T}`}}/>
                         </div>
@@ -2076,7 +2081,7 @@ function ScreenTrip() {
           </div>
 
           {/* ── 6. WARNING ── */}
-          <div style={{margin:'10px 16px 0',background:'#FFFBEB',borderRadius:14,padding:'12px 14px',border:'1px solid #FDE68A',display:'flex',gap:10}}>
+          <div style={{margin:'16px 16px 0',background:'#FFFBEB',borderRadius:14,padding:'12px 14px',border:'1px solid #FDE68A',display:'flex',gap:10}}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <p style={{margin:0,fontSize:12,color:'#92400E',lineHeight:1.55}}>Tur sanasi yaqinlashishi bilan narxlar o'zgarishi mumkin. Xarid qilishdan oldin menejer bilan tasdiqlashni tavsiya qilamiz.</p>
           </div>
@@ -2109,16 +2114,35 @@ function ScreenTrip() {
                 </div>
               ))}
             </div>
-            {ROOMS.map((r,i)=>(
-              <div key={i} style={{background:'#fff',borderRadius:18,marginBottom:10,boxShadow:'0 2px 12px rgba(10,31,33,0.06)',border:`1.5px solid ${tourRoom===i?T:'transparent'}`,overflow:'hidden',transition:'border-color 0.15s'}}>
-                {/* room photo */}
-                <div style={{position:'relative',height:130,overflow:'hidden'}}>
-                  <img src={r.photo} alt={r.type} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                  <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.55) 100%)'}}/>
+            {ROOMS.map((r,i)=>{
+              const imgIdx = tourRoomImg[i]||0;
+              return (
+              <div key={i} style={{background:'#fff',borderRadius:18,marginBottom:10,boxShadow:'0 2px 12px rgba(10,31,33,0.06)',overflow:'hidden'}}>
+                {/* room photo carousel */}
+                <div style={{position:'relative',height:160,overflow:'hidden',background:'#000'}}>
+                  <img src={r.photos[imgIdx]} alt={r.type} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                  <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,transparent 45%,rgba(0,0,0,0.6) 100%)'}}/>
+                  {/* prev arrow */}
+                  {imgIdx>0 && (
+                    <button onClick={()=>setTourRoomImg(o=>({...o,[i]:imgIdx-1}))} style={{position:'absolute',left:8,top:'50%',transform:'translateY(-50%)',width:28,height:28,borderRadius:'50%',background:'rgba(0,0,0,0.4)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+                    </button>
+                  )}
+                  {/* next arrow */}
+                  {imgIdx<r.photos.length-1 && (
+                    <button onClick={()=>setTourRoomImg(o=>({...o,[i]:imgIdx+1}))} style={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)',width:28,height:28,borderRadius:'50%',background:'rgba(0,0,0,0.4)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                  )}
+                  {/* counter */}
+                  <div style={{position:'absolute',top:10,right:10,background:'rgba(0,0,0,0.5)',borderRadius:999,padding:'3px 8px',fontSize:11,fontWeight:700,color:'#fff'}}>{imgIdx+1} / {r.photos.length}</div>
+                  {/* dots + title */}
                   <div style={{position:'absolute',bottom:10,left:12,right:12,display:'flex',alignItems:'flex-end',justifyContent:'space-between'}}>
                     <div style={{fontSize:14,fontWeight:800,color:'#fff'}}>{r.type}</div>
-                    <div onClick={()=>setTourRoom(i)} style={{width:22,height:22,borderRadius:'50%',border:`2px solid ${tourRoom===i?T:'rgba(255,255,255,0.7)'}`,background:tourRoom===i?T:'rgba(0,0,0,0.3)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}>
-                      {tourRoom===i && <div style={{width:8,height:8,background:'#fff',borderRadius:'50%'}}/>}
+                    <div style={{display:'flex',gap:4}}>
+                      {r.photos.map((_,k)=>(
+                        <div key={k} onClick={()=>setTourRoomImg(o=>({...o,[i]:k}))} style={{width:k===imgIdx?14:5,height:5,borderRadius:999,background:k===imgIdx?'#fff':'rgba(255,255,255,0.6)',transition:'width 0.2s',cursor:'pointer'}}/>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -2144,7 +2168,7 @@ function ScreenTrip() {
                       <span style={{fontSize:11,color:T,fontWeight:600}}>Muddatli: {fmtS(installment)}/oy</span>
                     </div>
                     <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:5,marginBottom:5}}>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:999,padding:'4px 10px'}}>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:999,padding:'5px 11px',boxShadow:'0 5px 14px rgba(217,119,6,0.45),0 2px 5px rgba(217,119,6,0.30),inset 0 1px 0 rgba(255,255,255,0.30)'}}>
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
                         <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>Premium: {fmtS(r.prem)}</span>
                       </div>
@@ -2162,7 +2186,8 @@ function ScreenTrip() {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>
