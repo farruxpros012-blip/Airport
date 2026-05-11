@@ -1884,18 +1884,18 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{flex:1,overflowY:'auto'}}>
-          {/* ── HERO GALLERY (full-bleed, horizontal scroll with peek) ── */}
-          <div style={{position:'relative'}}>
-            <div style={{display:'flex',overflowX:'auto',scrollSnapType:'x mandatory',scrollbarWidth:'none'}} onScroll={(e)=>{const idx = Math.round(e.target.scrollLeft/e.target.clientWidth); if(idx!==tourGallery)setTourGallery(idx);}}>
+          {/* ── HERO GALLERY (rounded card with side padding) ── */}
+          <div style={{position:'relative',padding:'12px 16px 0'}}>
+            <div style={{display:'flex',overflowX:'auto',scrollSnapType:'x mandatory',scrollbarWidth:'none',borderRadius:18,overflow:'hidden'}} onScroll={(e)=>{const idx = Math.round(e.target.scrollLeft/e.target.clientWidth); if(idx!==tourGallery)setTourGallery(idx);}}>
               {GALLERY.map((g,i)=>(
-                <div key={i} style={{minWidth:'92%',scrollSnapAlign:'start',position:'relative',marginRight:i<GALLERY.length-1?8:0}}>
-                  <img src={g} alt="" style={{width:'100%',height:280,objectFit:'cover',display:'block',borderRadius:i===0?'0 16px 16px 0':16}}/>
+                <div key={i} style={{minWidth:'100%',scrollSnapAlign:'start',position:'relative'}}>
+                  <img src={g} alt="" style={{width:'100%',height:260,objectFit:'cover',display:'block'}}/>
                 </div>
               ))}
             </div>
             {/* gradient + top bar overlay */}
-            <div style={{position:'absolute',top:0,left:0,right:0,height:90,background:'linear-gradient(to bottom,rgba(0,0,0,0.4),transparent)',pointerEvents:'none'}}/>
-            <div style={{position:'absolute',top:0,left:0,right:0,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 16px 0'}}>
+            <div style={{position:'absolute',top:12,left:16,right:16,height:90,background:'linear-gradient(to bottom,rgba(0,0,0,0.4),transparent)',pointerEvents:'none',borderRadius:'18px 18px 0 0'}}/>
+            <div style={{position:'absolute',top:12,left:16,right:16,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 14px 0'}}>
               <button onClick={()=>setTourDetail(null)} style={{width:38,height:38,borderRadius:'50%',background:'rgba(0,0,0,0.35)',backdropFilter:'blur(10px)',border:'1px solid rgba(255,255,255,0.25)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
               </button>
@@ -1908,12 +1908,12 @@ function ScreenTrip() {
               </button>
             </div>
             {/* photo counter pill */}
-            <div style={{position:'absolute',bottom:14,right:18,background:'rgba(0,0,0,0.55)',backdropFilter:'blur(8px)',borderRadius:999,padding:'4px 10px',display:'flex',alignItems:'center',gap:5}}>
+            <div style={{position:'absolute',bottom:14,right:30,background:'rgba(0,0,0,0.55)',backdropFilter:'blur(8px)',borderRadius:999,padding:'4px 10px',display:'flex',alignItems:'center',gap:5}}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
               <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>{tourGallery+1} / {GALLERY.length}</span>
             </div>
             {/* swipe hint dots */}
-            <div style={{position:'absolute',bottom:14,left:16,display:'flex',gap:4}}>
+            <div style={{position:'absolute',bottom:14,left:28,display:'flex',gap:4}}>
               {GALLERY.map((_,i)=>(
                 <div key={i} style={{width:i===tourGallery?16:5,height:5,borderRadius:999,background:i===tourGallery?'#fff':'rgba(255,255,255,0.55)',transition:'width 0.25s'}}/>
               ))}
