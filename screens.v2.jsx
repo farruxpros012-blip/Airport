@@ -1866,52 +1866,21 @@ function ScreenTrip() {
     ];
 
     const HROOMS = [
-      {
-        name:'Standart xona',
-        size:'28 m²',
-        floor:'3–8 qavat',
-        bed:'1 king yoki 2 twin',
-        view:'Shahar manzarasi',
-        photos:[
-          'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600',
-          'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600',
-          'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600',
-        ],
-        price: Math.round(premPrice*0.7),
-        premium: Math.round(premPrice*0.65),
-        meals:'Nonushta kiradi',
-      },
-      {
-        name:'Deluxe xona',
-        size:'38 m²',
-        floor:'9–15 qavat',
-        bed:'1 king',
-        view:'Dengiz manzarasi',
-        photos:[
-          'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=600',
-          'https://images.unsplash.com/photo-1592229505726-ca121723b8ef?w=600',
-          'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=600',
-        ],
-        price: premPrice,
-        premium: Math.round(premPrice*0.92),
-        meals:'All Inclusive',
-        isPremium: true,
-      },
-      {
-        name:'Suite xona',
-        size:'65 m²',
-        floor:'16–20 qavat',
-        bed:'1 king + divan',
-        view:'Panoramik dengiz',
-        photos:[
-          'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600',
-          'https://images.unsplash.com/photo-1587985064135-0366536eab42?w=600',
-          'https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=600',
-        ],
-        price: Math.round(premPrice*1.4),
-        premium: Math.round(premPrice*1.3),
-        meals:'Ultra All Inclusive',
-      },
+      {type:'Standart xona',meal:'Nonushta kiritilgan',guests:'2 kattalar',dates:'17–24 may',nights:7,airline:'Shahar manzarasi',price:Math.round(regPrice*0.7),prem:Math.round(premPrice*0.65),photos:[
+        'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700',
+        'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=700',
+        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=700',
+      ]},
+      {type:'Deluxe xona',meal:'All Inclusive',guests:'2 kattalar',dates:'17–24 may',nights:7,airline:'Dengiz manzarasi',price:regPrice,prem:Math.round(premPrice*0.92),photos:[
+        'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=700',
+        'https://images.unsplash.com/photo-1592229505726-ca121723b8ef?w=700',
+        'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=700',
+      ]},
+      {type:'Suite xona',meal:'Ultra All Inclusive',guests:'2 kattalar + 1 bola',dates:'17–24 may',nights:7,airline:'Panoramik dengiz',price:Math.round(regPrice*1.4),prem:Math.round(premPrice*1.3),photos:[
+        'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=700',
+        'https://images.unsplash.com/photo-1587985064135-0366536eab42?w=700',
+        'https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=700',
+      ]},
     ];
 
     const REVIEWS = [
@@ -2137,102 +2106,82 @@ function ScreenTrip() {
             </div>
           </div>
 
-          {/* 8. Xona tanlash */}
-          <div style={{...cardStyle,overflow:'visible'}}>
-            <div style={{padding:'16px 16px 0',fontSize:14,fontWeight:800,color:'#0A1F21'}}>Xona tanlash</div>
-            <div style={{padding:'10px 0 16px',display:'flex',flexDirection:'column',gap:0}}>
-              {HROOMS.map((r,i)=>{
-                const imgIdx = hotelRoomImg[i]||0;
-                const coins2 = Math.floor(r.premium/10000);
-                return (
-                  <div key={i} style={{margin:'0 16px',marginTop:i>0?14:0,background:'#F8FAFA',borderRadius:16,overflow:'hidden',border:'1px solid rgba(0,153,168,0.08)'}}>
-                    {/* Photo carousel */}
-                    <div style={{position:'relative',height:160}}>
-                      <img src={r.photos[imgIdx]} alt={r.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                      {imgIdx > 0 && (
-                        <button onClick={()=>setHotelRoomImg(o=>({...o,[i]:imgIdx-1}))}
-                          style={{position:'absolute',left:8,top:'50%',transform:'translateY(-50%)',width:26,height:26,borderRadius:'50%',
-                            background:'rgba(0,0,0,0.35)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-                        </button>
-                      )}
-                      {imgIdx < r.photos.length-1 && (
-                        <button onClick={()=>setHotelRoomImg(o=>({...o,[i]:imgIdx+1}))}
-                          style={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)',width:26,height:26,borderRadius:'50%',
-                            background:'rgba(0,0,0,0.35)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-                        </button>
-                      )}
-                      <div style={{position:'absolute',bottom:8,left:'50%',transform:'translateX(-50%)',display:'flex',gap:4}}>
-                        {r.photos.map((_,k)=>(
-                          <div key={k} style={{width:k===imgIdx?14:5,height:5,borderRadius:3,
-                            background:k===imgIdx?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.2s'}}/>
-                        ))}
-                      </div>
-                      <div style={{position:'absolute',top:8,right:8,background:'rgba(0,0,0,0.45)',borderRadius:8,
-                        padding:'2px 7px',fontSize:10,fontWeight:700,color:'#fff'}}>
-                        {imgIdx+1}/{r.photos.length}
-                      </div>
-                      {r.isPremium && (
-                        <div style={{position:'absolute',top:8,left:8,
-                          background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:8,
-                          padding:'3px 8px',display:'flex',alignItems:'center',gap:4,
-                          boxShadow:'0 4px 12px rgba(217,119,6,0.40)'}}>
-                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
-                          <span style={{fontSize:10,fontWeight:700,color:'#fff'}}>Premium</span>
-                        </div>
-                      )}
-                    </div>
-                    {/* Room info */}
-                    <div style={{padding:'12px 14px'}}>
-                      <div style={{fontSize:13,fontWeight:800,color:'#0A1F21',marginBottom:8}}>{r.name}</div>
-                      {[
-                        {svg:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M21 21H3V3"/><path d="M21 3L3 21"/></svg>,label:r.size},
-                        {svg:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>,label:r.bed},
-                        {svg:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,label:r.view},
-                        {svg:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>,label:r.meals},
-                      ].map((m,j)=>(
-                        <div key={j} style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}>
-                          {m.svg}
-                          <span style={{fontSize:11,color:'#5C7577'}}>{m.label}</span>
-                        </div>
+          {/* 8. Xona tanlash — same style as tour detail */}
+          <div style={{margin:'16px 16px 0'}}>
+            <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',marginBottom:10}}>Xona tanlang</div>
+            <div style={{display:'flex',gap:8,marginBottom:12,overflowX:'auto',scrollbarWidth:'none'}}>
+              {['Saralash','Ovqatlanish','Yulduz'].map((f,i)=>(
+                <div key={i} style={{display:'inline-flex',alignItems:'center',gap:4,background:'#fff',border:'1px solid #E8EAF3',borderRadius:999,padding:'6px 12px',flexShrink:0,cursor:'pointer',boxShadow:'0 1px 4px rgba(10,31,33,0.04)'}}>
+                  <span style={{fontSize:12,fontWeight:600,color:'#3A4A55'}}>{f}</span>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              ))}
+            </div>
+            {HROOMS.map((r,i)=>{
+              const imgIdx = hotelRoomImg[i]||0;
+              return (
+              <div key={i} style={{background:'#fff',borderRadius:18,marginBottom:10,boxShadow:'0 2px 12px rgba(10,31,33,0.06)',overflow:'hidden'}}>
+                <div style={{position:'relative',height:160,overflow:'hidden',background:'#000'}}>
+                  <img src={r.photos[imgIdx]} alt={r.type} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                  <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,transparent 45%,rgba(0,0,0,0.6) 100%)'}}/>
+                  {imgIdx>0 && (
+                    <button onClick={()=>setHotelRoomImg(o=>({...o,[i]:imgIdx-1}))} style={{position:'absolute',left:8,top:'50%',transform:'translateY(-50%)',width:28,height:28,borderRadius:'50%',background:'rgba(0,0,0,0.4)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+                    </button>
+                  )}
+                  {imgIdx<r.photos.length-1 && (
+                    <button onClick={()=>setHotelRoomImg(o=>({...o,[i]:imgIdx+1}))} style={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)',width:28,height:28,borderRadius:'50%',background:'rgba(0,0,0,0.4)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                  )}
+                  <div style={{position:'absolute',top:10,right:10,background:'rgba(0,0,0,0.5)',borderRadius:999,padding:'3px 8px',fontSize:11,fontWeight:700,color:'#fff'}}>{imgIdx+1} / {r.photos.length}</div>
+                  <div style={{position:'absolute',bottom:10,left:12,right:12,display:'flex',alignItems:'flex-end',justifyContent:'space-between'}}>
+                    <div style={{fontSize:14,fontWeight:800,color:'#fff'}}>{r.type}</div>
+                    <div style={{display:'flex',gap:4}}>
+                      {r.photos.map((_,k)=>(
+                        <div key={k} onClick={()=>setHotelRoomImg(o=>({...o,[i]:k}))} style={{width:k===imgIdx?14:5,height:5,borderRadius:999,background:k===imgIdx?'#fff':'rgba(255,255,255,0.6)',transition:'width 0.2s',cursor:'pointer'}}/>
                       ))}
-                      <div style={{height:1,background:'rgba(0,0,0,0.06)',margin:'10px 0'}}/>
-                      {/* Price */}
-                      <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',flexWrap:'wrap',gap:6}}>
-                        <div>
-                          <div style={{fontSize:10,color:'#9AA1B8',textDecoration:'line-through'}}>{fmtS(r.price)}</div>
-                          {r.isPremium ? (
-                            <div style={{display:'inline-flex',alignItems:'center',gap:5,
-                              background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:999,padding:'5px 11px',
-                              boxShadow:'0 5px 14px rgba(217,119,6,0.45),0 2px 5px rgba(217,119,6,0.30),inset 0 1px 0 rgba(255,255,255,0.30)'}}>
-                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
-                              <span style={{fontSize:13,fontWeight:800,color:'#fff'}}>{fmtS(r.premium)}</span>
-                            </div>
-                          ) : (
-                            <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>{fmtS(r.premium)}</div>
-                          )}
-                        </div>
-                        <div style={{display:'flex',gap:6}}>
-                          <button style={{padding:'8px 12px',borderRadius:10,background:TBG,border:'none',
-                            cursor:'pointer',fontSize:12,fontWeight:700,color:T}}>Tafsilotlar</button>
-                          <button style={{padding:'8px 14px',borderRadius:10,background:T,border:'none',
-                            cursor:'pointer',fontSize:12,fontWeight:700,color:'#fff',
-                            boxShadow:'0 4px 12px rgba(0,153,168,0.35)'}}>Band qilish</button>
-                        </div>
-                      </div>
-                      {/* Coins */}
-                      <div style={{display:'flex',alignItems:'center',gap:6,marginTop:8}}>
-                        <div style={{width:16,height:16,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                          <span style={{fontSize:8,fontWeight:900,color:'#92400E'}}>C</span>
-                        </div>
-                        <span style={{fontSize:11,color:'#5C7577'}}>{coins2} Coins — band qilganingiz uchun bonus</span>
-                      </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+                <div style={{padding:'12px 14px'}}>
+                  {[
+                    {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>, text:`${r.dates} · ${r.nights} kecha`},
+                    {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>, text:r.meal},
+                    {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>, text:r.guests},
+                    {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>, text:r.airline},
+                  ].map((row,j)=>(
+                    <div key={j} style={{display:'flex',alignItems:'center',gap:7,marginBottom:5}}>
+                      {row.icon}
+                      <span style={{fontSize:12,color:'#5C7577'}}>{row.text}</span>
+                    </div>
+                  ))}
+                  <div style={{borderTop:'1px solid #F0F2F8',marginTop:10,paddingTop:10}}>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:5}}>
+                      <span style={{fontSize:12,color:'#5C7577'}}>Narx (1 kishi)</span>
+                      <span style={{fontSize:16,fontWeight:900,color:'#0A1F21'}}>{fmtS(r.price)}</span>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:5,marginBottom:5}}>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:999,padding:'5px 11px',boxShadow:'0 5px 14px rgba(217,119,6,0.45),0 2px 5px rgba(217,119,6,0.30),inset 0 1px 0 rgba(255,255,255,0.30)'}}>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                        <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>Premium: {fmtS(r.prem)}</span>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:10,justifyContent:'flex-end'}}>
+                      <div style={{width:14,height:14,borderRadius:'50%',background:'linear-gradient(135deg,#FBBF24,#D97706)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                        <span style={{fontSize:7,fontWeight:900,color:'#fff'}}>C</span>
+                      </div>
+                      <span style={{fontSize:11,color:'#5C7577'}}>+{Math.floor(r.prem/10000)} Coins bonus</span>
+                    </div>
+                    <div style={{display:'flex',gap:8}}>
+                      <button style={{flex:1,background:'#fff',border:`1.5px solid ${T}`,borderRadius:12,padding:'10px 0',fontSize:13,fontWeight:700,color:T,cursor:'pointer'}}>Tafsilotlar</button>
+                      <button style={{flex:2,background:T,border:'none',borderRadius:12,padding:'10px 0',fontSize:13,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.28)'}}>Band qilish</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              );
+            })}
           </div>
 
           <div style={{height:16}}/>
@@ -2582,10 +2531,6 @@ function ScreenTrip() {
                     <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:5}}>
                       <span style={{fontSize:12,color:'#5C7577'}}>Narx (1 kishi)</span>
                       <span style={{fontSize:16,fontWeight:900,color:'#0A1F21'}}>{fmtS(r.price)}</span>
-                    </div>
-                    <div style={{display:'flex',alignItems:'center',gap:5,justifyContent:'flex-end',marginBottom:6}}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                      <span style={{fontSize:11,color:T,fontWeight:600}}>Muddatli: {fmtS(installment)}/oy</span>
                     </div>
                     <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:5,marginBottom:5}}>
                       <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:999,padding:'5px 11px',boxShadow:'0 5px 14px rgba(217,119,6,0.45),0 2px 5px rgba(217,119,6,0.30),inset 0 1px 0 rgba(255,255,255,0.30)'}}>
