@@ -1770,27 +1770,33 @@ function ScreenTrip() {
     React.useEffect(() => { setTimeout(() => inputRef.current?.focus(), 200); }, []);
     const q = s.toLowerCase().trim();
     const LOCATIONS = [
-      {icon:'✈️', name:'Toshkent Xalqaro Aeroporti', sub:'Airport · TAS'},
-      {icon:'✈️', name:'Samarqand Xalqaro Aeroporti', sub:'Airport · SKD'},
-      {icon:'🏨', name:'Hyatt Regency Toshkent', sub:'Mehmonxona · Chilonzor'},
-      {icon:'🏨', name:'Hilton Toshkent City', sub:'Mehmonxona · Yunusobod'},
-      {icon:'🏨', name:'Wyndham Tashkent', sub:'Mehmonxona · Yunusobod'},
-      {icon:'📍', name:'Chilonzor', sub:'Toshkent'},
-      {icon:'📍', name:'Yunusobod', sub:'Toshkent'},
-      {icon:'📍', name:'Mirzo Ulug\'bek', sub:'Toshkent'},
-      {icon:'📍', name:'Sergeli', sub:'Toshkent'},
-      {icon:'📍', name:'Yakkasaroy', sub:'Toshkent'},
-      {icon:'📍', name:'Shayxontoxur', sub:'Toshkent'},
-      {icon:'📍', name:'Olmazor', sub:'Toshkent'},
-      {icon:'📍', name:'Yashnobod', sub:'Toshkent'},
-      {icon:'🏙️', name:'Samarqand', sub:'Shahar'},
-      {icon:'🏙️', name:'Buxoro', sub:'Shahar'},
-      {icon:'🏙️', name:'Xiva', sub:'Shahar'},
-      {icon:'🏙️', name:'Namangan', sub:'Shahar'},
-      {icon:'🏙️', name:'Andijon', sub:'Shahar'},
-      {icon:'🏙️', name:'Farg\'ona', sub:'Shahar'},
-      {icon:'🏙️', name:'Nukus', sub:'Shahar'},
+      {type:'plane', name:'Toshkent Xalqaro Aeroporti', sub:'Airport · TAS'},
+      {type:'plane', name:'Samarqand Xalqaro Aeroporti', sub:'Airport · SKD'},
+      {type:'hotel', name:'Hyatt Regency Toshkent', sub:'Mehmonxona · Chilonzor'},
+      {type:'hotel', name:'Hilton Toshkent City', sub:'Mehmonxona · Yunusobod'},
+      {type:'hotel', name:'Wyndham Tashkent', sub:'Mehmonxona · Yunusobod'},
+      {type:'pin', name:'Chilonzor', sub:'Toshkent tumani'},
+      {type:'pin', name:'Yunusobod', sub:'Toshkent tumani'},
+      {type:'pin', name:"Mirzo Ulug'bek", sub:'Toshkent tumani'},
+      {type:'pin', name:'Sergeli', sub:'Toshkent tumani'},
+      {type:'pin', name:'Yakkasaroy', sub:'Toshkent tumani'},
+      {type:'pin', name:'Shayxontoxur', sub:'Toshkent tumani'},
+      {type:'pin', name:'Olmazor', sub:'Toshkent tumani'},
+      {type:'city', name:'Samarqand', sub:'Shahar'},
+      {type:'city', name:'Buxoro', sub:'Shahar'},
+      {type:'city', name:'Xiva', sub:'Shahar'},
+      {type:'city', name:'Namangan', sub:'Shahar'},
+      {type:'city', name:'Andijon', sub:'Shahar'},
+      {type:'city', name:"Farg'ona", sub:'Shahar'},
+      {type:'city', name:'Nukus', sub:'Shahar'},
     ];
+    const LocIcon = ({type}) => {
+      const s = {width:18,height:18,flexShrink:0};
+      if (type==='plane') return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.98-.98a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.04z"/></svg>;
+      if (type==='hotel') return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/><rect x="11" y="8" width="2" height="2"/></svg>;
+      if (type==='city') return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 22V10l7-7 7 7v12"/><path d="M9 22v-6h6v6"/><path d="M14 5v17"/></svg>;
+      return <svg {...s} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>;
+    };
     const filtered = q ? LOCATIONS.filter(l=>l.name.toLowerCase().includes(q)||(l.sub||'').toLowerCase().includes(q)) : LOCATIONS.slice(0,8);
     return (
       <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:300,display:'flex',alignItems:'flex-end'}} onClick={()=>setXferFromSheet(null)}>
@@ -1819,7 +1825,7 @@ function ScreenTrip() {
           <div>
             {filtered.map((loc,i)=>(
               <div key={i} onClick={()=>{const v=loc.name;if(xferFromSheet==='to')setXferTo(v);else setXferFrom(v);setXferFromSheet(null);}} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 4px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
-                <div style={{width:38,height:38,borderRadius:12,background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{loc.icon}</div>
+                <div style={{width:38,height:38,borderRadius:12,background:'#EDF7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><LocIcon type={loc.type}/></div>
                 <div style={{flex:1}}>
                   <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{loc.name}</div>
                   <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>{loc.sub}</div>
