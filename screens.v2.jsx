@@ -1771,9 +1771,25 @@ function ScreenTrip() {
     const q = s.toLowerCase().trim();
     const LOCATIONS = [
       {icon:'✈️', name:'Toshkent Xalqaro Aeroporti', sub:'Airport · TAS'},
+      {icon:'✈️', name:'Samarqand Xalqaro Aeroporti', sub:'Airport · SKD'},
       {icon:'🏨', name:'Hyatt Regency Toshkent', sub:'Mehmonxona · Chilonzor'},
       {icon:'🏨', name:'Hilton Toshkent City', sub:'Mehmonxona · Yunusobod'},
-      ...COUNTRY_CITY.flatMap(g=>g.cities.map(c=>({icon:'📍',name:c,sub:g.country,flag:g.flag}))),
+      {icon:'🏨', name:'Wyndham Tashkent', sub:'Mehmonxona · Yunusobod'},
+      {icon:'📍', name:'Chilonzor', sub:'Toshkent'},
+      {icon:'📍', name:'Yunusobod', sub:'Toshkent'},
+      {icon:'📍', name:'Mirzo Ulug\'bek', sub:'Toshkent'},
+      {icon:'📍', name:'Sergeli', sub:'Toshkent'},
+      {icon:'📍', name:'Yakkasaroy', sub:'Toshkent'},
+      {icon:'📍', name:'Shayxontoxur', sub:'Toshkent'},
+      {icon:'📍', name:'Olmazor', sub:'Toshkent'},
+      {icon:'📍', name:'Yashnobod', sub:'Toshkent'},
+      {icon:'🏙️', name:'Samarqand', sub:'Shahar'},
+      {icon:'🏙️', name:'Buxoro', sub:'Shahar'},
+      {icon:'🏙️', name:'Xiva', sub:'Shahar'},
+      {icon:'🏙️', name:'Namangan', sub:'Shahar'},
+      {icon:'🏙️', name:'Andijon', sub:'Shahar'},
+      {icon:'🏙️', name:'Farg\'ona', sub:'Shahar'},
+      {icon:'🏙️', name:'Nukus', sub:'Shahar'},
     ];
     const filtered = q ? LOCATIONS.filter(l=>l.name.toLowerCase().includes(q)||(l.sub||'').toLowerCase().includes(q)) : LOCATIONS.slice(0,8);
     return (
@@ -1802,8 +1818,8 @@ function ScreenTrip() {
           {/* Results */}
           <div>
             {filtered.map((loc,i)=>(
-              <div key={i} onClick={()=>{const v=loc.flag?`${loc.name}, ${loc.sub}`:loc.name;if(xferFromSheet==='to')setXferTo(v);else setXferFrom(v);setXferFromSheet(null);}} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 4px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
-                <div style={{width:38,height:38,borderRadius:12,background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{loc.flag||loc.icon}</div>
+              <div key={i} onClick={()=>{const v=loc.name;if(xferFromSheet==='to')setXferTo(v);else setXferFrom(v);setXferFromSheet(null);}} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 4px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
+                <div style={{width:38,height:38,borderRadius:12,background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>{loc.icon}</div>
                 <div style={{flex:1}}>
                   <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{loc.name}</div>
                   <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>{loc.sub}</div>
