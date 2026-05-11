@@ -1855,19 +1855,14 @@ function ScreenTrip() {
     };
 
     const AMENITIES = [
-      {icon:'🏊',label:'Basseyn',color:'#E0F2F3',accent:T},
-      {icon:'🍽️',label:'Restoran',color:'#FEF3C7',accent:'#D97706'},
-      {icon:'💪',label:'Sport zal',color:'#EDE9FE',accent:'#7C3AED'},
-      {icon:'🧖',label:'Spa',color:'#FCE7F3',accent:'#DB2777'},
-      {icon:'🅿️',label:'Parking',color:'#D1FAE5',accent:'#059669'},
-      {icon:'📶',label:'Wi-Fi',color:'#DBEAFE',accent:'#2563EB'},
-      {icon:'🏖️',label:'Plyaj',color:'#FEE2E2',accent:'#DC2626'},
-      {icon:'🌿',label:'Bog\'',color:'#D1FAE5',accent:'#16A34A'},
-    ];
-
-    const HBARS = [
-      {d:'Du',price:'$280',h:38},{d:'Se',price:'$310',h:42},{d:'Ch',price:'$295',h:40},
-      {d:'Pa',price:'$340',h:46},{d:'Ju',price:'$420',h:58},{d:'Sha',price:'$395',h:54},
+      {svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8"><path d="M2 12h20M2 12c0-1.1.9-2 2-2h1a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4z"/><path d="M17 8a3 3 0 0 0-3 3v5"/><path d="M22 12v4a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-4"/></svg>,label:'Basseyn',color:'#E0F2F3'},
+      {svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="1.8"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>,label:'Restoran',color:'#FEF3C7'},
+      {svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="1.8"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><path d="M4 20h16"/></svg>,label:'Sport zal',color:'#EDE9FE'},
+      {svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DB2777" strokeWidth="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,label:'Spa',color:'#FCE7F3'},
+      {svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>,label:'Parking',color:'#D1FAE5'},
+      {svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.8"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="#2563EB"/></svg>,label:'Wi-Fi',color:'#DBEAFE'},
+      {svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>,label:'Plyaj',color:'#FEE2E2'},
+      {svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="1.8"><path d="M12 22V12"/><path d="M5 4l7 8 7-8"/><path d="M12 12c0 0-4-3-4-7 0-2.2 1.8-4 4-4s4 1.8 4 4c0 4-4 7-4 7z"/></svg>,label:'Bog\'',color:'#D1FAE5'},
     ];
 
     const HROOMS = [
@@ -1929,24 +1924,20 @@ function ScreenTrip() {
       <Frame>
         <div style={{flex:1,overflowY:'auto',paddingBottom:24}}>
 
-          {/* Header */}
-          <div style={{position:'relative',height:0}}>
+          {/* 1. Hero carousel + overlay buttons */}
+          <div style={{margin:'16px 16px 0',borderRadius:20,overflow:'hidden',position:'relative',height:240}}
+            onTouchStart={hSwipeStart} onTouchEnd={hSwipeEnd}>
             <button onClick={()=>{setHotelDetail(null);setHotelGallery(0);setHotelExpanded(false);}}
-              style={{position:'absolute',top:16,left:16,zIndex:10,width:36,height:36,borderRadius:'50%',
+              style={{position:'absolute',top:12,left:12,zIndex:10,width:36,height:36,borderRadius:'50%',
                 background:'rgba(0,0,0,0.3)',backdropFilter:'blur(10px)',border:'1px solid rgba(255,255,255,0.2)',
                 cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
-            <button style={{position:'absolute',top:16,right:16,zIndex:10,width:36,height:36,borderRadius:'50%',
+            <button style={{position:'absolute',top:12,right:12,zIndex:10,width:36,height:36,borderRadius:'50%',
               background:'rgba(0,0,0,0.3)',backdropFilter:'blur(10px)',border:'1px solid rgba(255,255,255,0.2)',
               cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </button>
-          </div>
-
-          {/* 1. Hero carousel */}
-          <div style={{margin:'16px 16px 0',borderRadius:20,overflow:'hidden',position:'relative',height:240}}
-            onTouchStart={hSwipeStart} onTouchEnd={hSwipeEnd}>
             <img src={GALLERY[hotelGallery]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'opacity 0.3s'}}/>
             {hotelGallery > 0 && (
               <button onClick={()=>setHotelGallery(g=>g-1)}
@@ -2017,8 +2008,8 @@ function ScreenTrip() {
             <div style={{padding:'10px 16px 16px',display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10}}>
               {AMENITIES.map((a,i)=>(
                 <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:6}}>
-                  <div style={{width:44,height:44,borderRadius:14,background:a.color,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20}}>
-                    {a.icon}
+                  <div style={{width:44,height:44,borderRadius:14,background:a.color,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                    {a.svg}
                   </div>
                   <span style={{fontSize:10,fontWeight:600,color:'#5C7577',textAlign:'center'}}>{a.label}</span>
                 </div>
@@ -2043,63 +2034,36 @@ function ScreenTrip() {
             </button>
           </div>
 
-          {/* 5. Narx grafigi + Sanalar + Mehmonlar */}
+          {/* 5. Sanalar + Mehmonlar */}
           <div style={cardStyle}>
-            <div style={{padding:'16px 16px 0',fontSize:14,fontWeight:800,color:'#0A1F21'}}>Narx grafigi</div>
-            {/* Bar chart */}
-            <div style={{padding:'12px 16px 4px',display:'flex',alignItems:'flex-end',gap:6,height:90,position:'relative'}}>
-              {HBARS.map((b,i)=>{
-                const sel = hotelSelDay===i;
-                return (
-                  <div key={i} onClick={()=>setHotelSelDay(i)}
-                    style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',position:'relative',cursor:'pointer'}}>
-                    {sel && (
-                      <div style={{position:'absolute',bottom:b.h+6,left:'50%',transform:'translateX(-50%)',
-                        background:T,color:'#fff',borderRadius:8,padding:'3px 7px',fontSize:10,fontWeight:700,
-                        whiteSpace:'nowrap',boxShadow:'0 2px 8px rgba(0,153,168,0.4)',zIndex:2}}>
-                        {b.price}
-                        <div style={{position:'absolute',bottom:-5,left:'50%',transform:'translateX(-50%)',
-                          width:0,height:0,borderLeft:'5px solid transparent',borderRight:'5px solid transparent',
-                          borderTop:`5px solid ${T}`}}/>
-                      </div>
-                    )}
-                    <div style={{width:'100%',height:b.h,borderRadius:'6px 6px 0 0',
-                      background:sel?T:'#E0F2F3',transition:'background 0.2s'}}/>
-                  </div>
-                );
-              })}
-            </div>
-            <div style={{padding:'0 16px',display:'flex',gap:6}}>
-              {HBARS.map((b,i)=>(
-                <div key={i} style={{flex:1,textAlign:'center',fontSize:10,color:hotelSelDay===i?T:'#9AA1B8',fontWeight:hotelSelDay===i?700:400}}>{b.d}</div>
-              ))}
-            </div>
-            <div style={{height:1,background:'#F0F2F8',margin:'12px 16px'}}/>
-            {/* Sanalar */}
-            <div style={{padding:'0 16px'}}>
-              <div style={{fontSize:12,fontWeight:700,color:'#0A1F21',marginBottom:8}}>Sanalar</div>
+            <div style={{padding:'16px 16px 0',fontSize:14,fontWeight:800,color:'#0A1F21'}}>Sanalar va mehmonlar</div>
+            <div style={{padding:'12px 16px 0'}}>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
                 {[['Kirish','17 May, Sesh'],['Chiqish','24 May, Sha']].map(([lbl,val],i)=>(
-                  <div key={i} style={{background:'#F4F5FA',borderRadius:12,padding:'10px 12px'}}>
-                    <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,marginBottom:2}}>{lbl}</div>
-                    <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{val}</div>
+                  <div key={i} style={{background:'#F4F5FA',borderRadius:12,padding:'10px 12px',display:'flex',alignItems:'center',gap:8}}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <div>
+                      <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,marginBottom:1}}>{lbl}</div>
+                      <div style={{fontSize:12,fontWeight:700,color:'#0A1F21'}}>{val}</div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
             <div style={{height:1,background:'#F0F2F8',margin:'12px 16px'}}/>
-            {/* Mehmonlar */}
             <div style={{padding:'0 16px 16px'}}>
-              <div style={{fontSize:12,fontWeight:700,color:'#0A1F21',marginBottom:8}}>Mehmonlar</div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
                 {[['Kattalar','2'],['Bolalar','0']].map(([lbl,val],i)=>(
                   <div key={i} style={{background:'#F4F5FA',borderRadius:12,padding:'10px 12px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                    <div>
-                      <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>{lbl}</div>
-                      <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{val}</div>
+                    <div style={{display:'flex',alignItems:'center',gap:8}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      <div>
+                        <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>{lbl}</div>
+                        <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{val}</div>
+                      </div>
                     </div>
                     <div style={{display:'flex',gap:4}}>
-                      <button style={{width:24,height:24,borderRadius:8,background:'#E0F2F3',border:'none',fontSize:14,color:T,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700}}>-</button>
+                      <button style={{width:24,height:24,borderRadius:8,background:'#E0F2F3',border:'none',fontSize:14,color:T,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700}}>−</button>
                       <button style={{width:24,height:24,borderRadius:8,background:T,border:'none',fontSize:14,color:'#fff',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700}}>+</button>
                     </div>
                   </div>
@@ -2224,13 +2188,13 @@ function ScreenTrip() {
                     <div style={{padding:'12px 14px'}}>
                       <div style={{fontSize:13,fontWeight:800,color:'#0A1F21',marginBottom:8}}>{r.name}</div>
                       {[
-                        {icon:'📐',label:r.size},
-                        {icon:'🛏️',label:r.bed},
-                        {icon:'👁️',label:r.view},
-                        {icon:'🍽️',label:r.meals},
+                        {svg:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M21 21H3V3"/><path d="M21 3L3 21"/></svg>,label:r.size},
+                        {svg:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>,label:r.bed},
+                        {svg:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,label:r.view},
+                        {svg:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>,label:r.meals},
                       ].map((m,j)=>(
                         <div key={j} style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}>
-                          <span style={{fontSize:12}}>{m.icon}</span>
+                          {m.svg}
                           <span style={{fontSize:11,color:'#5C7577'}}>{m.label}</span>
                         </div>
                       ))}
