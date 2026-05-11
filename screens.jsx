@@ -929,6 +929,7 @@ function ScreenTrip() {
   const [hotelExpanded, setHotelExpanded] = React.useState(false);
   const [hotelSelDay, setHotelSelDay] = React.useState(2);
   const [hotelRoomImg, setHotelRoomImg] = React.useState({0:0,1:0,2:0});
+  const [hotelRoomsPage, setHotelRoomsPage] = React.useState(false);
   const hotelSwipeX = React.useRef(0);
   React.useEffect(() => {
     if (page && hintShown) {
@@ -1896,7 +1897,7 @@ function ScreenTrip() {
           {/* 1. Hero carousel + overlay buttons */}
           <div style={{margin:'16px 16px 0',borderRadius:20,overflow:'hidden',position:'relative',height:240}}
             onTouchStart={hSwipeStart} onTouchEnd={hSwipeEnd}>
-            <button onClick={()=>{setHotelDetail(null);setHotelGallery(0);setHotelExpanded(false);}}
+            <button onClick={()=>{setHotelDetail(null);setHotelGallery(0);setHotelExpanded(false);setHotelRoomsPage(false);}}
               style={{position:'absolute',top:12,left:12,zIndex:10,width:36,height:36,borderRadius:'50%',
                 background:'rgba(0,0,0,0.3)',backdropFilter:'blur(10px)',border:'1px solid rgba(255,255,255,0.2)',
                 cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
@@ -2106,86 +2107,116 @@ function ScreenTrip() {
             </div>
           </div>
 
-          {/* 8. Xona tanlash — same style as tour detail */}
+          {/* 8. Xona tanlash button */}
           <div style={{margin:'16px 16px 0'}}>
-            <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',marginBottom:10}}>Xona tanlang</div>
-            <div style={{display:'flex',gap:8,marginBottom:12,overflowX:'auto',scrollbarWidth:'none'}}>
-              {['Saralash','Ovqatlanish','Yulduz'].map((f,i)=>(
-                <div key={i} style={{display:'inline-flex',alignItems:'center',gap:4,background:'#fff',border:'1px solid #E8EAF3',borderRadius:999,padding:'6px 12px',flexShrink:0,cursor:'pointer',boxShadow:'0 1px 4px rgba(10,31,33,0.04)'}}>
-                  <span style={{fontSize:12,fontWeight:600,color:'#3A4A55'}}>{f}</span>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+            <button onClick={()=>setHotelRoomsPage(true)} style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',background:'#fff',border:'none',borderRadius:18,padding:'16px 18px',cursor:'pointer',boxShadow:'0 2px 10px rgba(10,31,33,0.05)'}}>
+              <div style={{display:'flex',alignItems:'center',gap:12}}>
+                <div style={{width:42,height:42,borderRadius:12,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
                 </div>
-              ))}
-            </div>
-            {HROOMS.map((r,i)=>{
-              const imgIdx = hotelRoomImg[i]||0;
-              return (
-              <div key={i} style={{background:'#fff',borderRadius:18,marginBottom:10,boxShadow:'0 2px 12px rgba(10,31,33,0.06)',overflow:'hidden'}}>
-                <div style={{position:'relative',height:160,overflow:'hidden',background:'#000'}}>
-                  <img src={r.photos[imgIdx]} alt={r.type} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-                  <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,transparent 45%,rgba(0,0,0,0.6) 100%)'}}/>
-                  {imgIdx>0 && (
-                    <button onClick={()=>setHotelRoomImg(o=>({...o,[i]:imgIdx-1}))} style={{position:'absolute',left:8,top:'50%',transform:'translateY(-50%)',width:28,height:28,borderRadius:'50%',background:'rgba(0,0,0,0.4)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
-                    </button>
-                  )}
-                  {imgIdx<r.photos.length-1 && (
-                    <button onClick={()=>setHotelRoomImg(o=>({...o,[i]:imgIdx+1}))} style={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)',width:28,height:28,borderRadius:'50%',background:'rgba(0,0,0,0.4)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-                    </button>
-                  )}
-                  <div style={{position:'absolute',top:10,right:10,background:'rgba(0,0,0,0.5)',borderRadius:999,padding:'3px 8px',fontSize:11,fontWeight:700,color:'#fff'}}>{imgIdx+1} / {r.photos.length}</div>
-                  <div style={{position:'absolute',bottom:10,left:12,right:12,display:'flex',alignItems:'flex-end',justifyContent:'space-between'}}>
-                    <div style={{fontSize:14,fontWeight:800,color:'#fff'}}>{r.type}</div>
-                    <div style={{display:'flex',gap:4}}>
-                      {r.photos.map((_,k)=>(
-                        <div key={k} onClick={()=>setHotelRoomImg(o=>({...o,[i]:k}))} style={{width:k===imgIdx?14:5,height:5,borderRadius:999,background:k===imgIdx?'#fff':'rgba(255,255,255,0.6)',transition:'width 0.2s',cursor:'pointer'}}/>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div style={{padding:'12px 14px'}}>
-                  {[
-                    {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>, text:`${r.dates} · ${r.nights} kecha`},
-                    {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>, text:r.meal},
-                    {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>, text:r.guests},
-                    {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>, text:r.airline},
-                  ].map((row,j)=>(
-                    <div key={j} style={{display:'flex',alignItems:'center',gap:7,marginBottom:5}}>
-                      {row.icon}
-                      <span style={{fontSize:12,color:'#5C7577'}}>{row.text}</span>
-                    </div>
-                  ))}
-                  <div style={{borderTop:'1px solid #F0F2F8',marginTop:10,paddingTop:10}}>
-                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:5}}>
-                      <span style={{fontSize:12,color:'#5C7577'}}>Narx (1 kishi)</span>
-                      <span style={{fontSize:16,fontWeight:900,color:'#0A1F21'}}>{fmtS(r.price)}</span>
-                    </div>
-                    <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:5,marginBottom:5}}>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:999,padding:'5px 11px',boxShadow:'0 5px 14px rgba(217,119,6,0.45),0 2px 5px rgba(217,119,6,0.30),inset 0 1px 0 rgba(255,255,255,0.30)'}}>
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
-                        <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>Premium: {fmtS(r.prem)}</span>
-                      </div>
-                    </div>
-                    <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:10,justifyContent:'flex-end'}}>
-                      <div style={{width:14,height:14,borderRadius:'50%',background:'linear-gradient(135deg,#FBBF24,#D97706)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                        <span style={{fontSize:7,fontWeight:900,color:'#fff'}}>C</span>
-                      </div>
-                      <span style={{fontSize:11,color:'#5C7577'}}>+{Math.floor(r.prem/10000)} Coins bonus</span>
-                    </div>
-                    <div style={{display:'flex',gap:8}}>
-                      <button style={{flex:1,background:'#fff',border:`1.5px solid ${T}`,borderRadius:12,padding:'10px 0',fontSize:13,fontWeight:700,color:T,cursor:'pointer'}}>Tafsilotlar</button>
-                      <button style={{flex:2,background:T,border:'none',borderRadius:12,padding:'10px 0',fontSize:13,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.28)'}}>Band qilish</button>
-                    </div>
-                  </div>
+                <div style={{textAlign:'left'}}>
+                  <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Xona tanlash</div>
+                  <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>{HROOMS.length} ta xona turi mavjud</div>
                 </div>
               </div>
-              );
-            })}
+              <div style={{width:32,height:32,borderRadius:'50%',background:T,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,boxShadow:'0 3px 10px rgba(0,153,168,0.30)'}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              </div>
+            </button>
           </div>
 
           <div style={{height:16}}/>
         </div>
+
+        {/* Hotel rooms full-page overlay */}
+        {hotelRoomsPage && (
+          <div style={{position:'fixed',inset:0,background:'#F7F9FB',display:'flex',flexDirection:'column',zIndex:100,maxWidth:460,margin:'0 auto'}}>
+            <div style={{display:'flex',alignItems:'center',gap:12,padding:'14px 16px',background:'#fff',borderBottom:'1px solid #F0F2F8',flexShrink:0}}>
+              <button onClick={()=>setHotelRoomsPage(false)} style={{width:36,height:36,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+              </button>
+              <div style={{flex:1}}>
+                <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>Xona tanlang</div>
+                <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>{hotelName}</div>
+              </div>
+            </div>
+            <div style={{flex:1,overflowY:'auto',padding:'12px 16px 24px'}}>
+              <div style={{display:'flex',gap:8,marginBottom:12,overflowX:'auto',scrollbarWidth:'none'}}>
+                {['Saralash','Ovqatlanish','Yulduz'].map((f,i)=>(
+                  <div key={i} style={{display:'inline-flex',alignItems:'center',gap:4,background:'#fff',border:'1px solid #E8EAF3',borderRadius:999,padding:'6px 12px',flexShrink:0,cursor:'pointer',boxShadow:'0 1px 4px rgba(10,31,33,0.04)'}}>
+                    <span style={{fontSize:12,fontWeight:600,color:'#3A4A55'}}>{f}</span>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+                  </div>
+                ))}
+              </div>
+              {HROOMS.map((r,i)=>{
+                const imgIdx = hotelRoomImg[i]||0;
+                return (
+                <div key={i} style={{background:'#fff',borderRadius:18,marginBottom:10,boxShadow:'0 2px 12px rgba(10,31,33,0.06)',overflow:'hidden'}}>
+                  <div style={{position:'relative',height:160,overflow:'hidden',background:'#000'}}>
+                    <img src={r.photos[imgIdx]} alt={r.type} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                    <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,transparent 45%,rgba(0,0,0,0.6) 100%)'}}/>
+                    {imgIdx>0 && (
+                      <button onClick={()=>setHotelRoomImg(o=>({...o,[i]:imgIdx-1}))} style={{position:'absolute',left:8,top:'50%',transform:'translateY(-50%)',width:28,height:28,borderRadius:'50%',background:'rgba(0,0,0,0.4)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+                      </button>
+                    )}
+                    {imgIdx<r.photos.length-1 && (
+                      <button onClick={()=>setHotelRoomImg(o=>({...o,[i]:imgIdx+1}))} style={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)',width:28,height:28,borderRadius:'50%',background:'rgba(0,0,0,0.4)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+                      </button>
+                    )}
+                    <div style={{position:'absolute',top:10,right:10,background:'rgba(0,0,0,0.5)',borderRadius:999,padding:'3px 8px',fontSize:11,fontWeight:700,color:'#fff'}}>{imgIdx+1} / {r.photos.length}</div>
+                    <div style={{position:'absolute',bottom:10,left:12,right:12,display:'flex',alignItems:'flex-end',justifyContent:'space-between'}}>
+                      <div style={{fontSize:14,fontWeight:800,color:'#fff'}}>{r.type}</div>
+                      <div style={{display:'flex',gap:4}}>
+                        {r.photos.map((_,k)=>(
+                          <div key={k} onClick={()=>setHotelRoomImg(o=>({...o,[i]:k}))} style={{width:k===imgIdx?14:5,height:5,borderRadius:999,background:k===imgIdx?'#fff':'rgba(255,255,255,0.6)',transition:'width 0.2s',cursor:'pointer'}}/>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{padding:'12px 14px'}}>
+                    {[
+                      {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>, text:`${r.dates} · ${r.nights} kecha`},
+                      {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>, text:r.meal},
+                      {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>, text:r.guests},
+                      {icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>, text:r.airline},
+                    ].map((row,j)=>(
+                      <div key={j} style={{display:'flex',alignItems:'center',gap:7,marginBottom:5}}>
+                        {row.icon}
+                        <span style={{fontSize:12,color:'#5C7577'}}>{row.text}</span>
+                      </div>
+                    ))}
+                    <div style={{borderTop:'1px solid #F0F2F8',marginTop:10,paddingTop:10}}>
+                      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:5}}>
+                        <span style={{fontSize:12,color:'#5C7577'}}>Narx (1 kishi)</span>
+                        <span style={{fontSize:16,fontWeight:900,color:'#0A1F21'}}>{fmtS(r.price)}</span>
+                      </div>
+                      <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:5,marginBottom:5}}>
+                        <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:999,padding:'5px 11px',boxShadow:'0 5px 14px rgba(217,119,6,0.45),0 2px 5px rgba(217,119,6,0.30),inset 0 1px 0 rgba(255,255,255,0.30)'}}>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                          <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>Premium: {fmtS(r.prem)}</span>
+                        </div>
+                      </div>
+                      <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:10,justifyContent:'flex-end'}}>
+                        <div style={{width:14,height:14,borderRadius:'50%',background:'linear-gradient(135deg,#FBBF24,#D97706)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                          <span style={{fontSize:7,fontWeight:900,color:'#fff'}}>C</span>
+                        </div>
+                        <span style={{fontSize:11,color:'#5C7577'}}>+{Math.floor(r.prem/10000)} Coins bonus</span>
+                      </div>
+                      <div style={{display:'flex',gap:8}}>
+                        <button style={{flex:1,background:'#fff',border:`1.5px solid ${T}`,borderRadius:12,padding:'10px 0',fontSize:13,fontWeight:700,color:T,cursor:'pointer'}}>Tafsilotlar</button>
+                        <button style={{flex:2,background:T,border:'none',borderRadius:12,padding:'10px 0',fontSize:13,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.28)'}}>Band qilish</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </Frame>
     );
   }
