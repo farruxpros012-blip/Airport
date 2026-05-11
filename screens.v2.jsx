@@ -916,6 +916,8 @@ function ScreenTrip() {
   const [flightDetail, setFlightDetail] = React.useState(null);
   const [tourDetail, setTourDetail] = React.useState(null);
   const [tourGallery, setTourGallery] = React.useState(0);
+  const [tourNights, setTourNights] = React.useState(7);
+  const [tourRoom, setTourRoom] = React.useState(0);
   React.useEffect(() => {
     if (page && hintShown) {
       const t = setTimeout(() => setHintShown(false), 5000);
@@ -1770,194 +1772,327 @@ function ScreenTrip() {
   // Tour detail page
   if (tourDetail) {
     const td = tourDetail;
-    const nights = parseInt((td.sub||'').match(/(\d+)\s*kecha/)?.[1]||'5');
-    const SERVICES = ['Parvoz kiritilgan','Transfer bepul','Ovqatlanish kiritilgan','Mehmonxona ★★★★★','Sug\'urta bepul','Gid xizmati'];
     const GALLERY = [td.img,
       'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600',
       'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600',
     ];
-    const activeGallery = tourGallery;
-    const setActiveGallery = setTourGallery;
     const city = (td.title||'').split(',')[0];
     const country = (td.title||'').split(',')[1]?.trim()||'';
+    const premPrice = parseInt((td.premium||td.regular||'').replace(/\D/g,''));
+    const regPrice  = parseInt((td.regular||'').replace(/\D/g,''));
+    const coins = Math.floor(premPrice/10000);
+    const installment = Math.floor(premPrice/6);
+    const NIGHT_OPTIONS = [{n:2,price:'$650'},{n:3,price:'$695'},{n:4,price:'$720'},{n:5,price:'$860'},{n:14,price:'$1 640'}];
+    const CHART_BARS = [
+      {day:'14',dow:'Du',h:32,active:false},{day:'15',dow:'Se',h:38,active:false},
+      {day:'16',dow:'Ch',h:52,active:false},{day:'17',dow:'Pa',h:72,active:true},
+      {day:'18',dow:'Ju',h:44,active:false},{day:'19',dow:'Sh',h:36,active:false},
+    ];
+    const ROOMS = [
+      {type:'Basseynga ko\'rinishi',meal:'Nonushta kiritilgan',guests:'2 kattalar',dates:'22-29 sentyabr',nights:7,airline:'Fly Emirates',price:regPrice,prem:premPrice},
+      {type:'Dengizga ko\'rinishi',meal:'Ultra All Inclusive',guests:'2 kattalar',dates:'22-29 sentyabr',nights:7,airline:'Fly Emirates',price:Math.round(regPrice*1.12),prem:Math.round(premPrice*1.1)},
+    ];
+    const SectionTitle = ({children}) => (
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
+        <div style={{width:3,height:18,background:T,borderRadius:999}}/>
+        <span style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>{children}</span>
+      </div>
+    );
+    const fmtSum = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ') + ' so\'m';
     return (
       <Frame>
-        <div style={{background:'#F4F5FA',minHeight:'100vh',paddingBottom:100}}>
-          {/* Hero image strip */}
-          <div style={{position:'relative',height:300,overflow:'hidden',flexShrink:0}}>
-            <img src={GALLERY[activeGallery]} alt={td.title}
-              style={{width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'opacity 0.3s'}}/>
-            {/* gradient overlay */}
-            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.28) 0%,transparent 40%,transparent 55%,rgba(0,0,0,0.55) 100%)'}}/>
-            {/* Back button */}
-            <button onClick={()=>setTourDetail(null)} style={{position:'absolute',top:18,left:18,width:40,height:40,borderRadius:'50%',background:'rgba(255,255,255,0.22)',backdropFilter:'blur(12px)',border:'1px solid rgba(255,255,255,0.35)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
-            </button>
-            {/* Gallery dots */}
-            <div style={{position:'absolute',bottom:14,left:'50%',transform:'translateX(-50%)',display:'flex',gap:5}}>
-              {GALLERY.map((_,i)=>(
-                <div key={i} onClick={()=>setActiveGallery(i)} style={{width:i===activeGallery?20:6,height:6,borderRadius:999,background:i===activeGallery?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.25s',cursor:'pointer'}}/>
+        <Scroll style={{paddingBottom:110}}>
+          {/* ── HERO GALLERY ── */}
+          <div style={{position:'relative',height:290,overflow:'hidden'}}>
+            <img src={GALLERY[tourGallery]} alt={td.title}
+              style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,transparent 35%,transparent 50%,rgba(0,0,0,0.6) 100%)'}}/>
+            {/* top bar */}
+            <div style={{position:'absolute',top:0,left:0,right:0,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 18px 0'}}>
+              <button onClick={()=>setTourDetail(null)} style={{width:38,height:38,borderRadius:'50%',background:'rgba(0,0,0,0.28)',backdropFilter:'blur(10px)',border:'1px solid rgba(255,255,255,0.25)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+              </button>
+              <div style={{background:'rgba(255,120,0,0.9)',backdropFilter:'blur(8px)',borderRadius:20,padding:'5px 10px',display:'flex',alignItems:'center',gap:5}}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg>
+                <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>Hit savdo!</span>
+              </div>
+              <button style={{width:38,height:38,borderRadius:'50%',background:'rgba(0,0,0,0.28)',backdropFilter:'blur(10px)',border:'1px solid rgba(255,255,255,0.25)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+              </button>
+            </div>
+            {/* gallery thumbs strip */}
+            <div style={{position:'absolute',bottom:60,right:12,display:'flex',flexDirection:'column',gap:5}}>
+              {GALLERY.map((g,i)=>(
+                <div key={i} onClick={()=>setTourGallery(i)}
+                  style={{width:42,height:32,borderRadius:8,overflow:'hidden',border:i===tourGallery?`2px solid ${T}`:'2px solid rgba(255,255,255,0.5)',cursor:'pointer',opacity:i===tourGallery?1:0.7}}>
+                  <img src={g} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                </div>
               ))}
             </div>
-            {/* Bottom-left: city + country */}
-            <div style={{position:'absolute',bottom:28,left:20}}>
-              <div style={{fontSize:26,fontWeight:900,color:'#fff',lineHeight:1.1,textShadow:'0 2px 8px rgba(0,0,0,0.3)'}}>{city}</div>
-              <div style={{fontSize:14,color:'rgba(255,255,255,0.85)',fontWeight:500,marginTop:2}}>{country}</div>
+            {/* hotel name block */}
+            <div style={{position:'absolute',bottom:14,left:16,right:70}}>
+              <div style={{fontSize:22,fontWeight:900,color:'#fff',lineHeight:1.15,textShadow:'0 2px 8px rgba(0,0,0,0.4)'}}>{city}</div>
+              <div style={{display:'flex',alignItems:'center',gap:6,marginTop:4}}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
+                <span style={{fontSize:12,color:'rgba(255,255,255,0.85)',fontWeight:500}}>{country}</span>
+                <span style={{fontSize:12,color:'rgba(255,255,255,0.5)'}}>·</span>
+                <span style={{fontSize:12,color:TBG,fontWeight:600,textDecoration:'underline',cursor:'pointer'}}>Xaritada ko'rish</span>
+              </div>
             </div>
-            {/* Bottom-right: price pill */}
-            <div style={{position:'absolute',bottom:28,right:18,background:'rgba(0,153,168,0.92)',backdropFilter:'blur(8px)',borderRadius:14,padding:'6px 12px',border:'1px solid rgba(255,255,255,0.2)'}}>
-              <div style={{fontSize:10,color:'rgba(255,255,255,0.75)',fontWeight:600,textTransform:'uppercase',letterSpacing:0.5}}>dan</div>
-              <div style={{fontSize:15,fontWeight:800,color:'#fff'}}>{(td.premium||td.regular||'').replace('so\'m','')}<span style={{fontSize:10,fontWeight:500}}> so'm</span></div>
+            {/* rating badge */}
+            <div style={{position:'absolute',bottom:14,right:16,textAlign:'center'}}>
+              <div style={{background:'linear-gradient(135deg,#22C55E,#16A34A)',borderRadius:12,padding:'5px 10px',display:'inline-block',boxShadow:'0 2px 8px rgba(34,197,94,0.4)'}}>
+                <div style={{fontSize:15,fontWeight:900,color:'#fff'}}>4.8</div>
+              </div>
+              <div style={{fontSize:10,color:'rgba(255,255,255,0.7)',marginTop:3}}>15 sharh</div>
             </div>
           </div>
 
-          {/* Pill row: nights, pax, meal */}
-          <div style={{display:'flex',gap:8,padding:'16px 16px 0',overflowX:'auto',scrollbarWidth:'none'}}>
+          {/* ── HOTEL TITLE ROW ── */}
+          <div style={{padding:'16px 16px 0'}}>
+            <div style={{background:'#fff',borderRadius:20,padding:'14px 16px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+              <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
+                <div>
+                  <div style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{city} Hotel</div>
+                  <div style={{display:'flex',alignItems:'center',gap:4,marginTop:3}}>
+                    {[0,1,2,3,4].map(s=><svg key={s} width="10" height="10" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}
+                  </div>
+                </div>
+                <div style={{textAlign:'right',flexShrink:0}}>
+                  <div style={{fontSize:11,color:'#9AA1B8'}}>dan</div>
+                  <div style={{fontSize:18,fontWeight:900,color:T}}>{fmtSum(premPrice)}</div>
+                </div>
+              </div>
+              <div style={{height:1,background:'#F0F2F8',margin:'12px 0'}}/>
+              {/* booking count */}
+              <div style={{display:'flex',alignItems:'center',gap:6}}>
+                <div style={{width:6,height:6,borderRadius:'50%',background:'#22C55E'}}/>
+                <span style={{fontSize:12,color:'#5C7577'}}>150 martadan ko'p band qilingan</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ── TAGS ── */}
+          <div style={{display:'flex',gap:7,padding:'12px 16px 0',overflowX:'auto',scrollbarWidth:'none'}}>
             {[
-              {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg>, label:`${nights} kecha`},
-              {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, label:'2 kishi'},
-              {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M3 2h18M3 8h18M3 14h10M3 20h6"/></svg>, label:'Ultra AI'},
-              {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.68 12 19.79 19.79 0 0 1 1.63 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>, label:'+99812 345 67'},
-            ].map((p,i)=>(
-              <div key={i} style={{display:'inline-flex',alignItems:'center',gap:6,background:'#fff',borderRadius:999,padding:'7px 12px',boxShadow:'0 1px 6px rgba(10,31,33,0.06)',border:'1px solid rgba(0,153,168,0.10)',flexShrink:0}}>
-                {p.icon}
-                <span style={{fontSize:12,fontWeight:600,color:'#0A1F21',whiteSpace:'nowrap'}}>{p.label}</span>
+              {label:'Viza kerak emas!',color:'#dcfce7',tc:'#166534'},
+              {label:'Bepul Wi-Fi',color:'#dbeafe',tc:'#1e40af'},
+              {label:'Dengiz yaqinida',color:'#e0f2fe',tc:'#0369a1'},
+              {label:'1-liniya',color:'#fef3c7',tc:'#92400e'},
+              {label:'All Inclusive',color:'#f0fdf4',tc:T},
+            ].map(tg=>(
+              <div key={tg.label} style={{background:tg.color,borderRadius:999,padding:'5px 11px',flexShrink:0}}>
+                <span style={{fontSize:11,fontWeight:700,color:tg.tc,whiteSpace:'nowrap'}}>{tg.label}</span>
               </div>
             ))}
           </div>
 
-          {/* Flight timeline */}
-          <div style={{margin:'16px 16px 0',background:'#fff',borderRadius:20,padding:'16px 18px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
-            <div style={{fontSize:12,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.8,marginBottom:14}}>Parvoz</div>
-            {/* Outbound */}
-            <div style={{display:'flex',alignItems:'center',gap:0}}>
-              <div style={{textAlign:'center',minWidth:48}}>
-                <div style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>07:15</div>
-                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>TAS</div>
-              </div>
-              <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:3,padding:'0 10px'}}>
-                <div style={{fontSize:10,color:'#9AA1B8'}}>4s 45m · to'g'ri</div>
-                <div style={{width:'100%',height:1,background:'linear-gradient(to right,#0099A8,#9AA1B8)',position:'relative'}}>
-                  <div style={{position:'absolute',right:-4,top:-3,width:7,height:7,borderRadius:'50%',background:'#9AA1B8'}}/>
-                  <svg style={{position:'absolute',left:'40%',top:-8}} width="16" height="16" viewBox="0 0 24 24" fill={T}><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+          {/* ── NIMA KIRADI ── */}
+          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,padding:'16px 16px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <SectionTitle>Nima kiradi</SectionTitle>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10}}>
+              {[
+                {icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>, label:'Yashash', sub:'8 kecha'},
+                {icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.68 12 19.79 19.79 0 0 1 1.63 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>, label:'Parvoz', sub:'Kiritilgan'},
+                {icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>, label:'Transfer', sub:'Bepul'},
+                {icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>, label:'Med. sug\'urta', sub:'Kiritilgan'},
+                {icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>, label:'eSIM', sub:'Bepul'},
+                {icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, label:'Sug\'urta', sub:'Bepul'},
+              ].map((item,i)=>(
+                <div key={i} style={{background:TBG,borderRadius:14,padding:'10px 10px 8px',display:'flex',flexDirection:'column',alignItems:'center',gap:5,textAlign:'center'}}>
+                  {item.icon}
+                  <div style={{fontSize:11,fontWeight:700,color:'#0A1F21',lineHeight:1.2}}>{item.label}</div>
+                  <div style={{fontSize:10,color:'#5C7577'}}>{item.sub}</div>
                 </div>
-              </div>
-              <div style={{textAlign:'center',minWidth:48}}>
-                <div style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>11:00</div>
-                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>{(td.title||'').replace(/[^A-Z]/g,'').slice(0,3)||'DXB'}</div>
-              </div>
-            </div>
-            <div style={{height:1,background:'#F0F2F8',margin:'12px 0'}}/>
-            {/* Return */}
-            <div style={{display:'flex',alignItems:'center',gap:0}}>
-              <div style={{textAlign:'center',minWidth:48}}>
-                <div style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>18:30</div>
-                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>{(td.title||'').replace(/[^A-Z]/g,'').slice(0,3)||'DXB'}</div>
-              </div>
-              <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:3,padding:'0 10px'}}>
-                <div style={{fontSize:10,color:'#9AA1B8'}}>4s 45m · qaytish</div>
-                <div style={{width:'100%',height:1,background:'linear-gradient(to right,#9AA1B8,#0099A8)',position:'relative'}}>
-                  <div style={{position:'absolute',left:-4,top:-3,width:7,height:7,borderRadius:'50%',background:'#9AA1B8'}}/>
-                  <svg style={{position:'absolute',left:'40%',top:-8,transform:'scaleX(-1)'}} width="16" height="16" viewBox="0 0 24 24" fill={T}><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
-                </div>
-              </div>
-              <div style={{textAlign:'center',minWidth:48}}>
-                <div style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>22:15</div>
-                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>TAS</div>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* Hotel card */}
-          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,overflow:'hidden',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
-            <div style={{position:'relative',height:130,overflow:'hidden'}}>
-              <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600" alt="hotel" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
-              <div style={{position:'absolute',inset:0,background:'linear-gradient(to right,rgba(0,0,0,0.5) 0%,transparent 60%)'}}/>
-              <div style={{position:'absolute',bottom:12,left:14}}>
-                <div style={{fontSize:15,fontWeight:800,color:'#fff'}}>Rixos Premium</div>
-                <div style={{display:'flex',gap:2,marginTop:4}}>
-                  {[0,1,2,3,4].map(s=><svg key={s} width="11" height="11" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}
-                </div>
-              </div>
-              <div style={{position:'absolute',top:10,right:10,background:'rgba(0,153,168,0.9)',borderRadius:10,padding:'4px 8px'}}>
-                <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>★ 9.4</span>
+          {/* ── MEHMONXONA HAQIDA ── */}
+          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,padding:'16px 16px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <SectionTitle>Mehmonxona haqida</SectionTitle>
+            <div style={{display:'flex',gap:10,marginBottom:12}}>
+              <img src={td.img} style={{width:72,height:72,borderRadius:12,objectFit:'cover',flexShrink:0}}/>
+              <div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{city} Hotel 5★</div>
+                <div style={{fontSize:12,color:'#5C7577',marginTop:3,lineHeight:1.45}}>Standard Queen Room: 24 kv.m., queen-size krovatga ega, gidromassaj vanna, maksimal mehmon soni: 2 kishi.</div>
               </div>
             </div>
-            <div style={{padding:'12px 14px'}}>
-              <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
-                {['Ultra All Inclusive','Dengiz ko\'rinishi','Shaxsiy plyaj','Spa & Wellness'].map(tag=>(
-                  <div key={tag} style={{background:'#F0F9FA',borderRadius:999,padding:'4px 10px',border:'1px solid rgba(0,153,168,0.15)'}}>
-                    <span style={{fontSize:11,fontWeight:600,color:T}}>{tag}</span>
+            <button style={{background:'none',border:'none',padding:0,cursor:'pointer',fontSize:13,fontWeight:600,color:T}}>Ko'proq o'qish →</button>
+          </div>
+
+          {/* ── NARX GRAFIGI ── */}
+          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,padding:'16px 16px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <SectionTitle>Narx grafigi</SectionTitle>
+            <div style={{fontSize:12,color:'#9AA1B8',marginBottom:12}}>Narxlar 2 kattalar uchun ko'rsatilgan</div>
+            {/* date nav */}
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#F4F5FA',borderRadius:12,padding:'8px 14px',marginBottom:14}}>
+              <button style={{background:'none',border:'none',cursor:'pointer',padding:0,display:'flex'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+              </button>
+              <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>14 sentyabr — 20 sentyabr</span>
+              <button style={{background:'none',border:'none',cursor:'pointer',padding:0,display:'flex'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            </div>
+            {/* bars */}
+            <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',height:80,gap:4,padding:'0 4px',marginBottom:6}}>
+              {CHART_BARS.map((b,i)=>(
+                <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4,position:'relative'}}>
+                  {b.active && (
+                    <div style={{position:'absolute',top:-(80-b.h)-24,background:T,color:'#fff',borderRadius:8,padding:'3px 7px',fontSize:10,fontWeight:700,whiteSpace:'nowrap',boxShadow:'0 2px 8px rgba(0,153,168,0.4)'}}>
+                      dan $1 640
+                      <div style={{position:'absolute',bottom:-5,left:'50%',transform:'translateX(-50%)',width:0,height:0,borderLeft:'5px solid transparent',borderRight:'5px solid transparent',borderTop:`5px solid ${T}`}}/>
+                    </div>
+                  )}
+                  <div style={{width:'100%',height:b.h,background:b.active?T:'#E8EBF5',borderRadius:'6px 6px 4px 4px',transition:'height 0.3s'}}/>
+                </div>
+              ))}
+            </div>
+            <div style={{display:'flex',justifyContent:'space-between',padding:'0 4px'}}>
+              {CHART_BARS.map((b,i)=>(
+                <div key={i} style={{flex:1,textAlign:'center'}}>
+                  <div style={{fontSize:11,fontWeight:b.active?800:500,color:b.active?T:'#9AA1B8'}}>{b.day}</div>
+                  <div style={{fontSize:10,color:'#C0C5D8'}}>{b.dow}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── MAVJUD KECHALAR ── */}
+          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,padding:'16px 16px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <SectionTitle>Mavjud kechalar</SectionTitle>
+            <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+              {NIGHT_OPTIONS.map(o=>(
+                <button key={o.n} onClick={()=>setTourNights(o.n)}
+                  style={{background:tourNights===o.n?T:'#F4F5FA',border:`1.5px solid ${tourNights===o.n?T:'transparent'}`,borderRadius:12,padding:'8px 14px',cursor:'pointer',transition:'all 0.15s'}}>
+                  <span style={{fontSize:13,fontWeight:700,color:tourNights===o.n?'#fff':'#0A1F21'}}>{o.n} kecha</span>
+                  <span style={{fontSize:12,color:tourNights===o.n?'rgba(255,255,255,0.8)':'#9AA1B8'}}> — dan {o.price}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── DATE + GUESTS ROW ── */}
+          <div style={{margin:'14px 16px 0',display:'flex',gap:10}}>
+            <div style={{flex:1,background:'#fff',borderRadius:16,padding:'12px 14px',boxShadow:'0 2px 8px rgba(10,31,33,0.05)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <div>
+                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,marginBottom:2}}>SANALAR</div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>25 sent — 3 okt</div>
+              </div>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
+            <div style={{flex:1,background:'#fff',borderRadius:16,padding:'12px 14px',boxShadow:'0 2px 8px rgba(10,31,33,0.05)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <div>
+                <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,marginBottom:2}}>MEHMONLAR</div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>2 kattalar</div>
+              </div>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
+          </div>
+
+          {/* ── WARNING NOTE ── */}
+          <div style={{margin:'14px 16px 0',background:'#FFFBEB',borderRadius:16,padding:'14px 14px',border:'1px solid #FDE68A',display:'flex',gap:10}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <p style={{margin:0,fontSize:12,color:'#92400E',lineHeight:1.55}}>Eslatma: Tur sanasi yaqinlashishi bilan narxlar o'zgarishi mumkin. Xarid qilishdan oldin menejer bilan tasdiqlashni tavsiya qilamiz.</p>
+          </div>
+
+          {/* ── MENEJER BUTTON ── */}
+          <div style={{padding:'12px 16px 0'}}>
+            <button style={{width:'100%',background:'#fff',border:`1.5px solid ${T}`,borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,color:T,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.68 12 19.79 19.79 0 0 1 1.63 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Menejer bilan bog'lanish
+            </button>
+          </div>
+
+          {/* ── XONA TANLOV ── */}
+          <div style={{margin:'16px 16px 0'}}>
+            <SectionTitle>Xona tanlang</SectionTitle>
+            {/* filter chips */}
+            <div style={{display:'flex',gap:8,marginBottom:14,overflowX:'auto',scrollbarWidth:'none'}}>
+              {['Saralash','Ovqatlanish','Aviakompaniya'].map((f,i)=>(
+                <div key={i} style={{display:'inline-flex',alignItems:'center',gap:5,background:'#fff',border:'1px solid #E8EAF3',borderRadius:999,padding:'6px 12px',flexShrink:0,cursor:'pointer',boxShadow:'0 1px 4px rgba(10,31,33,0.04)'}}>
+                  <span style={{fontSize:12,fontWeight:600,color:'#3A4A55'}}>{f}</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              ))}
+            </div>
+            {/* room cards */}
+            {ROOMS.map((r,i)=>(
+              <div key={i} onClick={()=>setTourRoom(i)}
+                style={{background:'#fff',borderRadius:20,padding:'16px',marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.06)',border:`1.5px solid ${tourRoom===i?T:'transparent'}`,cursor:'pointer',transition:'border-color 0.15s'}}>
+                {/* selection indicator */}
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+                  <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{r.type}</div>
+                  <div style={{width:20,height:20,borderRadius:'50%',border:`2px solid ${tourRoom===i?T:'#DDE0EB'}`,background:tourRoom===i?T:'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                    {tourRoom===i && <div style={{width:8,height:8,background:'#fff',borderRadius:'50%'}}/>}
+                  </div>
+                </div>
+                {/* meta rows */}
+                {[
+                  {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>, text:`${r.dates} · ${r.nights} kecha`},
+                  {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>, text:r.meal},
+                  {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>, text:r.guests},
+                ].map((row,j)=>(
+                  <div key={j} style={{display:'flex',alignItems:'center',gap:7,marginBottom:6}}>
+                    {row.icon}
+                    <span style={{fontSize:12,color:'#5C7577'}}>{row.text}</span>
                   </div>
                 ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Included services */}
-          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,padding:'16px 18px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
-            <div style={{fontSize:12,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.8,marginBottom:14}}>Narxga kiritilgan</div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-              {SERVICES.map((s,i)=>(
-                <div key={i} style={{display:'flex',alignItems:'center',gap:8}}>
-                  <div style={{width:22,height:22,borderRadius:'50%',background:'#E0F7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="3" strokeLinecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+                {/* airline */}
+                <div style={{display:'flex',alignItems:'center',gap:7,marginBottom:12}}>
+                  <div style={{width:22,height:22,borderRadius:6,background:'#EF4444',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
                   </div>
-                  <span style={{fontSize:12,fontWeight:500,color:'#3A4A55',lineHeight:1.3}}>{s}</span>
+                  <span style={{fontSize:12,color:'#5C7577'}}>{r.airline}</span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Price breakdown */}
-          <div style={{margin:'14px 16px 0',background:'#fff',borderRadius:20,padding:'16px 18px',boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
-            <div style={{fontSize:12,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.8,marginBottom:12}}>Narx tarkibi</div>
-            {[
-              {label:'Parvoz (2 kishi)',val:'3 200 000'},
-              {label:'Mehmonxona (7 kecha)',val:'3 500 000'},
-              {label:'Transfer',val:'Bepul'},
-              {label:'Sug\'urta',val:'Bepul'},
-            ].map((r,i)=>(
-              <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 0',borderBottom:i<3?'1px solid #F5F6FA':'none'}}>
-                <span style={{fontSize:13,color:'#5C7577'}}>{r.label}</span>
-                <span style={{fontSize:13,fontWeight:700,color:r.val==='Bepul'?'#22C55E':'#0A1F21'}}>{r.val}{r.val!=='Bepul'?' so\'m':''}</span>
+                {/* price block */}
+                <div style={{borderTop:'1px solid #F0F2F8',paddingTop:12}}>
+                  <div style={{textAlign:'right',marginBottom:6}}>
+                    <span style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>{fmtSum(r.price)}</span>
+                  </div>
+                  {/* installment */}
+                  <div style={{display:'flex',alignItems:'center',gap:6,justifyContent:'flex-end',marginBottom:6}}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    <span style={{fontSize:12,color:T,fontWeight:600}}>Muddatli: {fmtSum(installment)}/oy</span>
+                  </div>
+                  {/* premium badge */}
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:8}}>
+                    <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:999,padding:'6px 12px',boxShadow:'0 2px 8px rgba(217,119,6,0.25)'}}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                      <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>Premium narx: {fmtSum(r.prem)}</span>
+                    </div>
+                    <button style={{width:28,height:28,borderRadius:999,background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                    </button>
+                  </div>
+                  {/* coins */}
+                  <div style={{display:'flex',alignItems:'center',gap:6,marginTop:8}}>
+                    <div style={{width:18,height:18,borderRadius:'50%',background:'linear-gradient(135deg,#FBBF24,#D97706)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                      <span style={{fontSize:9,fontWeight:900,color:'#fff'}}>C</span>
+                    </div>
+                    <span style={{fontSize:11,color:'#5C7577'}}>{coins} Coins — xarid uchun bonus</span>
+                  </div>
+                  {/* action buttons */}
+                  <div style={{display:'flex',gap:8,marginTop:12}}>
+                    <button style={{flex:1,background:'#fff',border:`1.5px solid ${T}`,borderRadius:14,padding:'11px 0',fontSize:13,fontWeight:700,color:T,cursor:'pointer'}}>Tafsilotlar</button>
+                    <button style={{flex:2,background:T,border:'none',borderRadius:14,padding:'11px 0',fontSize:13,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.30)'}}>Zabronirovat'</button>
+                  </div>
+                </div>
               </div>
             ))}
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:10,padding:'12px 14px',background:'#F0F9FA',borderRadius:14}}>
-              <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Jami</span>
-              <span style={{fontSize:16,fontWeight:900,color:T}}>{(td.premium||td.regular||'')}</span>
-            </div>
-            {/* Coins */}
-            <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10}}>
-              <div style={{width:20,height:20,borderRadius:'50%',background:'linear-gradient(135deg,#FBBF24,#D97706)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                <span style={{fontSize:10,fontWeight:900,color:'#fff'}}>C</span>
-              </div>
-              <span style={{fontSize:12,color:'#5C7577'}}>Band qilsangiz <strong>{Math.floor(parseInt((td.premium||td.regular||'').replace(/\D/g,''))/10000)} Coins</strong> bonus to'planadi</span>
-            </div>
           </div>
+        </Scroll>
 
-          {/* Premium upsell */}
-          <div style={{margin:'14px 16px 0',background:'linear-gradient(135deg,#0099A8 0%,#006A74 100%)',borderRadius:20,padding:'16px 18px',boxShadow:'0 6px 20px rgba(0,153,168,0.30)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
-              <div style={{background:'rgba(255,255,255,0.2)',borderRadius:10,padding:'6px 10px',display:'inline-flex',alignItems:'center',gap:6}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
-                <span style={{fontSize:12,fontWeight:700,color:'#fff'}}>Premium</span>
-              </div>
+        {/* Fixed bottom CTA */}
+        <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:20,background:'linear-gradient(to bottom,rgba(244,245,250,0),#fff 28%)',padding:'10px 16px 28px'}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8}}>
+            <div>
+              <div style={{fontSize:11,color:'#9AA1B8'}}>Tanlangan narx</div>
+              <div style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>{fmtSum(ROOMS[tourRoom].price)}</div>
             </div>
-            <div style={{fontSize:13,color:'rgba(255,255,255,0.85)',lineHeight:1.5,marginBottom:10}}>Biznes klass + Premium mehmonxona + Shaxsiy transfer + Ajratilgan gid</div>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-              <div>
-                <div style={{fontSize:11,color:'rgba(255,255,255,0.6)'}}>Oddiy narx: <span style={{textDecoration:'line-through'}}>{td.regular}</span></div>
-                <div style={{fontSize:18,fontWeight:900,color:'#fff'}}>{td.premium}</div>
-              </div>
-              <button style={{background:'#fff',border:'none',borderRadius:14,padding:'10px 16px',fontSize:13,fontWeight:700,color:T,cursor:'pointer'}}>Tanlash</button>
-            </div>
+            <button style={{background:T,border:'none',borderRadius:16,padding:'13px 28px',fontSize:14,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Band qilish</button>
           </div>
-        </div>
-
-        {/* Fixed CTA */}
-        <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:20,padding:'12px 20px 30px',background:'linear-gradient(to bottom,rgba(244,245,250,0),#F4F5FA 30%)'}}>
-          <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Band qilish</button>
         </div>
       </Frame>
     );
