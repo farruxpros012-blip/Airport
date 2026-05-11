@@ -1640,7 +1640,7 @@ function ScreenTrip() {
             </button>
           </div>
           {/* Locate me */}
-          <button onClick={()=>setTaxiMapAddr('Mening joriy manzilim')} style={{position:'fixed',right:'calc(50% - 230px + 18px)',bottom:200,zIndex:10,width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
+          <button onClick={()=>setTaxiMapAddr('Mening joriy manzilim')} style={{position:'absolute',right:18,bottom:220,zIndex:6,width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
           </button>
           <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
@@ -1785,7 +1785,7 @@ function ScreenTrip() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
           </div>
-          <button onClick={()=>setXferMapAddr('Mening joriy manzilim')} style={{position:'fixed',right:'calc(50% - 230px + 18px)',bottom:200,zIndex:10,width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
+          <button onClick={()=>setXferMapAddr('Mening joriy manzilim')} style={{position:'absolute',right:18,bottom:220,zIndex:6,width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
           </button>
           {/* Fixed bottom panel */}
