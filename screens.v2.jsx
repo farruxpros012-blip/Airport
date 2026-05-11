@@ -2144,7 +2144,6 @@ function ScreenTrip() {
               {HROOMS.map((r,i)=>{
                 const imgIdx = hotelRoomImg[i]||0;
                 const coins2 = Math.floor(r.premium/10000);
-                const inst2  = Math.floor(r.premium/6);
                 return (
                   <div key={i} style={{margin:'0 16px',marginTop:i>0?14:0,background:'#F8FAFA',borderRadius:16,overflow:'hidden',border:'1px solid rgba(0,153,168,0.08)'}}>
                     {/* Photo carousel */}
@@ -2213,7 +2212,6 @@ function ScreenTrip() {
                           ) : (
                             <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>{fmtS(r.premium)}</div>
                           )}
-                          <div style={{fontSize:10,color:'#9AA1B8',marginTop:2}}>oyiga {fmtS(inst2)} (6 oyga)</div>
                         </div>
                         <div style={{display:'flex',gap:6}}>
                           <button style={{padding:'8px 12px',borderRadius:10,background:TBG,border:'none',
