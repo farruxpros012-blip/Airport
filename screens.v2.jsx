@@ -913,6 +913,7 @@ function ScreenTrip() {
   const [esimCountry, setEsimCountry] = React.useState(null);
   const [esimTab, setEsimTab] = React.useState('standard');
   const [esimSelected, setEsimSelected] = React.useState(null);
+  const [flightDetail, setFlightDetail] = React.useState(null);
   React.useEffect(() => {
     if (page && hintShown) {
       const t = setTimeout(() => setHintShown(false), 5000);
@@ -1624,18 +1625,8 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          <div style={{position:'absolute',inset:0,background:'#E8EFF0'}}/>
-          <div style={{position:'absolute',top:'10%',left:'5%',width:'22%',height:'18%',background:'#C8DEC9',borderRadius:12}}/>
-          <div style={{position:'absolute',top:'55%',right:'8%',width:'18%',height:'14%',background:'#C8DEC9',borderRadius:10}}/>
-          <div style={{position:'absolute',top:'28%',right:'15%',width:'12%',height:'8%',background:'#BDD5E8',borderRadius:999}}/>
-          <div style={{position:'absolute',top:'42%',left:0,right:0,height:18,background:'#fff',borderTop:'1px solid #d4d9df',borderBottom:'1px solid #d4d9df'}}/>
-          <div style={{position:'absolute',top:'62%',left:0,right:0,height:10,background:'#fff',borderTop:'1px solid #dde0e5',borderBottom:'1px solid #dde0e5'}}/>
-          <div style={{position:'absolute',top:0,bottom:0,left:'35%',width:16,background:'#fff',borderLeft:'1px solid #d4d9df',borderRight:'1px solid #d4d9df'}}/>
-          <div style={{position:'absolute',top:0,bottom:0,left:'60%',width:10,background:'#f5f5f3',borderLeft:'1px solid #dde0e5',borderRight:'1px solid #dde0e5'}}/>
-          {[[8,70,14,10],[25,72,18,8],[48,68,12,12],[70,72,16,8],[8,48,16,12],[48,50,14,10],[68,50,12,8],[25,25,14,12]].map(([l,t,w,h],i)=>(
-            <div key={i} style={{position:'absolute',left:`${l}%`,top:`${t}%`,width:`${w}%`,height:`${h}%`,background:'#D0D8DC',borderRadius:2,opacity:0.7}}/>
-          ))}
-          <div style={{position:'absolute',top:'48%',left:'50%',transform:'translate(-50%,-100%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none'}}>
+          <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=69.18%2C41.27%2C69.32%2C41.34&amp;layer=mapnik" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:'none'}}/>
+          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none',zIndex:5}}>
             <div style={{filter:'drop-shadow(0 6px 16px rgba(0,153,168,0.45))'}}>
               <div style={{width:48,height:48,background:T,borderRadius:'50% 50% 50% 4px',transform:'rotate(-45deg)',display:'flex',alignItems:'center',justifyContent:'center',border:'3px solid #fff'}}>
                 <div style={{transform:'rotate(45deg)',width:14,height:14,background:'#fff',borderRadius:'50%'}}/>
@@ -1643,11 +1634,15 @@ function ScreenTrip() {
             </div>
             <div style={{width:10,height:6,background:'rgba(0,0,0,0.18)',borderRadius:'50%',marginTop:3,filter:'blur(3px)'}}/>
           </div>
-          <div style={{position:'fixed',top:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'52px 18px 12px',background:'linear-gradient(to bottom,rgba(255,255,255,0.96) 60%,transparent)'}}>
-            <button onClick={()=>setTaxiMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.08)'}}>
+          <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'0 18px'}}>
+            <button onClick={()=>setTaxiMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
           </div>
+          {/* Locate me */}
+          <button onClick={()=>setTaxiMapAddr('Mening joriy manzilim')} style={{position:'fixed',right:'calc(50% - 230px + 18px)',bottom:200,zIndex:10,width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+          </button>
           <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
             <div style={{width:36,height:4,background:'#DDE0EB',borderRadius:999,margin:'0 auto 14px'}}/>
             <div style={{display:'flex',alignItems:'center',gap:10,background:'#F4F5FA',borderRadius:14,padding:'12px 14px',marginBottom:14}}>
@@ -1664,34 +1659,120 @@ function ScreenTrip() {
     );
   }
 
+  // Flight detail page
+  if (flightDetail) {
+    const it = flightDetail;
+    return (
+      <Frame>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 18px 14px',background:'#F4F5FA',position:'sticky',top:0,zIndex:10}}>
+          <button onClick={()=>setFlightDetail(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div style={{fontSize:17,fontWeight:800,color:'#0A1F21'}}>Reys tafsiloti</div>
+          <div style={{width:46}}/>
+        </div>
+        <Scroll style={{padding:'8px 16px 120px'}}>
+          {/* Airline */}
+          <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,display:'flex',alignItems:'center',gap:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <div style={{width:48,height:48,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <span style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>{it.airline.slice(0,1)}</span>
+            </div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>{it.airline}</div>
+              <div style={{fontSize:12,color:'#9AA1B8',marginTop:2}}>{it.tag}</div>
+            </div>
+          </div>
+          {/* Onward */}
+          <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <div style={{fontSize:11,color:'#9AA1B8',fontWeight:700,textTransform:'uppercase',letterSpacing:0.6,marginBottom:10}}>Borish · {it.depDate}</div>
+            <div style={{display:'flex',alignItems:'center',gap:14}}>
+              <div>
+                <div style={{fontSize:24,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.dep}</div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginTop:6}}>{it.from}</div>
+              </div>
+              <div style={{flex:1,textAlign:'center'}}>
+                <div style={{fontSize:11,color:'#9AA1B8'}}>{it.dur}</div>
+                <div style={{height:1,background:'#E8EAF3',margin:'8px 0',position:'relative'}}><div style={{position:'absolute',left:'50%',top:-7,transform:'translateX(-50%)',background:'#fff',padding:'0 4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg></div></div>
+                <div style={{fontSize:11,color:'#9AA1B8'}}>{it.stops}</div>
+              </div>
+              <div style={{textAlign:'right'}}>
+                <div style={{fontSize:24,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.arr}</div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginTop:6}}>{it.to}</div>
+              </div>
+            </div>
+          </div>
+          {/* Return */}
+          {it.retDep && <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <div style={{fontSize:11,color:'#9AA1B8',fontWeight:700,textTransform:'uppercase',letterSpacing:0.6,marginBottom:10}}>Qaytish · {it.retDate}</div>
+            <div style={{display:'flex',alignItems:'center',gap:14}}>
+              <div>
+                <div style={{fontSize:24,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.retDep}</div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginTop:6}}>{it.to}</div>
+              </div>
+              <div style={{flex:1,textAlign:'center'}}>
+                <div style={{fontSize:11,color:'#9AA1B8'}}>{it.retDur}</div>
+                <div style={{height:1,background:'#E8EAF3',margin:'8px 0',position:'relative'}}><div style={{position:'absolute',left:'50%',top:-7,transform:'translateX(-50%)',background:'#fff',padding:'0 4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg></div></div>
+                <div style={{fontSize:11,color:'#9AA1B8'}}>{it.stops}</div>
+              </div>
+              <div style={{textAlign:'right'}}>
+                <div style={{fontSize:24,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.retArr}</div>
+                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginTop:6}}>{it.from}</div>
+              </div>
+            </div>
+          </div>}
+          {/* Info */}
+          <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Reys haqida</div>
+            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={it.baggage?T:'#9AA1B8'} strokeWidth="2"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
+              <span style={{fontSize:13,color:'#0A1F21'}}>{it.baggage?'Bagaj kiritilgan (23 kg)':"Bagajsiz"}</span>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
+              <span style={{fontSize:13,color:'#0A1F21'}}>Qo'l yuki 7 kg gacha</span>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              <span style={{fontSize:13,color:'#0A1F21'}}>Bekor qilish: pulli</span>
+            </div>
+          </div>
+          {/* Price */}
+          <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+              <span style={{fontSize:13,color:'#5C7577'}}>Oddiy narx</span>
+              <span style={{fontSize:18,fontWeight:800,color:'#0A1F21'}}>{fmtPrice(it.regular)}</span>
+            </div>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:14,padding:'10px 14px',boxShadow:'0 2px 8px rgba(217,119,6,0.25)'}}>
+              <div style={{display:'flex',alignItems:'center',gap:8}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                <span style={{fontSize:12,fontWeight:700,color:'#fff'}}>Premium narx</span>
+              </div>
+              <span style={{fontSize:16,fontWeight:800,color:'#fff'}}>{fmtPrice(it.premium)}</span>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:6,marginTop:10}}>
+              <div style={{width:18,height:18,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <span style={{fontSize:9,fontWeight:900,color:'#92400E'}}>C</span>
+              </div>
+              <span style={{fontSize:12,color:'#5C7577'}}>{Math.floor(parseInt(it.premium.replace(/\D/g,''))/10000)} Coins bonus</span>
+            </div>
+          </div>
+        </Scroll>
+        {/* Sticky CTA */}
+        <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,padding:'12px 20px 28px',background:'linear-gradient(to bottom,rgba(244,245,250,0) 0%,#F4F5FA 30%)'}}>
+          <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Band qilish</button>
+        </div>
+      </Frame>
+    );
+  }
+
   // Transfer map page (full screen)
   if (xferMapPage) {
     const mapTarget = xferMapPage;
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          {/* Map background — block colors like a real map */}
-          <div style={{position:'absolute',inset:0,background:'#E8EFF0'}}/>
-          {/* Green park areas */}
-          <div style={{position:'absolute',top:'10%',left:'5%',width:'22%',height:'18%',background:'#C8DEC9',borderRadius:12}}/>
-          <div style={{position:'absolute',top:'55%',right:'8%',width:'18%',height:'14%',background:'#C8DEC9',borderRadius:10}}/>
-          <div style={{position:'absolute',bottom:'18%',left:'12%',width:'14%',height:'12%',background:'#C8DEC9',borderRadius:8}}/>
-          {/* Water */}
-          <div style={{position:'absolute',top:'28%',right:'15%',width:'12%',height:'8%',background:'#BDD5E8',borderRadius:999}}/>
-          {/* Roads — major horizontal */}
-          <div style={{position:'absolute',top:'42%',left:0,right:0,height:18,background:'#fff',borderTop:'1px solid #d4d9df',borderBottom:'1px solid #d4d9df'}}/>
-          <div style={{position:'absolute',top:'62%',left:0,right:0,height:10,background:'#fff',borderTop:'1px solid #dde0e5',borderBottom:'1px solid #dde0e5'}}/>
-          <div style={{position:'absolute',top:'22%',left:0,right:0,height:8,background:'#f5f5f3',borderTop:'1px solid #e5e8ec',borderBottom:'1px solid #e5e8ec'}}/>
-          {/* Roads — vertical */}
-          <div style={{position:'absolute',top:0,bottom:0,left:'35%',width:16,background:'#fff',borderLeft:'1px solid #d4d9df',borderRight:'1px solid #d4d9df'}}/>
-          <div style={{position:'absolute',top:0,bottom:0,left:'60%',width:10,background:'#f5f5f3',borderLeft:'1px solid #dde0e5',borderRight:'1px solid #dde0e5'}}/>
-          <div style={{position:'absolute',top:0,bottom:0,left:'15%',width:8,background:'#f5f5f3',borderLeft:'1px solid #e5e8ec',borderRight:'1px solid #e5e8ec'}}/>
-          {/* Block buildings */}
-          {[[8,70,14,10],[25,72,18,8],[48,68,12,12],[70,72,16,8],[80,65,10,10],[8,48,16,12],[25,50,10,8],[48,50,14,10],[68,50,12,8],[80,50,10,10],[8,28,10,8],[25,25,14,12],[48,28,10,8],[68,25,12,10]].map(([l,t,w,h],i)=>(
-            <div key={i} style={{position:'absolute',left:`${l}%`,top:`${t}%`,width:`${w}%`,height:`${h}%`,background:'#D0D8DC',borderRadius:2,opacity:0.7}}/>
-          ))}
-          {/* Center pin */}
-          <div style={{position:'absolute',top:'48%',left:'50%',transform:'translate(-50%,-100%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none'}}>
+          <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=69.18%2C41.27%2C69.32%2C41.34&amp;layer=mapnik" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:'none'}}/>
+          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none',zIndex:5}}>
             <div style={{filter:'drop-shadow(0 6px 16px rgba(0,153,168,0.45))'}}>
               <div style={{width:48,height:48,background:T,borderRadius:'50% 50% 50% 4px',transform:'rotate(-45deg)',display:'flex',alignItems:'center',justifyContent:'center',border:'3px solid #fff'}}>
                 <div style={{transform:'rotate(45deg)',width:14,height:14,background:'#fff',borderRadius:'50%'}}/>
@@ -1699,12 +1780,14 @@ function ScreenTrip() {
             </div>
             <div style={{width:10,height:6,background:'rgba(0,0,0,0.18)',borderRadius:'50%',marginTop:3,filter:'blur(3px)'}}/>
           </div>
-          {/* Fixed top bar */}
-          <div style={{position:'fixed',top:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'52px 18px 12px',background:'linear-gradient(to bottom,rgba(255,255,255,0.96) 60%,transparent)'}}>
-            <button onClick={()=>setXferMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.08)'}}>
+          <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'0 18px'}}>
+            <button onClick={()=>setXferMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
           </div>
+          <button onClick={()=>setXferMapAddr('Mening joriy manzilim')} style={{position:'fixed',right:'calc(50% - 230px + 18px)',bottom:200,zIndex:10,width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+          </button>
           {/* Fixed bottom panel */}
           <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
             <div style={{width:36,height:4,background:'#DDE0EB',borderRadius:999,margin:'0 auto 14px'}}/>
@@ -1863,7 +1946,7 @@ function ScreenTrip() {
               {s && <button onClick={()=>setS('')} style={{border:'none',background:'none',padding:0,cursor:'pointer',color:'#9AA1B8',fontSize:16,lineHeight:1}}>×</button>}
             </div>
             {/* Map button — always visible in sticky header */}
-            <button onClick={()=>{const t=xferFromSheet;setXferFromSheet(null);setXferMapPage(t);}} style={{width:'100%',display:'flex',alignItems:'center',gap:10,background:'#EDF7F8',border:'1px solid rgba(0,153,168,0.18)',borderRadius:14,padding:'11px 14px',cursor:'pointer'}}>
+            <button onClick={()=>{const t=xferFromSheet;setXferFromSheet(null);setXferMapPage(t);}} style={{display:'inline-flex',alignItems:'center',gap:8,background:'none',border:'none',padding:'8px 4px',cursor:'pointer'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
               <span style={{fontSize:14,fontWeight:600,color:T}}>Xaritadan belgilash</span>
             </button>
@@ -1928,7 +2011,7 @@ function ScreenTrip() {
               <input ref={inputRef} value={s} onChange={e=>setS(e.target.value)} placeholder="Shahar, aeroport yoki manzil..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
               {s && <button onClick={()=>setS('')} style={{border:'none',background:'none',padding:0,cursor:'pointer',color:'#9AA1B8',fontSize:16,lineHeight:1}}>×</button>}
             </div>
-            <button onClick={()=>{const t=taxiFromSheet;setTaxiFromSheet(null);setTaxiMapPage(t);}} style={{width:'100%',display:'flex',alignItems:'center',gap:10,background:'#EDF7F8',border:'1px solid rgba(0,153,168,0.18)',borderRadius:14,padding:'11px 14px',cursor:'pointer'}}>
+            <button onClick={()=>{const t=taxiFromSheet;setTaxiFromSheet(null);setTaxiMapPage(t);}} style={{display:'inline-flex',alignItems:'center',gap:8,background:'none',border:'none',padding:'8px 4px',cursor:'pointer'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
               <span style={{fontSize:14,fontWeight:600,color:T}}>Xaritadan belgilash</span>
             </button>
@@ -2250,7 +2333,7 @@ function ScreenTrip() {
         <Scroll style={{background:'#F4F5FA',padding:16}}>
           {/* AVIABILET — flight-style cards */}
           {page === 'aviabilet' && items.map((it,i) => (
-            <div key={i} style={{background:'#fff',borderRadius:20,marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)',overflow:'hidden'}}>
+            <div key={i} onClick={()=>setFlightDetail(it)} style={{background:'#fff',borderRadius:20,marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)',overflow:'hidden',cursor:'pointer'}}>
               {/* Tag */}
               <div style={{padding:'14px 16px 0'}}>
                 <span style={{display:'inline-block',background:T,color:'#fff',fontSize:11,fontWeight:700,padding:'4px 12px',borderRadius:999}}>{it.tag}</span>
