@@ -1882,15 +1882,17 @@ function ScreenTrip() {
             <img src={GALLERY[excurGallery]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
             <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.25) 0%,transparent 45%,rgba(0,0,0,0.45) 100%)'}}/>
             <button onClick={()=>{setExcurDetail(null);setExcurGallery(0);setExcurExpanded(false);setExcurPeople(1);}}
-              style={{position:'absolute',top:12,left:12,zIndex:10,width:36,height:36,borderRadius:'50%',
-                background:'rgba(0,0,0,0.3)',backdropFilter:'blur(10px)',border:'1px solid rgba(255,255,255,0.2)',
-                cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              style={{position:'absolute',top:14,left:14,zIndex:10,width:42,height:42,borderRadius:'50%',
+                background:'rgba(255,255,255,0.95)',backdropFilter:'blur(10px)',border:'none',
+                cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',
+                boxShadow:'0 4px 14px rgba(0,0,0,0.15)'}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
-            <button style={{position:'absolute',top:12,right:12,zIndex:10,width:36,height:36,borderRadius:'50%',
-              background:'rgba(0,0,0,0.3)',backdropFilter:'blur(10px)',border:'1px solid rgba(255,255,255,0.2)',
-              cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <button style={{position:'absolute',top:14,right:14,zIndex:10,width:42,height:42,borderRadius:'50%',
+              background:'rgba(255,255,255,0.95)',backdropFilter:'blur(10px)',border:'none',
+              cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',
+              boxShadow:'0 4px 14px rgba(0,0,0,0.15)'}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#EF4444" stroke="#EF4444" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </button>
             {excurGallery > 0 && (
               <button onClick={()=>setExcurGallery(g=>g-1)}
@@ -1914,73 +1916,108 @@ function ScreenTrip() {
             </div>
           </div>
 
-          {/* 2. Title + badges */}
+          {/* 2. Title + rating + thumbnails + meta */}
           <div style={cardStyle}>
-            <div style={{padding:'16px 16px 0'}}>
-              <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',lineHeight:1.3}}>{ed.title}</div>
-              <div style={{display:'flex',gap:6,marginTop:10,flexWrap:'wrap'}}>
-                {[ed.sub].map((t,i)=>(
-                  <div key={i} style={{background:TBG,borderRadius:20,padding:'4px 10px',fontSize:11,fontWeight:600,color:T}}>{t}</div>
+            <div style={{padding:'16px'}}>
+              <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:10}}>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:19,fontWeight:800,color:'#0A1F21',lineHeight:1.25}}>{ed.title}</div>
+                  <div style={{fontSize:13,color:'#5C7577',marginTop:4}}>{ed.sub}</div>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:5,background:'#FEF3C7',borderRadius:20,padding:'5px 10px',flexShrink:0}}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span style={{fontSize:13,fontWeight:800,color:'#92400E'}}>4.9</span>
+                </div>
+              </div>
+
+              {/* Thumbnail strip */}
+              <div style={{display:'flex',gap:8,marginTop:14}}>
+                {GALLERY.map((g,i)=>(
+                  <div key={i} onClick={()=>setExcurGallery(i)} style={{flex:1,aspectRatio:'1/1',borderRadius:12,overflow:'hidden',cursor:'pointer',position:'relative',border:i===excurGallery?`2px solid ${T}`:'2px solid transparent'}}>
+                    <img src={g} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                  </div>
                 ))}
               </div>
-            </div>
-            <div style={{height:1,background:'#F0F2F8',margin:'14px 16px'}}/>
-            {[
-              {icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>, title:'Bepul bekor qilish', sub:'Qaytarish mumkin', color:'#D1FAE5'},
-              {icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>, title:"Bilish kerak bo'lganlar", sub:'Chipta sotib olishdan oldin ma\'lumot', color:'#FEF3C7'},
-            ].map((it,i)=>(
-              <div key={i} style={{margin:'0 16px',marginBottom:i===0?8:16,display:'flex',alignItems:'center',gap:10,background:it.color,borderRadius:12,padding:'10px 12px'}}>
-                <div style={{flexShrink:0}}>{it.icon}</div>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:12,fontWeight:700,color:'#0A1F21'}}>{it.title}</div>
-                  <div style={{fontSize:11,color:'#5C7577',marginTop:1}}>{it.sub}</div>
+
+              {/* Location row */}
+              <div style={{display:'flex',alignItems:'center',gap:8,marginTop:14}}>
+                <div style={{width:24,height:24,borderRadius:'50%',background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 </div>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>O'zbekiston</span>
               </div>
-            ))}
+
+              <div style={{height:1,background:'#F0F2F8',margin:'14px 0'}}/>
+
+              {/* Joined people */}
+              <div style={{display:'flex',alignItems:'center',gap:10}}>
+                <div style={{display:'flex'}}>
+                  {['#FDA4AF','#A5B4FC','#86EFAC','#FCD34D'].map((c,i)=>(
+                    <div key={i} style={{width:28,height:28,borderRadius:'50%',background:c,border:'2px solid #fff',marginLeft:i>0?-8:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#fff'}}>
+                      {['N','J','A','M'][i]}
+                    </div>
+                  ))}
+                </div>
+                <span style={{fontSize:12,fontWeight:600,color:'#5C7577'}}>+72 kishi qo'shilgan</span>
+              </div>
+            </div>
           </div>
 
-          {/* 3. Tour price — interactive stepper */}
+          {/* 3. Narx */}
           <div style={cardStyle}>
-            <div style={{padding:'16px 16px 14px'}}>
-              <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',marginBottom:14}}>Tur narxi</div>
-
-              {/* People stepper */}
-              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#F4F5FA',borderRadius:14,padding:'12px 16px',marginBottom:14}}>
-                <div>
-                  <div style={{fontSize:11,color:'#9AA1B8',fontWeight:600,marginBottom:2}}>Ishtirokchilar soni</div>
-                  <div style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{excurPeople} kishi</div>
-                </div>
-                <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <div style={{padding:'16px'}}>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+                <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Narx</div>
+                <div style={{display:'flex',alignItems:'center',gap:8,background:'#F4F5FA',borderRadius:999,padding:'4px'}}>
                   <button onClick={()=>setExcurPeople(v=>Math.max(1,v-1))}
-                    style={{width:32,height:32,borderRadius:10,background:excurPeople>1?TBG:'#EAEDF3',border:'none',cursor:excurPeople>1?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={excurPeople>1?T:'#C0C5D4'} strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    style={{width:26,height:26,borderRadius:'50%',background:excurPeople>1?'#fff':'transparent',border:'none',cursor:excurPeople>1?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:excurPeople>1?'0 1px 3px rgba(0,0,0,0.08)':'none'}}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={excurPeople>1?'#0A1F21':'#C0C5D4'} strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   </button>
-                  <span style={{fontSize:16,fontWeight:800,color:'#0A1F21',minWidth:20,textAlign:'center'}}>{excurPeople}</span>
+                  <span style={{fontSize:13,fontWeight:800,color:'#0A1F21',minWidth:36,textAlign:'center'}}>{excurPeople} kishi</span>
                   <button onClick={()=>setExcurPeople(v=>Math.min(10,v+1))}
-                    style={{width:32,height:32,borderRadius:10,background:excurPeople<10?T:'#EAEDF3',border:'none',cursor:excurPeople<10?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={excurPeople<10?'#fff':'#C0C5D4'} strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    style={{width:26,height:26,borderRadius:'50%',background:excurPeople<10?'#fff':'transparent',border:'none',cursor:excurPeople<10?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:excurPeople<10?'0 1px 3px rgba(0,0,0,0.08)':'none'}}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={excurPeople<10?'#0A1F21':'#C0C5D4'} strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   </button>
                 </div>
               </div>
 
-              {/* Price display */}
-              <div style={{background:`linear-gradient(135deg,${T},#006D79)`,borderRadius:16,padding:'16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <div>
-                  <div style={{fontSize:11,color:'rgba(255,255,255,0.7)',fontWeight:600,marginBottom:3}}>{excurPeople} kishi uchun narx</div>
-                  <div style={{fontSize:12,color:'rgba(255,255,255,0.55)',textDecoration:'line-through'}}>{fmtS(curPrice.reg * excurPeople)}</div>
-                  <div style={{fontSize:22,fontWeight:900,color:'#fff',lineHeight:1.1}}>{fmtS(total)}</div>
+              {/* Price card */}
+              <div style={{background:`linear-gradient(135deg,${T},#006D79)`,borderRadius:14,padding:'14px 16px',position:'relative',overflow:'hidden'}}>
+                <div style={{position:'absolute',right:-30,top:-30,width:120,height:120,borderRadius:'50%',background:'rgba(255,255,255,0.06)'}}/>
+                <div style={{position:'relative',display:'flex',alignItems:'flex-end',justifyContent:'space-between'}}>
+                  <div>
+                    <div style={{fontSize:11,color:'rgba(255,255,255,0.75)',fontWeight:600}}>{excurPeople} kishi · jami</div>
+                    <div style={{fontSize:11,color:'rgba(255,255,255,0.55)',textDecoration:'line-through',marginTop:2}}>{fmtS(curPrice.reg * excurPeople)}</div>
+                    <div style={{fontSize:22,fontWeight:900,color:'#fff',lineHeight:1.1,marginTop:1}}>{fmtS(total)}</div>
+                  </div>
+                  {excurPeople > 1 && (
+                    <div style={{textAlign:'right'}}>
+                      <div style={{fontSize:10,color:'rgba(255,255,255,0.75)',fontWeight:600}}>kishi boshiga</div>
+                      <div style={{fontSize:14,fontWeight:800,color:'#fff',marginTop:1}}>{fmtS(curPrice.prem)}</div>
+                    </div>
+                  )}
                 </div>
-                {excurPeople > 1 && (
-                  <div style={{background:'rgba(255,255,255,0.18)',borderRadius:12,padding:'8px 12px',textAlign:'center'}}>
-                    <div style={{fontSize:11,color:'rgba(255,255,255,0.8)',fontWeight:600,marginBottom:2}}>1 kishiga</div>
-                    <div style={{fontSize:15,fontWeight:800,color:'#fff'}}>{fmtS(curPrice.prem)}</div>
-                    <div style={{marginTop:4,background:'rgba(255,255,255,0.2)',borderRadius:6,padding:'2px 6px'}}>
-                      <span style={{fontSize:9,color:'#fff',fontWeight:700}}>{Math.round((1 - curPrice.prem / PRICE_TABLE[0].prem)*100)}% tejash</span>
+              </div>
+
+              {/* Saving indicator (only when 2+) */}
+              {excurPeople > 1 && (() => {
+                const saved = (PRICE_TABLE[0].prem - curPrice.prem) * excurPeople;
+                const pct = Math.round((1 - curPrice.prem / PRICE_TABLE[0].prem)*100);
+                return (
+                  <div style={{marginTop:10,display:'flex',alignItems:'center',gap:10,background:'#D1FAE5',borderRadius:12,padding:'10px 12px'}}>
+                    <div style={{width:32,height:32,borderRadius:'50%',background:'#059669',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:12,fontWeight:700,color:'#065F46'}}>Guruhda arzonroq</div>
+                      <div style={{fontSize:11,color:'#065F46',marginTop:1}}>{fmtS(saved)} tejaysiz</div>
+                    </div>
+                    <div style={{background:'#059669',borderRadius:8,padding:'5px 10px'}}>
+                      <span style={{fontSize:13,fontWeight:800,color:'#fff'}}>−{pct}%</span>
                     </div>
                   </div>
-                )}
-              </div>
+                );
+              })()}
             </div>
           </div>
 
