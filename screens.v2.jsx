@@ -1876,8 +1876,8 @@ function ScreenTrip() {
       <Frame>
         <div style={{flex:1,overflowY:'auto',paddingBottom:100}}>
 
-          {/* 1. Hero carousel */}
-          <div style={{margin:'16px 16px 0',borderRadius:20,overflow:'hidden',position:'relative',height:240}}
+          {/* 1. Hero carousel — edge to edge */}
+          <div style={{position:'relative',height:280,overflow:'hidden'}}
             onTouchStart={eSwipeStart} onTouchEnd={eSwipeEnd}>
             <img src={GALLERY[excurGallery]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
             <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.25) 0%,transparent 45%,rgba(0,0,0,0.45) 100%)'}}/>
@@ -1916,49 +1916,32 @@ function ScreenTrip() {
             </div>
           </div>
 
-          {/* 2. Title + rating + thumbnails + meta */}
+          {/* 2. Title + info */}
           <div style={cardStyle}>
             <div style={{padding:'16px'}}>
-              <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:10}}>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:19,fontWeight:800,color:'#0A1F21',lineHeight:1.25}}>{ed.title}</div>
-                  <div style={{fontSize:13,color:'#5C7577',marginTop:4}}>{ed.sub}</div>
-                </div>
-                <div style={{display:'flex',alignItems:'center',gap:5,background:'#FEF3C7',borderRadius:20,padding:'5px 10px',flexShrink:0}}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  <span style={{fontSize:13,fontWeight:800,color:'#92400E'}}>4.9</span>
-                </div>
-              </div>
+              <div style={{fontSize:19,fontWeight:800,color:'#0A1F21',lineHeight:1.25}}>{ed.title}</div>
+              <div style={{fontSize:13,color:'#5C7577',marginTop:4}}>{ed.sub}</div>
 
-              {/* Thumbnail strip */}
-              <div style={{display:'flex',gap:8,marginTop:14}}>
-                {GALLERY.map((g,i)=>(
-                  <div key={i} onClick={()=>setExcurGallery(i)} style={{flex:1,aspectRatio:'1/1',borderRadius:12,overflow:'hidden',cursor:'pointer',position:'relative',border:i===excurGallery?`2px solid ${T}`:'2px solid transparent'}}>
-                    <img src={g} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+              <div style={{display:'flex',flexDirection:'column',gap:8,marginTop:14}}>
+                <div style={{display:'flex',alignItems:'center',gap:10,background:'#ECFDF5',borderRadius:12,padding:'10px 12px'}}>
+                  <div style={{width:28,height:28,borderRadius:8,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.4" strokeLinecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
                   </div>
-                ))}
-              </div>
-
-              {/* Location row */}
-              <div style={{display:'flex',alignItems:'center',gap:8,marginTop:14}}>
-                <div style={{width:24,height:24,borderRadius:'50%',background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:12,fontWeight:700,color:'#065F46'}}>Bepul bekor qilish</div>
+                    <div style={{fontSize:11,color:'#047857',marginTop:1}}>Pulni qaytarish mumkin</div>
+                  </div>
                 </div>
-                <span style={{fontSize:13,fontWeight:600,color:'#0A1F21'}}>O'zbekiston</span>
-              </div>
-
-              <div style={{height:1,background:'#F0F2F8',margin:'14px 0'}}/>
-
-              {/* Joined people */}
-              <div style={{display:'flex',alignItems:'center',gap:10}}>
-                <div style={{display:'flex'}}>
-                  {['#FDA4AF','#A5B4FC','#86EFAC','#FCD34D'].map((c,i)=>(
-                    <div key={i} style={{width:28,height:28,borderRadius:'50%',background:c,border:'2px solid #fff',marginLeft:i>0?-8:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#fff'}}>
-                      {['N','J','A','M'][i]}
-                    </div>
-                  ))}
+                <div style={{display:'flex',alignItems:'center',gap:10,background:'#FFFBEB',borderRadius:12,padding:'10px 12px'}}>
+                  <div style={{width:28,height:28,borderRadius:8,background:'#FEF3C7',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:12,fontWeight:700,color:'#78350F'}}>Bilish kerak bo'lganlar</div>
+                    <div style={{fontSize:11,color:'#92400E',marginTop:1}}>Chipta sotib olishdan oldin o'qing</div>
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
                 </div>
-                <span style={{fontSize:12,fontWeight:600,color:'#5C7577'}}>+72 kishi qo'shilgan</span>
               </div>
             </div>
           </div>
