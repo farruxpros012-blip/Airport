@@ -1934,35 +1934,48 @@ function ScreenTrip() {
             </div>
           </div>
 
-          {/* 2. Compact chip row — Bepul bekor qilish / Bilish kerak */}
-          <div style={{display:'flex',gap:8,padding:'12px 16px 0'}}>
-            <div style={{flex:1,display:'flex',alignItems:'center',gap:8,background:'#fff',borderRadius:12,padding:'8px 10px',boxShadow:'0 1px 6px rgba(10,31,33,0.05)',border:'1px solid #D1FAE5'}}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.3" strokeLinecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
-              <span style={{fontSize:11,fontWeight:700,color:'#065F46'}}>Bepul bekor qilish</span>
+          {/* 2. Bepul bekor qilish / Bilish kerak — with subtitle */}
+          <div style={{display:'flex',flexDirection:'column',gap:8,padding:'12px 16px 0'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:14,padding:'11px 13px',boxShadow:'0 2px 8px rgba(10,31,33,0.05)',border:'1px solid #D1FAE5'}}>
+              <div style={{width:32,height:32,borderRadius:10,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.3" strokeLinecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
+              </div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:12.5,fontWeight:800,color:'#065F46',lineHeight:1.2}}>Bepul bekor qilish</div>
+                <div style={{fontSize:11,color:'#047857',marginTop:2}}>Ekskursiyadan 24 soat oldin to'liq pulni qaytarib oling</div>
+              </div>
             </div>
-            <div style={{flex:1,display:'flex',alignItems:'center',gap:8,background:'#fff',borderRadius:12,padding:'8px 10px',boxShadow:'0 1px 6px rgba(10,31,33,0.05)',border:'1px solid #FED7AA',cursor:'pointer'}}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span style={{flex:1,fontSize:11,fontWeight:700,color:'#78350F'}}>Bilish kerak</span>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:14,padding:'11px 13px',boxShadow:'0 2px 8px rgba(10,31,33,0.05)',border:'1px solid #FED7AA',cursor:'pointer'}}>
+              <div style={{width:32,height:32,borderRadius:10,background:'#FEF3C7',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:12.5,fontWeight:800,color:'#78350F',lineHeight:1.2}}>Bilish kerak bo'lganlar</div>
+                <div style={{fontSize:11,color:'#92400E',marginTop:2}}>Chipta sotib olishdan oldin shartlarni o'qing</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
 
           {/* 3. Narx — slim, inline */}
           <div style={{background:'#fff',margin:'10px 16px 0',borderRadius:18,padding:'14px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
-              <div style={{display:'flex',alignItems:'center',gap:6}}>
-                <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Narx</span>
-                <span style={{fontSize:11,color:'#9AA1B8'}}>· kishi sonini tanlang</span>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+              <div>
+                <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>Narx</div>
+                <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>Necha kishi borasiz?</div>
               </div>
-              <div style={{display:'flex',alignItems:'center',background:'#F4F7F8',borderRadius:999,padding:'3px',gap:2}}>
+              <div style={{display:'flex',alignItems:'center',background:'#F4F7F8',borderRadius:999,padding:'5px',gap:4}}>
                 <button onClick={()=>setExcurPeople(v=>Math.max(1,v-1))}
-                  style={{width:26,height:26,borderRadius:'50%',background:excurPeople>1?T:'transparent',border:'none',cursor:excurPeople>1?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={excurPeople>1?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  style={{width:38,height:38,borderRadius:'50%',background:excurPeople>1?T:'#E5E9EC',border:'none',cursor:excurPeople>1?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:excurPeople>1?'0 2px 6px rgba(0,153,168,0.25)':'none',transition:'all 0.2s'}}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={excurPeople>1?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
-                <span style={{fontSize:13,fontWeight:800,color:'#0A1F21',minWidth:24,textAlign:'center'}}>{excurPeople}</span>
+                <div style={{minWidth:60,textAlign:'center'}}>
+                  <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',lineHeight:1}}>{excurPeople}</div>
+                  <div style={{fontSize:10,color:'#7A8FA0',marginTop:1}}>kishi</div>
+                </div>
                 <button onClick={()=>setExcurPeople(v=>Math.min(10,v+1))}
-                  style={{width:26,height:26,borderRadius:'50%',background:excurPeople<10?T:'transparent',border:'none',cursor:excurPeople<10?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={excurPeople<10?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  style={{width:38,height:38,borderRadius:'50%',background:excurPeople<10?T:'#E5E9EC',border:'none',cursor:excurPeople<10?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:excurPeople<10?'0 2px 6px rgba(0,153,168,0.25)':'none',transition:'all 0.2s'}}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={excurPeople<10?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
               </div>
             </div>
