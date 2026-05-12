@@ -1909,7 +1909,7 @@ function ScreenTrip() {
                 <div key={i} onClick={()=>setExcurGallery(i)} style={{width:i===excurGallery?18:6,height:6,borderRadius:3,background:i===excurGallery?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.25s',cursor:'pointer'}}/>
               ))}
             </div>
-            <div style={{position:'absolute',top:12,right:60,background:'rgba(0,0,0,0.45)',backdropFilter:'blur(6px)',borderRadius:8,padding:'3px 9px',fontSize:11,fontWeight:700,color:'#fff'}}>
+            <div style={{position:'absolute',bottom:12,right:12,background:'rgba(0,0,0,0.45)',backdropFilter:'blur(6px)',borderRadius:8,padding:'3px 9px',fontSize:11,fontWeight:700,color:'#fff'}}>
               {excurGallery+1}/{GALLERY.length}
             </div>
           </div>
@@ -1965,35 +1965,21 @@ function ScreenTrip() {
               </div>
 
               {/* Price display */}
-              <div style={{background:`linear-gradient(135deg,${T},#006D79)`,borderRadius:16,padding:'16px'}}>
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8}}>
-                  <div>
-                    <div style={{fontSize:11,color:'rgba(255,255,255,0.7)',fontWeight:600,marginBottom:3}}>1 kishiga</div>
-                    <div style={{fontSize:11,color:'rgba(255,255,255,0.55)',textDecoration:'line-through'}}>{fmtS(curPrice.reg)}</div>
-                    <div style={{fontSize:20,fontWeight:900,color:'#fff'}}>{fmtS(curPrice.prem)}</div>
-                  </div>
-                  {excurPeople > 1 && (
-                    <div style={{textAlign:'right'}}>
-                      <div style={{fontSize:11,color:'rgba(255,255,255,0.7)',fontWeight:600,marginBottom:3}}>Jami {excurPeople} kishi</div>
-                      <div style={{fontSize:16,fontWeight:800,color:'#fff'}}>{fmtS(total)}</div>
-                      <div style={{marginTop:4,background:'rgba(255,255,255,0.2)',borderRadius:8,padding:'3px 8px',display:'inline-block'}}>
-                        <span style={{fontSize:10,color:'#fff',fontWeight:700}}>
-                          {Math.round((1 - curPrice.prem / PRICE_TABLE[0].prem)*100)}% tejash
-                        </span>
-                      </div>
+              <div style={{background:`linear-gradient(135deg,${T},#006D79)`,borderRadius:16,padding:'16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                <div>
+                  <div style={{fontSize:11,color:'rgba(255,255,255,0.7)',fontWeight:600,marginBottom:3}}>{excurPeople} kishi uchun narx</div>
+                  <div style={{fontSize:12,color:'rgba(255,255,255,0.55)',textDecoration:'line-through'}}>{fmtS(curPrice.reg * excurPeople)}</div>
+                  <div style={{fontSize:22,fontWeight:900,color:'#fff',lineHeight:1.1}}>{fmtS(total)}</div>
+                </div>
+                {excurPeople > 1 && (
+                  <div style={{background:'rgba(255,255,255,0.18)',borderRadius:12,padding:'8px 12px',textAlign:'center'}}>
+                    <div style={{fontSize:11,color:'rgba(255,255,255,0.8)',fontWeight:600,marginBottom:2}}>1 kishiga</div>
+                    <div style={{fontSize:15,fontWeight:800,color:'#fff'}}>{fmtS(curPrice.prem)}</div>
+                    <div style={{marginTop:4,background:'rgba(255,255,255,0.2)',borderRadius:6,padding:'2px 6px'}}>
+                      <span style={{fontSize:9,color:'#fff',fontWeight:700}}>{Math.round((1 - curPrice.prem / PRICE_TABLE[0].prem)*100)}% tejash</span>
                     </div>
-                  )}
-                </div>
-                <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
-                  {[1,2,3,4,5,6,8,10].map(n=>(
-                    <button key={n} onClick={()=>setExcurPeople(n)}
-                      style={{flex:'0 0 auto',background:excurPeople===n?'rgba(255,255,255,0.95)':'rgba(255,255,255,0.15)',
-                        border:'none',borderRadius:8,padding:'5px 10px',cursor:'pointer',
-                        fontSize:11,fontWeight:700,color:excurPeople===n?T:'#fff',transition:'all 0.15s'}}>
-                      {n}
-                    </button>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
