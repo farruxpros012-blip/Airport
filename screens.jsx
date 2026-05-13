@@ -2207,51 +2207,50 @@ function ScreenTrip() {
 
     return (
       <Frame>
-        {/* App bar */}
-        <div style={{position:'sticky',top:0,zIndex:30,background:'#F4F7F8',display:'flex',alignItems:'center',padding:'12px 16px',gap:12}}>
-          <button onClick={()=>{setExcurDetail(null);setExcurGallery(0);setExcurExpanded(false);setExcurPeople(1);}}
-            style={{width:50,height:50,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
-          </button>
-          <div style={{flex:1,fontSize:15,fontWeight:800,color:'#0A1F21',textAlign:'center',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',paddingRight:50,letterSpacing:-0.2}}>
-            {ed.title}
-          </div>
-        </div>
-
         <div style={{flex:1,overflowY:'auto',paddingBottom:120,background:'#F4F7F8'}}>
 
-          {/* Hero carousel — rounded card */}
-          <div style={{margin:'4px 16px 0',borderRadius:14,overflow:'hidden',position:'relative',background:'#000',height:210}}
+          {/* Hero — edge-to-edge 320px with overlay back btn + title */}
+          <div style={{position:'relative',height:320,overflow:'hidden',background:'#000'}}
             onTouchStart={eSwipeStart} onTouchEnd={eSwipeEnd}>
             <img src={GALLERY[excurGallery]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,transparent 40%,rgba(0,0,0,0.0) 55%,rgba(0,0,0,0.72) 100%)',pointerEvents:'none'}}/>
+            <button onClick={()=>{setExcurDetail(null);setExcurGallery(0);setExcurExpanded(false);setExcurPeople(1);}}
+              style={{position:'absolute',top:16,left:16,zIndex:10,width:48,height:48,borderRadius:'50%',background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
             {excurGallery > 0 && (
-              <button onClick={()=>setExcurGallery(g=>g-1)} style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <button onClick={()=>setExcurGallery(g=>g-1)} style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',width:32,height:32,borderRadius:'50%',background:'rgba(0,0,0,0.35)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
               </button>
             )}
             {excurGallery < GALLERY.length-1 && (
-              <button onClick={()=>setExcurGallery(g=>g+1)} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              <button onClick={()=>setExcurGallery(g=>g+1)} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:32,height:32,borderRadius:'50%',background:'rgba(0,0,0,0.35)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
               </button>
             )}
-            <div style={{position:'absolute',bottom:10,left:0,right:0,display:'flex',justifyContent:'center',gap:5}}>
-              {GALLERY.map((_,i)=>(
-                <div key={i} onClick={()=>setExcurGallery(i)} style={{width:i===excurGallery?20:6,height:6,borderRadius:3,background:i===excurGallery?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.25s',cursor:'pointer'}}/>
-              ))}
-            </div>
-          </div>
-
-          {/* Title + meta */}
-          <div style={{background:'#fff',margin:'14px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
-            <div style={{fontSize:18,fontWeight:900,color:'#0A1F21',marginBottom:10,letterSpacing:-0.3}}>{ed.title}</div>
-            <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap'}}>
-              <div style={{display:'flex',alignItems:'center',gap:5}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>{ed.sub}</span>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:5}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>Toshkent</span>
+            <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'0 16px 18px'}}>
+              <div style={{fontSize:21,fontWeight:900,color:'#fff',lineHeight:1.2,marginBottom:6,textShadow:'0 1px 8px rgba(0,0,0,0.4)'}}>{ed.title}</div>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                <div style={{display:'flex',alignItems:'center',gap:10,fontSize:12,color:'rgba(255,255,255,0.9)',fontWeight:600}}>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    {ed.sub}
+                  </span>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Toshkent
+                  </span>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                  <div style={{display:'flex',gap:4}}>
+                    {GALLERY.map((_,i)=>(
+                      <div key={i} onClick={()=>setExcurGallery(i)} style={{width:i===excurGallery?18:5,height:5,borderRadius:3,background:i===excurGallery?'#fff':'rgba(255,255,255,0.45)',transition:'width 0.25s',cursor:'pointer'}}/>
+                    ))}
+                  </div>
+                  <div style={{background:'rgba(0,0,0,0.4)',backdropFilter:'blur(6px)',borderRadius:8,padding:'2px 8px',fontSize:11,fontWeight:700,color:'#fff'}}>
+                    {excurGallery+1}/{GALLERY.length}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2441,46 +2440,45 @@ function ScreenTrip() {
 
     return (
       <Frame>
-        {/* App bar */}
-        <div style={{position:'sticky',top:0,zIndex:30,background:'#F4F7F8',display:'flex',alignItems:'center',padding:'12px 16px',gap:12}}>
-          <button onClick={()=>{setHotelDetail(null);setHotelGallery(0);setHotelExpanded(false);setHotelRoomsPage(false);}}
-            style={{width:50,height:50,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
-          </button>
-          <div style={{flex:1,fontSize:15,fontWeight:800,color:'#0A1F21',textAlign:'center',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',paddingRight:50,letterSpacing:-0.2}}>
-            {hotelName}
-          </div>
-        </div>
-
         <div style={{flex:1,overflowY:'auto',paddingBottom:120,background:'#F4F7F8'}}>
 
-          {/* Hero carousel — rounded card */}
-          <div style={{margin:'4px 16px 0',borderRadius:14,overflow:'hidden',position:'relative',background:'#000',height:210}}
+          {/* Hero — edge-to-edge 320px with overlay back btn + title */}
+          <div style={{position:'relative',height:320,overflow:'hidden',background:'#000'}}
             onTouchStart={hSwipeStart} onTouchEnd={hSwipeEnd}>
             <img src={GALLERY[hotelGallery]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,transparent 40%,rgba(0,0,0,0.0) 55%,rgba(0,0,0,0.72) 100%)',pointerEvents:'none'}}/>
+            <button onClick={()=>{setHotelDetail(null);setHotelGallery(0);setHotelExpanded(false);setHotelRoomsPage(false);}}
+              style={{position:'absolute',top:16,left:16,zIndex:10,width:48,height:48,borderRadius:'50%',background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
             {hotelGallery > 0 && (
-              <button onClick={()=>setHotelGallery(g=>g-1)} style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <button onClick={()=>setHotelGallery(g=>g-1)} style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',width:32,height:32,borderRadius:'50%',background:'rgba(0,0,0,0.35)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
               </button>
             )}
             {hotelGallery < GALLERY.length-1 && (
-              <button onClick={()=>setHotelGallery(g=>g+1)} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              <button onClick={()=>setHotelGallery(g=>g+1)} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:32,height:32,borderRadius:'50%',background:'rgba(0,0,0,0.35)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
               </button>
             )}
-            <div style={{position:'absolute',bottom:10,left:0,right:0,display:'flex',justifyContent:'center',gap:5,pointerEvents:'auto'}}>
-              {GALLERY.map((_,i)=>(
-                <div key={i} onClick={()=>setHotelGallery(i)} style={{width:i===hotelGallery?20:6,height:6,borderRadius:3,background:i===hotelGallery?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.25s',cursor:'pointer'}}/>
-              ))}
-            </div>
-          </div>
-
-          {/* Title + rating card */}
-          <div style={{background:'#fff',margin:'14px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
-            <div style={{fontSize:18,fontWeight:900,color:'#0A1F21',marginBottom:12,letterSpacing:-0.3}}>{stars}★ {hotelName}</div>
-            <div style={{display:'flex',alignItems:'center',gap:10,background:'#F4F7F8',borderRadius:10,padding:'9px 12px'}}>
-              <div style={{background:'#22C55E',borderRadius:7,padding:'5px 9px',fontSize:13,fontWeight:800,color:'#fff',minWidth:36,textAlign:'center'}}>{hd.rating || '8.1'}</div>
-              <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>{hd.reviews || '3310'} sharhlar</span>
+            <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'0 16px 18px'}}>
+              <div style={{fontSize:21,fontWeight:900,color:'#fff',lineHeight:1.2,marginBottom:6,textShadow:'0 1px 8px rgba(0,0,0,0.4)'}}>{stars}★ {hotelName}</div>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                  <div style={{background:'#22C55E',borderRadius:6,padding:'3px 8px',fontSize:12,fontWeight:800,color:'#fff'}}>{hd.rating || '8.1'}</div>
+                  <span style={{fontSize:12,color:'rgba(255,255,255,0.9)',fontWeight:600}}>{hd.reviews || '3310'} sharhlar</span>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                  <div style={{display:'flex',gap:4}}>
+                    {GALLERY.map((_,i)=>(
+                      <div key={i} onClick={()=>setHotelGallery(i)} style={{width:i===hotelGallery?18:5,height:5,borderRadius:3,background:i===hotelGallery?'#fff':'rgba(255,255,255,0.45)',transition:'width 0.25s',cursor:'pointer'}}/>
+                    ))}
+                  </div>
+                  <div style={{background:'rgba(0,0,0,0.4)',backdropFilter:'blur(6px)',borderRadius:8,padding:'2px 8px',fontSize:11,fontWeight:700,color:'#fff'}}>
+                    {hotelGallery+1}/{GALLERY.length}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
