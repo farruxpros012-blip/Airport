@@ -2177,25 +2177,25 @@ function ScreenTrip() {
           </div>
 
           {/* 2. Bepul bekor qilish / Bilish kerak — with subtitle */}
-          <div style={{display:'flex',flexDirection:'column',gap:8,padding:'16px 16px 0'}}>
-            <div style={{display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:14,padding:'11px 13px',boxShadow:'0 4px 14px rgba(5,150,105,0.15)'}}>
-              <div style={{width:32,height:32,borderRadius:10,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.3" strokeLinecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
+          <div style={{display:'flex',flexDirection:'column',gap:16,padding:'16px 16px 0'}}>
+            <div style={{display:'flex',alignItems:'center',gap:14,background:'#fff',borderRadius:16,padding:'14px 16px',boxShadow:'0 4px 14px rgba(5,150,105,0.15)'}}>
+              <div style={{width:42,height:42,borderRadius:13,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.3" strokeLinecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
               </div>
               <div style={{flex:1}}>
-                <div style={{fontSize:12.5,fontWeight:800,color:'#065F46',lineHeight:1.2}}>Bepul bekor qilish</div>
-                <div style={{fontSize:11,color:'#047857',marginTop:2}}>Ekskursiyadan 24 soat oldin to'liq pulni qaytarib oling</div>
+                <div style={{fontSize:14,fontWeight:800,color:'#065F46',lineHeight:1.2}}>Bepul bekor qilish</div>
+                <div style={{fontSize:12,color:'#047857',marginTop:3}}>Ekskursiyadan 24 soat oldin to'liq pulni qaytarib oling</div>
               </div>
             </div>
-            <div style={{display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:14,padding:'11px 13px',boxShadow:'0 4px 14px rgba(217,119,6,0.15)',cursor:'pointer'}}>
-              <div style={{width:32,height:32,borderRadius:10,background:'#FEF3C7',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div style={{display:'flex',alignItems:'center',gap:14,background:'#fff',borderRadius:16,padding:'14px 16px',boxShadow:'0 4px 14px rgba(217,119,6,0.15)',cursor:'pointer'}}>
+              <div style={{width:42,height:42,borderRadius:13,background:'#FEF3C7',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               </div>
               <div style={{flex:1}}>
-                <div style={{fontSize:12.5,fontWeight:800,color:'#78350F',lineHeight:1.2}}>Bilish kerak bo'lganlar</div>
-                <div style={{fontSize:11,color:'#92400E',marginTop:2}}>Chipta sotib olishdan oldin shartlarni o'qing</div>
+                <div style={{fontSize:14,fontWeight:800,color:'#78350F',lineHeight:1.2}}>Bilish kerak bo'lganlar</div>
+                <div style={{fontSize:12,color:'#92400E',marginTop:3}}>Chipta sotib olishdan oldin shartlarni o'qing</div>
               </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
 
