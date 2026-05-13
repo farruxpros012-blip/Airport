@@ -1960,44 +1960,46 @@ function ScreenTrip() {
     const fmtSm = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ') + " so'm";
 
     const FlightLeg = ({airline, reys, dur, dep, depAirport, depFull, depDay, arr, arrAirport, arrFull, arrDay}) => (
-      <div>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
-          <div style={{display:'flex',alignItems:'center',gap:10}}>
-            <div style={{width:30,height:30,borderRadius:'50%',background:'#E0F2F3',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill={T}><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+      <div style={{background:'linear-gradient(180deg, #FAFBFC 0%, #F4F7F8 100%)',borderRadius:14,padding:'14px',border:'1px solid rgba(15,42,74,0.04)'}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+          <div style={{display:'flex',alignItems:'center',gap:11}}>
+            <div style={{width:38,height:38,borderRadius:12,background:`linear-gradient(135deg, ${T} 0%, #007A87 100%)`,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,boxShadow:'0 4px 10px rgba(0,153,168,0.28)'}}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
             </div>
             <div>
-              <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',lineHeight:1.15}}>{airline}</div>
+              <div style={{fontSize:13.5,fontWeight:800,color:'#0A1F21',lineHeight:1.15,letterSpacing:-0.2}}>{airline}</div>
               <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>Reys {reys}</div>
             </div>
           </div>
-          <div style={{fontSize:12.5,fontWeight:700,color:'#0A1F21'}}>{dur}</div>
+          <div style={{background:'#fff',border:`1px solid ${T}33`,borderRadius:999,padding:'5px 11px',fontSize:12,fontWeight:800,color:T,whiteSpace:'nowrap'}}>{dur}</div>
         </div>
-        <div style={{display:'flex',gap:12}}>
-          <div style={{display:'flex',flexDirection:'column',alignItems:'center',paddingTop:6}}>
-            <div style={{width:9,height:9,borderRadius:'50%',border:`2px solid ${T}`,background:'#fff'}}/>
-            <div style={{flex:1,width:2,background:T,minHeight:34}}/>
-            <div style={{width:9,height:9,borderRadius:'50%',border:`2px solid ${T}`,background:'#fff'}}/>
+        <div style={{display:'flex',gap:14}}>
+          <div style={{display:'flex',flexDirection:'column',alignItems:'center',paddingTop:5}}>
+            <div style={{width:11,height:11,borderRadius:'50%',border:`2.5px solid ${T}`,background:'#fff'}}/>
+            <div style={{flex:1,width:2,background:`linear-gradient(180deg, ${T} 0%, ${T}66 100%)`,minHeight:36}}/>
+            <div style={{width:11,height:11,borderRadius:'50%',border:`2.5px solid ${T}`,background:T}}/>
           </div>
           <div style={{flex:1,minWidth:0}}>
-            <div style={{marginBottom:14}}>
+            <div style={{marginBottom:16}}>
               <div style={{display:'flex',gap:12,alignItems:'baseline'}}>
-                <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{dep}</span>
-                <span style={{fontSize:13.5,fontWeight:700,color:'#0A1F21'}}>{depAirport}</span>
+                <span style={{fontSize:16,fontWeight:900,color:'#0A1F21',letterSpacing:-0.3}}>{dep}</span>
+                <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>{depAirport}</span>
               </div>
-              <div style={{display:'flex',gap:12,marginTop:3}}>
-                <span style={{fontSize:11.5,color:'#9AA1B8',whiteSpace:'nowrap'}}>{depDay}</span>
-                <span style={{fontSize:11.5,color:'#9AA1B8',overflow:'hidden',textOverflow:'ellipsis'}}>{depFull}</span>
+              <div style={{display:'flex',gap:10,marginTop:4,alignItems:'center'}}>
+                <span style={{fontSize:11.5,color:'#5C7577',whiteSpace:'nowrap',fontWeight:600}}>{depDay}</span>
+                <span style={{width:3,height:3,borderRadius:'50%',background:'#C0C8D4',flexShrink:0}}/>
+                <span style={{fontSize:11.5,color:'#5C7577',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{depFull}</span>
               </div>
             </div>
             <div>
               <div style={{display:'flex',gap:12,alignItems:'baseline'}}>
-                <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{arr}</span>
-                <span style={{fontSize:13.5,fontWeight:700,color:'#0A1F21'}}>{arrAirport}</span>
+                <span style={{fontSize:16,fontWeight:900,color:'#0A1F21',letterSpacing:-0.3}}>{arr}</span>
+                <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>{arrAirport}</span>
               </div>
-              <div style={{display:'flex',gap:12,marginTop:3}}>
-                <span style={{fontSize:11.5,color:'#9AA1B8',whiteSpace:'nowrap'}}>{arrDay}</span>
-                <span style={{fontSize:11.5,color:'#9AA1B8',overflow:'hidden',textOverflow:'ellipsis'}}>{arrFull}</span>
+              <div style={{display:'flex',gap:10,marginTop:4,alignItems:'center'}}>
+                <span style={{fontSize:11.5,color:'#5C7577',whiteSpace:'nowrap',fontWeight:600}}>{arrDay}</span>
+                <span style={{width:3,height:3,borderRadius:'50%',background:'#C0C8D4',flexShrink:0}}/>
+                <span style={{fontSize:11.5,color:'#5C7577',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{arrFull}</span>
               </div>
             </div>
           </div>
@@ -2005,10 +2007,16 @@ function ScreenTrip() {
       </div>
     );
 
+    const TARIFF_META = [
+      {name:'Light', tagBg:'#F4F5FA', tagColor:'#0A1F21', recommended:false},
+      {name:'Standard', tagBg:'linear-gradient(135deg,#FBBF24,#F59E0B)', tagColor:'#fff', recommended:true},
+      {name:'Flex', tagBg:'#0A1F21', tagColor:'#fff', recommended:false},
+    ];
+
     return (
       <Frame>
         {/* App bar */}
-        <div style={{position:'sticky',top:0,zIndex:30,background:'#F4F7F8',display:'flex',alignItems:'center',padding:'12px 16px',gap:12}}>
+        <div style={{position:'sticky',top:0,zIndex:30,background:'#F4F7F8',display:'flex',alignItems:'center',padding:'12px 16px',gap:12,boxShadow:'0 1px 0 rgba(15,42,74,0.04)'}}>
           <button onClick={()=>setFlightDetail(null)} style={{width:50,height:50,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
@@ -2020,12 +2028,55 @@ function ScreenTrip() {
 
         <div style={{flex:1,overflowY:'auto',paddingBottom:110,background:'#F4F7F8'}}>
 
+          {/* Route hero summary */}
+          <div style={{margin:'10px 16px 0',borderRadius:18,padding:'16px 18px',background:`linear-gradient(135deg, ${T} 0%, #007A87 100%)`,boxShadow:'0 8px 24px rgba(0,153,168,0.28), 0 2px 6px rgba(0,153,168,0.18)',color:'#fff',position:'relative',overflow:'hidden'}}>
+            <div style={{position:'absolute',right:-30,top:-30,width:140,height:140,borderRadius:'50%',background:'rgba(255,255,255,0.06)',pointerEvents:'none'}}/>
+            <div style={{position:'absolute',right:30,bottom:-40,width:90,height:90,borderRadius:'50%',background:'rgba(255,255,255,0.05)',pointerEvents:'none'}}/>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',position:'relative'}}>
+              <div>
+                <div style={{fontSize:28,fontWeight:900,letterSpacing:-1,lineHeight:1}}>{it.from}</div>
+                <div style={{fontSize:12,opacity:0.85,marginTop:4,fontWeight:600}}>{fromCity}</div>
+              </div>
+              <div style={{flex:1,padding:'0 14px',display:'flex',flexDirection:'column',alignItems:'center'}}>
+                <div style={{fontSize:11,opacity:0.9,fontWeight:700,marginBottom:6}}>{it.dur}</div>
+                <div style={{display:'flex',alignItems:'center',width:'100%'}}>
+                  <div style={{width:7,height:7,borderRadius:'50%',background:'#fff'}}/>
+                  <div style={{flex:1,height:1.5,background:'rgba(255,255,255,0.45)',borderTop:'1.5px dashed rgba(255,255,255,0.55)',marginTop:-1}}/>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" style={{margin:'0 -2px'}}><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+                  <div style={{flex:1,height:1.5,background:'rgba(255,255,255,0.45)',borderTop:'1.5px dashed rgba(255,255,255,0.55)',marginTop:-1}}/>
+                  <div style={{width:7,height:7,borderRadius:'50%',background:'#fff'}}/>
+                </div>
+                <div style={{fontSize:11,opacity:0.85,fontWeight:600,marginTop:6}}>{hasTransit?'1 transfer':"to'g'ridan-to'g'ri"}</div>
+              </div>
+              <div style={{textAlign:'right'}}>
+                <div style={{fontSize:28,fontWeight:900,letterSpacing:-1,lineHeight:1}}>{it.to}</div>
+                <div style={{fontSize:12,opacity:0.85,marginTop:4,fontWeight:600}}>{toCity}</div>
+              </div>
+            </div>
+            <div style={{display:'flex',gap:6,marginTop:14,position:'relative'}}>
+              <div style={{background:'rgba(255,255,255,0.18)',backdropFilter:'blur(8px)',borderRadius:999,padding:'5px 11px',fontSize:11,fontWeight:700,display:'flex',alignItems:'center',gap:6}}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                {it.depDate}{it.retDep?` — ${it.retDate}`:''}
+              </div>
+              <div style={{background:'rgba(255,255,255,0.18)',backdropFilter:'blur(8px)',borderRadius:999,padding:'5px 11px',fontSize:11,fontWeight:700,display:'flex',alignItems:'center',gap:6}}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                1 yo'lovchi
+              </div>
+            </div>
+          </div>
+
           {/* Ketish */}
-          <div style={{background:'#fff',margin:'8px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 4px 18px rgba(15,42,74,0.07),0 1px 3px rgba(15,42,74,0.04)'}}>
-            <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:8,padding:'4px 11px',fontSize:11.5,fontWeight:800,color:'#0099A8',marginBottom:10}}>Ketish</div>
-            <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',marginBottom:4,letterSpacing:-0.2}}>{fromCity} - {toCity}</div>
-            <div style={{fontSize:12,color:'#5C7577',marginBottom:14}}>{it.dur} soatlik parvoz · {hasTransit?'1 transfer':"to'g'ridan-to'g'ri"}</div>
-            <div style={{height:1,background:'#F0F2F8',marginBottom:16}}/>
+          <div style={{background:'#fff',margin:'14px 16px 0',borderRadius:18,padding:'18px',boxShadow:'0 4px 20px rgba(15,42,74,0.06), 0 1px 3px rgba(15,42,74,0.04)'}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+              <div>
+                <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:8,padding:'4px 11px',fontSize:11,fontWeight:800,color:T,marginBottom:8,letterSpacing:0.3}}>KETISH</div>
+                <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',letterSpacing:-0.3,lineHeight:1.15}}>{fromCity} — {toCity}</div>
+                <div style={{fontSize:12,color:'#5C7577',marginTop:4,fontWeight:500}}>{it.dur} soatlik parvoz · {hasTransit?'1 transfer':"to'g'ridan-to'g'ri"}</div>
+              </div>
+              <div style={{width:42,height:42,borderRadius:13,background:'#F4F7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
+              </div>
+            </div>
             {hasTransit ? (
               <>
                 <FlightLeg
@@ -2105,11 +2156,17 @@ function ScreenTrip() {
 
           {/* Qaytish */}
           {it.retDep && (
-            <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
-              <div style={{display:'inline-block',background:'#F4F5FA',borderRadius:8,padding:'4px 11px',fontSize:11.5,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Qaytish</div>
-              <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',marginBottom:4,letterSpacing:-0.2}}>{toCity} - {fromCity}</div>
-              <div style={{fontSize:12,color:'#5C7577',marginBottom:14}}>{it.retDur} soatlik parvoz · to'g'ridan-to'g'ri</div>
-              <div style={{height:1,background:'#F0F2F8',marginBottom:16}}/>
+            <div style={{background:'#fff',margin:'14px 16px 0',borderRadius:18,padding:'18px',boxShadow:'0 4px 20px rgba(15,42,74,0.06), 0 1px 3px rgba(15,42,74,0.04)'}}>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+                <div>
+                  <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:8,padding:'4px 11px',fontSize:11,fontWeight:800,color:T,marginBottom:8,letterSpacing:0.3}}>QAYTISH</div>
+                  <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',letterSpacing:-0.3,lineHeight:1.15}}>{toCity} — {fromCity}</div>
+                  <div style={{fontSize:12,color:'#5C7577',marginTop:4,fontWeight:500}}>{it.retDur} soatlik parvoz · to'g'ridan-to'g'ri</div>
+                </div>
+                <div style={{width:42,height:42,borderRadius:13,background:'#F4F7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transform:'scaleX(-1)'}}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                </div>
+              </div>
               <FlightLeg
                 airline="Uzbekistan Airways" reys="HY-334" dur={it.retDur}
                 dep={it.retDep} depAirport={toCity} depFull={AIRPORT_FULL[it.to]||it.to} depDay={it.retDate}
@@ -2119,59 +2176,94 @@ function ScreenTrip() {
           )}
 
           {/* Tarifni tanlang */}
-          <div style={{margin:'18px 16px 0',padding:'0 4px'}}>
-            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:4,letterSpacing:-0.2}}>Tarifni tanlang</div>
-            <div style={{fontSize:12,color:'#5C7577'}}>Tarif shartlari bron qilishdagi har bir yo'lovchiga tatbiq etiladi</div>
+          <div style={{margin:'22px 16px 0',padding:'0 4px'}}>
+            <div style={{fontSize:18,fontWeight:900,color:'#0A1F21',marginBottom:4,letterSpacing:-0.3}}>Tarifni tanlang</div>
+            <div style={{fontSize:12.5,color:'#5C7577',fontWeight:500}}>Tarif shartlari bron qilishdagi har bir yo'lovchiga tatbiq etiladi</div>
           </div>
 
-          {TARIFFS.map((t,i)=>(
-            <div key={i} style={{background:'#fff',margin:'12px 16px 0',borderRadius:16,padding:'18px',boxShadow:'0 4px 18px rgba(15,42,74,0.07),0 1px 3px rgba(15,42,74,0.04)'}}>
-              {/* Ketish block */}
-              <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:8,padding:'3px 10px',fontSize:11,fontWeight:800,color:'#0099A8',marginBottom:10}}>Ketish</div>
-              <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8,cursor:'pointer'}}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
-                <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>2 aviakompaniyalar</span>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:6,flexWrap:'wrap'}}>
-                <div style={{display:'flex',alignItems:'center',gap:5}}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
-                  <span style={{fontSize:12.5,color:'#0A1F21'}}>Yuk: {t.baggage}</span>
+          {TARIFFS.map((t,i)=>{
+            const meta = TARIFF_META[i] || TARIFF_META[0];
+            return (
+              <div key={i} style={{background:'#fff',margin:'12px 16px 0',borderRadius:18,boxShadow:meta.recommended?'0 6px 24px rgba(245,158,11,0.18), 0 1px 3px rgba(15,42,74,0.04)':'0 4px 20px rgba(15,42,74,0.06), 0 1px 3px rgba(15,42,74,0.04)',border:meta.recommended?'1.5px solid #F59E0B':'1px solid rgba(15,42,74,0.04)',overflow:'hidden'}}>
+                {/* Header */}
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 18px 0'}}>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:7,background:meta.tagBg,color:meta.tagColor,borderRadius:999,padding:'6px 14px',fontSize:12,fontWeight:800,letterSpacing:0.3,boxShadow:meta.recommended?'0 4px 12px rgba(245,158,11,0.35)':'none'}}>
+                    {meta.recommended && <svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>}
+                    {meta.name}
+                    {meta.recommended && <span style={{fontSize:10,opacity:0.95,fontWeight:700}}>· Tavsiya</span>}
+                  </div>
+                  <div style={{fontSize:11,color:'#9AA1B8',fontWeight:700}}>{t.seats} chipta qoldi</div>
                 </div>
-                <div style={{display:'flex',alignItems:'center',gap:5}}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                  <span style={{fontSize:12.5,color:'#0A1F21'}}>{t.cabin}</span>
-                </div>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:14}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-                <span style={{fontSize:12.5,color:'#0A1F21'}}>Qaytarib berilmaydi</span>
-              </div>
-              <div style={{height:1,background:'#F0F2F8',marginBottom:14}}/>
 
-              {/* Qaytish block */}
-              <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:8,padding:'3px 10px',fontSize:11,fontWeight:800,color:'#0099A8',marginBottom:10}}>Qaytish</div>
-              <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:6}}>
-                <div style={{display:'flex',alignItems:'center',gap:5}}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
-                  <span style={{fontSize:12.5,color:'#0A1F21'}}>Yuk: {t.retBaggage}</span>
+                {/* Ketish block */}
+                <div style={{padding:'14px 18px 0'}}>
+                  <div style={{background:'#FAFBFC',borderRadius:12,padding:'12px 14px',border:'1px solid rgba(15,42,74,0.04)'}}>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+                      <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:6,padding:'2px 8px',fontSize:10,fontWeight:800,color:T,letterSpacing:0.3}}>KETISH</div>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:4,cursor:'pointer'}}>
+                        <span style={{fontSize:11.5,color:'#5C7577',fontWeight:600}}>2 aviakompaniyalar</span>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap',marginBottom:7}}>
+                      <div style={{display:'flex',alignItems:'center',gap:6}}>
+                        <div style={{width:22,height:22,borderRadius:7,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
+                        </div>
+                        <span style={{fontSize:12,color:'#0A1F21',fontWeight:600}}>Yuk {t.baggage}</span>
+                      </div>
+                      <div style={{display:'flex',alignItems:'center',gap:6}}>
+                        <div style={{width:22,height:22,borderRadius:7,background:'#DBEAFE',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1E40AF" strokeWidth="2.5"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        </div>
+                        <span style={{fontSize:12,color:'#0A1F21',fontWeight:600}}>Qo'l: {t.cabin}</span>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:6}}>
+                      <div style={{width:22,height:22,borderRadius:7,background:'#FEE2E2',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </div>
+                      <span style={{fontSize:12,color:'#5C7577'}}>Qaytarib berilmaydi</span>
+                    </div>
+                  </div>
                 </div>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:14}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-                <span style={{fontSize:12.5,color:'#0A1F21'}}>Qaytarib berilmaydi</span>
-              </div>
 
-              {/* Price + CTA */}
-              <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',textAlign:'right',marginBottom:10}}>{fmtSm(t.price)}</div>
-              <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:12,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',boxShadow:'0 4px 14px rgba(0,153,168,0.28)'}}>
-                Tanlash
-              </button>
-              <div style={{fontSize:11.5,color:'#9AA1B8',textAlign:'right',marginTop:8}}>{t.seats} chipta qoldi</div>
-            </div>
-          ))}
+                {/* Qaytish block */}
+                <div style={{padding:'10px 18px 0'}}>
+                  <div style={{background:'#FAFBFC',borderRadius:12,padding:'12px 14px',border:'1px solid rgba(15,42,74,0.04)'}}>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+                      <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:6,padding:'2px 8px',fontSize:10,fontWeight:800,color:T,letterSpacing:0.3}}>QAYTISH</div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:14,marginBottom:7}}>
+                      <div style={{display:'flex',alignItems:'center',gap:6}}>
+                        <div style={{width:22,height:22,borderRadius:7,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
+                        </div>
+                        <span style={{fontSize:12,color:'#0A1F21',fontWeight:600}}>Yuk {t.retBaggage}</span>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:6}}>
+                      <div style={{width:22,height:22,borderRadius:7,background:'#FEE2E2',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </div>
+                      <span style={{fontSize:12,color:'#5C7577'}}>Qaytarib berilmaydi</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Price + CTA footer */}
+                <div style={{padding:'16px 18px 18px',display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:12}}>
+                  <div>
+                    <div style={{fontSize:10.5,color:'#9AA1B8',fontWeight:700,letterSpacing:0.4,textTransform:'uppercase'}}>Narx (1 kishi)</div>
+                    <div style={{fontSize:20,fontWeight:900,color:'#0A1F21',letterSpacing:-0.5,marginTop:2}}>{fmtSm(t.price)}</div>
+                  </div>
+                  <button style={{background:meta.recommended?'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)':T,color:'#fff',border:'none',borderRadius:14,padding:'13px 26px',fontSize:14,fontWeight:800,cursor:'pointer',boxShadow:meta.recommended?'0 6px 18px rgba(245,158,11,0.4), 0 2px 6px rgba(245,158,11,0.25)':'0 6px 18px rgba(0,153,168,0.3), 0 2px 6px rgba(0,153,168,0.2)',letterSpacing:0.3,whiteSpace:'nowrap'}}>
+                    Tanlash
+                  </button>
+                </div>
+              </div>
+            );
+          })}
 
           <div style={{height:18}}/>
         </div>
