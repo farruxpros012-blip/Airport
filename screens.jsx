@@ -1112,21 +1112,25 @@ function ScreenTrip() {
     const close = () => setPreSheet(null);
 
     // Compact unified row inside a card
-    const cardWrap = { background:'#F7F8FB', borderRadius:16, padding:'0 14px', marginBottom:10 };
-    const row = (i, last) => ({ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'11px 0', borderBottom: last ? 'none' : '1px solid #E8EAF3', minHeight:22 });
-    const lab = { fontSize:12, color:'#7A8190', fontWeight:600, flexShrink:0, marginRight:12 };
+    const cardWrap = { background:'#fff', borderRadius:16, padding:'0 14px', marginBottom:10, boxShadow:'0 1px 6px rgba(10,31,33,0.05)' };
+    const row = (i, last) => ({ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'13px 0', borderBottom: last ? 'none' : '1px solid #F0F2F8', minHeight:22 });
+    const lab = { fontSize:11, color:'#9AA1B8', fontWeight:700, letterSpacing:0.3, flexShrink:0, marginRight:12, textTransform:'uppercase' };
     const valIn = { flex:1, border:'none', background:'none', fontSize:14, fontWeight:600, color:'#0A1F21', outline:'none', textAlign:'right', fontFamily:'inherit', minWidth:0 };
     const cnt = (val, set, min=0) => (
-      <div style={{display:'flex',alignItems:'center',gap:0}}>
-        <button onClick={()=>set(v=>Math.max(min,v-1))} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',lineHeight:1,padding:0}}>−</button>
-        <span style={{fontSize:15,fontWeight:700,color:'#0A1F21',width:28,textAlign:'center'}}>{val}</span>
-        <button onClick={()=>set(v=>v+1)} style={{width:28,height:28,border:'1.5px solid #E8EAF3',background:'#fff',borderRadius:'50%',fontSize:16,color:T,cursor:'pointer',lineHeight:1,padding:0}}>+</button>
+      <div style={{display:'flex',alignItems:'center',gap:4}}>
+        <button onClick={()=>set(v=>Math.max(min,v-1))} style={{width:40,height:40,border:'none',background:val>min?T:'#F0F2F8',borderRadius:'50%',fontSize:22,color:val>min?'#fff':'#B0BAC4',cursor:val>min?'pointer':'default',lineHeight:1,padding:0,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={val>min?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <span style={{fontSize:16,fontWeight:800,color:'#0A1F21',width:34,textAlign:'center'}}>{val}</span>
+        <button onClick={()=>set(v=>v+1)} style={{width:40,height:40,border:'none',background:T,borderRadius:'50%',fontSize:22,color:'#fff',cursor:'pointer',lineHeight:1,padding:0,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
       </div>
     );
 
     // Route card with two tappable rows + swap (opens city picker)
     const routeCard = (fLabel='Qayerdan', tLabel='Qayerga') => (
-      <div style={{background:'#F7F8FB',borderRadius:16,padding:'4px 14px',marginBottom:10,position:'relative'}}>
+      <div style={{background:'#fff',borderRadius:16,padding:'4px 14px',marginBottom:10,position:'relative',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
         <div onClick={()=>setNested('route-from')} style={{display:'flex',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #E8EAF3',cursor:'pointer'}}>
           <div style={{width:7,height:7,borderRadius:'50%',background:T,marginRight:10}}/>
           <span style={{flex:1,fontSize:14,fontWeight:600,color:fromVal?'#0A1F21':'#9AA1B8',paddingRight:40,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{fromVal||fLabel}</span>
@@ -1144,22 +1148,22 @@ function ScreenTrip() {
     // Compact 2-col split row (used for date+nights, datetime, etc)
     const splitCard = (a, b) => (
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
-        <div style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px'}}>
+        <div style={{background:'#fff',borderRadius:14,padding:'12px 14px',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
           <div style={lab}>{a.label}</div>
-          <input value={a.val} onChange={e=>a.set(e.target.value)} placeholder={a.ph} style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:2}}/>
+          <input value={a.val} onChange={e=>a.set(e.target.value)} placeholder={a.ph} style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:4}}/>
         </div>
-        <div style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px'}}>
+        <div style={{background:'#fff',borderRadius:14,padding:'12px 14px',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
           <div style={lab}>{b.label}</div>
-          <input value={b.val} onChange={e=>b.set(e.target.value)} placeholder={b.ph} style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:2}}/>
+          <input value={b.val} onChange={e=>b.set(e.target.value)} placeholder={b.ph} style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:4}}/>
         </div>
       </div>
     );
 
     // Single inline input row in a card
     const singleCard = (label, val, set, ph, readOnly=false) => (
-      <div style={{...cardWrap, padding:'10px 14px'}}>
+      <div style={{background:'#fff',borderRadius:16,padding:'12px 14px',marginBottom:10,boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
         <div style={lab}>{label}</div>
-        <input value={val} onChange={set?(e=>set(e.target.value)):undefined} readOnly={readOnly} placeholder={ph} style={{width:'100%',border:'none',background:'none',fontSize:14,fontWeight:700,color: readOnly?T:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:2}}/>
+        <input value={val} onChange={set?(e=>set(e.target.value)):undefined} readOnly={readOnly} placeholder={ph} style={{width:'100%',border:'none',background:'none',fontSize:15,fontWeight:700,color: readOnly?T:'#0A1F21',outline:'none',fontFamily:'inherit',marginTop:4}}/>
       </div>
     );
 
@@ -1200,20 +1204,23 @@ function ScreenTrip() {
 
     // ── Clickable display card (used for hotel multiselect, dates) ──
     const tapCard = (label, value, ph, onClick) => (
-      <div onClick={onClick} style={{...cardWrap, padding:'10px 14px', cursor:'pointer'}}>
-        <div style={lab}>{label}</div>
-        <div style={{fontSize:14,fontWeight:700,color: value?'#0A1F21':'#9AA1B8',marginTop:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{value||ph}</div>
+      <div onClick={onClick} style={{background:'#fff',borderRadius:16,padding:'12px 14px',marginBottom:10,cursor:'pointer',boxShadow:'0 1px 6px rgba(10,31,33,0.05)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div>
+          <div style={lab}>{label}</div>
+          <div style={{fontSize:15,fontWeight:700,color: value?'#0A1F21':'#9AA1B8',marginTop:4,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{value||ph}</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5"><path d="M9 6l6 6-6 6"/></svg>
       </div>
     );
     const tapSplit = (a, b) => (
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
-        <div onClick={a.onClick} style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px',cursor:'pointer'}}>
+        <div onClick={a.onClick} style={{background:'#fff',borderRadius:14,padding:'12px 14px',cursor:'pointer',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
           <div style={lab}>{a.label}</div>
-          <div style={{fontSize:14,fontWeight:700,color:a.val?'#0A1F21':'#9AA1B8',marginTop:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{a.val||a.ph}</div>
+          <div style={{fontSize:15,fontWeight:700,color:a.val?'#0A1F21':'#9AA1B8',marginTop:4,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{a.val||a.ph}</div>
         </div>
-        <div onClick={b.onClick} style={{background:'#F7F8FB',borderRadius:14,padding:'10px 14px',cursor:'pointer'}}>
+        <div onClick={b.onClick} style={{background:'#fff',borderRadius:14,padding:'12px 14px',cursor:'pointer',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
           <div style={lab}>{b.label}</div>
-          <div style={{fontSize:14,fontWeight:700,color:b.val?'#0A1F21':'#9AA1B8',marginTop:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.val||b.ph}</div>
+          <div style={{fontSize:15,fontWeight:700,color:b.val?'#0A1F21':'#9AA1B8',marginTop:4,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.val||b.ph}</div>
         </div>
       </div>
     );
@@ -1573,33 +1580,47 @@ function ScreenTrip() {
       return null;
     };
 
-    const pageTitle = nested
-      ? ({hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','rent-loc':'Davlat va shahar','hotel-country':'Davlat tanlang'}[nested]||'Sana tanlang')
-      : (titles[preSheet]||'Qidirish');
+    const nestedTitle = {hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','rent-loc':'Davlat va shahar','hotel-country':'Davlat tanlang','date-start':'Sana tanlang','date-end':'Sana tanlang','rent-from':'Ketish sanasi','rent-to':'Qaytish sanasi'};
 
     return (
       <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column',background:'#F4F7F8'}}>
-        {/* Header */}
-        <div style={{display:'flex',alignItems:'center',gap:12,padding:'16px 18px 12px',background:'#fff',boxShadow:'0 1px 0 #E8EAF3',flexShrink:0}}>
-          <button onClick={nested ? ()=>setNested(null) : close}
-            style={{width:38,height:38,borderRadius:'50%',background:'#F4F7F8',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+        {/* Header — back button left, title centered absolutely */}
+        <div style={{position:'relative',display:'flex',alignItems:'center',padding:'14px 18px',background:'#fff',boxShadow:'0 1px 0 #E8EAF3',flexShrink:0}}>
+          <button onClick={close}
+            style={{width:40,height:40,borderRadius:'50%',background:'#F4F7F8',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <div style={{flex:1,fontSize:17,fontWeight:800,color:'#0A1F21'}}>{pageTitle}</div>
+          <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:19,fontWeight:900,color:'#0A1F21',pointerEvents:'none'}}>
+            {titles[preSheet]||'Qidirish'}
+          </div>
         </div>
 
-        {/* Scrollable content */}
+        {/* Scrollable content — always shows main form */}
         <div style={{flex:1,overflowY:'auto',padding:'16px 18px 0'}}>
-          {nested ? renderNested() : renderFields()}
+          {renderFields()}
           <div style={{height:100}}/>
         </div>
 
         {/* Fixed bottom CTA */}
-        {!nested && (
-          <div style={{flexShrink:0,padding:'10px 18px 28px',background:'rgba(244,247,248,0.97)',borderTop:'1px solid #E8EAF3'}}>
-            <button onClick={submit} style={{width:'100%',background:`linear-gradient(135deg,${T},#007A87)`,color:'#fff',border:'none',borderRadius:16,padding:'15px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 20px rgba(0,153,168,0.35)'}}>
-              Qidirish
-            </button>
+        <div style={{flexShrink:0,padding:'10px 18px 28px',background:'rgba(244,247,248,0.97)',borderTop:'1px solid #E8EAF3'}}>
+          <button onClick={submit} style={{width:'100%',background:`linear-gradient(135deg,${T},#007A87)`,color:'#fff',border:'none',borderRadius:16,padding:'15px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 20px rgba(0,153,168,0.35)'}}>
+            Qidirish
+          </button>
+        </div>
+
+        {/* Nested pickers as bottomsheet overlay on top of this page */}
+        {nested && (
+          <div style={{position:'absolute',inset:0,background:'rgba(10,31,33,0.45)',zIndex:10,display:'flex',alignItems:'flex-end'}} onClick={()=>setNested(null)}>
+            <div style={{width:'100%',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 32px',maxHeight:'88vh',overflowY:'auto',boxShadow:'0 -8px 40px rgba(0,0,0,0.18)'}} onClick={e=>e.stopPropagation()}>
+              <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'12px auto 0'}}/>
+              <div style={{display:'flex',alignItems:'center',gap:10,padding:'14px 0 12px'}}>
+                <button onClick={()=>setNested(null)} style={{width:32,height:32,borderRadius:'50%',background:'#F4F7F8',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+                </button>
+                <div style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{nestedTitle[nested]||'Tanlang'}</div>
+              </div>
+              {renderNested()}
+            </div>
           </div>
         )}
       </div>
