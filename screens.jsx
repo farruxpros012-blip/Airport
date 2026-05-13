@@ -2430,254 +2430,125 @@ function ScreenTrip() {
 
     return (
       <Frame>
-        <div style={{flex:1,overflowY:'auto',paddingBottom:110,background:'#F4F7F8'}}>
+        {/* App bar */}
+        <div style={{position:'sticky',top:0,zIndex:30,background:'#F4F7F8',display:'flex',alignItems:'center',padding:'12px 16px',gap:12}}>
+          <button onClick={()=>{setHotelDetail(null);setHotelGallery(0);setHotelExpanded(false);setHotelRoomsPage(false);}}
+            style={{width:44,height:44,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div style={{flex:1,fontSize:15,fontWeight:800,color:'#0A1F21',textAlign:'center',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',paddingRight:44,letterSpacing:-0.2}}>
+            {hotelName}
+          </div>
+        </div>
 
-          {/* 1. Hero carousel — edge-to-edge, 320px, with info overlay */}
-          <div style={{position:'relative',height:320,overflow:'hidden'}}
+        <div style={{flex:1,overflowY:'auto',paddingBottom:120,background:'#F4F7F8'}}>
+
+          {/* Hero carousel — rounded card */}
+          <div style={{margin:'4px 16px 0',borderRadius:14,overflow:'hidden',position:'relative',background:'#000',height:210}}
             onTouchStart={hSwipeStart} onTouchEnd={hSwipeEnd}>
-            <img src={GALLERY[hotelGallery]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'opacity 0.3s'}}/>
-            {/* Deep gradient overlay */}
-            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,transparent 40%,rgba(0,0,0,0.0) 55%,rgba(0,0,0,0.72) 100%)',pointerEvents:'none'}}/>
-
-            {/* Back button */}
-            <button onClick={()=>{setHotelDetail(null);setHotelGallery(0);setHotelExpanded(false);setHotelRoomsPage(false);}}
-              style={{position:'absolute',top:16,left:16,zIndex:10,width:40,height:40,borderRadius:'50%',
-                background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',
-                cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',
-                boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            {/* Favourite button */}
-            <button style={{position:'absolute',top:16,right:16,zIndex:10,width:40,height:40,borderRadius:'50%',
-              background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',
-              cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',
-              boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            </button>
-
-            {/* Prev/Next arrows */}
+            <img src={GALLERY[hotelGallery]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
             {hotelGallery > 0 && (
-              <button onClick={()=>setHotelGallery(g=>g-1)}
-                style={{position:'absolute',left:12,top:'50%',transform:'translateY(-50%)',width:32,height:32,
-                  borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',
-                  display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <button onClick={()=>setHotelGallery(g=>g-1)} style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
               </button>
             )}
             {hotelGallery < GALLERY.length-1 && (
-              <button onClick={()=>setHotelGallery(g=>g+1)}
-                style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',width:32,height:32,
-                  borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',
-                  display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              <button onClick={()=>setHotelGallery(g=>g+1)} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
               </button>
             )}
-
-            {/* Bottom overlay: name + stars + location + dots + counter */}
-            <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'0 16px 18px'}}>
-              <div style={{fontSize:21,fontWeight:900,color:'#fff',lineHeight:1.2,marginBottom:4,textShadow:'0 1px 8px rgba(0,0,0,0.4)'}}>{hotelName}</div>
-              <div style={{display:'flex',gap:2,marginBottom:5}}>
-                {Array.from({length:stars}).map((_,i)=>(
-                  <svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                ))}
-              </div>
-              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <div style={{display:'flex',alignItems:'center',gap:5}}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  <span style={{fontSize:12,color:'rgba(255,255,255,0.9)',fontWeight:600}}>{hd.sub}</span>
-                </div>
-                <div style={{display:'flex',alignItems:'center',gap:8}}>
-                  <div style={{display:'flex',gap:4}}>
-                    {GALLERY.map((_,i)=>(
-                      <div key={i} onClick={()=>setHotelGallery(i)} style={{width:i===hotelGallery?18:5,height:5,borderRadius:3,
-                        background:i===hotelGallery?'#fff':'rgba(255,255,255,0.45)',transition:'width 0.25s',cursor:'pointer'}}/>
-                    ))}
-                  </div>
-                  <div style={{background:'rgba(0,0,0,0.4)',backdropFilter:'blur(6px)',borderRadius:8,padding:'2px 8px',fontSize:11,fontWeight:700,color:'#fff'}}>
-                    {hotelGallery+1}/{GALLERY.length}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 2. Hotel rating + location + tags card */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.05)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
-              <div style={{width:3,height:14,borderRadius:2,background:T,flexShrink:0}}/>
-              <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Mehmonxona</span>
-              <div style={{marginLeft:'auto',background:'#22C55E',borderRadius:10,padding:'4px 10px',textAlign:'center'}}>
-                <span style={{fontSize:15,fontWeight:800,color:'#fff'}}>{hd.rating}</span>
-                <span style={{fontSize:9,color:'rgba(255,255,255,0.85)',fontWeight:600,marginLeft:4}}>Ajoyib</span>
-              </div>
-            </div>
-            <div style={{fontSize:12,color:'#5C7577',marginBottom:10}}>{hd.reviews} ta sharh</div>
-            <div style={{height:1,background:'#F0F2F8',marginBottom:10}}/>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
-              <div style={{display:'flex',alignItems:'center',gap:6}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span style={{fontSize:12,color:'#5C7577'}}>{hd.sub}</span>
-              </div>
-              <button style={{fontSize:11,fontWeight:700,color:T,background:'none',border:'none',cursor:'pointer',padding:0}}>Xaritada ko'rsatish</button>
-            </div>
-            <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
-              {['Ultra All Inclusive','5★ Premium','Plyajga yaqin','Oilaviy','Bolalar maydonchasi','Spa & Wellness'].map((tag,i)=>(
-                <div key={i} style={{background:TBG,borderRadius:20,padding:'4px 10px',fontSize:11,fontWeight:600,color:T}}>{tag}</div>
+            <div style={{position:'absolute',bottom:10,left:0,right:0,display:'flex',justifyContent:'center',gap:5,pointerEvents:'auto'}}>
+              {GALLERY.map((_,i)=>(
+                <div key={i} onClick={()=>setHotelGallery(i)} style={{width:i===hotelGallery?20:6,height:6,borderRadius:3,background:i===hotelGallery?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.25s',cursor:'pointer'}}/>
               ))}
             </div>
           </div>
 
-          {/* 3. Qulayliklar grid */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.05)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
-              <div style={{width:3,height:14,borderRadius:2,background:T,flexShrink:0}}/>
-              <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Qulayliklar</span>
+          {/* Title + rating card */}
+          <div style={{background:'#fff',margin:'14px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:18,fontWeight:900,color:'#0A1F21',marginBottom:12,letterSpacing:-0.3}}>{stars}★ {hotelName}</div>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'#F4F7F8',borderRadius:10,padding:'9px 12px'}}>
+              <div style={{background:'#22C55E',borderRadius:7,padding:'5px 9px',fontSize:13,fontWeight:800,color:'#fff',minWidth:36,textAlign:'center'}}>{hd.rating || '8.1'}</div>
+              <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>{hd.reviews || '3310'} sharhlar</span>
             </div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10}}>
-              {AMENITIES.map((a,i)=>(
-                <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:6}}>
-                  <div style={{width:44,height:44,borderRadius:14,background:a.color,display:'flex',alignItems:'center',justifyContent:'center'}}>
-                    {a.svg}
+          </div>
+
+          {/* Joylashuv */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:12,letterSpacing:-0.2}}>Joylashuv</div>
+            <div style={{borderRadius:12,overflow:'hidden',height:150,marginBottom:12,background:'#E8EAF3'}}>
+              <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=69.22%2C41.30%2C69.32%2C41.34&layer=mapnik&marker=41.32%2C69.27" style={{width:'100%',height:'100%',border:'none'}}/>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#0A1F21"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+              <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>{hd.address || `Kibray street, 72, ${hd.sub || 'Tashkent'}`}</span>
+            </div>
+          </div>
+
+          {/* Reviews + sub-scores */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:18}}>
+              <div style={{background:'#22C55E',borderRadius:7,padding:'5px 9px',fontSize:13,fontWeight:800,color:'#fff',minWidth:36,textAlign:'center'}}>{hd.rating || '8.1'}</div>
+              <span style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{hd.reviews || '3,310'} sharhlar</span>
+            </div>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px 28px'}}>
+              {[
+                {label:'Tozalik', score:8.2},
+                {label:'Nonushta', score:7.9},
+                {label:'Joylashuvi', score:7.6},
+                {label:"Xizmat ko'rsatish", score:7.6},
+                {label:'Wi-Fi sifati', score:7.6},
+                {label:'Narx va sifat mutanosibligi', score:7.5},
+              ].map(s=>(
+                <div key={s.label}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6,gap:8}}>
+                    <span style={{fontSize:12.5,color:'#0A1F21',fontWeight:600,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{s.label}</span>
+                    <span style={{fontSize:12.5,color:'#0A1F21',fontWeight:700,flexShrink:0}}>{s.score}</span>
                   </div>
-                  <span style={{fontSize:10,fontWeight:600,color:'#5C7577',textAlign:'center'}}>{a.label}</span>
+                  <div style={{height:4,borderRadius:2,background:'#E8EAF3',overflow:'hidden'}}>
+                    <div style={{height:'100%',width:`${s.score*10}%`,background:'#22C55E'}}/>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* 4. Mehmonxona haqida */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.05)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
-              <div style={{width:3,height:14,borderRadius:2,background:T,flexShrink:0}}/>
-              <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Mehmonxona haqida</span>
+          {/* Qulayliklar */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:14,letterSpacing:-0.2}}>Qulayliklar</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:6}}>
+              {['Computer','Air conditioning','24-hour reception','Elevator/lift','Smoking areas','Heating','Security guard','Washing machine'].map(a=>(
+                <div key={a} style={{background:'#F4F5FA',borderRadius:999,padding:'7px 14px',fontSize:12.5,color:'#0A1F21',fontWeight:500}}>{a}</div>
+              ))}
             </div>
-            <div style={{fontSize:13,color:'#5C7577',lineHeight:1.6,overflow:'hidden',
-              maxHeight:hotelExpanded?'none':'72px'}}>
-              {hotelName} — dunyoning eng obro'li mehmonxonalaridan biri. Dengiz yoqasida joylashgan ushbu hashamatli kompleks o'zida yuzdan ortiq xona va suite, bir nechta restoran va bar, katta ochiq havzali basseyn, shaxsiy plyaj hamda to'liq Spa-markaz ni birlashtiradi. Har bir xona zamonaviy usulda bezatilgan bo'lib, zamonaviy texnologiyalar va premium yotoq to'shamasi bilan jihozlangan. Mehmonxona mehmonsevarligi va professional xizmati bilan 5★ sifatini to'liq oqlaydi.
+            <button style={{background:'none',border:'none',padding:'10px 0 0',cursor:'pointer',fontSize:13,fontWeight:700,color:T}}>+ 77 tadan ortiq</button>
+          </div>
+
+          {/* Joylashish shartlari */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:12,letterSpacing:-0.2}}>Joylashish shartlari</div>
+            <div style={{fontSize:13.5,color:'#0A1F21',marginBottom:6}}>Kelish 14:00.</div>
+            <div style={{fontSize:13.5,color:'#0A1F21'}}>Ketish 12:00.</div>
+          </div>
+
+          {/* Mehmonxona haqida */}
+          <div style={{background:'#fff',margin:'12px 16px 16px',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:12,letterSpacing:-0.2}}>Mehmonxona haqida</div>
+            <div style={{fontSize:13.5,color:'#0A1F21',lineHeight:1.55,overflow:'hidden',maxHeight:hotelExpanded?'none':84,position:'relative'}}>
+              Plans for the journey: have a rest and enjoy! Resort «{hotelName}» is located in Tashkent. This resort is located in 5 km from the city center. You can take a walk and explore the neighbourhood area of the hotel. {hotelName} — dunyoning eng obro'li mehmonxonalaridan biri. Hashamatli kompleks o'zida yuzdan ortiq xona va suite, bir nechta restoran va bar, katta ochiq havzali basseyn, shaxsiy plyaj hamda to'liq Spa-markaz ni birlashtiradi. Har bir xona zamonaviy usulda bezatilgan bo'lib, premium yotoq to'shamasi bilan jihozlangan.
             </div>
-            <button onClick={()=>setHotelExpanded(v=>!v)}
-              style={{display:'flex',alignItems:'center',gap:4,paddingTop:10,background:'none',border:'none',cursor:'pointer',color:T,fontSize:13,fontWeight:700}}>
-              {hotelExpanded?'Kamroq ko\'rsatish':'Ko\'proq o\'qish'}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.5"
-                style={{transform:hotelExpanded?'rotate(180deg)':'none',transition:'transform 0.2s'}}>
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
+            <button onClick={()=>setHotelExpanded(v=>!v)} style={{background:'none',border:'none',padding:'10px 0 0',cursor:'pointer',fontSize:13,fontWeight:700,color:T}}>
+              {hotelExpanded?'Yopish':"Ko'proq o'qish"}
             </button>
           </div>
-
-          {/* 5. Sanalar + Mehmonlar */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.05)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
-              <div style={{width:3,height:14,borderRadius:2,background:T,flexShrink:0}}/>
-              <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Sanalar va mehmonlar</span>
-            </div>
-            <div style={{padding:'12px 16px 0'}}>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
-                {[['Kirish','17 May, Sesh'],['Chiqish','24 May, Sha']].map(([lbl,val],i)=>(
-                  <div key={i} style={{background:'#F4F5FA',borderRadius:12,padding:'10px 12px',display:'flex',alignItems:'center',gap:8}}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <div>
-                      <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,marginBottom:1}}>{lbl}</div>
-                      <div style={{fontSize:12,fontWeight:700,color:'#0A1F21'}}>{val}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div style={{height:1,background:'#F0F2F8',margin:'12px 16px'}}/>
-            <div style={{padding:'0 16px 16px'}}>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
-                {[['Kattalar','2'],['Bolalar','0']].map(([lbl,val],i)=>(
-                  <div key={i} style={{background:'#F4F5FA',borderRadius:12,padding:'10px 12px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                    <div style={{display:'flex',alignItems:'center',gap:8}}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                      <div>
-                        <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600}}>{lbl}</div>
-                        <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{val}</div>
-                      </div>
-                    </div>
-                    <div style={{display:'flex',gap:4}}>
-                      <button style={{width:24,height:24,borderRadius:8,background:'#E0F2F3',border:'none',fontSize:14,color:T,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700}}>−</button>
-                      <button style={{width:24,height:24,borderRadius:8,background:T,border:'none',fontSize:14,color:'#fff',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700}}>+</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* 6. Sharhlar */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.05)'}}>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <div style={{width:3,height:14,borderRadius:2,background:T,flexShrink:0}}/>
-                <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Mehmonlar sharhlari</span>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:6}}>
-                <div style={{background:'#22C55E',borderRadius:8,padding:'3px 8px'}}>
-                  <span style={{fontSize:12,fontWeight:800,color:'#fff'}}>{hd.rating}</span>
-                </div>
-                <span style={{fontSize:11,color:'#9AA1B8'}}>{hd.reviews} sharh</span>
-              </div>
-            </div>
-            {REVIEWS.map((r,i)=>(
-              <div key={i} style={{marginBottom:14}}>
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
-                  <div style={{display:'flex',alignItems:'center',gap:8}}>
-                    <div style={{width:32,height:32,borderRadius:'50%',background:TBG,display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,color:T}}>
-                      {r.name[0]}
-                    </div>
-                    <div>
-                      <div style={{fontSize:12,fontWeight:700,color:'#0A1F21'}}>{r.name}</div>
-                      <div style={{fontSize:10,color:'#9AA1B8'}}>{r.date}</div>
-                    </div>
-                  </div>
-                  <div style={{background:'#22C55E',borderRadius:8,padding:'3px 8px'}}>
-                    <span style={{fontSize:11,fontWeight:800,color:'#fff'}}>{r.rating}</span>
-                  </div>
-                </div>
-                <div style={{fontSize:12,color:'#5C7577',lineHeight:1.5}}>{r.text}</div>
-                {i < REVIEWS.length-1 && <div style={{height:1,background:'#F0F2F8',marginTop:14}}/>}
-              </div>
-            ))}
-            <button style={{width:'100%',padding:'11px',borderRadius:12,background:TBG,border:'none',cursor:'pointer',
-              fontSize:13,fontWeight:700,color:T,marginTop:4}}>Barcha sharhlarni ko'rish</button>
-          </div>
-
-          {/* 7. Menejer — Savolingiz bormi? style */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.05)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:12}}>
-              <div style={{width:44,height:44,borderRadius:14,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.68 12 19.79 19.79 0 0 1 1.63 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              </div>
-              <div style={{flex:1}}>
-                <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Savolingiz bormi?</div>
-                <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>Javob berishdan xursandmiz</div>
-              </div>
-              <button style={{background:T,border:'none',borderRadius:12,padding:'11px 18px',cursor:'pointer',fontSize:13,fontWeight:800,color:'#fff',boxShadow:'0 4px 12px rgba(0,153,168,0.3)'}}>
-                Yozish
-              </button>
-            </div>
-          </div>
-
         </div>
 
         {/* Fixed bottom CTA */}
-        <div style={{position:'fixed',left:0,right:0,bottom:0,maxWidth:460,margin:'0 auto',zIndex:40}}>
-          <div style={{background:'rgba(244,247,248,0.95)',backdropFilter:'blur(12px)',borderTop:'1px solid rgba(0,153,168,0.1)',padding:'10px 16px 18px'}}>
-            <div style={{display:'flex',alignItems:'center',gap:12}}>
-              <div style={{flex:1}}>
-                <div style={{fontSize:10,color:'#B0BAC4'}}>{fmtS(regPrice)}</div>
-                <div style={{display:'flex',alignItems:'baseline',gap:5}}>
-                  <span style={{fontSize:20,fontWeight:900,color:T,lineHeight:1}}>{fmtS(premPrice)}</span>
-                </div>
-                <div style={{fontSize:10,color:'#9AA1B8',marginTop:1}}>1 kishi uchun</div>
-              </div>
-              <button onClick={()=>setHotelRoomsPage(true)} style={{background:`linear-gradient(135deg,${T},#007A87)`,color:'#fff',border:'none',borderRadius:14,padding:'14px 28px',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 20px rgba(0,153,168,0.4)',letterSpacing:0.2}}>
-                Xona tanlash
-              </button>
-            </div>
-          </div>
+        <div style={{position:'fixed',left:0,right:0,bottom:0,maxWidth:460,margin:'0 auto',zIndex:40,background:'#fff',boxShadow:'0 -2px 12px rgba(15,42,74,0.08)',padding:'12px 16px 22px'}}>
+          <div style={{fontSize:13,color:'#5C7577',fontWeight:500,marginBottom:10,textAlign:'center'}}>2 mehmon uchun {fmtS(premPrice)} dan boshlab</div>
+          <button onClick={()=>setHotelRoomsPage(true)} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:12,padding:'15px 0',fontSize:14,fontWeight:800,cursor:'pointer',letterSpacing:0.8,textTransform:'uppercase',boxShadow:'0 4px 14px rgba(0,153,168,0.28)'}}>
+            Xonani tanlang
+          </button>
         </div>
 
         {/* Hotel rooms full-page overlay */}
@@ -3700,7 +3571,9 @@ function ScreenTrip() {
                   sub = <>{q.dateStart || 'Ketish'}{q.dateEnd?` – ${q.dateEnd}`:''} · {ppl||1} kishi · {{econom:'Econom',business:'Business',premium:'Premium'}[q.flightClass]||'Econom'}</>;
                 } else if (page === 'hotel') {
                   title = q.from || 'Shahar tanlang';
-                  sub = <>{q.dateStart || 'Sana'}{q.dateEnd?` – ${q.dateEnd}`:''} · {ppl||1} kishi</>;
+                  const rooms = q.rooms || Math.max(1, Math.ceil((ppl||1)/2));
+                  const dr = q.dateStart && q.dateEnd ? `${q.dateStart} – ${q.dateEnd}` : (q.dateStart || 'Sana');
+                  sub = <>{dr}, {ppl||1} kishi, {rooms} xona</>;
                 } else if (page === 'excur') {
                   title = <>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || 'Davlat tanlang'}</>;
                   sub = '1 kunlik ekskursiya';
