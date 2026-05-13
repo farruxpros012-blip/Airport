@@ -1108,6 +1108,16 @@ function ScreenTrip() {
     const [rentFrom, setRentFrom] = React.useState('');
     const [rentTo, setRentTo] = React.useState('');
     const [rentPickupLoc, setRentPickupLoc] = React.useState('');
+    const [airportHistory, setAirportHistory] = React.useState(() => {
+      try { return JSON.parse(localStorage.getItem('airport_history')||'[]'); } catch { return []; }
+    });
+    const addToHistory = (ap) => {
+      setAirportHistory(prev => {
+        const next = [ap, ...prev.filter(x=>x.iata!==ap.iata)].slice(0,5);
+        try { localStorage.setItem('airport_history', JSON.stringify(next)); } catch {}
+        return next;
+      });
+    };
     if (!preSheet) return null;
     const close = () => setPreSheet(null);
 
@@ -1574,6 +1584,116 @@ function ScreenTrip() {
       );
     }
 
+    // ── Airport data ──
+    const AIRPORTS = [
+      {iata:'TAS',name:"Islom Karimov nomidagi Toshkent xalqaro aeroporti",city:'Toshkent',country:"O'zbekiston",flag:'🇺🇿'},
+      {iata:'SKD',name:'Samarqand xalqaro aeroporti',city:'Samarqand',country:"O'zbekiston",flag:'🇺🇿'},
+      {iata:'BHK',name:'Buxoro xalqaro aeroporti',city:'Buxoro',country:"O'zbekiston",flag:'🇺🇿'},
+      {iata:'FEG',name:'Farg\'ona xalqaro aeroporti',city:"Farg'ona",country:"O'zbekiston",flag:'🇺🇿'},
+      {iata:'NVI',name:'Navoiy xalqaro aeroporti',city:'Navoiy',country:"O'zbekiston",flag:'🇺🇿'},
+      {iata:'DXB',name:'Dubai International Airport',city:'Dubai',country:'BAA',flag:'🇦🇪'},
+      {iata:'AUH',name:'Abu Dhabi International Airport',city:'Abu Dhabi',country:'BAA',flag:'🇦🇪'},
+      {iata:'SHJ',name:'Sharjah International Airport',city:'Sharjah',country:'BAA',flag:'🇦🇪'},
+      {iata:'IST',name:'Istanbul Airport',city:'Istanbul',country:'Turkiya',flag:'🇹🇷'},
+      {iata:'SAW',name:'Sabiha Gökçen International Airport',city:'Istanbul',country:'Turkiya',flag:'🇹🇷'},
+      {iata:'AYT',name:'Antalya Airport',city:'Antalya',country:'Turkiya',flag:'🇹🇷'},
+      {iata:'CAI',name:'Cairo International Airport',city:'Qohira',country:'Misr',flag:'🇪🇬'},
+      {iata:'HRG',name:'Hurghada International Airport',city:'Hurghada',country:'Misr',flag:'🇪🇬'},
+      {iata:'SSH',name:'Sharm el-Sheikh International Airport',city:'Sharm el-Sheikh',country:'Misr',flag:'🇪🇬'},
+      {iata:'BKK',name:'Suvarnabhumi Airport',city:'Bangkok',country:'Tailand',flag:'🇹🇭'},
+      {iata:'DMK',name:'Don Mueang International Airport',city:'Bangkok',country:'Tailand',flag:'🇹🇭'},
+      {iata:'HKT',name:'Phuket International Airport',city:'Phuket',country:'Tailand',flag:'🇹🇭'},
+      {iata:'HAN',name:'Noi Bai International Airport',city:'Hanoi',country:'Vietnam',flag:'🇻🇳'},
+      {iata:'SGN',name:'Tan Son Nhat International Airport',city:'Ho Chi Minh',country:'Vietnam',flag:'🇻🇳'},
+      {iata:'DAD',name:'Da Nang International Airport',city:'Da Nang',country:'Vietnam',flag:'🇻🇳'},
+      {iata:'KUL',name:'Kuala Lumpur International Airport',city:'Kuala Lumpur',country:'Malayziya',flag:'🇲🇾'},
+      {iata:'SIN',name:'Changi Airport',city:'Singapur',country:'Singapur',flag:'🇸🇬'},
+      {iata:'CDG',name:'Charles de Gaulle Airport',city:'Paris',country:'Fransiya',flag:'🇫🇷'},
+      {iata:'LHR',name:'Heathrow Airport',city:'London',country:'Buyuk Britaniya',flag:'🇬🇧'},
+      {iata:'FRA',name:'Frankfurt Airport',city:'Frankfurt',country:'Germaniya',flag:'🇩🇪'},
+      {iata:'MUC',name:'Munich Airport',city:'Myunxen',country:'Germaniya',flag:'🇩🇪'},
+      {iata:'FCO',name:'Leonardo da Vinci Airport',city:'Rim',country:'Italiya',flag:'🇮🇹'},
+      {iata:'MXP',name:'Malpensa Airport',city:'Milan',country:'Italiya',flag:'🇮🇹'},
+      {iata:'MAD',name:'Adolfo Suárez Madrid–Barajas Airport',city:'Madrid',country:'Ispaniya',flag:'🇪🇸'},
+      {iata:'BCN',name:'Barcelona–El Prat Airport',city:'Barselona',country:'Ispaniya',flag:'🇪🇸'},
+      {iata:'JFK',name:'John F. Kennedy International Airport',city:'New York',country:'AQSh',flag:'🇺🇸'},
+      {iata:'LAX',name:'Los Angeles International Airport',city:'Los Angeles',country:'AQSh',flag:'🇺🇸'},
+      {iata:'MIA',name:'Miami International Airport',city:'Miami',country:'AQSh',flag:'🇺🇸'},
+      {iata:'GYD',name:'Heydar Aliyev International Airport',city:'Boku',country:'Ozarbayjon',flag:'🇦🇿'},
+      {iata:'EVN',name:'Zvartnots International Airport',city:'Yerevan',country:'Armaniston',flag:'🇦🇲'},
+      {iata:'TBS',name:'Tbilisi International Airport',city:'Tbilisi',country:'Gruziya',flag:'🇬🇪'},
+      {iata:'NRT',name:'Narita International Airport',city:'Tokio',country:'Yaponiya',flag:'🇯🇵'},
+      {iata:'ICN',name:'Incheon International Airport',city:'Seul',country:'Janubiy Koreya',flag:'🇰🇷'},
+      {iata:'DEL',name:'Indira Gandhi International Airport',city:'Dehli',country:'Hindiston',flag:'🇮🇳'},
+      {iata:'BOM',name:'Chhatrapati Shivaji Maharaj International Airport',city:'Mumbai',country:'Hindiston',flag:'🇮🇳'},
+      {iata:'SVO',name:'Sheremetyevo International Airport',city:'Moskva',country:'Rossiya',flag:'🇷🇺'},
+      {iata:'DME',name:'Domodedovo International Airport',city:'Moskva',country:'Rossiya',flag:'🇷🇺'},
+    ];
+
+    const searchAirports = (q) => {
+      if (!q.trim()) return [];
+      const s = q.toLowerCase().trim();
+      return AIRPORTS.filter(a =>
+        a.iata.toLowerCase().includes(s) ||
+        a.name.toLowerCase().includes(s) ||
+        a.city.toLowerCase().includes(s) ||
+        a.country.toLowerCase().includes(s)
+      ).slice(0, 8);
+    };
+
+    // ── Airport Picker (bottomsheet content) ──
+    const AirportPicker = ({onPick}) => {
+      const [q, setQ] = React.useState('');
+      const results = searchAirports(q);
+      const inputRef = React.useRef(null);
+      React.useEffect(()=>{ setTimeout(()=>inputRef.current?.focus(), 150); }, []);
+      const pick = (ap) => { addToHistory(ap); onPick(`${ap.city} (${ap.iata})`); };
+      const AirportRow = ({ap}) => (
+        <div onClick={()=>pick(ap)} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 4px',cursor:'pointer',borderBottom:'1px solid #F4F7F8'}}>
+          <div style={{width:42,height:42,borderRadius:12,background:'#F4F7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <span style={{fontSize:11,fontWeight:800,color:'#0A1F21',letterSpacing:0.2}}>{ap.iata}</span>
+          </div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{ap.city} <span style={{color:'#9AA1B8',fontWeight:500}}>· {ap.country} {ap.flag}</span></div>
+            <div style={{fontSize:11,color:'#9AA1B8',marginTop:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{ap.name}</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5"><path d="M9 6l6 6-6 6"/></svg>
+        </div>
+      );
+      return (
+        <div>
+          <div style={{display:'flex',alignItems:'center',background:'#F4F7F8',borderRadius:14,padding:'10px 14px',gap:10,marginBottom:14}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input ref={inputRef} value={q} onChange={e=>setQ(e.target.value)} placeholder="Shahar yoki aeroport nomi..." style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+            {q && <button onClick={()=>setQ('')} style={{border:'none',background:'none',cursor:'pointer',padding:0,display:'flex',alignItems:'center'}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>}
+          </div>
+          {!q && airportHistory.length > 0 && (
+            <div>
+              <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginBottom:8,display:'flex',alignItems:'center',gap:6}}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                So'nggi qidiruvlar
+              </div>
+              {airportHistory.map(ap=><AirportRow key={ap.iata} ap={ap}/>)}
+            </div>
+          )}
+          {!q && airportHistory.length === 0 && (
+            <div style={{textAlign:'center',padding:'32px 0',color:'#C0C8D4'}}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#DDE0EB" strokeWidth="1.5" style={{marginBottom:10}}><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5c-1.5-1.5-3.5-1.5-5 0L11 6 2.8 4.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 2.3 2.3L7.6 21 9 20l1-2 3 .7c.4.1.9-.1 1.3-.4l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+              <div style={{fontSize:13,color:'#9AA1B8'}}>Qidirish uchun shahar yoki aeroport nomini yozing</div>
+            </div>
+          )}
+          {q && results.length === 0 && (
+            <div style={{textAlign:'center',padding:'32px 0'}}>
+              <div style={{fontSize:13,color:'#9AA1B8'}}>"{q}" bo'yicha aeroport topilmadi</div>
+            </div>
+          )}
+          {q && results.map(ap=><AirportRow key={ap.iata} ap={ap}/>)}
+        </div>
+      );
+    };
+
     // ── Nested sheets (date picker / hotel multi-select) ──
     const renderNested = () => {
       if (nested === 'tour-date') return <DatePicker withNights onPick={v=>{setDateStart(v.date);setNights(v.nights);setNested(null);}}/>;
@@ -1581,6 +1701,8 @@ function ScreenTrip() {
       if (nested === 'date-end')   return <DatePicker onPick={v=>{setDateEnd(v);setNested(null);}}/>;
       if (nested === 'rent-from')  return <DatePicker withTime onPick={v=>{setRentFrom(v);setNested(null);}}/>;
       if (nested === 'rent-to')    return <DatePicker withTime onPick={v=>{setRentTo(v);setNested(null);}}/>;
+      if (nested === 'airport-from') return <AirportPicker onPick={v=>{setFromVal(v);setNested(null);}}/>;
+      if (nested === 'airport-to')   return <AirportPicker onPick={v=>{setToVal(v);setNested(null);}}/>;
       if (nested === 'route-from') return <CityCountryPicker onPick={v=>{setFromVal(v);setNested(null);}}/>;
       if (nested === 'route-to')   return <CityCountryPicker onPick={v=>{setToVal(v);setNested(null);}}/>;
       if (nested === 'rent-loc')   return <CityCountryPicker onPick={v=>{setRentPickupLoc(v);setNested(null);}}/>;
@@ -1598,7 +1720,28 @@ function ScreenTrip() {
     const renderFields = () => {
       if (preSheet === 'turlar') return (
         <>
-          {routeCard()}
+          {/* Airport route card for turlar */}
+          <div style={{background:'#fff',borderRadius:16,padding:'4px 14px',marginBottom:10,position:'relative',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
+            <div onClick={()=>setNested('airport-from')} style={{display:'flex',alignItems:'center',padding:'14px 0',borderBottom:'1px solid #F0F2F8',cursor:'pointer',gap:10}}>
+              <div style={{width:8,height:8,borderRadius:'50%',background:T,flexShrink:0}}/>
+              <div style={{flex:1}}>
+                <div style={{fontSize:10,fontWeight:700,color:'#9AA1B8',letterSpacing:0.4,textTransform:'uppercase',marginBottom:2}}>Qayerdan</div>
+                <div style={{fontSize:14,fontWeight:700,color:fromVal?'#0A1F21':'#C0C8D4'}}>{fromVal||'Shahar yoki aeroport'}</div>
+              </div>
+              {fromVal && <button onClick={e=>{e.stopPropagation();setFromVal('');}} style={{border:'none',background:'none',cursor:'pointer',padding:4,display:'flex'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>}
+            </div>
+            <div onClick={()=>setNested('airport-to')} style={{display:'flex',alignItems:'center',padding:'14px 0',cursor:'pointer',gap:10}}>
+              <div style={{width:8,height:8,borderRadius:'50%',background:'#DDE0EB',flexShrink:0}}/>
+              <div style={{flex:1}}>
+                <div style={{fontSize:10,fontWeight:700,color:'#9AA1B8',letterSpacing:0.4,textTransform:'uppercase',marginBottom:2}}>Qayerga</div>
+                <div style={{fontSize:14,fontWeight:700,color:toVal?'#0A1F21':'#C0C8D4'}}>{toVal||'Shahar yoki aeroport'}</div>
+              </div>
+              {toVal && <button onClick={e=>{e.stopPropagation();setToVal('');}} style={{border:'none',background:'none',cursor:'pointer',padding:4,display:'flex'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>}
+            </div>
+            <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.05)'}}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+            </button>
+          </div>
           {tapCard('QACHON · NECHA KUN', dateStart?`${dateStart} · ${nights} kun`:'', 'Sana va davomiylikni tanlang', ()=>setNested('tour-date'))}
           {guestsCard(true)}
           {tapCard('HOTEL TANLASH', hotels.length?`${hotels.length} ta hotel tanlandi`:'', 'Hotelni tanlang (bir nechta mumkin)', ()=>setNested('hotels'))}
@@ -1642,7 +1785,7 @@ function ScreenTrip() {
       return null;
     };
 
-    const nestedTitle = {hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','rent-loc':'Davlat va shahar','hotel-country':'Davlat tanlang','date-start':'Sana tanlang','date-end':'Sana tanlang','rent-from':'Ketish sanasi','rent-to':'Qaytish sanasi'};
+    const nestedTitle = {hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','airport-from':'Qayerdan — aeroport','airport-to':'Qayerga — aeroport','rent-loc':'Davlat va shahar','hotel-country':'Davlat tanlang','date-start':'Sana tanlang','date-end':'Sana tanlang','rent-from':'Ketish sanasi','rent-to':'Qaytish sanasi'};
 
     return (
       <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column',background:'#F4F7F8'}}>
