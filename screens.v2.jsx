@@ -1167,7 +1167,7 @@ function ScreenTrip() {
       </div>
     );
 
-    // Smart counter: - hidden when at min, secondary style
+    // Smart counter: - hidden when at min, + is primary teal
     const cntSmart = (val, set, min=0) => (
       <div style={{display:'flex',alignItems:'center',gap:6}}>
         {val > min ? (
@@ -1176,8 +1176,8 @@ function ScreenTrip() {
           </button>
         ) : <div style={{width:40,height:40,flexShrink:0}}/>}
         <span style={{fontSize:16,fontWeight:800,color:'#0A1F21',width:28,textAlign:'center'}}>{val}</span>
-        <button onClick={()=>set(v=>v+1)} style={{width:40,height:40,border:'1.5px solid #DDE0EB',background:'#fff',borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <button onClick={()=>set(v=>v+1)} style={{width:40,height:40,border:'none',background:T,borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,boxShadow:'0 3px 10px rgba(0,153,168,0.3)'}}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       </div>
     );
