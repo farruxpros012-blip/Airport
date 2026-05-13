@@ -680,18 +680,35 @@ function TripResultsView({ params, onBack }) {
     ? (fmtD(params.departDate) ? `${fmtD(params.departDate)} · faqat ketish` : 'Faqat ketish')
     : (params.departDate && params.returnDate ? `${fmtD(params.departDate)} — ${fmtD(params.returnDate)}` : '');
 
+  const activeTabIcon = (RESULT_TABS.find(t=>t.id===tab)||{}).icon;
   return (
     <Frame>
-      {/* Sticky header */}
-      <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'transparent',position:'sticky',top:0,zIndex:10}}>
-        <button onClick={onBack} aria-label="Back" style={{width:44,height:44,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0,zIndex:1}}>
-          <IconBack size={22} color={TRIP_INK}/>
-        </button>
-        <div style={{position:'absolute',left:0,right:0,textAlign:'center',pointerEvents:'none'}}>
-          <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.4}}>{origin} → {dest}</div>
-          <div style={{fontSize:17,fontWeight:800,color:TRIP_INK,letterSpacing:-0.2}}>{dateLabel||'Qidiruv natijasi'}</div>
+      {/* Sticky header — wireframe layout */}
+      <div style={{background:'#F4F7F8',position:'sticky',top:0,zIndex:10,paddingBottom:12,boxShadow:'0 1px 0 rgba(15,42,74,0.04)'}}>
+        <div style={{display:'flex',alignItems:'center',padding:'12px 16px 12px',gap:8}}>
+          <button onClick={onBack} aria-label="Back"
+            style={{width:44,height:44,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',flexShrink:0}}>
+            <IconBack size={22} color={TRIP_INK}/>
+          </button>
+          {/* Floating route card */}
+          <button onClick={onBack}
+            style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:10,background:'#fff',border:'none',cursor:'pointer',padding:'0 10px 0 6px',height:44,borderRadius:14,boxShadow:'0 2px 10px rgba(15,27,61,0.08)',textAlign:'left'}}>
+            <div style={{width:32,height:32,borderRadius:9,background:'rgba(31,191,201,0.12)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              {activeTabIcon}
+            </div>
+            <div style={{flex:1,minWidth:0,fontSize:13.5,fontWeight:700,color:TRIP_INK,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2}}>
+              {origin}<span style={{color:TEAL,margin:'0 5px',fontWeight:800}}>→</span>{dest}
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round" style={{flexShrink:0}}><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <button style={{display:'flex',alignItems:'center',gap:3,background:'#fff',border:'none',cursor:'pointer',padding:'0 10px',height:44,flexShrink:0,borderRadius:14,boxShadow:'0 2px 10px rgba(15,27,61,0.08)'}}>
+            <span style={{fontSize:12,fontWeight:800,color:TRIP_INK}}>UZS</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={TRIP_INK} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
         </div>
-        <div style={{width:44,flexShrink:0,marginLeft:'auto'}}/>
+        {dateLabel && (
+          <div style={{padding:'0 16px',fontSize:11.5,color:'#5C6B86',fontWeight:600,textAlign:'center'}}>{dateLabel}</div>
+        )}
       </div>
 
       {/* Service tabs */}
