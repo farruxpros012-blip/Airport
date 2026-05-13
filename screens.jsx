@@ -3702,32 +3702,35 @@ function ScreenTrip() {
               </div>
               {(() => {
                 const q = tripQuery || {};
-                const stack = (a, b) => (
-                  <div style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:9}}>
-                    {/* dot · line · dot column */}
-                    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-between',height:30,flexShrink:0}}>
-                      <div style={{width:7,height:7,borderRadius:'50%',background:'#0A1F21'}}/>
-                      <div style={{width:1.5,flex:1,background:'#D6DAE6',margin:'2px 0'}}/>
-                      <div style={{width:7,height:7,borderRadius:'50%',background:T}}/>
-                    </div>
-                    {/* labels */}
-                    <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'space-between',height:30}}>
-                      <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{a}</div>
-                      <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{b}</div>
-                    </div>
+                const ppl = (q.adults||0) + (q.children||0) + (q.infants||0);
+                let title, sub;
+                if (page === 'turlar') {
+                  title = <>{q.from || 'Qayerdan'} — {q.to || 'Qayerga'}</>;
+                  const dr = q.dateStart && q.dateEnd ? `${q.dateStart} – ${q.dateEnd}` : (q.dateStart || 'Sana');
+                  sub = <>{dr}, {ppl||1} kishi</>;
+                } else if (page === 'aviabilet') {
+                  title = <>{q.from || 'Qayerdan'} — {q.to || 'Qayerga'}</>;
+                  sub = <>{q.dateStart || 'Ketish'}{q.dateEnd?` – ${q.dateEnd}`:''} · {ppl||1} kishi · {{econom:'Econom',business:'Business',premium:'Premium'}[q.flightClass]||'Econom'}</>;
+                } else if (page === 'hotel') {
+                  title = q.from || 'Shahar tanlang';
+                  sub = <>{q.dateStart || 'Sana'}{q.dateEnd?` – ${q.dateEnd}`:''} · {ppl||1} kishi</>;
+                } else if (page === 'excur') {
+                  title = <>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || 'Davlat tanlang'}</>;
+                  sub = '1 kunlik ekskursiya';
+                } else if (page === 'esim') {
+                  title = <>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || esimCountry || 'Davlat tanlang'}</>;
+                  sub = 'eSIM tarif';
+                } else if (page === 'rentcar') {
+                  title = q.rentLoc || 'Manzil tanlang';
+                  sub = <>{q.rentFrom || 'Boshlanish'}{q.rentTo?` → ${q.rentTo}`:''}</>;
+                }
+                return (
+                  <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'center'}}>
+                    <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1.15}}>{title}</div>
+                    {sub && <div style={{fontSize:11.5,fontWeight:500,color:'#5C7577',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',marginTop:3,lineHeight:1.15}}>{sub}</div>}
                   </div>
                 );
-                const single = (t) => (
-                  <div style={{flex:1,minWidth:0,fontSize:13.5,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2}}>{t}</div>
-                );
-                if (page === 'turlar' || page === 'aviabilet') return stack(q.from || 'Qayerdan', q.to || 'Qayerga');
-                if (page === 'hotel') return single(q.from || 'Shahar tanlang');
-                if (page === 'excur') return single(<>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || 'Davlat tanlang'}</>);
-                if (page === 'esim') return single(<>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || esimCountry || 'Davlat tanlang'}</>);
-                if (page === 'rentcar') return single(q.rentLoc || 'Manzil tanlang');
-                return null;
               })()}
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round" style={{flexShrink:0}}><path d="M9 18l6-6-6-6"/></svg>
             </button>
             {/* Language/currency pill */}
             <button style={{display:'flex',alignItems:'center',gap:4,background:'#fff',border:'none',cursor:'pointer',padding:'10px 14px',flexShrink:0,borderRadius:999,boxShadow:'0 2px 10px rgba(15,27,61,0.08)'}}>
@@ -3738,7 +3741,7 @@ function ScreenTrip() {
         </div>
         {/* Row 2 — search, sticky below Row 1, collapses on scroll-down */}
         {page!=='aviabilet' && (
-          <div style={{position:'sticky',top:80,zIndex:25,background:'#F4F7F8',overflow:'hidden',maxHeight:showResultSearch?56:0,transition:'max-height 0.22s ease'}}>
+          <div style={{position:'sticky',top:80,zIndex:25,background:'#F4F7F8',overflow:'hidden',maxHeight:showResultSearch?56:0,transition:'max-height 0.22s ease',marginTop:-8,marginBottom:16}}>
             <div style={{padding:'0 16px',position:'relative',display:'flex',alignItems:'center'}}>
               <svg style={{position:'absolute',left:30,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
               <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Davlat qidirish...',hotel:'Mehmonxona qidirish...',rentcar:'Avtomobil yoki davlat...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 42px',border:'1px solid #ECEEF6',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#fff',outline:'none',boxSizing:'border-box',boxShadow:'0 1px 4px rgba(15,42,74,0.04)'}}/>
@@ -3779,7 +3782,7 @@ function ScreenTrip() {
             </>
           )}
           {/* Row 3: Filters */}
-          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'16px 16px 12px',WebkitOverflowScrolling:'touch'}}>
+          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
             <div style={{flexShrink:0,width:36,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
             </div>
