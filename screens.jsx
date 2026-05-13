@@ -1774,7 +1774,7 @@ function ScreenTrip() {
     const nestedTitle = {hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','airport-from':'Qayerdan — aeroport','airport-to':'Qayerga — aeroport','rent-loc':'Davlat va shahar','hotel-country':'Davlat tanlang','date-start':'Sana tanlang','date-end':'Sana tanlang','rent-from':'Ketish sanasi','rent-to':'Qaytish sanasi'};
 
     return (
-      <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column'}}>
+      <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column',background:'#F4F5FA'}}>
         {/* Header — back button left, title centered absolutely */}
         <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'transparent',flexShrink:0}}>
           <button onClick={close}
@@ -1788,7 +1788,7 @@ function ScreenTrip() {
         </div>
 
         {/* Scrollable content — always shows main form */}
-        <div style={{flex:1,overflowY:'auto',padding:'16px 18px 0'}}>
+        <div style={{flex:1,overflowY:'auto',padding:'16px 18px 0',background:'#F4F5FA'}}>
           {renderFields()}
           <div style={{height:100}}/>
         </div>
