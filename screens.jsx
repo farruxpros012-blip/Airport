@@ -1525,7 +1525,7 @@ function ScreenTrip() {
         <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column',background:'#F4F7F8'}}>
           {/* Header */}
           <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'#fff',borderBottom:'1px solid #F0F2F8',flexShrink:0}}>
-            <button onClick={close} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1}}>
+            <button onClick={close} style={{width:40,height:40,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',boxShadow:'0 1px 6px rgba(15,27,61,0.07)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
             <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>Global eSIM</div>
@@ -1778,7 +1778,7 @@ function ScreenTrip() {
         {/* Header — back button left, title centered absolutely */}
         <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'#fff',borderBottom:'1px solid #F0F2F8',flexShrink:0}}>
           <button onClick={close}
-            style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
+            style={{width:40,height:40,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',boxShadow:'0 1px 6px rgba(15,27,61,0.07)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
           <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>
@@ -1916,7 +1916,7 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{background:'#fff',borderBottom:'1px solid #F0F2F8',position:'sticky',top:0,zIndex:20,display:'flex',alignItems:'center',padding:'12px 16px',position:'relative'}}>
-          <button onClick={()=>setFlightDetail(null)} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
+          <button onClick={()=>setFlightDetail(null)} style={{width:40,height:40,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',boxShadow:'0 1px 6px rgba(15,27,61,0.07)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
           <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>Reys tafsiloti</div>
@@ -2023,7 +2023,7 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{background:'#fff',borderBottom:'1px solid #F0F2F8',position:'sticky',top:0,zIndex:20,display:'flex',alignItems:'center',padding:'12px 16px',position:'relative'}}>
-          <button onClick={()=>setTourRoomDetail(null)} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
+          <button onClick={()=>setTourRoomDetail(null)} style={{width:40,height:40,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',boxShadow:'0 1px 6px rgba(15,27,61,0.07)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
           <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>{r.type}</div>
@@ -2641,7 +2641,7 @@ function ScreenTrip() {
         {hotelRoomsPage && (
           <div style={{position:'fixed',inset:0,background:'#F7F9FB',display:'flex',flexDirection:'column',zIndex:100,maxWidth:460,margin:'0 auto'}}>
             <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'#fff',borderBottom:'1px solid #F0F2F8',flexShrink:0}}>
-              <button onClick={()=>setHotelRoomsPage(false)} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
+              <button onClick={()=>setHotelRoomsPage(false)} style={{width:40,height:40,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',boxShadow:'0 1px 6px rgba(15,27,61,0.07)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
               </button>
               <div style={{position:'absolute',left:0,right:0,textAlign:'center',pointerEvents:'none'}}>
@@ -3156,7 +3156,7 @@ function ScreenTrip() {
       <Frame>
         {/* Top bar */}
         <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'#fff',borderBottom:'1px solid #F0F2F8'}}>
-          <button onClick={()=>setXferSearchPage(false)} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
+          <button onClick={()=>setXferSearchPage(false)} style={{width:40,height:40,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',boxShadow:'0 1px 6px rgba(15,27,61,0.07)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
           <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>Avtomobil qidirish</div>
@@ -3445,7 +3445,7 @@ function ScreenTrip() {
       <Frame>
         {/* Sticky top: back + search */}
         <div style={{display:'flex',alignItems:'center',gap:10,padding:'12px 16px',background:'#fff',position:'sticky',top:0,zIndex:20,borderBottom:'1px solid #F0F2F8'}}>
-          <button onClick={()=>{setPage(null);setEsimCountry(null);}} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+          <button onClick={()=>{setPage(null);setEsimCountry(null);}} style={{width:40,height:40,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',boxShadow:'0 1px 6px rgba(15,27,61,0.07)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
           <div style={{flex:1,position:'relative',display:'flex',alignItems:'center'}}>
@@ -4055,11 +4055,11 @@ function ScreenFlight() {
   return (
     <Frame>
       <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'#fff',borderBottom:'1px solid #F0F2F8'}}>
-        <a href="#/" style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',textDecoration:'none',flexShrink:0,zIndex:1}}>
+        <a href="#/" style={{width:40,height:40,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',boxShadow:'0 1px 6px rgba(15,27,61,0.07)',display:'flex',alignItems:'center',justifyContent:'center',textDecoration:'none',flexShrink:0,zIndex:1}}>
           <IconBack size={20} color={C.ink}/>
         </a>
         <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>Рейс HY-1587</div>
-        <div style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginLeft:'auto',zIndex:1,cursor:'pointer'}}>
+        <div style={{width:40,height:40,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',boxShadow:'0 1px 6px rgba(15,27,61,0.07)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginLeft:'auto',zIndex:1,cursor:'pointer'}}>
           <IconMore size={20} color={C.ink}/>
         </div>
       </div>
