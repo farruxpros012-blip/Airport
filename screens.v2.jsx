@@ -1537,11 +1537,12 @@ function ScreenTrip() {
       return (
         <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column',background:'#F4F7F8'}}>
           {/* Header */}
-          <div style={{position:'relative',display:'flex',alignItems:'center',padding:'14px 18px',background:'#fff',boxShadow:'0 1px 0 #E8EAF3',flexShrink:0}}>
-            <button onClick={close} style={{width:40,height:40,borderRadius:'50%',background:'#F4F7F8',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1}}>
+          <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'#fff',borderBottom:'1px solid #F0F2F8',flexShrink:0}}>
+            <button onClick={close} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
-            <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:19,fontWeight:900,color:'#0A1F21',pointerEvents:'none'}}>Global eSIM</div>
+            <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>Global eSIM</div>
+            <div style={{width:40,flexShrink:0,marginLeft:'auto'}}/>
           </div>
           {/* Search bar */}
           <div style={{padding:'12px 18px',background:'#fff',borderBottom:'1px solid #F0F2F8'}}>
@@ -1788,14 +1789,15 @@ function ScreenTrip() {
     return (
       <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column',background:'#F4F7F8'}}>
         {/* Header — back button left, title centered absolutely */}
-        <div style={{position:'relative',display:'flex',alignItems:'center',padding:'14px 18px',background:'#fff',boxShadow:'0 1px 0 #E8EAF3',flexShrink:0}}>
+        <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'#fff',borderBottom:'1px solid #F0F2F8',flexShrink:0}}>
           <button onClick={close}
-            style={{width:40,height:40,borderRadius:'50%',background:'#F4F7F8',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
+            style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:19,fontWeight:900,color:'#0A1F21',pointerEvents:'none'}}>
+          <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>
             {titles[preSheet]||'Qidirish'}
           </div>
+          <div style={{width:40,flexShrink:0,marginLeft:'auto'}}/>
         </div>
 
         {/* Scrollable content — always shows main form */}
@@ -1813,8 +1815,8 @@ function ScreenTrip() {
 
         {/* Nested pickers as bottomsheet overlay on top of this page */}
         {nested && (
-          <div style={{position:'absolute',inset:0,background:'rgba(10,31,33,0.45)',zIndex:10,display:'flex',alignItems:'flex-end'}} onClick={()=>setNested(null)}>
-            <div style={{width:'100%',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 32px',maxHeight:'88vh',overflowY:'auto',boxShadow:'0 -8px 40px rgba(0,0,0,0.18)'}} onClick={e=>e.stopPropagation()}>
+          <div style={{position:'absolute',inset:0,background:'rgba(10,31,33,0.45)',zIndex:10,display:'flex',alignItems:'flex-end'}} onPointerDown={e=>{if(e.target===e.currentTarget)setNested(null);}}>
+            <div style={{width:'100%',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 32px',maxHeight:'88vh',overflowY:'auto',boxShadow:'0 -8px 40px rgba(0,0,0,0.18)'}} onPointerDown={e=>e.stopPropagation()}>
               <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'12px auto 0'}}/>
               <div style={{display:'flex',alignItems:'center',gap:10,padding:'14px 0 12px'}}>
                 <button onClick={()=>setNested(null)} style={{width:32,height:32,borderRadius:'50%',background:'#F4F7F8',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
@@ -1926,12 +1928,12 @@ function ScreenTrip() {
     const it = flightDetail;
     return (
       <Frame>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 18px 14px',background:'#F4F5FA'}}>
-          <button onClick={()=>setFlightDetail(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+        <div style={{background:'#fff',borderBottom:'1px solid #F0F2F8',position:'sticky',top:0,zIndex:20,display:'flex',alignItems:'center',padding:'12px 16px',position:'relative'}}>
+          <button onClick={()=>setFlightDetail(null)} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <div style={{fontSize:17,fontWeight:800,color:'#0A1F21'}}>Reys tafsiloti</div>
-          <div style={{width:46}}/>
+          <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>Reys tafsiloti</div>
+          <div style={{width:40,flexShrink:0,marginLeft:'auto'}}/>
         </div>
         <div style={{flex:1,overflowY:'auto',padding:'8px 16px 120px'}}>
           {/* Airline */}
@@ -2033,11 +2035,12 @@ function ScreenTrip() {
     const fmtS = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ') + ' so\'m';
     return (
       <Frame>
-        <div style={{display:'flex',alignItems:'center',gap:14,padding:'16px 16px 14px',background:'#fff',borderBottom:'1px solid #F0F2F8'}}>
-          <button onClick={()=>setTourRoomDetail(null)} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+        <div style={{background:'#fff',borderBottom:'1px solid #F0F2F8',position:'sticky',top:0,zIndex:20,display:'flex',alignItems:'center',padding:'12px 16px',position:'relative'}}>
+          <button onClick={()=>setTourRoomDetail(null)} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <div style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{r.type}</div>
+          <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>{r.type}</div>
+          <div style={{width:40,flexShrink:0,marginLeft:'auto'}}/>
         </div>
         <div style={{flex:1,overflowY:'auto',paddingBottom:30}}>
           <img src={(r.photos&&r.photos[0])||'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=700'} alt={r.type} style={{width:'100%',height:220,objectFit:'cover',display:'block'}}/>
@@ -3455,9 +3458,9 @@ function ScreenTrip() {
     return (
       <Frame>
         {/* Sticky top: back + search */}
-        <div style={{display:'flex',alignItems:'center',gap:10,padding:'18px 16px 20px',background:'#F4F5FA',position:'sticky',top:0,zIndex:20}}>
-          <button onClick={()=>{setPage(null);setEsimCountry(null);}} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)',flexShrink:0}}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <div style={{display:'flex',alignItems:'center',gap:10,padding:'12px 16px',background:'#fff',position:'sticky',top:0,zIndex:20,borderBottom:'1px solid #F0F2F8'}}>
+          <button onClick={()=>{setPage(null);setEsimCountry(null);}} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
           <div style={{flex:1,position:'relative',display:'flex',alignItems:'center'}}>
             <svg style={{position:'absolute',left:14,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -3487,9 +3490,9 @@ function ScreenTrip() {
     return (
       <Frame>
         {/* Sticky top: only back + currency */}
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 16px 20px',background:'#F4F5FA',position:'sticky',top:0,zIndex:20,marginBottom:0}}>
-          <button onClick={()=>{setPage(null);setEsimCountry(null);setEsimSelected(null);}} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 16px',background:'#fff',position:'sticky',top:0,zIndex:20,borderBottom:'1px solid #F0F2F8'}}>
+          <button onClick={()=>{setPage(null);setEsimCountry(null);setEsimSelected(null);}} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
           <button style={{display:'flex',alignItems:'center',gap:5,padding:'11px 18px',borderRadius:999,background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',boxShadow:'0 2px 8px rgba(10,31,33,0.06)'}}>
             <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>UZS</span>
@@ -3595,9 +3598,9 @@ function ScreenTrip() {
         {/* Sticky header */}
         <div style={{background:'#fff',position:'sticky',top:0,zIndex:20,borderBottom:'1px solid #F0F2F8',marginBottom:20}}>
           {/* Row 1: back | center (tappable) | UZS */}
-          <div style={{display:'flex',alignItems:'center',padding:'14px 16px 10px',gap:8}}>
-            <button onClick={()=>{ if(page==='esim' && esimCountry){ setEsimCountry(null); } else { setPage(null); setEsimCountry(null); } }} style={{background:'none',border:'none',cursor:'pointer',padding:'4px 6px',flexShrink:0,display:'flex',alignItems:'center'}}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <div style={{display:'flex',alignItems:'center',padding:'12px 16px 10px',gap:8}}>
+            <button onClick={()=>{ if(page==='esim' && esimCountry){ setEsimCountry(null); } else { setPage(null); setEsimCountry(null); } }} style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
             {/* Whole center is one tap target — pill background + edit icon to signal tappability */}
             <button onClick={()=>setPreSheet(page==='esim'?'esim':page)} style={{flex:1,background:TBG,border:'none',cursor:'pointer',padding:'8px 14px',textAlign:'center',borderRadius:14,display:'flex',alignItems:'center',justifyContent:'center',gap:10,position:'relative'}}>
