@@ -918,15 +918,10 @@ function ScreenTrip() {
   const lastScrollRef = React.useRef(0);
   React.useEffect(() => {
     if (!page) return;
-    lastScrollRef.current = window.scrollY;
     const onScroll = () => {
-      const y = window.scrollY;
-      const last = lastScrollRef.current;
-      if (y < 30) setShowResultSearch(true);
-      else if (y > last + 4) setShowResultSearch(false);
-      else if (y < last - 4) setShowResultSearch(true);
-      lastScrollRef.current = y;
+      setShowResultSearch(window.scrollY < 10);
     };
+    setShowResultSearch(window.scrollY < 10);
     window.addEventListener('scroll', onScroll, {passive:true});
     return () => window.removeEventListener('scroll', onScroll);
   }, [page]);
@@ -3693,18 +3688,18 @@ function ScreenTrip() {
       <Frame>
         {/* Row 1 — always fixed at top */}
         <div style={{background:'#F4F7F8',position:'sticky',top:0,zIndex:30}}>
-          <div style={{display:'flex',alignItems:'center',padding:'12px 16px',gap:8}}>
+          <div style={{display:'flex',alignItems:'center',padding:'14px 16px',gap:8}}>
             <button onClick={()=>{ if(page==='esim' && esimCountry){ setEsimCountry(null); } else { setPage(null); setEsimCountry(null); } }}
-              style={{width:44,height:44,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+              style={{width:52,height:52,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
             {/* Floating route card: icon + Qayerdan → Qayerga + chevron */}
             <button onClick={()=>setPreSheet(page==='esim'?'esim':page)}
-              style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:10,background:'#fff',border:'none',cursor:'pointer',padding:'0 10px 0 6px',height:44,borderRadius:14,boxShadow:'0 2px 10px rgba(15,27,61,0.08)',textAlign:'left'}}>
-              <div style={{width:34,height:34,borderRadius:10,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:10,background:'#fff',border:'none',cursor:'pointer',padding:'0 12px 0 8px',height:52,borderRadius:16,boxShadow:'0 2px 10px rgba(15,27,61,0.08)',textAlign:'left'}}>
+              <div style={{width:36,height:36,borderRadius:11,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
                 {React.cloneElement(pageIcon,{width:19,height:19})}
               </div>
-              <div style={{flex:1,minWidth:0,fontSize:15,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.3}}>
+              <div style={{flex:1,minWidth:0,fontSize:13.5,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2}}>
                 {(() => {
                   const q = tripQuery || {};
                   const arrow = <span style={{color:T,margin:'0 6px',fontWeight:800}}>→</span>;
@@ -3719,15 +3714,15 @@ function ScreenTrip() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round" style={{flexShrink:0}}><path d="M9 18l6-6-6-6"/></svg>
             </button>
             {/* Language/currency pill */}
-            <button style={{display:'flex',alignItems:'center',gap:3,background:'#fff',border:'none',cursor:'pointer',padding:'8px 14px',flexShrink:0,borderRadius:999,boxShadow:'0 2px 10px rgba(15,27,61,0.08)'}}>
-              <span style={{fontSize:12.5,fontWeight:800,color:'#0A1F21'}}>UZS</span>
+            <button style={{display:'flex',alignItems:'center',gap:4,background:'#fff',border:'none',cursor:'pointer',padding:'10px 14px',flexShrink:0,borderRadius:999,boxShadow:'0 2px 10px rgba(15,27,61,0.08)'}}>
+              <span style={{fontSize:13,fontWeight:800,color:'#0A1F21'}}>UZS</span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
         </div>
         {/* Row 2 — search, sticky below Row 1, collapses on scroll-down */}
         {page!=='aviabilet' && (
-          <div style={{position:'sticky',top:68,zIndex:25,background:'#F4F7F8',overflow:'hidden',maxHeight:showResultSearch?70:0,transition:'max-height 0.22s ease'}}>
+          <div style={{position:'sticky',top:80,zIndex:25,background:'#F4F7F8',overflow:'hidden',maxHeight:showResultSearch?70:0,transition:'max-height 0.22s ease'}}>
             <div style={{padding:'8px 16px',position:'relative',display:'flex',alignItems:'center'}}>
               <svg style={{position:'absolute',left:30,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
               <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Davlat qidirish...',hotel:'Mehmonxona qidirish...',rentcar:'Avtomobil yoki davlat...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 42px',border:'1px solid #ECEEF6',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#fff',outline:'none',boxSizing:'border-box',boxShadow:'0 1px 4px rgba(15,42,74,0.04)'}}/>
