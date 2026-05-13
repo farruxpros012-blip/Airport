@@ -2178,7 +2178,7 @@ function ScreenTrip() {
 
           {/* 2. Bepul bekor qilish / Bilish kerak — with subtitle */}
           <div style={{display:'flex',flexDirection:'column',gap:8,padding:'12px 16px 0'}}>
-            <div style={{display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:14,padding:'11px 13px',boxShadow:'0 2px 8px rgba(10,31,33,0.05)',border:'1px solid #D1FAE5'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:14,padding:'11px 13px',boxShadow:'0 4px 14px rgba(5,150,105,0.15)'}}>
               <div style={{width:32,height:32,borderRadius:10,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.3" strokeLinecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
               </div>
@@ -2187,7 +2187,7 @@ function ScreenTrip() {
                 <div style={{fontSize:11,color:'#047857',marginTop:2}}>Ekskursiyadan 24 soat oldin to'liq pulni qaytarib oling</div>
               </div>
             </div>
-            <div style={{display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:14,padding:'11px 13px',boxShadow:'0 2px 8px rgba(10,31,33,0.05)',border:'1px solid #FED7AA',cursor:'pointer'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:14,padding:'11px 13px',boxShadow:'0 4px 14px rgba(217,119,6,0.15)',cursor:'pointer'}}>
               <div style={{width:32,height:32,borderRadius:10,background:'#FEF3C7',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               </div>
