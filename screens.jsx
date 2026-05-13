@@ -3416,33 +3416,19 @@ function ScreenTrip() {
                     <div style={{position:'absolute',top:-20,right:-20,width:90,height:90,borderRadius:'50%',background:'rgba(255,255,255,0.12)'}}/>
                     <div style={{position:'absolute',bottom:-30,left:-15,width:70,height:70,borderRadius:'50%',background:'rgba(0,0,0,0.10)'}}/>
                     <img src={encodeURI(ct.img)} alt={ct.label} style={{width:'118%',height:'auto',objectFit:'contain',position:'relative',zIndex:1,filter:'drop-shadow(0 6px 10px rgba(0,0,0,0.25))',transform:sel?'scale(1.05) rotate(-2deg)':'rotate(-2deg)',transition:'transform 0.25s'}} onError={e=>{e.target.style.display='none';}}/>
-                    {/* Pax badge floating */}
-                    <div style={{position:'absolute',bottom:8,left:8,background:'rgba(255,255,255,0.95)',borderRadius:999,padding:'3px 9px',display:'inline-flex',alignItems:'center',gap:4,backdropFilter:'blur(6px)',zIndex:2}}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={ct.accent} strokeWidth="2.5" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                      <span style={{fontSize:11,fontWeight:800,color:ct.accent}}>{ct.pax}</span>
-                    </div>
                   </div>
                   {/* Info */}
-                  <div style={{flex:1,padding:'14px 14px 14px 14px',display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
-                    <div>
-                      <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.15,letterSpacing:-0.2}}>{ct.label}</div>
-                      <div style={{fontSize:11,color:'#9AA1B8',marginTop:2,fontWeight:500}}>{ct.desc}</div>
-                    </div>
-                    {/* Capacity row */}
-                    <div style={{display:'flex',gap:14,marginTop:10,marginBottom:8,fontSize:11.5,color:'#374151'}}>
-                      <div style={{display:'flex',alignItems:'center',gap:4}}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  <div style={{flex:1,padding:'16px 16px',display:'flex',flexDirection:'column',justifyContent:'center',gap:10}}>
+                    <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',lineHeight:1.15,letterSpacing:-0.2}}>{ct.label}</div>
+                    <div style={{display:'flex',gap:16,fontSize:12.5,color:'#374151'}}>
+                      <div style={{display:'flex',alignItems:'center',gap:5}}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                         <span style={{fontWeight:700}}>{ct.pax} kishi</span>
                       </div>
-                      <div style={{display:'flex',alignItems:'center',gap:4}}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      <div style={{display:'flex',alignItems:'center',gap:5}}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                         <span style={{fontWeight:700}}>{ct.bags} bagaj</span>
                       </div>
-                    </div>
-                    <div style={{display:'flex',flexWrap:'wrap',gap:4}}>
-                      {ct.details.map((d,i)=>(
-                        <span key={i} style={{fontSize:10.5,color:'#5C7577',background:'#F4F6FA',borderRadius:6,padding:'2px 7px',fontWeight:600}}>{d}</span>
-                      ))}
                     </div>
                   </div>
                   {/* Selection indicator */}
