@@ -1899,6 +1899,10 @@ function ScreenTrip() {
   const [xferMapPage, setXferMapPage] = React.useState(null); // null | 'from' | 'to'
   const [xferSearchPage, setXferSearchPage] = React.useState(false);
   const [xferPickupDate, setXferPickupDate] = React.useState('');
+  const [xferPickupTime, setXferPickupTime] = React.useState('');
+  const [xferDateSheet, setXferDateSheet] = React.useState(false); // open date-time picker sheet
+  const [xferDateStep, setXferDateStep] = React.useState('date'); // 'date' | 'time'
+  const [xferTmpDate, setXferTmpDate] = React.useState('');
   const [xferCarType, setXferCarType] = React.useState('');
   const [xferMapAddr, setXferMapAddr] = React.useState("Chilonzor ko'chasi 5, Toshkent");
 
@@ -3271,53 +3275,165 @@ function ScreenTrip() {
   // Transfer search/result page
   if (xferSearchPage) {
     const CAR_TYPES = [
-      {id:'comfort',  label:'Qulaylik',  sub:'4 kishi · Kia, Toyota',   icon:'🚗'},
-      {id:'business', label:'Biznes',    sub:'4 kishi · BMW, Mercedes', icon:'🚙'},
-      {id:'minivan',  label:'Miniven',   sub:'7 kishi · Mercedes Vito', icon:'🚐'},
-      {id:'premium',  label:'Premium',   sub:'4 kishi · S-Class, 7',    icon:'✨'},
-      {id:'suv',      label:'SUV',       sub:'5 kishi · Land Cruiser',  icon:'🚘'},
+      {
+        id:'comfort',
+        label:'Qulaylik',
+        img:'https://images.unsplash.com/photo-1549317661-bd32c8ce0729?w=480&h=240&fit=crop&auto=format',
+        pax:4, bags:2,
+        desc:'Toyota Camry yoki o\'xshash',
+        details:['4 yo\'lovchi sig\'adi','2 ta katta bagaj','Konditsioner','Wi-Fi'],
+      },
+      {
+        id:'minivan8',
+        label:'Miniven 8 kishilik',
+        img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=480&h=240&fit=crop&auto=format',
+        pax:8, bags:6,
+        desc:'Mercedes Vito yoki o\'xshash',
+        details:['8 yo\'lovchi sig\'adi','6 ta katta bagaj','Konditsioner','USB zaryadlash'],
+      },
+      {
+        id:'minivan5',
+        label:'Miniven 5 kishilik',
+        img:'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=480&h=240&fit=crop&auto=format',
+        pax:5, bags:3,
+        desc:'Toyota Innova yoki o\'xshash',
+        details:['5 yo\'lovchi sig\'adi','3 ta katta bagaj','Konditsioner','Qulay salon'],
+      },
     ];
+    const pickupLabel = xferPickupDate ? (xferPickupTime ? `${xferPickupDate}, ${xferPickupTime}` : xferPickupDate) : null;
+    // Date-time bottom sheet
+    const DateTimeSheet = () => {
+      const MONTHS = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentyabr','Oktyabr','Noyabr','Dekabr'];
+      const now = new Date();
+      const [viewMonth, setViewMonth] = React.useState(now.getMonth());
+      const [viewYear, setViewYear] = React.useState(now.getFullYear());
+      const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+      const firstDow = new Date(viewYear, viewMonth, 1).getDay();
+      const blanks = (firstDow+6)%7;
+      const TIMES = ['06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+      return (
+        <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.55)',zIndex:400,display:'flex',alignItems:'flex-end'}} onClick={()=>setXferDateSheet(false)}>
+          <div onClick={e=>e.stopPropagation()} style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 0 32px',maxHeight:'85vh',display:'flex',flexDirection:'column'}}>
+            <div style={{width:36,height:4,background:'#E0E4EE',borderRadius:99,margin:'12px auto 0'}}/>
+            {/* Tabs */}
+            <div style={{display:'flex',borderBottom:'1.5px solid #F0F2F5',margin:'14px 20px 0'}}>
+              {['date','time'].map(step=>(
+                <button key={step} onClick={()=>setXferDateStep(step)} style={{flex:1,background:'none',border:'none',padding:'10px 0',fontSize:14,fontWeight:700,color:xferDateStep===step?T:'#9AA1B8',borderBottom:xferDateStep===step?`2.5px solid ${T}`:'2.5px solid transparent',cursor:'pointer',transition:'all 0.15s'}}>
+                  {step==='date'?'📅 Sana':'🕐 Vaqt'}
+                </button>
+              ))}
+            </div>
+            <div style={{overflowY:'auto',flex:1,padding:'16px 20px'}}>
+              {xferDateStep==='date' ? (
+                <>
+                  {/* Month nav */}
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+                    <button onClick={()=>{if(viewMonth===0){setViewMonth(11);setViewYear(y=>y-1);}else setViewMonth(m=>m-1);}} style={{width:36,height:36,borderRadius:'50%',border:'1px solid #E8EAF3',background:'#F7F8FB',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+                    </button>
+                    <span style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>{MONTHS[viewMonth]} {viewYear}</span>
+                    <button onClick={()=>{if(viewMonth===11){setViewMonth(0);setViewYear(y=>y+1);}else setViewMonth(m=>m+1);}} style={{width:36,height:36,borderRadius:'50%',border:'1px solid #E8EAF3',background:'#F7F8FB',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
+                  {/* Day headers */}
+                  <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',marginBottom:4}}>
+                    {['Du','Se','Ch','Pa','Ju','Sh','Ya'].map(d=><div key={d} style={{textAlign:'center',fontSize:11,fontWeight:700,color:'#9AA1B8',padding:'4px 0'}}>{d}</div>)}
+                  </div>
+                  {/* Days */}
+                  <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:2}}>
+                    {Array(blanks).fill(null).map((_,i)=><div key={'b'+i}/>)}
+                    {Array(daysInMonth).fill(null).map((_,i)=>{
+                      const day=i+1;
+                      const lbl=`${day} ${MONTHS[viewMonth]}`;
+                      const sel=xferTmpDate===lbl||xferPickupDate===lbl;
+                      const isPast=new Date(viewYear,viewMonth,day)<new Date(now.getFullYear(),now.getMonth(),now.getDate());
+                      return (
+                        <div key={day} onClick={()=>{if(!isPast){setXferTmpDate(lbl);setXferPickupDate(lbl);setXferDateStep('time');}}} style={{aspectRatio:'1',display:'flex',alignItems:'center',justifyContent:'center',borderRadius:'50%',background:sel?T:'transparent',color:sel?'#fff':isPast?'#D1D5DB':'#0A1F21',fontSize:13,fontWeight:sel?800:500,cursor:isPast?'default':'pointer'}}>
+                          {day}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div style={{fontSize:13,color:'#9AA1B8',fontWeight:600,marginBottom:12}}>Vaqtni tanlang</div>
+                  <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8}}>
+                    {TIMES.map(t=>{
+                      const sel=xferPickupTime===t;
+                      return (
+                        <div key={t} onClick={()=>{setXferPickupTime(t);setXferDateSheet(false);}} style={{textAlign:'center',padding:'10px 0',borderRadius:12,border:`1.5px solid ${sel?T:'#E8EAF3'}`,background:sel?T:'#fff',color:sel?'#fff':'#0A1F21',fontSize:14,fontWeight:700,cursor:'pointer'}}>
+                          {t}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    };
     return (
       <Frame>
+        {xferDateSheet && <DateTimeSheet/>}
         {/* Top bar */}
         <div style={{position:'relative',display:'flex',alignItems:'center',padding:'12px 16px',background:'transparent'}}>
           <button onClick={()=>setXferSearchPage(false)} style={{width:44,height:44,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>Avtomobil qidirish</div>
+          <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>Transfer buyurtma qilish</div>
           <div style={{width:44,flexShrink:0,marginLeft:'auto'}}/>
         </div>
         <Scroll style={{padding:'16px 20px 120px'}}>
-          {/* Route summary */}
-          <div style={{background:'#F4F5FA',borderRadius:16,padding:'14px 16px',marginBottom:16,display:'flex',alignItems:'center',gap:10}}>
-            <div style={{flex:1}}>
-              <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{xferFrom||'Qayerdan'}</div>
-              <div style={{width:1,height:16,background:'#DDE0EB',margin:'4px 0 4px 6px'}}/>
-              <div style={{fontSize:13,fontWeight:700,color:T}}>{xferTo||'Qayerga'}</div>
-            </div>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
-          </div>
           {/* Pickup date/time */}
-          <div style={{marginBottom:8}}>
+          <div style={{marginBottom:16}}>
             <div style={{fontSize:12,color:'#9AA1B8',fontWeight:600,marginBottom:6,textTransform:'uppercase',letterSpacing:0.4}}>OLISH SANASI VA VAQTI</div>
-            <div style={{background:'#fff',border:'1.5px solid #F0F2F5',borderRadius:16,padding:'13px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}} onClick={()=>{const d=prompt('Sana va vaqtni kiriting (masalan: 15 May, 10:30)');if(d)setXferPickupDate(d);}}>
-              <span style={{fontSize:14,fontWeight:xferPickupDate?700:400,color:xferPickupDate?'#0A1F21':'#9AA1B8'}}>{xferPickupDate||'15 May 2026, 10:30'}</span>
+            <div style={{background:'#fff',border:'1.5px solid #F0F2F5',borderRadius:16,padding:'13px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}} onClick={()=>{setXferDateStep('date');setXferDateSheet(true);}}>
+              <span style={{fontSize:14,fontWeight:pickupLabel?700:400,color:pickupLabel?'#0A1F21':'#9AA1B8'}}>{pickupLabel||'Sana va vaqtni tanlang'}</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
             </div>
           </div>
           {/* Car type */}
           <div style={{marginBottom:16}}>
             <div style={{fontSize:12,color:'#9AA1B8',fontWeight:600,marginBottom:10,textTransform:'uppercase',letterSpacing:0.4}}>TRANSPORT TURINI TANLANG</div>
-            <div style={{display:'flex',flexDirection:'column',gap:8}}>
+            <div style={{display:'flex',flexDirection:'column',gap:12}}>
               {CAR_TYPES.map(ct=>(
-                <div key={ct.id} onClick={()=>setXferCarType(ct.id)} style={{display:'flex',alignItems:'center',gap:14,background:'#fff',border:`1.5px solid ${xferCarType===ct.id?T:'#F0F2F5'}`,borderRadius:16,padding:'13px 16px',cursor:'pointer',transition:'border-color 0.15s'}}>
-                  <span style={{fontSize:24,lineHeight:1}}>{ct.icon}</span>
-                  <div style={{flex:1}}>
-                    <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>{ct.label}</div>
-                    <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>{ct.sub}</div>
+                <div key={ct.id} onClick={()=>setXferCarType(ct.id)} style={{background:'#fff',border:`2px solid ${xferCarType===ct.id?T:'#F0F2F5'}`,borderRadius:20,overflow:'hidden',cursor:'pointer',boxShadow:xferCarType===ct.id?`0 4px 16px rgba(0,153,168,0.18)`:'0 1px 4px rgba(10,31,33,0.05)',transition:'all 0.18s'}}>
+                  {/* Car image */}
+                  <div style={{width:'100%',height:160,background:'#F4F5FA',overflow:'hidden',position:'relative'}}>
+                    <img src={ct.img} alt={ct.label} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>{e.target.style.display='none';}}/>
+                    {xferCarType===ct.id && (
+                      <div style={{position:'absolute',top:10,right:10,width:24,height:24,borderRadius:'50%',background:T,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(0,153,168,0.4)'}}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+                    )}
                   </div>
-                  <div style={{width:20,height:20,borderRadius:'50%',border:`2px solid ${xferCarType===ct.id?T:'#DDE0EB'}`,background:xferCarType===ct.id?T:'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                    {xferCarType===ct.id && <div style={{width:8,height:8,background:'#fff',borderRadius:'50%'}}/>}
+                  {/* Info */}
+                  <div style={{padding:'12px 14px'}}>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+                      <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>{ct.label}</div>
+                      <div style={{fontSize:11,color:'#5C7577',fontWeight:500}}>{ct.desc}</div>
+                    </div>
+                    {/* Capacity chips */}
+                    <div style={{display:'flex',gap:8,marginBottom:8}}>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'#E0F2F3',borderRadius:999,padding:'5px 11px'}}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <span style={{fontSize:12,fontWeight:700,color:T}}>{ct.pax} kishi</span>
+                      </div>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'#F0F2F5',borderRadius:999,padding:'5px 11px'}}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        <span style={{fontSize:12,fontWeight:700,color:'#5C7577'}}>{ct.bags} bagaj</span>
+                      </div>
+                    </div>
+                    {/* Detail bullets */}
+                    <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+                      {ct.details.map((d,i)=>(
+                        <span key={i} style={{fontSize:11,color:'#6B7280',background:'#F7F8FB',borderRadius:8,padding:'3px 9px'}}>{d}</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -3326,7 +3442,7 @@ function ScreenTrip() {
         </Scroll>
         {/* Sticky CTA */}
         <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,padding:'12px 20px 28px',background:'linear-gradient(to bottom,rgba(244,245,250,0) 0%,#F4F5FA 30%)'}}>
-          <button style={{width:'100%',background:xferCarType?T:'#DDE0EB',color:xferCarType?'#fff':'#9AA1B8',border:'none',borderRadius:16,padding:'14px 0',fontSize:15,fontWeight:700,cursor:xferCarType?'pointer':'default',boxShadow:xferCarType?'0 6px 16px rgba(0,153,168,0.30)':'none',transition:'all 0.2s'}}>Yuborish</button>
+          <button style={{width:'100%',background:xferCarType?T:'#DDE0EB',color:xferCarType?'#fff':'#9AA1B8',border:'none',borderRadius:16,padding:'14px 0',fontSize:15,fontWeight:700,cursor:xferCarType?'pointer':'default',boxShadow:xferCarType?'0 6px 16px rgba(0,153,168,0.30)':'none',transition:'all 0.2s'}}>Buyurtma berish</button>
         </div>
       </Frame>
     );
@@ -3352,7 +3468,7 @@ function ScreenTrip() {
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </div>
-        <button onClick={()=>setXferSearchPage(true)} style={mkBtn(4)}>Avtomobilni qidirish</button>
+        <button onClick={()=>setXferSearchPage(true)} style={mkBtn(4)}>Transfer buyurtma qilish</button>
       </div>
     );
   };
