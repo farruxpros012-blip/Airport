@@ -2177,7 +2177,7 @@ function ScreenTrip() {
           </div>
 
           {/* 2. Bepul bekor qilish / Bilish kerak — with subtitle */}
-          <div style={{display:'flex',flexDirection:'column',gap:8,padding:'12px 16px 0'}}>
+          <div style={{display:'flex',flexDirection:'column',gap:8,padding:'16px 16px 0'}}>
             <div style={{display:'flex',alignItems:'center',gap:10,background:'#fff',borderRadius:14,padding:'11px 13px',boxShadow:'0 4px 14px rgba(5,150,105,0.15)'}}>
               <div style={{width:32,height:32,borderRadius:10,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.3" strokeLinecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
@@ -2200,7 +2200,7 @@ function ScreenTrip() {
           </div>
 
           {/* 3. Narx — slim, inline */}
-          <div style={{background:'#fff',margin:'10px 16px 0',borderRadius:18,padding:'14px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
+          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
               <div>
                 <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>Narx</div>
@@ -2255,7 +2255,7 @@ function ScreenTrip() {
           </div>
 
           {/* 4. Tavsif — slim meta inline */}
-          <div style={{background:'#fff',margin:'10px 16px 0',borderRadius:18,padding:'14px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
+          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
             <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
               <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Tavsif</span>
               <span style={{width:3,height:3,borderRadius:'50%',background:'#D1D5DB'}}/>
@@ -2282,27 +2282,21 @@ function ScreenTrip() {
             </button>
           </div>
 
-          {/* 5. Ekskursiya yo'nalishi — text only, no numbers */}
-          <div style={{background:'#fff',margin:'10px 16px 0',borderRadius:18,padding:'14px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
+          {/* 5. Ekskursiya yo'nalishi — plain flowing text */}
+          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
             <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
               <div style={{width:3,height:14,borderRadius:2,background:T}}/>
               <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Ekskursiya yo'nalishi</span>
             </div>
-            <div style={{paddingLeft:11,borderLeft:`1.5px dashed ${TBG}`,marginLeft:4}}>
+            <div style={{fontSize:13,color:'#5C7577',lineHeight:1.7}}>
               {ITINERARY.map((it,i)=>(
-                <div key={i} style={{position:'relative',paddingLeft:14,marginBottom:i<ITINERARY.length-1?12:0}}>
-                  <div style={{position:'absolute',left:-5,top:5,width:8,height:8,borderRadius:'50%',background:T,boxShadow:`0 0 0 3px ${TBG}`}}/>
-                  <div style={{fontSize:12.5,color:'#0A1F21',lineHeight:1.55}}>
-                    <span style={{fontWeight:800}}>{it.bold}</span>{' '}
-                    <span style={{color:'#5C7577'}}>{it.text}</span>
-                  </div>
-                </div>
+                <span key={i}><span style={{fontWeight:700,color:'#0A1F21'}}>{it.bold}</span>{' '}{it.text}{i<ITINERARY.length-1?' ':''}</span>
               ))}
             </div>
           </div>
 
           {/* 6. Nima kiradi / Nima kirmaydi — compact split */}
-          <div style={{background:'#fff',margin:'10px 16px 0',borderRadius:18,padding:'14px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)',display:'flex',gap:14}}>
+          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)',display:'flex',gap:14}}>
             <div style={{flex:1}}>
               <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:8}}>
                 <div style={{width:14,height:14,borderRadius:'50%',background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center'}}>
@@ -2328,13 +2322,16 @@ function ScreenTrip() {
             </div>
           </div>
 
-          {/* 7. Qo'llab-quvvatlash — slim one-row */}
-          <div style={{background:'#fff',margin:'10px 16px 0',borderRadius:18,padding:'10px 12px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)',display:'flex',alignItems:'center',gap:10}}>
-            <div style={{width:32,height:32,borderRadius:10,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          {/* 7. Qo'llab-quvvatlash */}
+          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'14px 16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)',display:'flex',alignItems:'center',gap:14}}>
+            <div style={{width:44,height:44,borderRadius:13,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             </div>
-            <div style={{flex:1,fontSize:12,fontWeight:700,color:'#0A1F21'}}>Savolingiz bormi?</div>
-            <button style={{background:T,border:'none',borderRadius:10,padding:'7px 14px',cursor:'pointer',fontSize:11,fontWeight:800,color:'#fff'}}>
+            <div style={{flex:1}}>
+              <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Savolingiz bormi?</div>
+              <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>Javob berishdan xursandmiz</div>
+            </div>
+            <button style={{background:T,border:'none',borderRadius:12,padding:'11px 18px',cursor:'pointer',fontSize:13,fontWeight:800,color:'#fff',boxShadow:'0 4px 12px rgba(0,153,168,0.3)'}}>
               So'rang
             </button>
           </div>
