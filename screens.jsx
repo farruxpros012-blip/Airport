@@ -3278,26 +3278,32 @@ function ScreenTrip() {
       {
         id:'comfort',
         label:'Qulaylik',
-        img:'https://images.unsplash.com/photo-1549317661-bd32c8ce0729?w=480&h=240&fit=crop&auto=format',
+        img:'assets/Qulaylik.png',
+        bg:'linear-gradient(135deg,#1F2937 0%,#374151 60%,#4B5563 100%)',
+        accent:'#1F2937',
         pax:4, bags:2,
         desc:'Toyota Camry yoki o\'xshash',
-        details:['4 yo\'lovchi sig\'adi','2 ta katta bagaj','Konditsioner','Wi-Fi'],
-      },
-      {
-        id:'minivan8',
-        label:'Miniven 8 kishilik',
-        img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=480&h=240&fit=crop&auto=format',
-        pax:8, bags:6,
-        desc:'Mercedes Vito yoki o\'xshash',
-        details:['8 yo\'lovchi sig\'adi','6 ta katta bagaj','Konditsioner','USB zaryadlash'],
+        details:['Konditsioner','Wi-Fi','Qulay salon'],
       },
       {
         id:'minivan5',
         label:'Miniven 5 kishilik',
-        img:'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=480&h=240&fit=crop&auto=format',
+        img:'assets/Miniven 4x.png',
+        bg:'linear-gradient(135deg,#475569 0%,#64748B 60%,#94A3B8 100%)',
+        accent:'#475569',
         pax:5, bags:3,
-        desc:'Toyota Innova yoki o\'xshash',
-        details:['5 yo\'lovchi sig\'adi','3 ta katta bagaj','Konditsioner','Qulay salon'],
+        desc:'VW Caddy yoki o\'xshash',
+        details:['Konditsioner','Qulay salon','USB zaryadlash'],
+      },
+      {
+        id:'minivan8',
+        label:'Miniven 8 kishilik',
+        img:'assets/Miniven 8x.png',
+        bg:'linear-gradient(135deg,#F59E0B 0%,#FBBF24 60%,#FCD34D 100%)',
+        accent:'#D97706',
+        pax:8, bags:6,
+        desc:'Toyota Hiace yoki o\'xshash',
+        details:['Konditsioner','USB zaryadlash','Katta bagajnik'],
       },
     ];
     const pickupLabel = xferPickupDate ? (xferPickupTime ? `${xferPickupDate}, ${xferPickupTime}` : xferPickupDate) : null;
@@ -3400,43 +3406,52 @@ function ScreenTrip() {
           <div style={{marginBottom:16}}>
             <div style={{fontSize:12,color:'#9AA1B8',fontWeight:600,marginBottom:10,textTransform:'uppercase',letterSpacing:0.4}}>TRANSPORT TURINI TANLANG</div>
             <div style={{display:'flex',flexDirection:'column',gap:12}}>
-              {CAR_TYPES.map(ct=>(
-                <div key={ct.id} onClick={()=>setXferCarType(ct.id)} style={{background:'#fff',border:`2px solid ${xferCarType===ct.id?T:'#F0F2F5'}`,borderRadius:20,overflow:'hidden',cursor:'pointer',boxShadow:xferCarType===ct.id?`0 4px 16px rgba(0,153,168,0.18)`:'0 1px 4px rgba(10,31,33,0.05)',transition:'all 0.18s'}}>
-                  {/* Car image */}
-                  <div style={{width:'100%',height:160,background:'#F4F5FA',overflow:'hidden',position:'relative'}}>
-                    <img src={ct.img} alt={ct.label} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>{e.target.style.display='none';}}/>
-                    {xferCarType===ct.id && (
-                      <div style={{position:'absolute',top:10,right:10,width:24,height:24,borderRadius:'50%',background:T,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(0,153,168,0.4)'}}>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      </div>
-                    )}
+              {CAR_TYPES.map(ct=>{
+                const sel = xferCarType===ct.id;
+                return (
+                <div key={ct.id} onClick={()=>setXferCarType(ct.id)} style={{position:'relative',background:'#fff',border:`2px solid ${sel?ct.accent:'#EEF0F5'}`,borderRadius:22,overflow:'hidden',cursor:'pointer',display:'flex',alignItems:'stretch',boxShadow:sel?`0 8px 24px ${ct.accent}26, 0 2px 6px rgba(10,31,33,0.06)`:'0 1px 4px rgba(10,31,33,0.04)',transition:'all 0.2s'}}>
+                  {/* Car image panel */}
+                  <div style={{width:140,minHeight:130,background:ct.bg,position:'relative',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,overflow:'hidden'}}>
+                    {/* Decorative glow */}
+                    <div style={{position:'absolute',top:-20,right:-20,width:90,height:90,borderRadius:'50%',background:'rgba(255,255,255,0.12)'}}/>
+                    <div style={{position:'absolute',bottom:-30,left:-15,width:70,height:70,borderRadius:'50%',background:'rgba(0,0,0,0.10)'}}/>
+                    <img src={encodeURI(ct.img)} alt={ct.label} style={{width:'118%',height:'auto',objectFit:'contain',position:'relative',zIndex:1,filter:'drop-shadow(0 6px 10px rgba(0,0,0,0.25))',transform:sel?'scale(1.05) rotate(-2deg)':'rotate(-2deg)',transition:'transform 0.25s'}} onError={e=>{e.target.style.display='none';}}/>
+                    {/* Pax badge floating */}
+                    <div style={{position:'absolute',bottom:8,left:8,background:'rgba(255,255,255,0.95)',borderRadius:999,padding:'3px 9px',display:'inline-flex',alignItems:'center',gap:4,backdropFilter:'blur(6px)',zIndex:2}}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={ct.accent} strokeWidth="2.5" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                      <span style={{fontSize:11,fontWeight:800,color:ct.accent}}>{ct.pax}</span>
+                    </div>
                   </div>
                   {/* Info */}
-                  <div style={{padding:'12px 14px'}}>
-                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
-                      <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>{ct.label}</div>
-                      <div style={{fontSize:11,color:'#5C7577',fontWeight:500}}>{ct.desc}</div>
+                  <div style={{flex:1,padding:'14px 14px 14px 14px',display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
+                    <div>
+                      <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.15,letterSpacing:-0.2}}>{ct.label}</div>
+                      <div style={{fontSize:11,color:'#9AA1B8',marginTop:2,fontWeight:500}}>{ct.desc}</div>
                     </div>
-                    {/* Capacity chips */}
-                    <div style={{display:'flex',gap:8,marginBottom:8}}>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'#E0F2F3',borderRadius:999,padding:'5px 11px'}}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        <span style={{fontSize:12,fontWeight:700,color:T}}>{ct.pax} kishi</span>
+                    {/* Capacity row */}
+                    <div style={{display:'flex',gap:14,marginTop:10,marginBottom:8,fontSize:11.5,color:'#374151'}}>
+                      <div style={{display:'flex',alignItems:'center',gap:4}}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                        <span style={{fontWeight:700}}>{ct.pax} kishi</span>
                       </div>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'#F0F2F5',borderRadius:999,padding:'5px 11px'}}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        <span style={{fontSize:12,fontWeight:700,color:'#5C7577'}}>{ct.bags} bagaj</span>
+                      <div style={{display:'flex',alignItems:'center',gap:4}}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        <span style={{fontWeight:700}}>{ct.bags} bagaj</span>
                       </div>
                     </div>
-                    {/* Detail bullets */}
-                    <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+                    <div style={{display:'flex',flexWrap:'wrap',gap:4}}>
                       {ct.details.map((d,i)=>(
-                        <span key={i} style={{fontSize:11,color:'#6B7280',background:'#F7F8FB',borderRadius:8,padding:'3px 9px'}}>{d}</span>
+                        <span key={i} style={{fontSize:10.5,color:'#5C7577',background:'#F4F6FA',borderRadius:6,padding:'2px 7px',fontWeight:600}}>{d}</span>
                       ))}
                     </div>
                   </div>
+                  {/* Selection indicator */}
+                  <div style={{position:'absolute',top:10,right:10,width:22,height:22,borderRadius:'50%',background:sel?T:'#fff',border:`2px solid ${sel?T:'#DDE0EB'}`,display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.18s',boxShadow:sel?'0 2px 8px rgba(0,153,168,0.35)':'none'}}>
+                    {sel && <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                  </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </Scroll>
