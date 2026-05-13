@@ -914,17 +914,6 @@ function ScreenTrip() {
   const [page, setPage] = React.useState(null);
   const [sheet, setSheet] = React.useState(null); // 'all'
   const [hintShown, setHintShown] = React.useState(true);
-  const [showResultSearch, setShowResultSearch] = React.useState(true);
-  const lastScrollRef = React.useRef(0);
-  React.useEffect(() => {
-    if (!page) return;
-    const onScroll = () => {
-      setShowResultSearch(window.scrollY < 10);
-    };
-    setShowResultSearch(window.scrollY < 10);
-    window.addEventListener('scroll', onScroll, {passive:true});
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [page]);
   const [esimCountry, setEsimCountry] = React.useState(null);
   const [esimTab, setEsimTab] = React.useState('standard');
   const [esimSelected, setEsimSelected] = React.useState(null);
@@ -1153,16 +1142,16 @@ function ScreenTrip() {
       </div>
     );
 
-    // Route card with two tappable rows + swap (opens city picker)
+    // Route card with two text-input rows + swap
     const routeCard = (fLabel='Qayerdan', tLabel='Qayerga') => (
       <div style={{background:'#fff',borderRadius:16,padding:'4px 14px',marginBottom:10,position:'relative',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
-        <div onClick={()=>setNested('route-from')} style={{display:'flex',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #E8EAF3',cursor:'pointer'}}>
-          <div style={{width:7,height:7,borderRadius:'50%',background:T,marginRight:10}}/>
-          <span style={{flex:1,fontSize:14,fontWeight:600,color:fromVal?'#0A1F21':'#9AA1B8',paddingRight:40,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{fromVal||fLabel}</span>
+        <div style={{display:'flex',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #E8EAF3'}}>
+          <div style={{width:7,height:7,borderRadius:'50%',background:T,marginRight:10,flexShrink:0}}/>
+          <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder={fLabel} style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',paddingRight:40,fontFamily:'inherit'}}/>
         </div>
-        <div onClick={()=>setNested('route-to')} style={{display:'flex',alignItems:'center',padding:'12px 0',cursor:'pointer'}}>
-          <div style={{width:7,height:7,borderRadius:'50%',background:'#DDE0EB',marginRight:10}}/>
-          <span style={{flex:1,fontSize:14,fontWeight:600,color:toVal?'#0A1F21':'#9AA1B8',paddingRight:40,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{toVal||tLabel}</span>
+        <div style={{display:'flex',alignItems:'center',padding:'12px 0'}}>
+          <div style={{width:7,height:7,borderRadius:'50%',background:'#DDE0EB',marginRight:10,flexShrink:0}}/>
+          <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder={tLabel} style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',paddingRight:40,fontFamily:'inherit'}}/>
         </div>
         <button onClick={(e)=>{e.stopPropagation();const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.05)'}}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
@@ -3739,9 +3728,9 @@ function ScreenTrip() {
             </button>
           </div>
         </div>
-        {/* Row 2 — search, sticky below Row 1, collapses on scroll-down */}
+        {/* Row 2 — search, always sticky below Row 1 */}
         {page!=='aviabilet' && (
-          <div style={{position:'sticky',top:80,zIndex:25,background:'#F4F7F8',overflow:'hidden',maxHeight:showResultSearch?56:0,transition:'max-height 0.22s ease',marginTop:-8,marginBottom:16}}>
+          <div style={{position:'sticky',top:80,zIndex:25,background:'#F4F7F8',marginTop:-8,marginBottom:16}}>
             <div style={{padding:'0 16px',position:'relative',display:'flex',alignItems:'center'}}>
               <svg style={{position:'absolute',left:30,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
               <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Davlat qidirish...',hotel:'Mehmonxona qidirish...',rentcar:'Avtomobil yoki davlat...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 42px',border:'1px solid #ECEEF6',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#fff',outline:'none',boxSizing:'border-box',boxShadow:'0 1px 4px rgba(15,42,74,0.04)'}}/>
