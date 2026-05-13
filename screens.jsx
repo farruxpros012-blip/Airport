@@ -2150,11 +2150,6 @@ function ScreenTrip() {
             const meta = TARIFF_META[i] || TARIFF_META[0];
             return (
               <div key={i} style={{background:'#fff',margin:'12px 16px 0',borderRadius:18,boxShadow:'0 4px 20px rgba(15,42,74,0.06), 0 1px 3px rgba(15,42,74,0.04)',border:'1px solid rgba(15,42,74,0.04)',overflow:'hidden'}}>
-                {/* Header: tier name + seats left */}
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 18px 0'}}>
-                  <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',letterSpacing:-0.2}}>{meta.name}</div>
-                  <div style={{fontSize:11,color:'#9AA1B8',fontWeight:700}}>{t.seats} chipta qoldi</div>
-                </div>
                 {/* Ketish */}
                 <div style={{padding:'14px 18px 0'}}>
                   <div style={{background:'#FAFBFC',borderRadius:12,padding:'12px 14px',border:'1px solid rgba(15,42,74,0.04)'}}>
@@ -2232,7 +2227,7 @@ function ScreenTrip() {
                 {/* Price + CTA */}
                 <div style={{padding:'16px 18px 18px',display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:12}}>
                   <div>
-                    <div style={{fontSize:10.5,color:'#9AA1B8',fontWeight:700,letterSpacing:0.4,textTransform:'uppercase'}}>Narx (1 kishi)</div>
+                    <div style={{fontSize:10.5,color:'#9AA1B8',fontWeight:700,letterSpacing:0.4,textTransform:'uppercase'}}>Narx (1 kishi) · {t.seats} chipta</div>
                     <div style={{fontSize:20,fontWeight:900,color:'#0A1F21',letterSpacing:-0.5,marginTop:2}}>{fmtSm(t.price)}</div>
                   </div>
                   <button style={{background:T,color:'#fff',border:'none',borderRadius:14,padding:'13px 26px',fontSize:14,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 18px rgba(0,153,168,0.3), 0 2px 6px rgba(0,153,168,0.2)',letterSpacing:0.3,whiteSpace:'nowrap'}}>
