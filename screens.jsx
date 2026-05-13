@@ -1645,8 +1645,6 @@ function ScreenTrip() {
     const AirportPicker = ({onPick}) => {
       const [q, setQ] = React.useState('');
       const results = searchAirports(q);
-      const inputRef = React.useRef(null);
-      React.useEffect(()=>{ setTimeout(()=>inputRef.current?.focus(), 150); }, []);
       const pick = (ap) => { addToHistory(ap); onPick(`${ap.city} (${ap.iata})`); };
       const AirportRow = ({ap}) => (
         <div onClick={()=>pick(ap)} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 4px',cursor:'pointer',borderBottom:'1px solid #F4F7F8'}}>
@@ -1664,7 +1662,7 @@ function ScreenTrip() {
         <div>
           <div style={{display:'flex',alignItems:'center',background:'#F4F7F8',borderRadius:14,padding:'10px 14px',gap:10,marginBottom:14}}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-            <input ref={inputRef} value={q} onChange={e=>setQ(e.target.value)} placeholder="Shahar yoki aeroport nomi..." style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+            <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Shahar yoki aeroport nomi..." style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
             {q && <button onClick={()=>setQ('')} style={{border:'none',background:'none',cursor:'pointer',padding:0,display:'flex',alignItems:'center'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>}
@@ -2229,7 +2227,7 @@ function ScreenTrip() {
                 <div style={{fontSize:10,color:'rgba(255,255,255,0.7)',fontWeight:600}}>{excurPeople===1?'1 kishi uchun':`${excurPeople} kishi · jami`}</div>
                 <div style={{display:'flex',alignItems:'baseline',gap:8,marginTop:2}}>
                   <span style={{fontSize:20,fontWeight:900,color:'#fff'}}>{fmtS(excurPeople===1?curPrice.prem:total)}</span>
-                  <span style={{fontSize:10,color:'rgba(255,255,255,0.55)',textDecoration:'line-through'}}>{fmtS(excurPeople===1?curPrice.reg:curPrice.reg*excurPeople)}</span>
+                  <span style={{fontSize:10,color:'rgba(255,255,255,0.55)'}}>{fmtS(excurPeople===1?curPrice.reg:curPrice.reg*excurPeople)}</span>
                 </div>
               </div>
               {excurPeople > 1 && (
@@ -2343,7 +2341,7 @@ function ScreenTrip() {
           <div style={{background:'rgba(244,247,248,0.95)',backdropFilter:'blur(12px)',borderTop:'1px solid rgba(0,153,168,0.1)',padding:'10px 16px 18px'}}>
             <div style={{display:'flex',alignItems:'center',gap:12}}>
               <div style={{flex:1}}>
-                <div style={{fontSize:10,color:'#B0BAC4',textDecoration:'line-through'}}>{fmtS(curPrice.reg * excurPeople)}</div>
+                <div style={{fontSize:10,color:'#B0BAC4'}}>{fmtS(curPrice.reg * excurPeople)}</div>
                 <div style={{display:'flex',alignItems:'baseline',gap:5}}>
                   <span style={{fontSize:20,fontWeight:900,color:T,lineHeight:1}}>{fmtS(total)}</span>
                 </div>
