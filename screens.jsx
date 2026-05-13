@@ -1959,13 +1959,13 @@ function ScreenTrip() {
     ];
     const fmtSm = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ') + " so'm";
     const AIRLINE_LOGOS = {
-      'Uzbekistan Airways': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Uzbekistan_Airways_logo.svg/200px-Uzbekistan_Airways_logo.svg.png',
-      'Fly Dubai':          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Flydubai_logo.svg/200px-Flydubai_logo.svg.png',
-      'Emirates':           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Emirates_logo.svg/200px-Emirates_logo.svg.png',
-      'Air India':          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Air_India_Logo.svg/200px-Air_India_Logo.svg.png',
-      'Qanot Sharq':        'https://upload.wikimedia.org/wikipedia/commons/uz/4/4f/Qanot_Sharq_logo.png',
+      'Uzbekistan Airways': 'https://images.kiwi.com/airlines/64/HY.png',
+      'Fly Dubai':          'https://images.kiwi.com/airlines/64/FZ.png',
+      'Emirates':           'https://images.kiwi.com/airlines/64/EK.png',
+      'Air India':          'https://images.kiwi.com/airlines/64/AI.png',
+      'Qanot Sharq':        'https://images.kiwi.com/airlines/64/HH.png',
     };
-    const logoFor = (name) => AIRLINE_LOGOS[name] || it.logo;
+    const logoFor = (name) => AIRLINE_LOGOS[name] || `https://images.kiwi.com/airlines/64/${(name||'').slice(0,2).toUpperCase()}.png`;
 
     const FlightLeg = ({airline, reys, dur, dep, depAirport, depFull, depDay, arr, arrAirport, arrFull, arrDay}) => (
       <div style={{padding:'4px 0'}}>
@@ -2016,9 +2016,9 @@ function ScreenTrip() {
     );
 
     const TARIFF_META = [
-      {name:'Light', recommended:false},
-      {name:'Standard', recommended:true},
-      {name:'Flex', recommended:false},
+      {name:'Light'},
+      {name:'Standard'},
+      {name:'Flex'},
     ];
 
     return (
@@ -2144,8 +2144,7 @@ function ScreenTrip() {
 
           {TARIFFS.map((t,i)=>{
             const meta = TARIFF_META[i] || TARIFF_META[0];
-            // Recommended: full detailed gold card. Others: compact list row.
-            if (meta.recommended) {
+            if (false) {
               return (
                 <div key={i} style={{background:'#fff',margin:'12px 16px 0',borderRadius:18,boxShadow:'0 6px 24px rgba(245,158,11,0.18), 0 1px 3px rgba(15,42,74,0.04)',border:'1.5px solid #F59E0B',overflow:'hidden'}}>
                   {/* Header */}
@@ -3789,12 +3788,18 @@ function ScreenTrip() {
               </div>
               {/* Onward */}
               <div style={{padding:'12px 16px 14px'}}>
-                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
-                  <div style={{width:26,height:26,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,overflow:'hidden'}}>
-                    <span style={{fontSize:11,fontWeight:900,color:'#0A1F21'}}>{it.airline.slice(0,1)}</span>
-                  </div>
-                  <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.airline}</span>
-                </div>
+                {(() => {
+                  const IATA = {'Uzbekistan Airways':'HY','Fly Dubai':'FZ','Emirates':'EK','Air India':'AI','Qanot Sharq':'HH'};
+                  const code = IATA[it.airline] || (it.airline||'').slice(0,2).toUpperCase();
+                  return (
+                    <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
+                      <div style={{width:28,height:28,borderRadius:8,background:'#fff',border:'1px solid #ECEEF6',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,overflow:'hidden'}}>
+                        <img src={`https://images.kiwi.com/airlines/64/${code}.png`} alt={it.airline} style={{maxWidth:'78%',maxHeight:'78%',objectFit:'contain'}}/>
+                      </div>
+                      <span style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{it.airline}</span>
+                    </div>
+                  );
+                })()}
                 <div style={{fontSize:11,color:'#9AA1B8',marginBottom:6}}>Borish</div>
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
                   <div style={{textAlign:'left'}}>
