@@ -3696,14 +3696,25 @@ function ScreenTrip() {
             <button onClick={()=>setPreSheet(page==='esim'?'esim':page)}
               style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:10,background:'#fff',border:'none',cursor:'pointer',padding:'0 12px 0 8px',height:52,borderRadius:16,boxShadow:'0 2px 10px rgba(15,27,61,0.08)',textAlign:'left'}}>
               <div style={{width:36,height:36,borderRadius:11,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                {pageIcon}
+                <div style={{display:'flex',filter:'brightness(0) saturate(100%) invert(43%) sepia(99%) saturate(1559%) hue-rotate(156deg) brightness(94%) contrast(101%)'}}>
+                  {pageIcon}
+                </div>
               </div>
               {(() => {
                 const q = tripQuery || {};
                 const stack = (a, b) => (
-                  <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'center',lineHeight:1.15}}>
-                    <div style={{fontSize:12.5,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2}}>{a}</div>
-                    <div style={{fontSize:12.5,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,marginTop:2}}>{b}</div>
+                  <div style={{flex:1,minWidth:0,display:'flex',alignItems:'stretch',gap:8}}>
+                    {/* dot · line · dot column */}
+                    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',paddingTop:2,paddingBottom:2}}>
+                      <div style={{width:7,height:7,borderRadius:'50%',background:'#0A1F21'}}/>
+                      <div style={{width:1.5,flex:1,background:'#D6DAE6',margin:'2px 0'}}/>
+                      <div style={{width:7,height:7,borderRadius:'50%',background:T}}/>
+                    </div>
+                    {/* labels */}
+                    <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'space-between',padding:'1px 0'}}>
+                      <div style={{fontSize:12.5,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{a}</div>
+                      <div style={{fontSize:12.5,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{b}</div>
+                    </div>
                   </div>
                 );
                 const single = (t) => (
