@@ -1152,9 +1152,18 @@ function ScreenTrip() {
 
     // Route card with two text-input rows + swap (no bottomsheet)
     const routeCard = (fLabel='Qayerdan', tLabel='Qayerga') => (
-      <div style={{background:'#fff',borderRadius:14,padding:'12px 14px',marginBottom:10,display:'flex',alignItems:'center',gap:10,boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder={`${fLabel} — ${tLabel}`} style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',fontFamily:'inherit'}}/>
+      <div style={{background:'#fff',borderRadius:16,padding:'4px 14px',marginBottom:10,position:'relative',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
+        <div style={{display:'flex',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #F0F2F8',gap:10}}>
+          <div style={{width:8,height:8,borderRadius:'50%',background:T,flexShrink:0}}/>
+          <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder={fLabel} style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',paddingRight:40,fontFamily:'inherit'}}/>
+        </div>
+        <div style={{display:'flex',alignItems:'center',padding:'12px 0',gap:10}}>
+          <div style={{width:8,height:8,borderRadius:'50%',background:'#DDE0EB',flexShrink:0}}/>
+          <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder={tLabel} style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',paddingRight:40,fontFamily:'inherit'}}/>
+        </div>
+        <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.05)'}}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+        </button>
       </div>
     );
 
@@ -2024,36 +2033,61 @@ function ScreenTrip() {
                   dep={it.dep} depAirport={fromCity} depFull={AIRPORT_FULL[it.from]||it.from} depDay={`${it.depDate}`}
                   arr="20:20"  arrAirport="Alma-ata" arrFull="Almaty Airport, ALA" arrDay={`${it.depDate}`}
                 />
-                <div style={{background:'#FFF8E1',borderRadius:12,padding:'12px 14px',margin:'16px 0',border:'1px solid #FCD34D'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
-                    <div style={{width:26,height:26,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                {(() => {
+                  // Demo: flag that this layover requires changing airports
+                  const airportChange = (it.airline||'').toLowerCase().includes('air india');
+                  const accent = airportChange ? '#DC2626' : '#D97706';
+                  const accentBg = airportChange ? '#FEE2E2' : '#FFF8E1';
+                  const accentBd = airportChange ? '#FCA5A5' : '#FCD34D';
+                  const accentIcon = airportChange ? '#7F1D1D' : '#78350F';
+                  const accentText = airportChange ? '#7F1D1D' : '#92400E';
+                  return (
+                    <div style={{background:accentBg,borderRadius:12,padding:'12px 14px',margin:'16px 0',border:`1px solid ${accentBd}`}}>
+                      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+                        <div style={{width:26,height:26,borderRadius:'50%',background:accentBd,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                          {airportChange
+                            ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={accentIcon} strokeWidth="2.5" strokeLinecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={accentIcon} strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>}
+                        </div>
+                        <div style={{flex:1}}>
+                          <div style={{fontSize:13,fontWeight:800,color:accentIcon,lineHeight:1.2}}>Qayta qo'nish — 8 soat 45 daqiqa</div>
+                          <div style={{fontSize:11.5,color:accentText,marginTop:2}}>
+                            {airportChange ? 'Almaty Airport (ALA) → Almaty 2 (BXJ)' : 'Almaty Airport (ALA)'}
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{height:1,background:'rgba(146,64,14,0.15)',margin:'8px 0'}}/>
+                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,fontSize:11,color:accentText,lineHeight:1.4}}>
+                        <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
+                          {airportChange
+                            ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" style={{marginTop:2,flexShrink:0}}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>}
+                          <span>{airportChange ? <><b>Boshqa aeroport</b> — taxi/transfer kerak</> : <><b>Bir aeroport</b> — terminal o'zgarmaydi</>}</span>
+                        </div>
+                        <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
+                          <span><b>Boshqa samolyot</b>ga o'tasiz</span>
+                        </div>
+                        <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
+                          {airportChange
+                            ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" style={{marginTop:2,flexShrink:0}}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>}
+                          <span>{airportChange ? 'Bagaj o\'zingiz olib boruvchi' : 'Bagajni qayta olib topshirasiz'}</span>
+                        </div>
+                        <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
+                          <span>Tranzit viza talab qilinmaydi</span>
+                        </div>
+                      </div>
+                      {airportChange && (
+                        <div style={{marginTop:10,padding:'8px 10px',background:'rgba(255,255,255,0.5)',borderRadius:8,fontSize:11,color:accentIcon,fontWeight:600,display:'flex',alignItems:'center',gap:6}}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={accentIcon} strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                          Aeroportlar orasi ~35 km — taxi ~40 daqiqa, narxi taxminan $20-25
+                        </div>
+                      )}
                     </div>
-                    <div style={{flex:1}}>
-                      <div style={{fontSize:13,fontWeight:800,color:'#78350F',lineHeight:1.2}}>Qayta qo'nish — 8 soat 45 daqiqa</div>
-                      <div style={{fontSize:11.5,color:'#92400E',marginTop:2}}>Almaty Airport (ALA)</div>
-                    </div>
-                  </div>
-                  <div style={{height:1,background:'rgba(146,64,14,0.15)',margin:'8px 0'}}/>
-                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,fontSize:11,color:'#78350F',lineHeight:1.4}}>
-                    <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
-                      <span><b>Bir aeroport</b> — terminal o'zgarmaydi</span>
-                    </div>
-                    <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
-                      <span><b>Boshqa samolyot</b>ga o'tasiz</span>
-                    </div>
-                    <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
-                      <span>Bagajni qayta olib topshirasiz</span>
-                    </div>
-                    <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
-                      <span>Tranzit viza talab qilinmaydi</span>
-                    </div>
-                  </div>
-                </div>
+                  );
+                })()}
                 <FlightLeg
                   airline="Fly Dubai" reys="FZ-1736" dur="5 h 25 min"
                   dep="05:05" depAirport="Alma-ata" depFull="Almaty Airport, ALA" depDay={`${it.depDate}`}
@@ -2740,7 +2774,7 @@ function ScreenTrip() {
 
     return (
       <Frame>
-        <div style={{flex:1,overflowY:'auto',paddingBottom:110,background:'#F4F7F8'}}>
+        <div style={{flex:1,overflowY:'auto',paddingBottom:30,background:'#F4F7F8'}}>
 
           {/* ── 1. HERO CAROUSEL — edge-to-edge 320px ── */}
           <div style={{position:'relative',height:320,overflow:'hidden',background:'#000'}}
@@ -3056,27 +3090,7 @@ function ScreenTrip() {
             })}
           </div>
 
-          <div style={{height:16}}/>
-        </div>
-
-        {/* Fixed CTA bottom bar */}
-        <div style={{background:'rgba(244,247,248,0.95)',backdropFilter:'blur(12px)',borderTop:'1px solid rgba(0,153,168,0.1)',padding:'10px 16px 18px'}}>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
-            <div>
-              <div style={{fontSize:11,color:'#9AA1B8',fontWeight:600}}>Narxdan boshlab</div>
-              <div style={{fontSize:20,fontWeight:900,color:'#0A1F21'}}>{fmtS(regPrice)}</div>
-            </div>
-            <div style={{textAlign:'right'}}>
-              <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'linear-gradient(135deg,#FBBF24,#D97706)',borderRadius:999,padding:'4px 10px',marginBottom:3}}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
-                <span style={{fontSize:11,fontWeight:700,color:'#fff'}}>Premium: {fmtS(premPrice)}</span>
-              </div>
-              <div style={{fontSize:11,color:'#9AA1B8'}}>Oyiga: {fmtS(installment)}</div>
-            </div>
-          </div>
-          <button style={{width:'100%',background:T,border:'none',borderRadius:14,padding:'14px 0',fontSize:15,fontWeight:800,color:'#fff',cursor:'pointer',boxShadow:'0 4px 16px rgba(0,153,168,0.32)'}}>
-            Xona tanlash
-          </button>
+          <div style={{height:24}}/>
         </div>
       </Frame>
     );
