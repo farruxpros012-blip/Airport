@@ -1532,10 +1532,13 @@ function ScreenTrip() {
             <div style={{width:44,flexShrink:0,marginLeft:'auto'}}/>
           </div>
           {/* Search bar */}
-          <div style={{padding:'12px 18px',background:'#fff',borderBottom:'1px solid #F0F2F8'}}>
-            <div style={{display:'flex',alignItems:'center',background:'#F4F7F8',borderRadius:14,padding:'10px 14px',gap:10}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-              <input value={esimSearch} onChange={e=>setEsimSearch(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+          <div style={{padding:'10px 16px 14px'}}>
+            <div style={{display:'flex',alignItems:'center',background:'#fff',borderRadius:16,padding:'12px 16px',gap:10,boxShadow:'0 2px 12px rgba(15,27,61,0.07)',border:'1px solid #F0F2F8'}}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input value={esimSearch} onChange={e=>setEsimSearch(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontFamily:'inherit',color:'#0A1F21',fontWeight:500}}/>
+              {esimSearch ? <button onClick={()=>setEsimSearch('')} style={{border:'none',background:'none',cursor:'pointer',padding:0,display:'flex',alignItems:'center'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button> : null}
             </div>
           </div>
           {/* Content */}
