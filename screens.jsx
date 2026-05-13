@@ -1936,104 +1936,184 @@ function ScreenTrip() {
   // Flight detail page
   if (flightDetail) {
     const it = flightDetail;
+    const T = '#0099A8';
+    const AIRPORT_FULL = {TAS:'Tashkent International Airport, TAS',DXB:'Dubai International Airport, DXB',ALA:'Almaty Airport, ALA',IST:'Istanbul Airport, IST'};
+    const AIRPORT_CITY = {TAS:'Tashkent',DXB:'Dubai',ALA:'Alma-ata',IST:'Istanbul'};
+    const fromCity = AIRPORT_CITY[it.from] || it.from;
+    const toCity   = AIRPORT_CITY[it.to]   || it.to;
+    const hasTransit = (it.stops||'').includes('transit') || (it.stops||'').includes('transfer');
+    const basePrice = parseInt(it.premium.replace(/\D/g,''));
+    const TARIFFS = [
+      {airlinesLabel: it.airline, baggage:'20 kg', cabin:'20 kg', retBaggage:'35 kg', refund:false, price:basePrice, seats:4},
+      {airlinesLabel: it.airline, baggage:'20 kg', cabin:'20 kg', retBaggage:'35 kg', refund:false, price:Math.round(basePrice*1.085), seats:8},
+      {airlinesLabel: it.airline, baggage:'20 kg', cabin:'20 kg', retBaggage:'35 kg', refund:false, price:Math.round(basePrice*1.23), seats:4},
+    ];
+    const fmtSm = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ') + " so'm";
+
+    const FlightLeg = ({airline, reys, dur, dep, depAirport, depFull, depDay, arr, arrAirport, arrFull, arrDay}) => (
+      <div>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <div style={{width:30,height:30,borderRadius:'50%',background:'#E0F2F3',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill={T}><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+            </div>
+            <div>
+              <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',lineHeight:1.15}}>{airline}</div>
+              <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>Reys {reys}</div>
+            </div>
+          </div>
+          <div style={{fontSize:12.5,fontWeight:700,color:'#0A1F21'}}>{dur}</div>
+        </div>
+        <div style={{display:'flex',gap:12}}>
+          <div style={{display:'flex',flexDirection:'column',alignItems:'center',paddingTop:6}}>
+            <div style={{width:9,height:9,borderRadius:'50%',border:`2px solid ${T}`,background:'#fff'}}/>
+            <div style={{flex:1,width:2,background:T,minHeight:34}}/>
+            <div style={{width:9,height:9,borderRadius:'50%',border:`2px solid ${T}`,background:'#fff'}}/>
+          </div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{marginBottom:14}}>
+              <div style={{display:'flex',gap:12,alignItems:'baseline'}}>
+                <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{dep}</span>
+                <span style={{fontSize:13.5,fontWeight:700,color:'#0A1F21'}}>{depAirport}</span>
+              </div>
+              <div style={{display:'flex',gap:12,marginTop:3}}>
+                <span style={{fontSize:11.5,color:'#9AA1B8',whiteSpace:'nowrap'}}>{depDay}</span>
+                <span style={{fontSize:11.5,color:'#9AA1B8',overflow:'hidden',textOverflow:'ellipsis'}}>{depFull}</span>
+              </div>
+            </div>
+            <div>
+              <div style={{display:'flex',gap:12,alignItems:'baseline'}}>
+                <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{arr}</span>
+                <span style={{fontSize:13.5,fontWeight:700,color:'#0A1F21'}}>{arrAirport}</span>
+              </div>
+              <div style={{display:'flex',gap:12,marginTop:3}}>
+                <span style={{fontSize:11.5,color:'#9AA1B8',whiteSpace:'nowrap'}}>{arrDay}</span>
+                <span style={{fontSize:11.5,color:'#9AA1B8',overflow:'hidden',textOverflow:'ellipsis'}}>{arrFull}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
     return (
       <Frame>
-        <div style={{background:'transparent',position:'sticky',top:0,zIndex:20,display:'flex',alignItems:'center',padding:'12px 16px',position:'relative'}}>
-          <button onClick={()=>setFlightDetail(null)} style={{width:44,height:44,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+        {/* App bar */}
+        <div style={{position:'sticky',top:0,zIndex:30,background:'#F4F7F8',display:'flex',alignItems:'center',padding:'12px 16px',gap:12}}>
+          <button onClick={()=>setFlightDetail(null)} style={{width:50,height:50,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:17,fontWeight:800,color:'#0A1F21',pointerEvents:'none'}}>Reys tafsiloti</div>
-          <div style={{width:44,flexShrink:0,marginLeft:'auto'}}/>
-        </div>
-        <div style={{flex:1,overflowY:'auto',padding:'8px 16px 120px'}}>
-          {/* Airline */}
-          <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,display:'flex',alignItems:'center',gap:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
-            <div style={{width:48,height:48,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <span style={{fontSize:18,fontWeight:900,color:'#0A1F21'}}>{it.airline.slice(0,1)}</span>
-            </div>
-            <div style={{flex:1}}>
-              <div style={{fontSize:15,fontWeight:700,color:'#0A1F21'}}>{it.airline}</div>
-              <div style={{fontSize:12,color:'#9AA1B8',marginTop:2}}>{it.tag}</div>
-            </div>
-          </div>
-          {/* Onward */}
-          <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
-            <div style={{fontSize:11,color:'#9AA1B8',fontWeight:700,textTransform:'uppercase',letterSpacing:0.6,marginBottom:10}}>Borish · {it.depDate}</div>
-            <div style={{display:'flex',alignItems:'center',gap:14}}>
-              <div>
-                <div style={{fontSize:24,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.dep}</div>
-                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginTop:6}}>{it.from}</div>
-              </div>
-              <div style={{flex:1,textAlign:'center'}}>
-                <div style={{fontSize:11,color:'#9AA1B8'}}>{it.dur}</div>
-                <div style={{height:1,background:'#E8EAF3',margin:'8px 0',position:'relative'}}><div style={{position:'absolute',left:'50%',top:-7,transform:'translateX(-50%)',background:'#fff',padding:'0 4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg></div></div>
-                <div style={{fontSize:11,color:'#9AA1B8'}}>{it.stops}</div>
-              </div>
-              <div style={{textAlign:'right'}}>
-                <div style={{fontSize:24,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.arr}</div>
-                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginTop:6}}>{it.to}</div>
-              </div>
-            </div>
-          </div>
-          {/* Return */}
-          {it.retDep && <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
-            <div style={{fontSize:11,color:'#9AA1B8',fontWeight:700,textTransform:'uppercase',letterSpacing:0.6,marginBottom:10}}>Qaytish · {it.retDate}</div>
-            <div style={{display:'flex',alignItems:'center',gap:14}}>
-              <div>
-                <div style={{fontSize:24,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.retDep}</div>
-                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginTop:6}}>{it.to}</div>
-              </div>
-              <div style={{flex:1,textAlign:'center'}}>
-                <div style={{fontSize:11,color:'#9AA1B8'}}>{it.retDur}</div>
-                <div style={{height:1,background:'#E8EAF3',margin:'8px 0',position:'relative'}}><div style={{position:'absolute',left:'50%',top:-7,transform:'translateX(-50%)',background:'#fff',padding:'0 4px'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg></div></div>
-                <div style={{fontSize:11,color:'#9AA1B8'}}>{it.stops}</div>
-              </div>
-              <div style={{textAlign:'right'}}>
-                <div style={{fontSize:24,fontWeight:800,color:'#0A1F21',lineHeight:1}}>{it.retArr}</div>
-                <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginTop:6}}>{it.from}</div>
-              </div>
-            </div>
-          </div>}
-          {/* Info */}
-          <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
-            <div style={{fontSize:13,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Reys haqida</div>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={it.baggage?T:'#9AA1B8'} strokeWidth="2"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
-              <span style={{fontSize:13,color:'#0A1F21'}}>{it.baggage?'Bagaj kiritilgan (23 kg)':"Bagajsiz"}</span>
-            </div>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
-              <span style={{fontSize:13,color:'#0A1F21'}}>Qo'l yuki 7 kg gacha</span>
-            </div>
-            <div style={{display:'flex',alignItems:'center',gap:8}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-              <span style={{fontSize:13,color:'#0A1F21'}}>Bekor qilish: pulli</span>
-            </div>
-          </div>
-          {/* Price */}
-          <div style={{background:'#fff',borderRadius:18,padding:16,marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.05)'}}>
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
-              <span style={{fontSize:13,color:'#5C7577'}}>Oddiy narx</span>
-              <span style={{fontSize:18,fontWeight:800,color:'#0A1F21'}}>{fmtPrice(it.regular)}</span>
-            </div>
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:14,padding:'10px 14px',boxShadow:'0 2px 8px rgba(217,119,6,0.25)'}}>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
-                <span style={{fontSize:12,fontWeight:700,color:'#fff'}}>Premium narx</span>
-              </div>
-              <span style={{fontSize:16,fontWeight:800,color:'#fff'}}>{fmtPrice(it.premium)}</span>
-            </div>
-            <div style={{display:'flex',alignItems:'center',gap:6,marginTop:10}}>
-              <div style={{width:18,height:18,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                <span style={{fontSize:9,fontWeight:900,color:'#92400E'}}>C</span>
-              </div>
-              <span style={{fontSize:12,color:'#5C7577'}}>{Math.floor(parseInt(it.premium.replace(/\D/g,''))/10000)} Coins bonus</span>
-            </div>
+          <div style={{flex:1,textAlign:'center',paddingRight:50,minWidth:0}}>
+            <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',lineHeight:1.15,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{fromCity} - {toCity}{it.retDep?` - ${fromCity}`:''}</div>
+            <div style={{fontSize:11,color:'#5C7577',marginTop:2,fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{it.depDate}{it.retDep?`, ${it.retDate}`:''}, 1 yo'lovchi</div>
           </div>
         </div>
-        {/* Sticky CTA */}
-        <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,padding:'12px 20px 28px',background:'linear-gradient(to bottom,rgba(244,245,250,0) 0%,#F4F5FA 30%)'}}>
-          <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Band qilish</button>
+
+        <div style={{flex:1,overflowY:'auto',paddingBottom:110,background:'#F4F7F8'}}>
+
+          {/* Ketish */}
+          <div style={{background:'#fff',margin:'8px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{display:'inline-block',background:'#F4F5FA',borderRadius:8,padding:'4px 11px',fontSize:11.5,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Ketish</div>
+            <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',marginBottom:4,letterSpacing:-0.2}}>{fromCity} - {toCity}</div>
+            <div style={{fontSize:12,color:'#5C7577',marginBottom:14}}>{it.dur} soatlik parvoz · {hasTransit?'1 transfer':"to'g'ridan-to'g'ri"}</div>
+            <div style={{height:1,background:'#F0F2F8',marginBottom:16}}/>
+            {hasTransit ? (
+              <>
+                <FlightLeg
+                  airline={it.airline} reys="HH-601" dur="1 h 30 min"
+                  dep={it.dep} depAirport={fromCity} depFull={AIRPORT_FULL[it.from]||it.from} depDay={`${it.depDate}`}
+                  arr="20:20"  arrAirport="Alma-ata" arrFull="Almaty Airport, ALA" arrDay={`${it.depDate}`}
+                />
+                <div style={{background:'#F4F5FA',borderRadius:10,padding:'10px 12px',margin:'14px 0',display:'flex',alignItems:'center',gap:8}}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M13 5l7 7-7 7"/><path d="M5 5l7 7-7 7"/></svg>
+                  <span style={{fontSize:12.5,color:'#0A1F21',fontWeight:600}}>Qayta qo'nish: Almaty Airport — 8 h 45 min</span>
+                </div>
+                <FlightLeg
+                  airline="Fly Dubai" reys="FZ-1736" dur="5 h 25 min"
+                  dep="05:05" depAirport="Alma-ata" depFull="Almaty Airport, ALA" depDay={`${it.depDate}`}
+                  arr={it.arr} arrAirport={toCity} arrFull={AIRPORT_FULL[it.to]||it.to} arrDay={`${it.arrDate||it.depDate}`}
+                />
+              </>
+            ) : (
+              <FlightLeg
+                airline={it.airline} reys="HY-334" dur={it.dur}
+                dep={it.dep} depAirport={fromCity} depFull={AIRPORT_FULL[it.from]||it.from} depDay={it.depDate}
+                arr={it.arr} arrAirport={toCity} arrFull={AIRPORT_FULL[it.to]||it.to} arrDay={it.arrDate||it.depDate}
+              />
+            )}
+          </div>
+
+          {/* Qaytish */}
+          {it.retDep && (
+            <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+              <div style={{display:'inline-block',background:'#F4F5FA',borderRadius:8,padding:'4px 11px',fontSize:11.5,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Qaytish</div>
+              <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',marginBottom:4,letterSpacing:-0.2}}>{toCity} - {fromCity}</div>
+              <div style={{fontSize:12,color:'#5C7577',marginBottom:14}}>{it.retDur} soatlik parvoz · to'g'ridan-to'g'ri</div>
+              <div style={{height:1,background:'#F0F2F8',marginBottom:16}}/>
+              <FlightLeg
+                airline="Uzbekistan Airways" reys="HY-334" dur={it.retDur}
+                dep={it.retDep} depAirport={toCity} depFull={AIRPORT_FULL[it.to]||it.to} depDay={it.retDate}
+                arr={it.retArr} arrAirport={fromCity} arrFull={AIRPORT_FULL[it.from]||it.from} arrDay={it.retDate}
+              />
+            </div>
+          )}
+
+          {/* Tarifni tanlang */}
+          <div style={{margin:'18px 16px 0',padding:'0 4px'}}>
+            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:4,letterSpacing:-0.2}}>Tarifni tanlang</div>
+            <div style={{fontSize:12,color:'#5C7577'}}>Tarif shartlari bron qilishdagi har bir yo'lovchiga tatbiq etiladi</div>
+          </div>
+
+          {TARIFFS.map((t,i)=>(
+            <div key={i} style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+              {/* Ketish block */}
+              <div style={{display:'inline-block',background:'#F4F5FA',borderRadius:8,padding:'3px 10px',fontSize:11,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Ketish</div>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8,cursor:'pointer'}}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+                <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>2 aviakompaniyalar</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:6,flexWrap:'wrap'}}>
+                <div style={{display:'flex',alignItems:'center',gap:5}}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
+                  <span style={{fontSize:12.5,color:'#0A1F21'}}>Yuk: {t.baggage}</span>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:5}}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                  <span style={{fontSize:12.5,color:'#0A1F21'}}>{t.cabin}</span>
+                </div>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:14}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                <span style={{fontSize:12.5,color:'#0A1F21'}}>Qaytarib berilmaydi</span>
+              </div>
+              <div style={{height:1,background:'#F0F2F8',marginBottom:14}}/>
+
+              {/* Qaytish block */}
+              <div style={{display:'inline-block',background:'#F4F5FA',borderRadius:8,padding:'3px 10px',fontSize:11,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Qaytish</div>
+              <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:6}}>
+                <div style={{display:'flex',alignItems:'center',gap:5}}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
+                  <span style={{fontSize:12.5,color:'#0A1F21'}}>Yuk: {t.retBaggage}</span>
+                </div>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:14}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                <span style={{fontSize:12.5,color:'#0A1F21'}}>Qaytarib berilmaydi</span>
+              </div>
+
+              {/* Price + CTA */}
+              <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',textAlign:'right',marginBottom:10}}>{fmtSm(t.price)}</div>
+              <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:12,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',boxShadow:'0 4px 14px rgba(0,153,168,0.28)'}}>
+                Tanlash
+              </button>
+              <div style={{fontSize:11.5,color:'#9AA1B8',textAlign:'right',marginTop:8}}>{t.seats} chipta qoldi</div>
+            </div>
+          ))}
+
+          <div style={{height:18}}/>
         </div>
       </Frame>
     );
