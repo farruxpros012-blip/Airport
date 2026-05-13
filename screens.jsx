@@ -914,6 +914,14 @@ function ScreenTrip() {
   const [page, setPage] = React.useState(null);
   const [sheet, setSheet] = React.useState(null); // 'all'
   const [hintShown, setHintShown] = React.useState(true);
+  const [resultScrolled, setResultScrolled] = React.useState(false);
+  React.useEffect(() => {
+    if (!page) return;
+    const onScroll = () => setResultScrolled(window.scrollY > 4);
+    setResultScrolled(window.scrollY > 4);
+    window.addEventListener('scroll', onScroll, {passive:true});
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [page]);
   const [esimCountry, setEsimCountry] = React.useState(null);
   const [esimTab, setEsimTab] = React.useState('standard');
   const [esimSelected, setEsimSelected] = React.useState(null);
@@ -1142,20 +1150,11 @@ function ScreenTrip() {
       </div>
     );
 
-    // Route card with two text-input rows + swap
+    // Route card with two text-input rows + swap (no bottomsheet)
     const routeCard = (fLabel='Qayerdan', tLabel='Qayerga') => (
-      <div style={{background:'#fff',borderRadius:16,padding:'4px 14px',marginBottom:10,position:'relative',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
-        <div style={{display:'flex',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #E8EAF3'}}>
-          <div style={{width:7,height:7,borderRadius:'50%',background:T,marginRight:10,flexShrink:0}}/>
-          <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder={fLabel} style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',paddingRight:40,fontFamily:'inherit'}}/>
-        </div>
-        <div style={{display:'flex',alignItems:'center',padding:'12px 0'}}>
-          <div style={{width:7,height:7,borderRadius:'50%',background:'#DDE0EB',marginRight:10,flexShrink:0}}/>
-          <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder={tLabel} style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',paddingRight:40,fontFamily:'inherit'}}/>
-        </div>
-        <button onClick={(e)=>{e.stopPropagation();const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.05)'}}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
-        </button>
+      <div style={{background:'#fff',borderRadius:14,padding:'12px 14px',marginBottom:10,display:'flex',alignItems:'center',gap:10,boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder={`${fLabel} — ${tLabel}`} style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',fontFamily:'inherit'}}/>
       </div>
     );
 
@@ -3674,16 +3673,15 @@ function ScreenTrip() {
     })();
     return (
       <Frame>
-        {/* Row 1 — always fixed at top */}
-        <div style={{background:'#F4F7F8',position:'sticky',top:0,zIndex:30}}>
+        {/* Unified sticky top — Row 1 (back · middle · UZS) + Row 2 (search) */}
+        <div style={{background:'#F4F7F8',position:'sticky',top:0,zIndex:30,boxShadow:resultScrolled?'0 4px 12px rgba(15,42,74,0.08)':'none',transition:'box-shadow 0.2s'}}>
           <div style={{display:'flex',alignItems:'center',padding:'12px 16px 4px',gap:8}}>
             <button onClick={()=>{ if(page==='esim' && esimCountry){ setEsimCountry(null); } else { setPage(null); setEsimCountry(null); } }}
               style={{width:52,height:52,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
-            {/* Floating route card: icon + Qayerdan → Qayerga + chevron */}
-            <button onClick={()=>setPreSheet(page==='esim'?'esim':page)}
-              style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:10,background:'#fff',border:'none',cursor:'pointer',padding:'0 12px 0 8px',height:52,borderRadius:16,boxShadow:'0 2px 10px rgba(15,27,61,0.08)',textAlign:'left'}}>
+            {/* Route summary — display only, no bottomsheet on tap */}
+            <div style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:10,background:'#fff',padding:'0 12px 0 8px',height:52,borderRadius:16,boxShadow:'0 2px 10px rgba(15,27,61,0.08)',textAlign:'left'}}>
               <div style={{width:36,height:36,borderRadius:11,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
                 <div style={{display:'flex',filter:'brightness(0) saturate(100%) invert(43%) sepia(99%) saturate(1559%) hue-rotate(156deg) brightness(94%) contrast(101%)'}}>
                   {pageIcon}
@@ -3720,28 +3718,26 @@ function ScreenTrip() {
                   </div>
                 );
               })()}
-            </button>
+            </div>
             {/* Language/currency pill */}
             <button style={{display:'flex',alignItems:'center',gap:4,background:'#fff',border:'none',cursor:'pointer',padding:'10px 14px',flexShrink:0,borderRadius:999,boxShadow:'0 2px 10px rgba(15,27,61,0.08)'}}>
               <span style={{fontSize:13,fontWeight:800,color:'#0A1F21'}}>UZS</span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
-        </div>
-        {/* Row 2 — search, always sticky below Row 1 */}
-        {page!=='aviabilet' && (
-          <div style={{position:'sticky',top:80,zIndex:25,background:'#F4F7F8',marginTop:-8,marginBottom:16}}>
-            <div style={{padding:'0 16px',position:'relative',display:'flex',alignItems:'center'}}>
+          {/* Row 2 — search, inside same sticky container */}
+          {page!=='aviabilet' && (
+            <div style={{padding:'0 16px 12px',position:'relative',display:'flex',alignItems:'center'}}>
               <svg style={{position:'absolute',left:30,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
               <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Davlat qidirish...',hotel:'Mehmonxona qidirish...',rentcar:'Avtomobil yoki davlat...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 42px',border:'1px solid #ECEEF6',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#fff',outline:'none',boxSizing:'border-box',boxShadow:'0 1px 4px rgba(15,42,74,0.04)'}}/>
             </div>
-          </div>
-        )}
+          )}
+        </div>
         {/* Row 3 — content rows (filter chips, tabs, etc) NOT sticky, scrolls normally */}
           {/* Aviabilet — airline chips + time grid */}
           {page==='aviabilet' && (
             <>
-              <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 10px',WebkitOverflowScrolling:'touch'}}>
+              <div style={{display:'flex',gap:7,overflowX:'auto',padding:'20px 16px 10px',WebkitOverflowScrolling:'touch'}}>
                 {[{n:'Air India',c:'#FBBF24'},{n:'Emirates',c:'#DC2626'},{n:'Fly Dubai',c:'#1E40AF'},{n:'Uzbekistan Airways',c:'#16A34A'}].map((a,i)=>(
                   <button key={i} style={{flexShrink:0,display:'flex',alignItems:'center',gap:6,padding:'6px 12px 6px 6px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>
                     <span style={{width:20,height:20,borderRadius:'50%',background:a.c,display:'inline-flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:10,fontWeight:800}}>{a.n.slice(0,1)}</span>
@@ -3770,8 +3766,8 @@ function ScreenTrip() {
               </div>
             </>
           )}
-          {/* Row 3: Filters */}
-          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
+          {/* Row 3: Filters — dropped down */}
+          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'20px 16px 12px',WebkitOverflowScrolling:'touch'}}>
             <div style={{flexShrink:0,width:36,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
             </div>
