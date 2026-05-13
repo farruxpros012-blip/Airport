@@ -3411,13 +3411,11 @@ function ScreenTrip() {
                 return (
                 <div key={ct.id} onClick={()=>setXferCarType(ct.id)} style={{position:'relative',background:'#fff',border:`2px solid ${sel?ct.accent:'#EEF0F5'}`,borderRadius:22,overflow:'hidden',cursor:'pointer',display:'flex',alignItems:'stretch',boxShadow:sel?`0 8px 24px ${ct.accent}26, 0 2px 6px rgba(10,31,33,0.06)`:'0 1px 4px rgba(10,31,33,0.04)',transition:'all 0.2s'}}>
                   {/* Car image panel */}
-                  <div style={{width:120,minHeight:90,background:ct.bg,position:'relative',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,overflow:'hidden'}}>
-                    <div style={{position:'absolute',top:-20,right:-20,width:90,height:90,borderRadius:'50%',background:'rgba(255,255,255,0.12)'}}/>
-                    <div style={{position:'absolute',bottom:-30,left:-15,width:70,height:70,borderRadius:'50%',background:'rgba(0,0,0,0.10)'}}/>
-                    <img src={encodeURI(ct.img)} alt={ct.label} style={{width:'100%',height:'auto',objectFit:'contain',position:'relative',zIndex:1,filter:'drop-shadow(0 4px 8px rgba(0,0,0,0.22))',transform:sel?'scale(1.05) rotate(-2deg)':'rotate(-2deg)',transition:'transform 0.25s'}} onError={e=>{e.target.style.display='none';}}/>
+                  <div style={{width:110,background:'transparent',position:'relative',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,overflow:'hidden',padding:'6px 4px'}}>
+                    <img src={encodeURI(ct.img)} alt={ct.label} style={{width:'100%',height:'auto',objectFit:'contain',filter:'drop-shadow(0 3px 6px rgba(0,0,0,0.15))',transform:sel?'scale(1.05) rotate(-2deg)':'rotate(-2deg)',transition:'transform 0.25s'}} onError={e=>{e.target.style.display='none';}}/>
                   </div>
                   {/* Info */}
-                  <div style={{flex:1,padding:'10px 12px',display:'flex',flexDirection:'column',justifyContent:'center',gap:6}}>
+                  <div style={{flex:1,padding:'8px 12px 8px 4px',display:'flex',flexDirection:'column',justifyContent:'center',gap:5}}>
                     <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',lineHeight:1.2,letterSpacing:-0.2}}>{ct.label}</div>
                     <div style={{display:'flex',gap:12,fontSize:12,color:'#374151'}}>
                       <div style={{display:'flex',alignItems:'center',gap:4}}>
