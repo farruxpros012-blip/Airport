@@ -3659,51 +3659,40 @@ function ScreenTrip() {
     return (
       <Frame>
         {/* Sticky header */}
-        <div style={{background:'#F4F7F8',position:'sticky',top:0,zIndex:20,paddingBottom:14,boxShadow:'0 1px 0 rgba(15,42,74,0.04)'}}>
-          {/* Row 1: back · page title · UZS */}
-          <div style={{display:'flex',alignItems:'center',padding:'12px 16px 10px',gap:10}}>
+        <div style={{background:'#F4F7F8',position:'sticky',top:0,zIndex:20,paddingBottom:12,boxShadow:'0 1px 0 rgba(15,42,74,0.04)'}}>
+          {/* Row 1: back · floating route card · language */}
+          <div style={{display:'flex',alignItems:'center',padding:'12px 16px 12px',gap:8}}>
             <button onClick={()=>{ if(page==='esim' && esimCountry){ setEsimCountry(null); } else { setPage(null); setEsimCountry(null); } }}
               style={{width:44,height:44,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
-            <div style={{flex:1,textAlign:'center',fontSize:11,fontWeight:800,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:1.2}}>
-              {PAGE_TITLES[page]||''}
-            </div>
-            <button style={{display:'flex',alignItems:'center',gap:3,background:'#fff',border:'none',cursor:'pointer',padding:'8px 12px',flexShrink:0,borderRadius:999,boxShadow:'0 2px 8px rgba(15,27,61,0.06)'}}>
+            {/* Floating route card: icon + Qayerdan → Qayerga + chevron */}
+            <button onClick={()=>setPreSheet(page==='esim'?'esim':page)}
+              style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:10,background:'#fff',border:'none',cursor:'pointer',padding:'0 10px 0 6px',height:44,borderRadius:14,boxShadow:'0 2px 10px rgba(15,27,61,0.08)',textAlign:'left'}}>
+              <div style={{width:32,height:32,borderRadius:9,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                {React.cloneElement(pageIcon,{width:18,height:18})}
+              </div>
+              <div style={{flex:1,minWidth:0,fontSize:13.5,fontWeight:700,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2}}>
+                {(() => {
+                  const q = tripQuery || {};
+                  const arrow = <span style={{color:T,margin:'0 5px',fontWeight:800}}>→</span>;
+                  if (page === 'turlar' || page === 'aviabilet') return <>{q.from || 'Qayerdan'}{arrow}{q.to || 'Qayerga'}</>;
+                  if (page === 'hotel') return q.from || 'Shahar tanlang';
+                  if (page === 'excur') return <>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || 'Davlat tanlang'}</>;
+                  if (page === 'esim') return <>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || esimCountry || 'Davlat tanlang'}</>;
+                  if (page === 'rentcar') return q.rentLoc || 'Manzil tanlang';
+                  return '';
+                })()}
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.5" strokeLinecap="round" style={{flexShrink:0}}><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            {/* Language/currency */}
+            <button style={{display:'flex',alignItems:'center',gap:3,background:'#fff',border:'none',cursor:'pointer',padding:'0 10px',height:44,flexShrink:0,borderRadius:14,boxShadow:'0 2px 10px rgba(15,27,61,0.08)'}}>
               <span style={{fontSize:12,fontWeight:800,color:'#0A1F21'}}>UZS</span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
-          {/* Row 2: Floating trip summary card */}
-          <div style={{padding:'0 16px 10px'}}>
-            <button onClick={()=>setPreSheet(page==='esim'?'esim':page)}
-              style={{width:'100%',display:'flex',alignItems:'center',gap:12,background:'#fff',border:'none',cursor:'pointer',padding:'12px 14px',borderRadius:18,boxShadow:'0 4px 18px rgba(15,42,74,0.07)',textAlign:'left'}}>
-              <div style={{width:42,height:42,borderRadius:13,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                {pageIcon}
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                {(() => {
-                  const q = tripQuery || {};
-                  const ppl = (q.adults||0) + (q.children||0) + (q.infants||0);
-                  const top = (t) => <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.2,letterSpacing:-0.2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t}</div>;
-                  const sub = (t) => <div style={{fontSize:11.5,color:'#5C7577',fontWeight:500,marginTop:3,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t}</div>;
-                  if (page === 'turlar') return <>{top(<>{q.from || 'Qayerdan'} <span style={{color:T,margin:'0 4px'}}>→</span> {q.to || 'Qayerga'}</>)}{sub(<>{q.dateStart || 'Sana'} · {q.nights||0} kun · {ppl||1} kishi{q.hotels && q.hotels.length ? ` · ${q.hotels.length} hotel` : ''}</>)}</>;
-                  if (page === 'aviabilet') return <>{top(<>{q.from || 'Qayerdan'} <span style={{color:T,margin:'0 4px'}}>→</span> {q.to || 'Qayerga'}</>)}{sub(<>{q.dateStart || 'Ketish'}{q.dateEnd?` – ${q.dateEnd}`:''} · {ppl||1} kishi · {{econom:'Econom',business:'Business',premium:'Premium'}[q.flightClass]||'Econom'}</>)}</>;
-                  if (page === 'hotel') return <>{top(q.from || 'Shahar')}{sub(<>{q.dateStart || 'Sana'}{q.dateEnd?` – ${q.dateEnd}`:''} · {ppl||1} kishi</>)}</>;
-                  if (page === 'excur') return <>{top(<>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || 'Davlat tanlang'}</>)}{sub('1 kunlik ekskursiya')}</>;
-                  if (page === 'esim') return <>{top(<>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || esimCountry || 'Davlat'}</>)}{sub('eSIM tarif')}</>;
-                  if (page === 'rentcar') return <>{top(q.rentLoc || 'Manzil')}{sub(<>{q.rentFrom || 'Boshlanish'}{q.rentTo?` → ${q.rentTo}`:''}</>)}</>;
-                  return null;
-                })()}
-              </div>
-              <div style={{width:34,height:34,borderRadius:'50%',background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                </svg>
-              </div>
-            </button>
-          </div>
-          {/* Row 3: Search (hidden on aviabilet) */}
+          {/* Row 2: Search (hidden on aviabilet) */}
           {page!=='aviabilet' && (
             <div style={{padding:'0 16px',position:'relative',display:'flex',alignItems:'center'}}>
               <svg style={{position:'absolute',left:30,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
