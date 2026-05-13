@@ -3687,7 +3687,7 @@ function ScreenTrip() {
       <Frame>
         {/* Row 1 — always fixed at top */}
         <div style={{background:'#F4F7F8',position:'sticky',top:0,zIndex:30}}>
-          <div style={{display:'flex',alignItems:'center',padding:'12px 16px 10px',gap:8}}>
+          <div style={{display:'flex',alignItems:'center',padding:'12px 16px 4px',gap:8}}>
             <button onClick={()=>{ if(page==='esim' && esimCountry){ setEsimCountry(null); } else { setPage(null); setEsimCountry(null); } }}
               style={{width:52,height:52,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
@@ -3705,13 +3705,13 @@ function ScreenTrip() {
                 const stack = (a, b) => (
                   <div style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:9}}>
                     {/* dot · line · dot column */}
-                    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-between',height:38,flexShrink:0}}>
+                    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-between',height:30,flexShrink:0}}>
                       <div style={{width:7,height:7,borderRadius:'50%',background:'#0A1F21'}}/>
                       <div style={{width:1.5,flex:1,background:'#D6DAE6',margin:'2px 0'}}/>
                       <div style={{width:7,height:7,borderRadius:'50%',background:T}}/>
                     </div>
                     {/* labels */}
-                    <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'space-between',height:38}}>
+                    <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'space-between',height:30}}>
                       <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{a}</div>
                       <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{b}</div>
                     </div>
@@ -3779,7 +3779,7 @@ function ScreenTrip() {
             </>
           )}
           {/* Row 3: Filters */}
-          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'10px 16px 12px',WebkitOverflowScrolling:'touch'}}>
+          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'16px 16px 12px',WebkitOverflowScrolling:'touch'}}>
             <div style={{flexShrink:0,width:36,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
             </div>
