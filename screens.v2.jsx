@@ -1953,9 +1953,11 @@ function ScreenTrip() {
     const hasTransit = (it.stops||'').includes('transit') || (it.stops||'').includes('transfer');
     const basePrice = parseInt(it.premium.replace(/\D/g,''));
     const TARIFFS = [
-      {airlinesLabel: it.airline, baggage:'20 kg', cabin:'20 kg', retBaggage:'35 kg', refund:false, price:basePrice, seats:4},
-      {airlinesLabel: it.airline, baggage:'20 kg', cabin:'20 kg', retBaggage:'35 kg', refund:false, price:Math.round(basePrice*1.085), seats:8},
-      {airlinesLabel: it.airline, baggage:'20 kg', cabin:'20 kg', retBaggage:'35 kg', refund:false, price:Math.round(basePrice*1.23), seats:4},
+      {airlinesLabel: it.airline, baggage:'20 kg', cabin:'8 kg', retBaggage:'20 kg', retCabin:'8 kg', refund:false, retRefund:false, price:basePrice, seats:4},
+      {airlinesLabel: it.airline, baggage:'20 kg', cabin:'8 kg', retBaggage:'35 kg', retCabin:'8 kg', refund:false, retRefund:false, price:Math.round(basePrice*1.085), seats:8},
+      {airlinesLabel: it.airline, baggage:'30 kg', cabin:'10 kg', retBaggage:'35 kg', retCabin:'10 kg', refund:false, retRefund:true, price:Math.round(basePrice*1.18), seats:6},
+      {airlinesLabel: it.airline, baggage:'35 kg', cabin:'10 kg', retBaggage:'35 kg', retCabin:'10 kg', refund:true, retRefund:true, price:Math.round(basePrice*1.23), seats:4},
+      {airlinesLabel: it.airline, baggage:'40 kg', cabin:'12 kg', retBaggage:'40 kg', retCabin:'12 kg', refund:true, retRefund:true, price:Math.round(basePrice*1.42), seats:2},
     ];
     const fmtSm = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ') + " so'm";
     const AIRLINE_LOGOS = {
@@ -2018,7 +2020,9 @@ function ScreenTrip() {
     const TARIFF_META = [
       {name:'Light'},
       {name:'Standard'},
+      {name:'Comfort'},
       {name:'Flex'},
+      {name:'Business'},
     ];
 
     return (
@@ -2144,6 +2148,100 @@ function ScreenTrip() {
 
           {TARIFFS.map((t,i)=>{
             const meta = TARIFF_META[i] || TARIFF_META[0];
+            return (
+              <div key={i} style={{background:'#fff',margin:'12px 16px 0',borderRadius:18,boxShadow:'0 4px 20px rgba(15,42,74,0.06), 0 1px 3px rgba(15,42,74,0.04)',border:'1px solid rgba(15,42,74,0.04)',overflow:'hidden'}}>
+                {/* Header: tier name + seats left */}
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 18px 0'}}>
+                  <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',letterSpacing:-0.2}}>{meta.name}</div>
+                  <div style={{fontSize:11,color:'#9AA1B8',fontWeight:700}}>{t.seats} chipta qoldi</div>
+                </div>
+                {/* Ketish */}
+                <div style={{padding:'14px 18px 0'}}>
+                  <div style={{background:'#FAFBFC',borderRadius:12,padding:'12px 14px',border:'1px solid rgba(15,42,74,0.04)'}}>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+                      <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:6,padding:'2px 8px',fontSize:10,fontWeight:800,color:T,letterSpacing:0.3}}>KETISH</div>
+                      <div style={{display:'flex',alignItems:'center',gap:5}}>
+                        <div style={{display:'flex',marginRight:4}}>
+                          <div style={{width:20,height:20,borderRadius:5,background:'#fff',border:'1px solid #ECEEF6',display:'flex',alignItems:'center',justifyContent:'center',overflow:'hidden'}}>
+                            <img src={logoFor('Qanot Sharq')} alt="" style={{maxWidth:'78%',maxHeight:'78%',objectFit:'contain'}}/>
+                          </div>
+                          <div style={{width:20,height:20,borderRadius:5,background:'#fff',border:'1px solid #ECEEF6',display:'flex',alignItems:'center',justifyContent:'center',overflow:'hidden',marginLeft:-6}}>
+                            <img src={logoFor('Fly Dubai')} alt="" style={{maxWidth:'78%',maxHeight:'78%',objectFit:'contain'}}/>
+                          </div>
+                        </div>
+                        <span style={{fontSize:11.5,color:'#5C7577',fontWeight:600}}>2 aviakompaniyalar</span>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap',marginBottom:7}}>
+                      <div style={{display:'flex',alignItems:'center',gap:6}}>
+                        <div style={{width:22,height:22,borderRadius:7,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
+                        </div>
+                        <span style={{fontSize:12,color:'#0A1F21',fontWeight:600}}>Yuk {t.baggage}</span>
+                      </div>
+                      <div style={{display:'flex',alignItems:'center',gap:6}}>
+                        <div style={{width:22,height:22,borderRadius:7,background:'#DBEAFE',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1E40AF" strokeWidth="2.5"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        </div>
+                        <span style={{fontSize:12,color:'#0A1F21',fontWeight:600}}>Qo'l: {t.cabin}</span>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:6}}>
+                      <div style={{width:22,height:22,borderRadius:7,background:t.refund?'#D1FAE5':'#FEE2E2',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        {t.refund
+                          ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.8"><polyline points="20 6 9 17 4 12"/></svg>
+                          : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>}
+                      </div>
+                      <span style={{fontSize:12,color:'#5C7577'}}>{t.refund?'Qaytarib beriladi':'Qaytarib berilmaydi'}</span>
+                    </div>
+                  </div>
+                </div>
+                {/* Qaytish */}
+                <div style={{padding:'10px 18px 0'}}>
+                  <div style={{background:'#FAFBFC',borderRadius:12,padding:'12px 14px',border:'1px solid rgba(15,42,74,0.04)'}}>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+                      <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:6,padding:'2px 8px',fontSize:10,fontWeight:800,color:T,letterSpacing:0.3}}>QAYTISH</div>
+                      <div style={{width:20,height:20,borderRadius:5,background:'#fff',border:'1px solid #ECEEF6',display:'flex',alignItems:'center',justifyContent:'center',overflow:'hidden'}}>
+                        <img src={logoFor('Uzbekistan Airways')} alt="" style={{maxWidth:'78%',maxHeight:'78%',objectFit:'contain'}}/>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap',marginBottom:7}}>
+                      <div style={{display:'flex',alignItems:'center',gap:6}}>
+                        <div style={{width:22,height:22,borderRadius:7,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
+                        </div>
+                        <span style={{fontSize:12,color:'#0A1F21',fontWeight:600}}>Yuk {t.retBaggage}</span>
+                      </div>
+                      <div style={{display:'flex',alignItems:'center',gap:6}}>
+                        <div style={{width:22,height:22,borderRadius:7,background:'#DBEAFE',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1E40AF" strokeWidth="2.5"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        </div>
+                        <span style={{fontSize:12,color:'#0A1F21',fontWeight:600}}>Qo'l: {t.retCabin}</span>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:6}}>
+                      <div style={{width:22,height:22,borderRadius:7,background:t.retRefund?'#D1FAE5':'#FEE2E2',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        {t.retRefund
+                          ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.8"><polyline points="20 6 9 17 4 12"/></svg>
+                          : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>}
+                      </div>
+                      <span style={{fontSize:12,color:'#5C7577'}}>{t.retRefund?'Qaytarib beriladi':'Qaytarib berilmaydi'}</span>
+                    </div>
+                  </div>
+                </div>
+                {/* Price + CTA */}
+                <div style={{padding:'16px 18px 18px',display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:12}}>
+                  <div>
+                    <div style={{fontSize:10.5,color:'#9AA1B8',fontWeight:700,letterSpacing:0.4,textTransform:'uppercase'}}>Narx (1 kishi)</div>
+                    <div style={{fontSize:20,fontWeight:900,color:'#0A1F21',letterSpacing:-0.5,marginTop:2}}>{fmtSm(t.price)}</div>
+                  </div>
+                  <button style={{background:T,color:'#fff',border:'none',borderRadius:14,padding:'13px 26px',fontSize:14,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 18px rgba(0,153,168,0.3), 0 2px 6px rgba(0,153,168,0.2)',letterSpacing:0.3,whiteSpace:'nowrap'}}>
+                    Tanlash
+                  </button>
+                </div>
+              </div>
+            );
+            // dead old branches below
             if (false) {
               return (
                 <div key={i} style={{background:'#fff',margin:'12px 16px 0',borderRadius:18,boxShadow:'0 6px 24px rgba(245,158,11,0.18), 0 1px 3px rgba(15,42,74,0.04)',border:'1.5px solid #F59E0B',overflow:'hidden'}}>
