@@ -1111,7 +1111,7 @@ function ScreenTrip() {
     const [adults, setAdults] = React.useState(2);
     const [children, setChildren] = React.useState(0);
     const [infants, setInfants] = React.useState(0);
-    const [hotels, setHotels] = React.useState([]);
+    const [hotels, setHotels] = React.useState(['Hammasi']);
     const [flightClass, setFlightClass] = React.useState('econom');
     const [country, setCountry] = React.useState('');
     const [passengerCount, setPassengerCount] = React.useState(1);
@@ -1714,9 +1714,18 @@ function ScreenTrip() {
       if (nested === 'hotel-country') return <CityCountryPicker mode="country" onPick={v=>{setCountry(v);setNested(null);}}/>;
       if (nested === 'hotels') return (
         <div>
-          <SearchList items={HOTEL_LIST} multi selected={hotels} placeholder="Hotelni qidirish..."
-            onPick={(name)=>setHotels(v=>v.includes(name)?v.filter(x=>x!==name):[...v,name])}/>
-          {hotels.length > 0 && <div style={{position:'sticky',bottom:0,marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,paddingTop:12,paddingBottom:6,background:'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 30%)'}}><button onClick={()=>setNested(null)} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tanlash ({hotels.length})</button></div>}
+          <SearchList items={['Hammasi', ...HOTEL_LIST]} multi selected={hotels} placeholder="Hotelni qidirish..."
+            onPick={(name)=>setHotels(v=>{
+              if (name === 'Hammasi') return ['Hammasi'];
+              const base = v.includes('Hammasi') ? [] : v;
+              const next = base.includes(name) ? base.filter(x=>x!==name) : [...base, name];
+              return next.length === 0 ? ['Hammasi'] : next;
+            })}/>
+          <div style={{position:'sticky',bottom:0,marginLeft:-18,marginRight:-18,paddingLeft:18,paddingRight:18,paddingTop:12,paddingBottom:6,background:'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 30%)'}}>
+            <button onClick={()=>setNested(null)} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>
+              Tanlash ({hotels.includes('Hammasi') ? 'Hammasi' : hotels.length})
+            </button>
+          </div>
         </div>
       );
       return null;
@@ -1725,23 +1734,15 @@ function ScreenTrip() {
     const renderFields = () => {
       if (preSheet === 'turlar') return (
         <>
-          {/* Airport route card for turlar */}
+          {/* Plain text inputs — no bottomsheet */}
           <div style={{background:'#fff',borderRadius:16,padding:'4px 14px',marginBottom:10,position:'relative',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
-            <div onClick={()=>setNested('airport-from')} style={{display:'flex',alignItems:'center',padding:'14px 0',borderBottom:'1px solid #F0F2F8',cursor:'pointer',gap:10}}>
+            <div style={{display:'flex',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #F0F2F8',gap:10}}>
               <div style={{width:8,height:8,borderRadius:'50%',background:T,flexShrink:0}}/>
-              <div style={{flex:1}}>
-                <div style={{fontSize:10,fontWeight:700,color:'#9AA1B8',letterSpacing:0.4,textTransform:'uppercase',marginBottom:2}}>Qayerdan</div>
-                <div style={{fontSize:14,fontWeight:700,color:fromVal?'#0A1F21':'#C0C8D4'}}>{fromVal||'Shahar yoki aeroport'}</div>
-              </div>
-              {fromVal && <button onClick={e=>{e.stopPropagation();setFromVal('');}} style={{border:'none',background:'none',cursor:'pointer',padding:4,display:'flex'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>}
+              <input value={fromVal} onChange={e=>setFromVal(e.target.value)} placeholder="Qayerdan — shahar yoki aeroport" style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',paddingRight:40,fontFamily:'inherit'}}/>
             </div>
-            <div onClick={()=>setNested('airport-to')} style={{display:'flex',alignItems:'center',padding:'14px 0',cursor:'pointer',gap:10}}>
+            <div style={{display:'flex',alignItems:'center',padding:'12px 0',gap:10}}>
               <div style={{width:8,height:8,borderRadius:'50%',background:'#DDE0EB',flexShrink:0}}/>
-              <div style={{flex:1}}>
-                <div style={{fontSize:10,fontWeight:700,color:'#9AA1B8',letterSpacing:0.4,textTransform:'uppercase',marginBottom:2}}>Qayerga</div>
-                <div style={{fontSize:14,fontWeight:700,color:toVal?'#0A1F21':'#C0C8D4'}}>{toVal||'Shahar yoki aeroport'}</div>
-              </div>
-              {toVal && <button onClick={e=>{e.stopPropagation();setToVal('');}} style={{border:'none',background:'none',cursor:'pointer',padding:4,display:'flex'}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>}
+              <input value={toVal} onChange={e=>setToVal(e.target.value)} placeholder="Qayerga — shahar yoki aeroport" style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontWeight:600,color:'#0A1F21',paddingRight:40,fontFamily:'inherit'}}/>
             </div>
             <button onClick={()=>{const t=fromVal;setFromVal(toVal);setToVal(t);}} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'#fff',border:'1.5px solid #E8EAF3',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',boxShadow:'0 2px 6px rgba(0,0,0,0.05)'}}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
@@ -1749,7 +1750,10 @@ function ScreenTrip() {
           </div>
           {tapCard('QACHON · NECHA KUN', dateStart?`${dateStart} · ${nights} kun`:'', 'Sana va davomiylikni tanlang', ()=>setNested('tour-date'))}
           {guestsCard(true)}
-          {tapCard('HOTEL TANLASH', hotels.length?`${hotels.length} ta hotel tanlandi`:'', 'Hotelni tanlang (bir nechta mumkin)', ()=>setNested('hotels'))}
+          {tapCard('HOTEL TANLASH',
+            hotels.includes('Hammasi') || hotels.length===0 ? 'Hammasi' : `${hotels.length} ta hotel tanlandi`,
+            'Hotelni tanlang (bir nechta mumkin)',
+            ()=>setNested('hotels'))}
         </>
       );
       if (preSheet === 'aviabilet') return (
@@ -3546,7 +3550,7 @@ function ScreenTrip() {
       <Frame>
         {/* Unified sticky top — Row 1 (back · middle · UZS) + Row 2 (search) */}
         <div style={{background:'#F4F7F8',position:'sticky',top:0,zIndex:30,boxShadow:resultScrolled?'0 4px 12px rgba(15,42,74,0.08)':'none',transition:'box-shadow 0.2s'}}>
-          <div style={{display:'flex',alignItems:'center',padding:'12px 16px 4px',gap:8}}>
+          <div style={{display:'flex',alignItems:'center',padding:'12px 16px',gap:8}}>
             <button onClick={()=>{ if(page==='esim' && esimCountry){ setEsimCountry(null); } else { setPage(null); setEsimCountry(null); } }}
               style={{width:52,height:52,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
@@ -3610,7 +3614,7 @@ function ScreenTrip() {
           {/* Aviabilet — airline chips + time grid */}
           {page==='aviabilet' && (
             <>
-              <div style={{display:'flex',gap:7,overflowX:'auto',padding:'20px 16px 10px',WebkitOverflowScrolling:'touch'}}>
+              <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 10px',WebkitOverflowScrolling:'touch'}}>
                 {[{n:'Air India',c:'#FBBF24'},{n:'Emirates',c:'#DC2626'},{n:'Fly Dubai',c:'#1E40AF'},{n:'Uzbekistan Airways',c:'#16A34A'}].map((a,i)=>(
                   <button key={i} style={{flexShrink:0,display:'flex',alignItems:'center',gap:6,padding:'6px 12px 6px 6px',borderRadius:999,border:'1.5px solid #E8EAF3',background:'#fff',fontSize:12,fontWeight:600,color:'#0A1F21',cursor:'pointer',whiteSpace:'nowrap'}}>
                     <span style={{width:20,height:20,borderRadius:'50%',background:a.c,display:'inline-flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:10,fontWeight:800}}>{a.n.slice(0,1)}</span>
@@ -3639,8 +3643,8 @@ function ScreenTrip() {
               </div>
             </>
           )}
-          {/* Row 3: Filters — dropped down */}
-          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'20px 16px 12px',WebkitOverflowScrolling:'touch'}}>
+          {/* Row 3: Filters */}
+          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
             <div style={{flexShrink:0,width:36,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
             </div>
