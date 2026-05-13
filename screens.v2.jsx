@@ -1955,9 +1955,9 @@ function ScreenTrip() {
     const TARIFFS = [
       {airlinesLabel: it.airline, baggage:'20 kg', cabin:'8 kg', retBaggage:'20 kg', retCabin:'8 kg', refund:false, retRefund:false, price:basePrice, seats:4},
       {airlinesLabel: it.airline, baggage:'20 kg', cabin:'8 kg', retBaggage:'35 kg', retCabin:'8 kg', refund:false, retRefund:false, price:Math.round(basePrice*1.085), seats:8},
-      {airlinesLabel: it.airline, baggage:'30 kg', cabin:'10 kg', retBaggage:'35 kg', retCabin:'10 kg', refund:false, retRefund:true, price:Math.round(basePrice*1.18), seats:6},
-      {airlinesLabel: it.airline, baggage:'35 kg', cabin:'10 kg', retBaggage:'35 kg', retCabin:'10 kg', refund:true, retRefund:true, price:Math.round(basePrice*1.23), seats:4},
-      {airlinesLabel: it.airline, baggage:'40 kg', cabin:'12 kg', retBaggage:'40 kg', retCabin:'12 kg', refund:true, retRefund:true, price:Math.round(basePrice*1.42), seats:2},
+      {airlinesLabel: it.airline, baggage:'30 kg', cabin:'10 kg', retBaggage:'35 kg', retCabin:'10 kg', refund:false, retRefund:false, price:Math.round(basePrice*1.18), seats:6},
+      {airlinesLabel: it.airline, baggage:'35 kg', cabin:'10 kg', retBaggage:'35 kg', retCabin:'10 kg', refund:false, retRefund:false, price:Math.round(basePrice*1.23), seats:4},
+      {airlinesLabel: it.airline, baggage:'40 kg', cabin:'12 kg', retBaggage:'40 kg', retCabin:'12 kg', refund:false, retRefund:false, price:Math.round(basePrice*1.42), seats:2},
     ];
     const fmtSm = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ') + " so'm";
     const AIRLINE_LOGOS = {
