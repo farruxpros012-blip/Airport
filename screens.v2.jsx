@@ -2054,61 +2054,13 @@ function ScreenTrip() {
                   dep={it.dep} depAirport={fromCity} depFull={AIRPORT_FULL[it.from]||it.from} depDay={`${it.depDate}`}
                   arr="20:20"  arrAirport="Alma-ata" arrFull="Almaty Airport, ALA" arrDay={`${it.depDate}`}
                 />
-                {(() => {
-                  // Demo: flag that this layover requires changing airports
-                  const airportChange = (it.airline||'').toLowerCase().includes('air india');
-                  const accent = airportChange ? '#DC2626' : '#D97706';
-                  const accentBg = airportChange ? '#FEE2E2' : '#FFF8E1';
-                  const accentBd = airportChange ? '#FCA5A5' : '#FCD34D';
-                  const accentIcon = airportChange ? '#7F1D1D' : '#78350F';
-                  const accentText = airportChange ? '#7F1D1D' : '#92400E';
-                  return (
-                    <div style={{background:accentBg,borderRadius:12,padding:'12px 14px',margin:'16px 0',border:`1px solid ${accentBd}`}}>
-                      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
-                        <div style={{width:26,height:26,borderRadius:'50%',background:accentBd,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                          {airportChange
-                            ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={accentIcon} strokeWidth="2.5" strokeLinecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                            : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={accentIcon} strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>}
-                        </div>
-                        <div style={{flex:1}}>
-                          <div style={{fontSize:13,fontWeight:800,color:accentIcon,lineHeight:1.2}}>Qayta qo'nish — 8 soat 45 daqiqa</div>
-                          <div style={{fontSize:11.5,color:accentText,marginTop:2}}>
-                            {airportChange ? 'Almaty Airport (ALA) → Almaty 2 (BXJ)' : 'Almaty Airport (ALA)'}
-                          </div>
-                        </div>
-                      </div>
-                      <div style={{height:1,background:'rgba(146,64,14,0.15)',margin:'8px 0'}}/>
-                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,fontSize:11,color:accentText,lineHeight:1.4}}>
-                        <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
-                          {airportChange
-                            ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" style={{marginTop:2,flexShrink:0}}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>}
-                          <span>{airportChange ? <><b>Boshqa aeroport</b> — taxi/transfer kerak</> : <><b>Bir aeroport</b> — terminal o'zgarmaydi</>}</span>
-                        </div>
-                        <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
-                          <span><b>Boshqa samolyot</b>ga o'tasiz</span>
-                        </div>
-                        <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
-                          {airportChange
-                            ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.5" style={{marginTop:2,flexShrink:0}}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>}
-                          <span>{airportChange ? 'Bagaj o\'zingiz olib boruvchi' : 'Bagajni qayta olib topshirasiz'}</span>
-                        </div>
-                        <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
-                          <span>Tranzit viza talab qilinmaydi</span>
-                        </div>
-                      </div>
-                      {airportChange && (
-                        <div style={{marginTop:10,padding:'8px 10px',background:'rgba(255,255,255,0.5)',borderRadius:8,fontSize:11,color:accentIcon,fontWeight:600,display:'flex',alignItems:'center',gap:6}}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={accentIcon} strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                          Aeroportlar orasi ~35 km — taxi ~40 daqiqa, narxi taxminan $20-25
-                        </div>
-                      )}
-                    </div>
-                  );
-                })()}
+                <div style={{display:'flex',justifyContent:'center',margin:'12px 0'}}>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:7,background:'#F3F4F6',borderRadius:999,padding:'7px 16px'}}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"><path d="M13 4c0-1.1-1.3-2-2-2s-2 .9-2 2v10H5l7 7 7-7h-4V4z" transform="rotate(0)"/><path d="M5 4c0-1.1.9-2 2-2h10M5 20h14"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="13" cy="12" r="8"/><path d="M13 8v4l2.5 2.5"/></svg>
+                    <span style={{fontSize:13,fontWeight:600,color:'#374151'}}>Qayta qo'nish: Guangzhou Baiyun International Airport · 2 h 45 min</span>
+                  </div>
+                </div>
                 <FlightLeg
                   airline="Fly Dubai" reys="FZ-1736" dur="5 h 25 min"
                   dep="05:05" depAirport="Alma-ata" depFull="Almaty Airport, ALA" depDay={`${it.depDate}`}
@@ -2227,7 +2179,7 @@ function ScreenTrip() {
                 {/* Price + CTA */}
                 <div style={{padding:'16px 18px 18px',display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:12}}>
                   <div>
-                    <div style={{fontSize:10.5,color:'#9AA1B8',fontWeight:700,letterSpacing:0.4,textTransform:'uppercase'}}>Narx (1 kishi) · {t.seats} chipta</div>
+                    <div style={{fontSize:10.5,color:t.seats<=3?'#DC2626':'#9AA1B8',fontWeight:700,letterSpacing:0.4,textTransform:'uppercase'}}>{t.seats} ta chipta qoldi</div>
                     <div style={{fontSize:20,fontWeight:900,color:'#0A1F21',letterSpacing:-0.5,marginTop:2}}>{fmtSm(t.price)}</div>
                   </div>
                   <button style={{background:T,color:'#fff',border:'none',borderRadius:14,padding:'13px 26px',fontSize:14,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 18px rgba(0,153,168,0.3), 0 2px 6px rgba(0,153,168,0.2)',letterSpacing:0.3,whiteSpace:'nowrap'}}>
