@@ -1073,9 +1073,9 @@ function ScreenTrip() {
 
           {/* Guests counters */}
           <div style={{background:'#F4F5FA',borderRadius:16,overflow:'hidden',marginBottom:4}}>
-            {[{label:'Kattalar',sub:'12+',val:adultsVal,set:setAdultsVal,min:1},{label:'Bolalar',sub:'2–11',val:childVal,set:setChildVal,min:0}].map((g,i,arr)=>(
+            {[{label:'Kattalar',sub:'12 yosh va undan katta',val:adultsVal,set:setAdultsVal,min:1},{label:'Bolalar',sub:'2–11 yosh',val:childVal,set:setChildVal,min:0}].map((g,i,arr)=>(
               <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 16px',borderBottom:i<arr.length-1?'1px solid #E8EAF3':'none'}}>
-                <span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{g.label} <span style={{fontSize:11,color:'#9AA1B8',fontWeight:400}}>{g.sub}</span></span>
+                <div><span style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{g.label}</span><div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>{g.sub}</div></div>
                 {cnt(g.val,g.set,g.min)}
               </div>
             ))}
@@ -1167,21 +1167,36 @@ function ScreenTrip() {
       </div>
     );
 
+    // Smart counter: - hidden when at min, secondary style
+    const cntSmart = (val, set, min=0) => (
+      <div style={{display:'flex',alignItems:'center',gap:6}}>
+        {val > min ? (
+          <button onClick={()=>set(v=>Math.max(min,v-1))} style={{width:40,height:40,border:'1.5px solid #DDE0EB',background:'#fff',borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        ) : <div style={{width:40,height:40,flexShrink:0}}/>}
+        <span style={{fontSize:16,fontWeight:800,color:'#0A1F21',width:28,textAlign:'center'}}>{val}</span>
+        <button onClick={()=>set(v=>v+1)} style={{width:40,height:40,border:'1.5px solid #DDE0EB',background:'#fff',borderRadius:'50%',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+    );
+
     // Guests block (compact, all in one card)
     const guestsCard = (showInfants=true) => (
       <div style={cardWrap}>
         <div style={row(0)}>
-          <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Kattalar</div><div style={{fontSize:11,color:'#9AA1B8'}}>12+</div></div>
-          {cnt(adults,setAdults,1)}
+          <div><div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Kattalar</div><div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>12 yosh va undan katta</div></div>
+          {cntSmart(adults,setAdults,1)}
         </div>
         <div style={row(1, !showInfants)}>
-          <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Bolalar</div><div style={{fontSize:11,color:'#9AA1B8'}}>2–11</div></div>
-          {cnt(children,setChildren,0)}
+          <div><div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Bolalar</div><div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>2–11 yosh</div></div>
+          {cntSmart(children,setChildren,0)}
         </div>
         {showInfants && (
           <div style={row(2, true)}>
-            <div><div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>Chaqaloq</div><div style={{fontSize:11,color:'#9AA1B8'}}>0–2</div></div>
-            {cnt(infants,setInfants,0)}
+            <div><div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Chaqaloq</div><div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>0–2 yosh</div></div>
+            {cntSmart(infants,setInfants,0)}
           </div>
         )}
       </div>
@@ -1489,24 +1504,71 @@ function ScreenTrip() {
         </div>
       );
     };
-    if (preSheet === 'esim') {
-      const onPick = (name) => { setTripQuery({country:name}); setEsimCountry(name); setPage('esim'); setPreSheet(null); };
-      return (
-        <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
-          <ESimSheet onPick={onPick}/>
-        </div>
-      );
-    }
-
-    // ── Excursion: flat country list ──
+    // ── Excursion: bottomsheet with updated title ──
     if (preSheet === 'excur') {
       const onPick = (name) => { setTripQuery({country:name}); setPage('excur'); setPreSheet(null); };
       return (
         <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:200,display:'flex',alignItems:'flex-end'}} onClick={close}>
           <div style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 18px 24px',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)',maxHeight:sheetH,overflowY:'auto',transform:sheetXform,transition:'transform 0.18s'}} onClick={e=>e.stopPropagation()}>
             <div style={{width:36,height:4,borderRadius:999,background:'#DDE0EB',margin:'10px auto 0'}}/>
-            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 10px'}}>Davlat tanlang</div>
+            <div style={{fontSize:17,fontWeight:800,color:'#0A1F21',margin:'12px 0 4px'}}>Barcha ekskursiyalarni ko'rish</div>
+            <div style={{fontSize:12,color:'#9AA1B8',marginBottom:12}}>Ekskursiya ko'rmoqchi bo'lgan davlatingizni tanlang</div>
             <SearchList items={EXCUR_LIST} onPick={onPick} placeholder="Davlatni qidirish..." withFlags/>
+          </div>
+        </div>
+      );
+    }
+
+    // ── eSIM: full page (not bottomsheet) ──
+    if (preSheet === 'esim') {
+      const onPick = (name) => { setTripQuery({country:name}); setEsimCountry(name); setPage('esim'); setPreSheet(null); };
+      const [esimSearch, setEsimSearch] = React.useState('');
+      const filt = (arr) => arr.filter(c => c.toLowerCase().includes(esimSearch.toLowerCase()));
+      return (
+        <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column',background:'#F4F7F8'}}>
+          {/* Header */}
+          <div style={{position:'relative',display:'flex',alignItems:'center',padding:'14px 18px',background:'#fff',boxShadow:'0 1px 0 #E8EAF3',flexShrink:0}}>
+            <button onClick={close} style={{width:40,height:40,borderRadius:'50%',background:'#F4F7F8',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <div style={{position:'absolute',left:0,right:0,textAlign:'center',fontSize:19,fontWeight:900,color:'#0A1F21',pointerEvents:'none'}}>Global eSIM</div>
+          </div>
+          {/* Search bar */}
+          <div style={{padding:'12px 18px',background:'#fff',borderBottom:'1px solid #F0F2F8'}}>
+            <div style={{display:'flex',alignItems:'center',background:'#F4F7F8',borderRadius:14,padding:'10px 14px',gap:10}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input value={esimSearch} onChange={e=>setEsimSearch(e.target.value)} placeholder="Davlatni qidirish..." style={{flex:1,border:'none',background:'none',outline:'none',fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+            </div>
+          </div>
+          {/* Content */}
+          <div style={{flex:1,overflowY:'auto',padding:'16px 18px 32px'}}>
+            {!esimSearch && (
+              <div onClick={()=>onPick('Global')} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 16px',background:`linear-gradient(135deg,#007684,${T})`,borderRadius:16,marginBottom:16,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.25)'}}>
+                <div>
+                  <div style={{fontSize:16,fontWeight:800,color:'#fff'}}>🌍 Global</div>
+                  <div style={{fontSize:12,color:'rgba(255,255,255,0.85)',marginTop:2}}>150+ davlatda ishlaydi</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+              </div>
+            )}
+            {!esimSearch && <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,marginBottom:8}}>Mashhur davlatlar</div>}
+            {filt(esimSearch ? ESIM_ALL : ESIM_POPULAR).map(c=>(
+              <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#fff',borderRadius:14,padding:'12px 14px',marginBottom:8,cursor:'pointer',boxShadow:'0 1px 5px rgba(10,31,33,0.05)'}}>
+                <div style={{display:'flex',alignItems:'center',gap:12}}><span style={{fontSize:24,lineHeight:1}}>{flagOf(c)}</span><span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>{c}</span></div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+              </div>
+            ))}
+            {!esimSearch && (
+              <>
+                <div style={{fontSize:11,fontWeight:700,color:'#9AA1B8',textTransform:'uppercase',letterSpacing:0.6,margin:'14px 0 8px'}}>Barcha davlatlar</div>
+                {ESIM_ALL.filter(c=>!ESIM_POPULAR.includes(c)).map(c=>(
+                  <div key={c} onClick={()=>onPick(c)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#fff',borderRadius:14,padding:'12px 14px',marginBottom:8,cursor:'pointer',boxShadow:'0 1px 5px rgba(10,31,33,0.05)'}}>
+                    <div style={{display:'flex',alignItems:'center',gap:12}}><span style={{fontSize:24,lineHeight:1}}>{flagOf(c)}</span><span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>{c}</span></div>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
       );
