@@ -3687,7 +3687,7 @@ function ScreenTrip() {
       <Frame>
         {/* Row 1 — always fixed at top */}
         <div style={{background:'#F4F7F8',position:'sticky',top:0,zIndex:30}}>
-          <div style={{display:'flex',alignItems:'center',padding:'14px 16px',gap:8}}>
+          <div style={{display:'flex',alignItems:'center',padding:'12px 16px 10px',gap:8}}>
             <button onClick={()=>{ if(page==='esim' && esimCountry){ setEsimCountry(null); } else { setPage(null); setEsimCountry(null); } }}
               style={{width:52,height:52,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
@@ -3703,17 +3703,17 @@ function ScreenTrip() {
               {(() => {
                 const q = tripQuery || {};
                 const stack = (a, b) => (
-                  <div style={{flex:1,minWidth:0,display:'flex',alignItems:'stretch',gap:8}}>
+                  <div style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:9}}>
                     {/* dot · line · dot column */}
-                    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',paddingTop:2,paddingBottom:2}}>
+                    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-between',height:38,flexShrink:0}}>
                       <div style={{width:7,height:7,borderRadius:'50%',background:'#0A1F21'}}/>
                       <div style={{width:1.5,flex:1,background:'#D6DAE6',margin:'2px 0'}}/>
                       <div style={{width:7,height:7,borderRadius:'50%',background:T}}/>
                     </div>
                     {/* labels */}
-                    <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'space-between',padding:'1px 0'}}>
-                      <div style={{fontSize:12.5,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{a}</div>
-                      <div style={{fontSize:12.5,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{b}</div>
+                    <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'space-between',height:38}}>
+                      <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{a}</div>
+                      <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:-0.2,lineHeight:1}}>{b}</div>
                     </div>
                   </div>
                 );
@@ -3738,8 +3738,8 @@ function ScreenTrip() {
         </div>
         {/* Row 2 — search, sticky below Row 1, collapses on scroll-down */}
         {page!=='aviabilet' && (
-          <div style={{position:'sticky',top:80,zIndex:25,background:'#F4F7F8',overflow:'hidden',maxHeight:showResultSearch?70:0,transition:'max-height 0.22s ease'}}>
-            <div style={{padding:'8px 16px',position:'relative',display:'flex',alignItems:'center'}}>
+          <div style={{position:'sticky',top:80,zIndex:25,background:'#F4F7F8',overflow:'hidden',maxHeight:showResultSearch?56:0,transition:'max-height 0.22s ease'}}>
+            <div style={{padding:'0 16px',position:'relative',display:'flex',alignItems:'center'}}>
               <svg style={{position:'absolute',left:30,pointerEvents:'none'}} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
               <input placeholder={({turlar:'Tur qidirish...',excur:'Ekskursiya...',esim:'Davlat qidirish...',hotel:'Mehmonxona qidirish...',rentcar:'Avtomobil yoki davlat...'})[page]||'Qidirish...'} style={{width:'100%',padding:'11px 16px 11px 42px',border:'1px solid #ECEEF6',borderRadius:14,fontSize:14,color:'#0A1F21',background:'#fff',outline:'none',boxSizing:'border-box',boxShadow:'0 1px 4px rgba(15,42,74,0.04)'}}/>
             </div>
@@ -3779,7 +3779,7 @@ function ScreenTrip() {
             </>
           )}
           {/* Row 3: Filters */}
-          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'0 16px 12px',WebkitOverflowScrolling:'touch'}}>
+          <div style={{display:'flex',gap:7,overflowX:'auto',padding:'10px 16px 12px',WebkitOverflowScrolling:'touch'}}>
             <div style={{flexShrink:0,width:36,height:34,borderRadius:10,border:'1.5px solid #E8EAF3',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
             </div>
