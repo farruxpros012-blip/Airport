@@ -2127,178 +2127,122 @@ function ScreenTrip() {
 
     return (
       <Frame>
-        <div style={{flex:1,overflowY:'auto',paddingBottom:110,background:'#F4F7F8'}}>
+        {/* App bar */}
+        <div style={{position:'sticky',top:0,zIndex:30,background:'#F4F7F8',display:'flex',alignItems:'center',padding:'12px 16px',gap:12}}>
+          <button onClick={()=>{setExcurDetail(null);setExcurGallery(0);setExcurExpanded(false);setExcurPeople(1);}}
+            style={{width:50,height:50,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div style={{flex:1,fontSize:15,fontWeight:800,color:'#0A1F21',textAlign:'center',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',paddingRight:50,letterSpacing:-0.2}}>
+            {ed.title}
+          </div>
+        </div>
 
-          {/* 1. Hero carousel — edge to edge, taller with info overlay */}
-          <div style={{position:'relative',height:320,overflow:'hidden'}}
+        <div style={{flex:1,overflowY:'auto',paddingBottom:120,background:'#F4F7F8'}}>
+
+          {/* Hero carousel — rounded card */}
+          <div style={{margin:'4px 16px 0',borderRadius:14,overflow:'hidden',position:'relative',background:'#000',height:210}}
             onTouchStart={eSwipeStart} onTouchEnd={eSwipeEnd}>
-            <img src={GALLERY[excurGallery]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'opacity 0.3s'}}/>
-            {/* Deep gradient for text legibility */}
-            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,transparent 40%,rgba(0,0,0,0.0) 55%,rgba(0,0,0,0.72) 100%)'}}/>
-
-            {/* Top controls */}
-            <button onClick={()=>{setExcurDetail(null);setExcurGallery(0);setExcurExpanded(false);setExcurPeople(1);}}
-              style={{position:'absolute',top:16,left:16,zIndex:10,width:40,height:40,borderRadius:'50%',
-                background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',
-                cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',
-                boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <button style={{position:'absolute',top:16,right:16,zIndex:10,width:40,height:40,borderRadius:'50%',
-              background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',
-              cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',
-              boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#EF4444" stroke="#EF4444" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            </button>
-
-            {/* Prev/Next arrows */}
+            <img src={GALLERY[excurGallery]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
             {excurGallery > 0 && (
-              <button onClick={()=>setExcurGallery(g=>g-1)}
-                style={{position:'absolute',left:12,top:'50%',transform:'translateY(-50%)',width:32,height:32,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <button onClick={()=>setExcurGallery(g=>g-1)} style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
               </button>
             )}
             {excurGallery < GALLERY.length-1 && (
-              <button onClick={()=>setExcurGallery(g=>g+1)}
-                style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',width:32,height:32,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              <button onClick={()=>setExcurGallery(g=>g+1)} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',width:30,height:30,borderRadius:'50%',background:'rgba(0,0,0,0.3)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',backdropFilter:'blur(6px)'}}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
               </button>
             )}
+            <div style={{position:'absolute',bottom:10,left:0,right:0,display:'flex',justifyContent:'center',gap:5}}>
+              {GALLERY.map((_,i)=>(
+                <div key={i} onClick={()=>setExcurGallery(i)} style={{width:i===excurGallery?20:6,height:6,borderRadius:3,background:i===excurGallery?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.25s',cursor:'pointer'}}/>
+              ))}
+            </div>
+          </div>
 
-            {/* Bottom: title overlay + dots + counter */}
-            <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'0 16px 18px'}}>
-              <div style={{fontSize:20,fontWeight:900,color:'#fff',lineHeight:1.2,marginBottom:4,textShadow:'0 1px 8px rgba(0,0,0,0.4)'}}>{ed.title}</div>
-              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <div style={{display:'flex',alignItems:'center',gap:6}}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <span style={{fontSize:12,color:'rgba(255,255,255,0.9)',fontWeight:600}}>{ed.sub}</span>
-                </div>
-                <div style={{display:'flex',alignItems:'center',gap:8}}>
-                  <div style={{display:'flex',gap:4}}>
-                    {GALLERY.map((_,i)=>(
-                      <div key={i} onClick={()=>setExcurGallery(i)} style={{width:i===excurGallery?18:5,height:5,borderRadius:3,background:i===excurGallery?'#fff':'rgba(255,255,255,0.45)',transition:'width 0.25s',cursor:'pointer'}}/>
-                    ))}
-                  </div>
-                  <div style={{background:'rgba(0,0,0,0.4)',backdropFilter:'blur(6px)',borderRadius:8,padding:'2px 8px',fontSize:11,fontWeight:700,color:'#fff'}}>
-                    {excurGallery+1}/{GALLERY.length}
-                  </div>
-                </div>
+          {/* Title + meta */}
+          <div style={{background:'#fff',margin:'14px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:18,fontWeight:900,color:'#0A1F21',marginBottom:10,letterSpacing:-0.3}}>{ed.title}</div>
+            <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap'}}>
+              <div style={{display:'flex',alignItems:'center',gap:5}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>{ed.sub}</span>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:5}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>Toshkent</span>
               </div>
             </div>
           </div>
 
-          {/* 2. Bepul bekor qilish / Bilish kerak — with subtitle */}
-          <div style={{display:'flex',flexDirection:'column',gap:16,padding:'16px 16px 0'}}>
-            <div style={{display:'flex',alignItems:'center',gap:14,background:'#fff',borderRadius:16,padding:'14px 16px',boxShadow:'0 4px 14px rgba(5,150,105,0.15)'}}>
-              <div style={{width:42,height:42,borderRadius:13,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.3" strokeLinecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
-              </div>
-              <div style={{flex:1}}>
-                <div style={{fontSize:14,fontWeight:800,color:'#065F46',lineHeight:1.2}}>Bepul bekor qilish</div>
-                <div style={{fontSize:12,color:'#047857',marginTop:3}}>Ekskursiyadan 24 soat oldin to'liq pulni qaytarib oling</div>
-              </div>
+          {/* Bepul bekor qilish */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'14px 16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)',display:'flex',alignItems:'center',gap:12}}>
+            <div style={{width:38,height:38,borderRadius:12,background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.3" strokeLinecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
             </div>
-            <div style={{display:'flex',alignItems:'center',gap:14,background:'#fff',borderRadius:16,padding:'14px 16px',boxShadow:'0 4px 14px rgba(217,119,6,0.15)',cursor:'pointer'}}>
-              <div style={{width:42,height:42,borderRadius:13,background:'#FEF3C7',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              </div>
-              <div style={{flex:1}}>
-                <div style={{fontSize:14,fontWeight:800,color:'#78350F',lineHeight:1.2}}>Bilish kerak bo'lganlar</div>
-                <div style={{fontSize:12,color:'#92400E',marginTop:3}}>Chipta sotib olishdan oldin shartlarni o'qing</div>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+            <div style={{flex:1}}>
+              <div style={{fontSize:13.5,fontWeight:800,color:'#065F46',lineHeight:1.2}}>Bepul bekor qilish</div>
+              <div style={{fontSize:11.5,color:'#047857',marginTop:3}}>24 soat oldin pulni qaytarib oling</div>
             </div>
           </div>
 
-          {/* 3. Narx — slim, inline */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
-              <div>
-                <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>Narx</div>
-                <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>Necha kishi borasiz?</div>
-              </div>
-              <div style={{display:'flex',alignItems:'center',background:'#F4F7F8',borderRadius:999,padding:'5px',gap:4}}>
-                <button onClick={()=>setExcurPeople(v=>Math.max(1,v-1))}
-                  style={{width:38,height:38,borderRadius:'50%',background:excurPeople>1?T:'#E5E9EC',border:'none',cursor:excurPeople>1?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:excurPeople>1?'0 2px 6px rgba(0,153,168,0.25)':'none',transition:'all 0.2s'}}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={excurPeople>1?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </button>
-                <div style={{minWidth:60,textAlign:'center'}}>
-                  <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',lineHeight:1}}>{excurPeople}</div>
-                  <div style={{fontSize:10,color:'#7A8FA0',marginTop:1}}>kishi</div>
-                </div>
-                <button onClick={()=>setExcurPeople(v=>Math.min(10,v+1))}
-                  style={{width:38,height:38,borderRadius:'50%',background:excurPeople<10?T:'#E5E9EC',border:'none',cursor:excurPeople<10?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:excurPeople<10?'0 2px 6px rgba(0,153,168,0.25)':'none',transition:'all 0.2s'}}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={excurPeople<10?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </button>
-              </div>
+          {/* Bilish kerak */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'14px 16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)',display:'flex',alignItems:'center',gap:12,cursor:'pointer'}}>
+            <div style={{width:38,height:38,borderRadius:12,background:'#FEF3C7',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             </div>
-
-            {/* Slim teal bar */}
-            <div style={{background:`linear-gradient(135deg,${T},#007A87)`,borderRadius:12,padding:'12px 14px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'relative',overflow:'hidden'}}>
-              <div style={{position:'absolute',right:-25,top:-25,width:90,height:90,borderRadius:'50%',background:'rgba(255,255,255,0.06)'}}/>
-              <div style={{position:'relative'}}>
-                <div style={{fontSize:10,color:'rgba(255,255,255,0.7)',fontWeight:600}}>{excurPeople===1?'1 kishi uchun':`${excurPeople} kishi · jami`}</div>
-                <div style={{display:'flex',alignItems:'baseline',gap:8,marginTop:2}}>
-                  <span style={{fontSize:20,fontWeight:900,color:'#fff'}}>{fmtS(excurPeople===1?curPrice.prem:total)}</span>
-                  <span style={{fontSize:10,color:'rgba(255,255,255,0.55)'}}>{fmtS(excurPeople===1?curPrice.reg:curPrice.reg*excurPeople)}</span>
-                </div>
-              </div>
-              {excurPeople > 1 && (
-                <div style={{position:'relative',textAlign:'right'}}>
-                  <div style={{fontSize:9,color:'rgba(255,255,255,0.7)'}}>kishi boshiga</div>
-                  <div style={{fontSize:13,fontWeight:800,color:'#fff'}}>{fmtS(curPrice.prem)}</div>
-                </div>
-              )}
+            <div style={{flex:1}}>
+              <div style={{fontSize:13.5,fontWeight:800,color:'#78350F',lineHeight:1.2}}>Bilish kerak bo'lganlar</div>
+              <div style={{fontSize:11.5,color:'#92400E',marginTop:3}}>Chipta sotib olishdan oldin shartlarni o'qing</div>
             </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
 
-            {/* Inline savings (2+) */}
+          {/* Narx */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:12,letterSpacing:-0.2}}>Necha kishi borasiz?</div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#F4F7F8',borderRadius:12,padding:'8px'}}>
+              <button onClick={()=>setExcurPeople(v=>Math.max(1,v-1))}
+                style={{width:40,height:40,borderRadius:'50%',background:excurPeople>1?T:'#E5E9EC',border:'none',cursor:excurPeople>1?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={excurPeople>1?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <div style={{textAlign:'center'}}>
+                <div style={{fontSize:20,fontWeight:900,color:'#0A1F21',lineHeight:1}}>{excurPeople}</div>
+                <div style={{fontSize:11,color:'#7A8FA0',marginTop:2}}>kishi</div>
+              </div>
+              <button onClick={()=>setExcurPeople(v=>Math.min(10,v+1))}
+                style={{width:40,height:40,borderRadius:'50%',background:excurPeople<10?T:'#E5E9EC',border:'none',cursor:excurPeople<10?'pointer':'default',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={excurPeople<10?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
             {excurPeople > 1 && (() => {
               const saved = (PRICE_TABLE[0].prem - curPrice.prem) * excurPeople;
               const pct = Math.round((1 - curPrice.prem / PRICE_TABLE[0].prem)*100);
               return (
-                <div style={{marginTop:8,display:'flex',alignItems:'center',gap:6,padding:'6px 4px 0'}}>
+                <div style={{marginTop:10,display:'flex',alignItems:'center',gap:6}}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.8" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span style={{fontSize:11,fontWeight:700,color:'#065F46',flex:1}}>Guruhda <span style={{color:'#059669'}}>{fmtS(saved)}</span> tejaysiz</span>
-                  <span style={{fontSize:11,fontWeight:800,color:'#059669'}}>−{pct}%</span>
+                  <span style={{fontSize:12,fontWeight:700,color:'#065F46',flex:1}}>Guruhda <span style={{color:'#059669'}}>{fmtS(saved)}</span> tejaysiz</span>
+                  <span style={{fontSize:12,fontWeight:800,color:'#059669'}}>−{pct}%</span>
                 </div>
               );
             })()}
           </div>
 
-          {/* 4. Tavsif — slim meta inline */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
-              <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Tavsif</span>
-              <span style={{width:3,height:3,borderRadius:'50%',background:'#D1D5DB'}}/>
-              <span style={{fontSize:11,color:'#7A8FA0',display:'flex',alignItems:'center',gap:3}}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
-                Toshkent (TAS)
-              </span>
-              <span style={{width:3,height:3,borderRadius:'50%',background:'#D1D5DB'}}/>
-              <span style={{fontSize:11,color:'#7A8FA0',display:'flex',alignItems:'center',gap:3}}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                {ed.sub}
-              </span>
+          {/* Tavsif */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:12,letterSpacing:-0.2}}>Tavsif</div>
+            <div style={{fontSize:13.5,color:'#0A1F21',lineHeight:1.55,overflow:'hidden',maxHeight:excurExpanded?'none':80}}>
+              Ushbu ekskursiya Toshkentda tranzit bo'lgan sayyohlar uchun maxsus ishlab chiqilgan. {ed.sub} davomida siz shaharning eng yirik tarixiy va madaniy ob'ektlarini ziyorat qilasiz — Chorsu bozori, Kukaldosh madrasasi, plov markazi, TV minora, Jasorat yodgorligi va Amir Temur maydoni. Professional gid sizga shahar tarixi va madaniyatini batafsil tushuntirib beradi.
             </div>
-            <div style={{fontSize:12.5,color:'#5C7577',lineHeight:1.55,overflow:'hidden',maxHeight:excurExpanded?'none':'56px'}}>
-              Ushbu ekskursiya Toshkentda tranzit bo'lgan sayyohlar uchun maxsus ishlab chiqilgan. 5 soat davomida siz shaharning eng yirik tarixiy va madaniy ob'ektlarini ziyorat qilasiz — Chorsu bozori, Kukaldosh madrasasi, plov markazi, TV minora, Jasorat yodgorligi va Amir Temur maydoni.
-            </div>
-            <button onClick={()=>setExcurExpanded(v=>!v)}
-              style={{display:'inline-flex',alignItems:'center',gap:3,marginTop:6,padding:0,background:'none',border:'none',cursor:'pointer',color:T,fontSize:12,fontWeight:700}}>
-              {excurExpanded?'Kamroq':'Ko\'proq'}
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.5"
-                style={{transform:excurExpanded?'rotate(180deg)':'none',transition:'transform 0.2s'}}>
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
+            <button onClick={()=>setExcurExpanded(v=>!v)} style={{background:'none',border:'none',padding:'10px 0 0',cursor:'pointer',fontSize:13,fontWeight:700,color:T}}>
+              {excurExpanded?'Yopish':"Ko'proq o'qish"}
             </button>
           </div>
 
-          {/* 5. Ekskursiya yo'nalishi — plain flowing text */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
-              <div style={{width:3,height:14,borderRadius:2,background:T}}/>
-              <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Ekskursiya yo'nalishi</span>
-            </div>
+          {/* Ekskursiya yo'nalishi */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:12,letterSpacing:-0.2}}>Ekskursiya yo'nalishi</div>
             <div style={{fontSize:13,color:'#5C7577',lineHeight:1.7}}>
               {ITINERARY.map((it,i)=>(
                 <span key={i}><span style={{fontWeight:700,color:'#0A1F21'}}>{it.bold}</span>{' '}{it.text}{i<ITINERARY.length-1?' ':''}</span>
@@ -2306,65 +2250,48 @@ function ScreenTrip() {
             </div>
           </div>
 
-          {/* 6. Nima kiradi / Nima kirmaydi — compact split */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)',display:'flex',gap:14}}>
-            <div style={{flex:1}}>
-              <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:8}}>
-                <div style={{width:14,height:14,borderRadius:'50%',background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+          {/* Narxga kiradi/kirmaydi */}
+          <div style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginBottom:12,letterSpacing:-0.2}}>Narxga kiradi</div>
+            {INCLUDED.map((it,i)=>(
+              <div key={i} style={{display:'flex',alignItems:'center',gap:8,marginBottom:7,fontSize:13.5,color:'#0A1F21'}}>
+                <div style={{width:16,height:16,borderRadius:'50%',background:'#D1FAE5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="3.5"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
-                <span style={{fontSize:12,fontWeight:800,color:'#065F46'}}>Kiradi</span>
+                {it}
               </div>
-              {INCLUDED.map((it,i)=>(
-                <div key={i} style={{fontSize:11.5,color:'#0A1F21',lineHeight:1.5,marginBottom:4}}>{it}</div>
-              ))}
-            </div>
-            <div style={{width:1,background:'#F0F2F8'}}/>
-            <div style={{flex:1}}>
-              <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:8}}>
-                <div style={{width:14,height:14,borderRadius:'50%',background:'#FEE2E2',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="3.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            ))}
+            <div style={{height:1,background:'#F0F2F8',margin:'12px 0'}}/>
+            <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',marginBottom:8}}>Narxga kirmaydi</div>
+            {NOT_INCLUDED.map((it,i)=>(
+              <div key={i} style={{display:'flex',alignItems:'center',gap:8,marginBottom:7,fontSize:13.5,color:'#0A1F21'}}>
+                <div style={{width:16,height:16,borderRadius:'50%',background:'#FEE2E2',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="3.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </div>
-                <span style={{fontSize:12,fontWeight:800,color:'#991B1B'}}>Kirmaydi</span>
+                {it}
               </div>
-              {NOT_INCLUDED.map((it,i)=>(
-                <div key={i} style={{fontSize:11.5,color:'#0A1F21',lineHeight:1.5,marginBottom:4}}>{it}</div>
-              ))}
-            </div>
+            ))}
           </div>
 
-          {/* 7. Qo'llab-quvvatlash */}
-          <div style={{background:'#fff',margin:'16px 16px 0',borderRadius:18,padding:'14px 16px',boxShadow:'0 2px 10px rgba(10,31,33,0.06)',display:'flex',alignItems:'center',gap:14}}>
+          {/* Qo'llab-quvvatlash */}
+          <div style={{background:'#fff',margin:'12px 16px 16px',borderRadius:14,padding:'14px 16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)',display:'flex',alignItems:'center',gap:14}}>
             <div style={{width:44,height:44,borderRadius:13,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             </div>
             <div style={{flex:1}}>
               <div style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Savolingiz bormi?</div>
-              <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>Javob berishdan xursandmiz</div>
+              <div style={{fontSize:11.5,color:'#9AA1B8',marginTop:2}}>Javob berishdan xursandmiz</div>
             </div>
-            <button style={{background:T,border:'none',borderRadius:12,padding:'11px 18px',cursor:'pointer',fontSize:13,fontWeight:800,color:'#fff',boxShadow:'0 4px 12px rgba(0,153,168,0.3)'}}>
-              So'rang
-            </button>
+            <button style={{background:T,border:'none',borderRadius:12,padding:'10px 16px',cursor:'pointer',fontSize:13,fontWeight:800,color:'#fff'}}>So'rang</button>
           </div>
-
         </div>
 
         {/* Fixed bottom CTA */}
-        <div style={{position:'fixed',left:0,right:0,bottom:0,maxWidth:460,margin:'0 auto',zIndex:40}}>
-          <div style={{background:'rgba(244,247,248,0.95)',backdropFilter:'blur(12px)',borderTop:'1px solid rgba(0,153,168,0.1)',padding:'10px 16px 18px'}}>
-            <div style={{display:'flex',alignItems:'center',gap:12}}>
-              <div style={{flex:1}}>
-                <div style={{fontSize:10,color:'#B0BAC4'}}>{fmtS(curPrice.reg * excurPeople)}</div>
-                <div style={{display:'flex',alignItems:'baseline',gap:5}}>
-                  <span style={{fontSize:20,fontWeight:900,color:T,lineHeight:1}}>{fmtS(total)}</span>
-                </div>
-                <div style={{fontSize:10,color:'#9AA1B8',marginTop:1}}>jami {excurPeople} kishi</div>
-              </div>
-              <button style={{background:`linear-gradient(135deg,${T},#007A87)`,color:'#fff',border:'none',borderRadius:14,padding:'14px 28px',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 20px rgba(0,153,168,0.4)',letterSpacing:0.2}}>
-                Band qilish
-              </button>
-            </div>
-          </div>
+        <div style={{position:'fixed',left:0,right:0,bottom:0,maxWidth:460,margin:'0 auto',zIndex:40,background:'#fff',boxShadow:'0 -2px 12px rgba(15,42,74,0.08)',padding:'12px 16px 22px'}}>
+          <div style={{fontSize:13,color:'#5C7577',fontWeight:500,marginBottom:10,textAlign:'center'}}>{excurPeople} kishi uchun {fmtS(total)}</div>
+          <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:12,padding:'15px 0',fontSize:14,fontWeight:800,cursor:'pointer',letterSpacing:0.8,textTransform:'uppercase',boxShadow:'0 4px 14px rgba(0,153,168,0.28)'}}>
+            Band qilish
+          </button>
         </div>
       </Frame>
     );
@@ -2437,10 +2364,10 @@ function ScreenTrip() {
         {/* App bar */}
         <div style={{position:'sticky',top:0,zIndex:30,background:'#F4F7F8',display:'flex',alignItems:'center',padding:'12px 16px',gap:12}}>
           <button onClick={()=>{setHotelDetail(null);setHotelGallery(0);setHotelExpanded(false);setHotelRoomsPage(false);}}
-            style={{width:44,height:44,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+            style={{width:50,height:50,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <div style={{flex:1,fontSize:15,fontWeight:800,color:'#0A1F21',textAlign:'center',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',paddingRight:44,letterSpacing:-0.2}}>
+          <div style={{flex:1,fontSize:15,fontWeight:800,color:'#0A1F21',textAlign:'center',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',paddingRight:50,letterSpacing:-0.2}}>
             {hotelName}
           </div>
         </div>
@@ -2722,18 +2649,11 @@ function ScreenTrip() {
             <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,transparent 40%,rgba(0,0,0,0.0) 55%,rgba(0,0,0,0.72) 100%)',pointerEvents:'none'}}/>
             {/* Back button */}
             <button onClick={()=>setTourDetail(null)}
-              style={{position:'absolute',top:16,left:16,zIndex:10,width:40,height:40,borderRadius:'50%',
+              style={{position:'absolute',top:16,left:16,zIndex:10,width:48,height:48,borderRadius:'50%',
                 background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',
                 cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',
                 boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            {/* Favourite button */}
-            <button style={{position:'absolute',top:16,right:16,zIndex:10,width:40,height:40,borderRadius:'50%',
-              background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',
-              cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',
-              boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
             {/* left/right arrows */}
             {tourGallery > 0 && (
