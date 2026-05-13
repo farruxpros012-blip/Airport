@@ -2012,8 +2012,8 @@ function ScreenTrip() {
         <div style={{flex:1,overflowY:'auto',paddingBottom:110,background:'#F4F7F8'}}>
 
           {/* Ketish */}
-          <div style={{background:'#fff',margin:'8px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
-            <div style={{display:'inline-block',background:'#F4F5FA',borderRadius:8,padding:'4px 11px',fontSize:11.5,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Ketish</div>
+          <div style={{background:'#fff',margin:'8px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 4px 18px rgba(15,42,74,0.07),0 1px 3px rgba(15,42,74,0.04)'}}>
+            <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:8,padding:'4px 11px',fontSize:11.5,fontWeight:800,color:'#0099A8',marginBottom:10}}>Ketish</div>
             <div style={{fontSize:17,fontWeight:900,color:'#0A1F21',marginBottom:4,letterSpacing:-0.2}}>{fromCity} - {toCity}</div>
             <div style={{fontSize:12,color:'#5C7577',marginBottom:14}}>{it.dur} soatlik parvoz · {hasTransit?'1 transfer':"to'g'ridan-to'g'ri"}</div>
             <div style={{height:1,background:'#F0F2F8',marginBottom:16}}/>
@@ -2024,9 +2024,35 @@ function ScreenTrip() {
                   dep={it.dep} depAirport={fromCity} depFull={AIRPORT_FULL[it.from]||it.from} depDay={`${it.depDate}`}
                   arr="20:20"  arrAirport="Alma-ata" arrFull="Almaty Airport, ALA" arrDay={`${it.depDate}`}
                 />
-                <div style={{background:'#F4F5FA',borderRadius:10,padding:'10px 12px',margin:'14px 0',display:'flex',alignItems:'center',gap:8}}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M13 5l7 7-7 7"/><path d="M5 5l7 7-7 7"/></svg>
-                  <span style={{fontSize:12.5,color:'#0A1F21',fontWeight:600}}>Qayta qo'nish: Almaty Airport — 8 h 45 min</span>
+                <div style={{background:'#FFF8E1',borderRadius:12,padding:'12px 14px',margin:'16px 0',border:'1px solid #FCD34D'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+                    <div style={{width:26,height:26,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    </div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:13,fontWeight:800,color:'#78350F',lineHeight:1.2}}>Qayta qo'nish — 8 soat 45 daqiqa</div>
+                      <div style={{fontSize:11.5,color:'#92400E',marginTop:2}}>Almaty Airport (ALA)</div>
+                    </div>
+                  </div>
+                  <div style={{height:1,background:'rgba(146,64,14,0.15)',margin:'8px 0'}}/>
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,fontSize:11,color:'#78350F',lineHeight:1.4}}>
+                    <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
+                      <span><b>Bir aeroport</b> — terminal o'zgarmaydi</span>
+                    </div>
+                    <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
+                      <span><b>Boshqa samolyot</b>ga o'tasiz</span>
+                    </div>
+                    <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>Bagajni qayta olib topshirasiz</span>
+                    </div>
+                    <div style={{display:'flex',alignItems:'flex-start',gap:5}}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.2" style={{marginTop:2,flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>Tranzit viza talab qilinmaydi</span>
+                    </div>
+                  </div>
                 </div>
                 <FlightLeg
                   airline="Fly Dubai" reys="FZ-1736" dur="5 h 25 min"
@@ -2065,9 +2091,9 @@ function ScreenTrip() {
           </div>
 
           {TARIFFS.map((t,i)=>(
-            <div key={i} style={{background:'#fff',margin:'12px 16px 0',borderRadius:14,padding:'16px',boxShadow:'0 2px 10px rgba(15,42,74,0.05)'}}>
+            <div key={i} style={{background:'#fff',margin:'12px 16px 0',borderRadius:16,padding:'18px',boxShadow:'0 4px 18px rgba(15,42,74,0.07),0 1px 3px rgba(15,42,74,0.04)'}}>
               {/* Ketish block */}
-              <div style={{display:'inline-block',background:'#F4F5FA',borderRadius:8,padding:'3px 10px',fontSize:11,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Ketish</div>
+              <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:8,padding:'3px 10px',fontSize:11,fontWeight:800,color:'#0099A8',marginBottom:10}}>Ketish</div>
               <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8,cursor:'pointer'}}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
                 <span style={{fontSize:13,color:'#0A1F21',fontWeight:600}}>2 aviakompaniyalar</span>
@@ -2091,7 +2117,7 @@ function ScreenTrip() {
               <div style={{height:1,background:'#F0F2F8',marginBottom:14}}/>
 
               {/* Qaytish block */}
-              <div style={{display:'inline-block',background:'#F4F5FA',borderRadius:8,padding:'3px 10px',fontSize:11,fontWeight:700,color:'#0A1F21',marginBottom:10}}>Qaytish</div>
+              <div style={{display:'inline-block',background:'#E0F2F3',borderRadius:8,padding:'3px 10px',fontSize:11,fontWeight:800,color:'#0099A8',marginBottom:10}}>Qaytish</div>
               <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:6}}>
                 <div style={{display:'flex',alignItems:'center',gap:5}}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7h14v14H5z"/></svg>
@@ -3743,22 +3769,12 @@ function ScreenTrip() {
                 </div>
               </div>
               {/* Price footer */}
-              <div style={{borderTop:'1px solid #F0F2F8',padding:'12px 16px',display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8}}>
-                <div style={{fontSize:16,fontWeight:800,color:'#0A1F21'}}>{fmtPrice(it.regular)}</div>
-                <div style={{display:'flex',alignItems:'center',gap:8}}>
-                  <div style={{display:'inline-flex',alignItems:'center',gap:7,background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:999,padding:'6px 12px',boxShadow:'0 2px 8px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
-                    <span style={{fontSize:11,fontWeight:600,color:'#fff'}}>Premium: </span>
-                    <span style={{fontSize:12,fontWeight:800,color:'#fff'}}>{fmtPrice(it.premium)}</span>
-                  </div>
-                  <button style={{width:28,height:28,borderRadius:999,background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:14,fontWeight:700,padding:0,flexShrink:0}}>···</button>
+              <div style={{borderTop:'1px solid #F0F2F8',padding:'12px 16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                <div>
+                  <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,marginBottom:2}}>Narx (1 kishi)</div>
+                  <div style={{fontSize:18,fontWeight:900,color:'#0A1F21',letterSpacing:-0.3}}>{fmtPrice(it.regular)}</div>
                 </div>
-                <div style={{display:'flex',alignItems:'center',gap:6}}>
-                  <div style={{width:16,height:16,borderRadius:'50%',background:'#FCD34D',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                    <span style={{fontSize:8,fontWeight:900,color:'#92400E'}}>C</span>
-                  </div>
-                  <span style={{fontSize:11,color:'#5C7577'}}>{Math.floor(parseInt(it.premium.replace(/\D/g,''))/10000)} Coins bonus</span>
-                </div>
+                <button style={{background:T,color:'#fff',border:'none',borderRadius:12,padding:'10px 20px',fontSize:13,fontWeight:700,cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.28)'}}>Tanlash</button>
               </div>
             </div>
           ))}
