@@ -915,7 +915,7 @@ function LeafletMap({ onDragStart, onDragEnd }) {
     const c = ref.current;
     if (!c || !window.L) return;
     if (c._lf) { c._lf.remove(); }
-    const map = window.L.map(c, { zoomControl: false, attributionControl: false }).setView([41.31, 69.25], 13);
+    const map = window.L.map(c, { zoomControl: false, attributionControl: false, inertia: false }).setView([41.31, 69.25], 13);
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
     const start = () => onDragStart && onDragStart();
     const end = () => onDragEnd && onDragEnd();
@@ -957,6 +957,7 @@ function MapPin({ dragging }) {
       path: 'assets/Pickup_Pin.json',
     });
     animRef.current = anim;
+    anim.setSpeed(2);
     anim.addEventListener('DOMLoaded', () => {
       anim.goToAndStop(0, true);
     });
@@ -973,7 +974,7 @@ function MapPin({ dragging }) {
       anim.goToAndPlay(0, true);
       const midFrame = Math.floor(totalFrames * 0.4);
       const fps = anim.frameRate || 30;
-      const delay = (midFrame / fps) * 1000;
+      const delay = (midFrame / fps) * 1000 / 2;
       timer.current = setTimeout(() => {
         try { anim.goToAndStop(midFrame, true); } catch(e) {}
       }, delay);
