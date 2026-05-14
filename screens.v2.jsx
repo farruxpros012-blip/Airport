@@ -4307,6 +4307,11 @@ function ScreenTrip() {
                 </div>
                 {/* Discount badge — top right */}
                 <div style={{position:'absolute',top:12,right:12,background:'linear-gradient(135deg,#EF4444,#DC2626)',color:'#fff',borderRadius:10,padding:'5px 10px',fontSize:12,fontWeight:800,letterSpacing:0.3,boxShadow:'0 4px 12px rgba(220,38,38,0.35)'}}>−{it.discount}%</div>
+                {/* Mileage badge — bottom left over image */}
+                <div style={{position:'absolute',bottom:12,left:12,display:'inline-flex',alignItems:'center',gap:5,background:'rgba(10,31,33,0.78)',backdropFilter:'blur(8px)',color:'#fff',borderRadius:999,padding:'5px 11px',boxShadow:'0 4px 12px rgba(0,0,0,0.25)'}}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  <span style={{fontSize:11,fontWeight:700}}>{it.speed}</span>
+                </div>
               </div>
               {/* Content */}
               <div style={{padding:'14px 16px 8px'}}>
@@ -4320,8 +4325,6 @@ function ScreenTrip() {
                   <span>{it.gear}</span>
                   <span style={{color:'#DDE0EB'}}>•</span>
                   <span>{it.fuel}</span>
-                  <span style={{color:'#DDE0EB'}}>•</span>
-                  <span>{it.speed}</span>
                 </div>
                 {/* Two includes — neutral teal accent */}
                 <div style={{display:'flex',flexDirection:'column',gap:4,marginTop:10}}>
