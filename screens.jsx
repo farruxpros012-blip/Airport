@@ -914,6 +914,7 @@ function MapWithPin() {
   const pinEl = React.useRef(null);
   const animRef = React.useRef(null);
   const timer = React.useRef(null);
+  const dropTimer = React.useRef(null);
   const reachedPeakRef = React.useRef(false);
   React.useEffect(() => {
     const mc = mapEl.current, pc = pinEl.current;
@@ -936,7 +937,10 @@ function MapWithPin() {
     const lift = () => {
       if (!animRef.current) return;
       const a = animRef.current;
-      reachedPeakRef.current = false;
+      // Cancel a pending drop if user is touching again quickly
+      if (dropTimer.current) { clearTimeout(dropTimer.current); dropTimer.current = null; }
+      // If pin is already paused at peak, skip restart — keep it lifted
+      if (reachedPeakRef.current) return;
       if (timer.current) clearTimeout(timer.current);
       try { a.stop(); } catch(e) {}
       a.setDirection(1);
@@ -952,12 +956,17 @@ function MapWithPin() {
     };
     const drop = () => {
       if (!animRef.current) return;
-      const a = animRef.current;
-      if (timer.current) { clearTimeout(timer.current); timer.current = null; }
-      // If pause never fired (brief tap): let the animation continue naturally to end
-      // If it did fire (held): play from peak to end
-      a.setDirection(1);
-      a.play();
+      // Delay the actual drop briefly so a quick re-touch keeps the pin lifted
+      if (dropTimer.current) clearTimeout(dropTimer.current);
+      dropTimer.current = setTimeout(() => {
+        dropTimer.current = null;
+        const a = animRef.current;
+        if (!a) return;
+        if (timer.current) { clearTimeout(timer.current); timer.current = null; }
+        a.setDirection(1);
+        a.play();
+        reachedPeakRef.current = false;
+      }, 120);
     };
 
     map.on('mousedown', lift);
