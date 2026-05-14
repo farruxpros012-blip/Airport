@@ -2054,7 +2054,7 @@ function ScreenTrip() {
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
           <LeafletMap onDragStart={()=>setMapDragging(true)} onDragEnd={()=>setMapDragging(false)}/>
-          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',pointerEvents:'none',zIndex:1000}}>
+          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',pointerEvents:'none',zIndex:1000}}>
             <MapPin dragging={mapDragging}/>
           </div>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,padding:'0 18px'}}>
@@ -3375,7 +3375,7 @@ function ScreenTrip() {
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
           <LeafletMap onDragStart={()=>setMapDragging(true)} onDragEnd={()=>setMapDragging(false)}/>
-          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',pointerEvents:'none',zIndex:1000}}>
+          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',pointerEvents:'none',zIndex:1000}}>
             <MapPin dragging={mapDragging}/>
           </div>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,padding:'0 18px'}}>
