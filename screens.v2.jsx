@@ -4311,8 +4311,8 @@ function ScreenTrip() {
               {/* Content */}
               <div style={{padding:'14px 16px 8px'}}>
                 <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',letterSpacing:-0.2,lineHeight:1.2}}>{it.title}</div>
-                {/* Single-line dot-separated specs */}
-                <div style={{fontSize:12,color:'#5C7577',marginTop:6,display:'flex',flexWrap:'wrap',gap:'4px 10px'}}>
+                {/* Specs row — tighter spacing */}
+                <div style={{fontSize:12,color:'#5C7577',marginTop:6,display:'flex',flexWrap:'wrap',gap:'3px 5px'}}>
                   <span>{it.pax} kishi</span>
                   <span style={{color:'#DDE0EB'}}>•</span>
                   <span>{it.bags} bagaj</span>
@@ -4323,10 +4323,14 @@ function ScreenTrip() {
                   <span style={{color:'#DDE0EB'}}>•</span>
                   <span>{it.speed}</span>
                 </div>
-                {/* Compact include line — single row, joined */}
-                <div style={{display:'flex',alignItems:'center',gap:6,marginTop:10,padding:'7px 10px',background:'#F0FAF5',borderRadius:10,border:'1px solid rgba(34,197,94,0.15)'}}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.6" strokeLinecap="round" style={{flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
-                  <span style={{fontSize:11.5,color:'#15803D',fontWeight:600}}>To'lovlar va uchinchi tomon sug'urtasi kiritilgan</span>
+                {/* Two includes — neutral teal accent */}
+                <div style={{display:'flex',flexDirection:'column',gap:4,marginTop:10}}>
+                  {it.includes.map((inc,j)=>(
+                    <div key={j} style={{display:'flex',alignItems:'center',gap:7}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.6" strokeLinecap="round" style={{flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
+                      <span style={{fontSize:12,color:'#5C7577',fontWeight:500}}>{inc}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
               {/* Price & CTA */}
@@ -4336,13 +4340,13 @@ function ScreenTrip() {
                     <span style={{fontSize:19,fontWeight:900,color:'#0A1F21',letterSpacing:-0.4}}>{it.regular}</span>
                     <span style={{fontSize:11,color:'#9AA1B8',fontWeight:500}}>/ kun</span>
                   </div>
-                  <div style={{display:'inline-flex',alignItems:'center',gap:5,marginTop:5,background:'linear-gradient(135deg,#FCD34D 0%,#F59E0B 60%,#D97706 100%)',borderRadius:999,padding:'4px 10px',boxShadow:'0 3px 10px rgba(217,119,6,0.25),inset 0 1px 0 rgba(255,255,255,0.35)'}}>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:5,marginTop:1,background:'linear-gradient(135deg,#FCD34D 0%,#F59E0B 60%,#D97706 100%)',borderRadius:999,padding:'4px 10px',boxShadow:'0 3px 10px rgba(217,119,6,0.25),inset 0 1px 0 rgba(255,255,255,0.35)'}}>
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <span style={{fontSize:10.5,fontWeight:700,color:'#fff'}}>Premium:</span>
                     <span style={{fontSize:11.5,fontWeight:800,color:'#fff'}}>{it.premium}</span>
                   </div>
                 </div>
-                <button style={{background:`linear-gradient(135deg,${T},#007A87)`,color:'#fff',border:'none',borderRadius:14,padding:'11px 22px',fontSize:13.5,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.32),inset 0 1px 0 rgba(255,255,255,0.25)',flexShrink:0,letterSpacing:0.2}}>Tanlash</button>
+                <button style={{background:`linear-gradient(135deg,${T},#007A87)`,color:'#fff',border:'none',borderRadius:16,padding:'14px 28px',fontSize:14.5,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.32),inset 0 1px 0 rgba(255,255,255,0.25)',flexShrink:0,letterSpacing:0.2}}>Tanlash</button>
               </div>
             </div>
           ))}
