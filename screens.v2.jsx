@@ -1045,7 +1045,12 @@ function playTick() {
     o.start(t);
     o.stop(t + 0.08);
   } catch (e) {}
-  try { if (navigator.vibrate) navigator.vibrate(35); } catch(e) {}
+  try {
+    if (navigator.vibrate) {
+      navigator.vibrate(0);
+      navigator.vibrate([55]);
+    }
+  } catch(e) {}
 }
 
 function IosTimeWheel({ items, value, onChange }) {
