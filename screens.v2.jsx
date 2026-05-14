@@ -1897,7 +1897,7 @@ function ScreenTrip() {
       if (nested === 'route-from') return <CityCountryPicker onPick={v=>{setFromVal(v);setNested(null);}}/>;
       if (nested === 'route-to')   return <CityCountryPicker onPick={v=>{setToVal(v);setNested(null);}}/>;
       if (nested === 'rent-loc')     return <CityCountryPicker onPick={v=>{setRentPickupLoc(v);setRentLocation('');setNested(null);}}/>;
-      if (nested === 'rent-location') return <RentLocationPicker rentPickupLoc={rentPickupLoc} onPick={v=>{setRentLocation(v);setNested(null);}} onMap={()=>{setNested(null);setPreSheet(null);setXferMapPage('rent-location');}}/>;
+      if (nested === 'rent-location') return <RentLocationPicker rentPickupLoc={rentPickupLoc} onPick={v=>{setRentLocation(v);setNested(null);}} onMap={()=>{setNested(null);setXferMapPage('rent-location');}}/>;
       if (nested === 'hotel-country') return <CityCountryPicker mode="country" onPick={v=>{setCountry(v);setNested(null);}}/>;
       if (nested === 'hotels') return (
         <div>
