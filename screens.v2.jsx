@@ -909,13 +909,16 @@ function useSheetViewport() {
   return { sheetH: Math.round(vvh * 0.88), sheetXform: kbOffset > 0 ? `translateY(-${kbOffset}px)` : 'none' };
 }
 
-function MapWithPin() {
+function MapWithPin({ onAddressChange }) {
   const mapEl = React.useRef(null);
   const pinEl = React.useRef(null);
   const animRef = React.useRef(null);
   const timer = React.useRef(null);
   const dropTimer = React.useRef(null);
   const reachedPeakRef = React.useRef(false);
+  const geoTimer = React.useRef(null);
+  const geoCb = React.useRef(onAddressChange);
+  React.useEffect(() => { geoCb.current = onAddressChange; }, [onAddressChange]);
   React.useEffect(() => {
     const mc = mapEl.current, pc = pinEl.current;
     if (!mc || !pc || !window.L || !window.lottie) return;
@@ -969,6 +972,24 @@ function MapWithPin() {
       }, 120);
     };
 
+    const geocode = () => {
+      if (!geoCb.current) return;
+      const c = map.getCenter();
+      if (geoTimer.current) clearTimeout(geoTimer.current);
+      geoTimer.current = setTimeout(() => {
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${c.lat}&lon=${c.lng}&format=json&accept-language=uz`)
+          .then(r => r.json())
+          .then(d => {
+            const a = d.address || {};
+            const parts = [a.road, a.neighbourhood || a.suburb, a.city || a.town || a.village].filter(Boolean);
+            const addr = parts.length ? parts.join(', ') : (d.display_name || '');
+            if (addr && geoCb.current) geoCb.current(addr);
+          })
+          .catch(()=>{});
+      }, 350);
+    };
+    map.on('moveend', geocode);
+    geocode();
     map.on('mousedown', lift);
     map.on('mouseup', drop);
     const onDown = () => lift();
@@ -2071,7 +2092,7 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          <MapWithPin/>
+          <MapWithPin onAddressChange={setTaxiMapAddr}/>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,padding:'0 18px'}}>
             <button onClick={()=>setTaxiMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
@@ -3389,7 +3410,7 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          <MapWithPin/>
+          <MapWithPin onAddressChange={setXferMapAddr}/>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,padding:'0 18px'}}>
             <button onClick={()=>setXferMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
