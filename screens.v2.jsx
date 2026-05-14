@@ -888,10 +888,10 @@ const TRIP_RESULTS = {
     { airline:'Air India', logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Air_India_Logo.svg/200px-Air_India_Logo.svg.png', tag:'Tejamkor', from:'TAS', to:'DXB', dep:'15:20', arr:'06:30', depDate:'8 May, Ju', arrDate:'9 May, Sh', dur:'12s 10m', stops:'1 transit', baggage:true, retDep:'07:50', retArr:'20:40', retDur:'10s 50m', retDate:'20 May, Ch', regular:"6 600 000 so'm", premium:"6 000 000 so'm" },
   ],
   rentcar: [
-    { img:'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600', title:'Toyota Camry', sub:'Sedan · Avtomatik · 5 kishi', regular:"495 000 so'm", premium:"450 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600', title:'Mercedes-Benz E-Class', sub:'Biznes · Avtomatik · 5 kishi', regular:"1 045 000 so'm", premium:"950 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1568844293986-8d0400bd4745?w=600', title:'Hyundai Sonata', sub:'Sedan · Avtomatik · 5 kishi', regular:"385 000 so'm", premium:"350 000 so'm" },
-    { img:'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600', title:'BMW X5', sub:'Krossover · 7 kishi · 4WD', regular:"1 540 000 so'm", premium:"1 400 000 so'm" },
+    { img:'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400', title:'Chevrolet Nexia 3, 2023', condition:'Yaxshi holat', condColor:'#2563EB', condBg:'#EFF6FF', discount:50, pax:4, bags:2, gear:'Avtomat', drive:'Avtomat', fuel:'Benzin', speed:'100 km/kun', includes:["Ijara kompaniyasining to'lovlari","Uchinchi tomon sug'urtasi"], regular:"495 000 so'm", premium:"247 500 so'm" },
+    { img:'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=400', title:'JAC M4, 2024', condition:'Yangi holat', condColor:'#16A34A', condBg:'#F0FDF4', discount:61, pax:9, bags:3, gear:'Mexanik', drive:'Mexanik', fuel:'Benzin', speed:'100 km/kun', includes:["Ijara kompaniyasining to'lovlari","Uchinchi tomon sug'urtasi"], regular:"1 045 000 so'm", premium:"407 550 so'm" },
+    { img:'https://images.unsplash.com/photo-1568844293986-8d0400bd4745?w=400', title:'BAW Mini bus, 2022', condition:'Yaxshi holat', condColor:'#2563EB', condBg:'#EFF6FF', discount:61, pax:5, bags:2, gear:'Avtomat', drive:'Avtomat', fuel:'Benzin', speed:'100 km/kun', includes:["Ijara kompaniyasining to'lovlari","Uchinchi tomon sug'urtasi"], regular:"385 000 so'm", premium:"150 150 so'm" },
+    { img:'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400', title:'BMW X5, 2022', condition:'Yangi holat', condColor:'#16A34A', condBg:'#F0FDF4', discount:40, pax:7, bags:4, gear:'Avtomat', drive:'Avtomat', fuel:'Dizel', speed:'150 km/kun', includes:["Ijara kompaniyasining to'lovlari","Uchinchi tomon sug'urtasi"], regular:"1 540 000 so'm", premium:"924 000 so'm" },
   ],
 };
 
@@ -1120,6 +1120,8 @@ function ScreenTrip() {
     const [rentFrom, setRentFrom] = React.useState('');
     const [rentTo, setRentTo] = React.useState('');
     const [rentPickupLoc, setRentPickupLoc] = React.useState('');
+    const [rentCountry, setRentCountry] = React.useState('');
+    const [rentCity, setRentCity] = React.useState('');
     const [airportHistory, setAirportHistory] = React.useState(() => {
       try { return JSON.parse(localStorage.getItem('airport_history')||'[]'); } catch { return []; }
     });
@@ -1719,7 +1721,9 @@ function ScreenTrip() {
       if (nested === 'airport-to')   return <AirportPicker onPick={v=>{setToVal(v);setNested(null);}}/>;
       if (nested === 'route-from') return <CityCountryPicker onPick={v=>{setFromVal(v);setNested(null);}}/>;
       if (nested === 'route-to')   return <CityCountryPicker onPick={v=>{setToVal(v);setNested(null);}}/>;
-      if (nested === 'rent-loc')   return <CityCountryPicker onPick={v=>{setRentPickupLoc(v);setNested(null);}}/>;
+      if (nested === 'rent-loc')     return <CityCountryPicker onPick={v=>{setRentPickupLoc(v);setNested(null);}}/>;
+      if (nested === 'rent-country') return <CityCountryPicker mode="country" onPick={v=>{setRentCountry(v);setRentCity('');setNested(null);}}/>;
+      if (nested === 'rent-city')    return <CityCountryPicker onPick={v=>{setRentCity(v);setNested(null);}}/>;
       if (nested === 'hotel-country') return <CityCountryPicker mode="country" onPick={v=>{setCountry(v);setNested(null);}}/>;
       if (nested === 'hotels') return (
         <div>
@@ -1793,7 +1797,8 @@ function ScreenTrip() {
       );
       if (preSheet === 'rentcar') return (
         <>
-          {tapCard('OLIB KETISH MANZILI', rentPickupLoc, 'Davlat va shaharni tanlang', ()=>setNested('rent-loc'))}
+          {tapCard('DAVLAT', rentCountry, 'Davlatni tanlang', ()=>setNested('rent-country'))}
+          {tapCard('OLIB KETISH SHAHRI / MANZILI', rentCity, rentCountry?'Shahar yoki manzilni tanlang':'Avval davlatni tanlang', rentCountry?()=>setNested('rent-city'):undefined)}
           {tapSplit(
             {label:'QACHONDAN', val:rentFrom, ph:'8-may, 2026 · 10:00', onClick:()=>setNested('rent-from')},
             {label:'QACHONGACHA', val:rentTo, ph:'10-may, 2026 · 18:00', onClick:()=>setNested('rent-to')}
@@ -1803,7 +1808,7 @@ function ScreenTrip() {
       return null;
     };
 
-    const nestedTitle = {hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','airport-from':'Qayerdan — aeroport','airport-to':'Qayerga — aeroport','rent-loc':'Davlat va shahar','hotel-country':'Davlat tanlang','date-start':'Sana tanlang','date-end':'Sana tanlang','rent-from':'Ketish sanasi','rent-to':'Qaytish sanasi'};
+    const nestedTitle = {hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','airport-from':'Qayerdan — aeroport','airport-to':'Qayerga — aeroport','rent-loc':'Davlat va shahar','rent-country':'Davlat tanlang','rent-city':'Shahar / Manzil tanlang','hotel-country':'Davlat tanlang','date-start':'Sana tanlang','date-end':'Sana tanlang','rent-from':'Ketish sanasi','rent-to':'Qaytish sanasi'};
 
     return (
       <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column',background:'#F4F5FA'}}>
@@ -3867,8 +3872,8 @@ function ScreenTrip() {
                   title = <>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || esimCountry || 'Davlat tanlang'}</>;
                   sub = 'eSIM tarif';
                 } else if (page === 'rentcar') {
-                  title = q.rentLoc || 'Manzil tanlang';
-                  sub = <>{q.rentFrom || 'Boshlanish'}{q.rentTo?` → ${q.rentTo}`:''}</>;
+                  title = rentCountry ? (rentCity ? `${rentCountry} · ${rentCity}` : rentCountry) : 'Manzil tanlang';
+                  sub = <>{rentFrom || 'Boshlanish'}{rentTo?` → ${rentTo}`:''}</>;
                 }
                 return (
                   <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'center'}}>
@@ -4093,10 +4098,69 @@ function ScreenTrip() {
             </div>
           ))}
 
-          {/* OTHERS (turlar/excur/hotel/rentcar) — generic card with photo */}
-          {page !== 'aviabilet' && page !== 'esim' && items.map((it,i)=>(
+          {/* RENT CAR — specialized card */}
+          {page === 'rentcar' && items.map((it,i)=>(
+            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid #F0F2F8'}}>
+              <div style={{padding:'14px 16px 0'}}>
+                {/* Top row: condition badge + discount */}
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+                  <span style={{background:it.condBg,color:it.condColor,borderRadius:999,padding:'4px 10px',fontSize:11.5,fontWeight:700}}>{it.condition}</span>
+                  <span style={{background:'#DC2626',color:'#fff',borderRadius:8,padding:'3px 9px',fontSize:12,fontWeight:800}}>-{it.discount}%</span>
+                </div>
+                {/* Car name + image row */}
+                <div style={{display:'flex',alignItems:'flex-start',gap:10}}>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.25}}>{it.title}</div>
+                    <div style={{fontSize:11.5,color:'#9AA1B8',marginTop:2}}>yoki o'rtacha kattalikdagi shu kabi avtomobil</div>
+                    {/* Specs row */}
+                    <div style={{display:'flex',flexWrap:'wrap',gap:6,marginTop:10}}>
+                      {[
+                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>, val:it.pax},
+                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>, val:it.bags},
+                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>, val:it.gear},
+                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>, val:it.drive},
+                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M3 7h3l2 9h8l2-9h3"/><circle cx="8" cy="19" r="2"/><circle cx="16" cy="19" r="2"/></svg>, val:it.fuel},
+                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, val:it.speed},
+                      ].map((s,j)=>(
+                        <div key={j} style={{display:'inline-flex',alignItems:'center',gap:4,background:'#F4F6FA',borderRadius:8,padding:'4px 8px'}}>
+                          {s.icon}
+                          <span style={{fontSize:11.5,fontWeight:600,color:'#374151'}}>{s.val}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Car image */}
+                  <div style={{width:120,height:80,flexShrink:0,borderRadius:12,overflow:'hidden',background:'#F7F8FB'}}>
+                    <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                  </div>
+                </div>
+                {/* Included services */}
+                <div style={{marginTop:12,display:'flex',flexDirection:'column',gap:4}}>
+                  {it.includes.map((inc,j)=>(
+                    <div key={j} style={{display:'flex',alignItems:'center',gap:6}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span style={{fontSize:12,color:'#374151'}}>{inc}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Divider + Price */}
+              <div style={{height:1,background:'#F0F2F8',margin:'12px 16px 0'}}/>
+              <div style={{padding:'12px 16px 14px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                <div>
+                  <div style={{fontSize:12,color:'#9AA1B8',textDecoration:'line-through'}}>{it.regular}</div>
+                  <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginTop:2}}>{it.premium}</div>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                  <button style={{background:T,color:'#fff',border:'none',borderRadius:12,padding:'9px 20px',fontSize:13,fontWeight:700,cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.25)'}}>Tanlash</button>
+                  <button style={{width:32,height:32,borderRadius:999,background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:16,fontWeight:700,padding:0,flexShrink:0}}>···</button>
+                </div>
+              </div>
+            </div>
+          ))}
+          {/* OTHERS (turlar/excur/hotel) — generic card with photo */}
+          {page !== 'aviabilet' && page !== 'esim' && page !== 'rentcar' && items.map((it,i)=>(
             <div key={i} onClick={page==='turlar'?()=>setTourDetail(it):page==='hotel'?()=>{setHotelDetail(it);setHotelGallery(0);setHotelExpanded(false);setHotelRoomImg({0:0,1:0,2:0});}:page==='excur'?()=>{setExcurDetail(it);setExcurGallery(0);setExcurExpanded(false);setExcurPeople(1);}:undefined} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid rgba(0,153,168,0.07)',cursor:(page==='turlar'||page==='hotel'||page==='excur')?'pointer':'default'}}>
-              {/* Photo with dot indicator (hotel) */}
               <div style={{width:'100%',height:200,overflow:'hidden',position:'relative'}}>
                 <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
                 {page==='hotel' && (
@@ -4108,7 +4172,6 @@ function ScreenTrip() {
               <div style={{padding:'14px 16px 14px'}}>
                 <div style={{fontSize:15,fontWeight:700,color:'#0A1F21',lineHeight:1.3}}>{it.title}</div>
                 <div style={{fontSize:12,color:'#9AA1B8',marginTop:3}}>{it.sub}</div>
-                {/* Hotel rating badge */}
                 {page==='hotel' && it.rating && (
                   <div style={{display:'flex',alignItems:'center',gap:8,marginTop:10}}>
                     <div style={{background:'#22C55E',borderRadius:8,padding:'3px 8px',display:'inline-flex'}}>
