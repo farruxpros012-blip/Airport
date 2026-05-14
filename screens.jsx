@@ -909,6 +909,41 @@ function useSheetViewport() {
   return { sheetH: Math.round(vvh * 0.88), sheetXform: kbOffset > 0 ? `translateY(-${kbOffset}px)` : 'none' };
 }
 
+function LeafletMap({ onDragStart, onDragEnd }) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const c = ref.current;
+    if (!c || !window.L) return;
+    if (c._lf) { c._lf.remove(); }
+    const map = window.L.map(c, { zoomControl: false, attributionControl: false }).setView([41.31, 69.25], 13);
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    map.on('movestart', () => onDragStart && onDragStart());
+    map.on('moveend', () => onDragEnd && onDragEnd());
+    c._lf = map;
+    return () => { map.remove(); c._lf = null; };
+  }, []);
+  return <div ref={ref} style={{position:'absolute',inset:0,width:'100%',height:'100%'}}/>;
+}
+
+function MapPin({ dragging }) {
+  const ref = React.useRef(null);
+  const timer = React.useRef(null);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (dragging) {
+      try { el.stop?.(); el.play?.(); } catch(e) {}
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => { try { el.pause?.(); } catch(e) {} }, 450);
+    } else {
+      if (timer.current) { clearTimeout(timer.current); timer.current = null; }
+      try { el.play?.(); } catch(e) {}
+    }
+    return () => { if (timer.current) clearTimeout(timer.current); };
+  }, [dragging]);
+  return <dotlottie-wc ref={ref} src="assets/Pickup_Pin.lottie" style={{width:'96px',height:'96px',display:'block'}}></dotlottie-wc>;
+}
+
 function RentLocationPicker({ rentPickupLoc, onPick, onMap }) {
   const T = '#0099A8';
   const [q, setQ] = React.useState('');
@@ -1978,9 +2013,9 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=69.18%2C41.27%2C69.32%2C41.34&amp;layer=mapnik" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:'none'}}/>
+          <LeafletMap onDragStart={()=>setMapDragging(true)} onDragEnd={()=>setMapDragging(false)}/>
           <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',pointerEvents:'none',zIndex:5}}>
-            <dotlottie-wc src="assets/Pickup_Pin.lottie" autoplay="" loop="" style={{width:'96px',height:'96px',display:'block'}}></dotlottie-wc>
+            <MapPin dragging={mapDragging}/>
           </div>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'0 18px'}}>
             <button onClick={()=>setTaxiMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
@@ -3299,9 +3334,9 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=69.18%2C41.27%2C69.32%2C41.34&amp;layer=mapnik" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:'none'}}/>
+          <LeafletMap onDragStart={()=>setMapDragging(true)} onDragEnd={()=>setMapDragging(false)}/>
           <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',pointerEvents:'none',zIndex:5}}>
-            <dotlottie-wc src="assets/Pickup_Pin.lottie" autoplay="" loop="" style={{width:'96px',height:'96px',display:'block'}}></dotlottie-wc>
+            <MapPin dragging={mapDragging}/>
           </div>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'0 18px'}}>
             <button onClick={()=>setXferMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
