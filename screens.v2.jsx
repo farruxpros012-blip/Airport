@@ -1446,12 +1446,12 @@ function ScreenTrip() {
 
     // ── Clickable display card (used for hotel multiselect, dates) ──
     const tapCard = (label, value, ph, onClick) => (
-      <div onClick={onClick} style={{background:'#fff',borderRadius:16,padding:'12px 14px',marginBottom:10,cursor:'pointer',boxShadow:'0 1px 6px rgba(10,31,33,0.05)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-        <div>
+      <div onClick={onClick} style={{background:'#fff',borderRadius:16,padding:'12px 14px',marginBottom:10,cursor:'pointer',boxShadow:'0 1px 6px rgba(10,31,33,0.05)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:10}}>
+        <div style={{flex:1,minWidth:0}}>
           <div style={lab}>{label}</div>
           <div style={{fontSize:15,fontWeight:700,color: value?'#0A1F21':'#9AA1B8',marginTop:4,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{value||ph}</div>
         </div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5"><path d="M9 6l6 6-6 6"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0C8D4" strokeWidth="2.5" style={{flexShrink:0}}><path d="M9 6l6 6-6 6"/></svg>
       </div>
     );
     const tapSplit = (a, b) => (
@@ -4294,61 +4294,59 @@ function ScreenTrip() {
 
           {/* RENT CAR — specialized card */}
           {page === 'rentcar' && items.map((it,i)=>(
-            <div key={i} style={{background:'#fff',borderRadius:20,overflow:'hidden',marginBottom:14,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid #F0F2F8'}}>
-              <div style={{padding:'14px 16px 0'}}>
+            <div key={i} style={{background:'#fff',borderRadius:18,overflow:'hidden',marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid #F0F2F8'}}>
+              <div style={{padding:'10px 14px 0'}}>
                 {/* Top row: condition badge + discount */}
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
-                  <span style={{background:it.condBg,color:it.condColor,borderRadius:999,padding:'4px 10px',fontSize:11.5,fontWeight:700}}>{it.condition}</span>
-                  <span style={{background:'#DC2626',color:'#fff',borderRadius:8,padding:'3px 9px',fontSize:12,fontWeight:800}}>-{it.discount}%</span>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+                  <span style={{background:it.condBg,color:it.condColor,borderRadius:999,padding:'3px 9px',fontSize:11,fontWeight:700}}>{it.condition}</span>
+                  <span style={{background:'#DC2626',color:'#fff',borderRadius:8,padding:'3px 8px',fontSize:11.5,fontWeight:800}}>-{it.discount}%</span>
                 </div>
-                {/* Car name + image row */}
-                <div style={{display:'flex',alignItems:'flex-start',gap:10}}>
-                  <div style={{flex:1}}>
-                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.25}}>{it.title}</div>
-                    <div style={{fontSize:11.5,color:'#9AA1B8',marginTop:2}}>yoki o'rtacha kattalikdagi shu kabi avtomobil</div>
-                    {/* Specs row */}
-                    <div style={{display:'flex',flexWrap:'wrap',gap:6,marginTop:10}}>
-                      {[
-                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>, val:it.pax},
-                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>, val:it.bags},
-                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>, val:it.gear},
-                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>, val:it.drive},
-                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M3 7h3l2 9h8l2-9h3"/><circle cx="8" cy="19" r="2"/><circle cx="16" cy="19" r="2"/></svg>, val:it.fuel},
-                        {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, val:it.speed},
-                      ].map((s,j)=>(
-                        <div key={j} style={{display:'inline-flex',alignItems:'center',gap:4,background:'#F4F6FA',borderRadius:8,padding:'4px 8px'}}>
-                          {s.icon}
-                          <span style={{fontSize:11.5,fontWeight:600,color:'#374151'}}>{s.val}</span>
-                        </div>
-                      ))}
+                {/* F-pattern: title + image side by side */}
+                <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
+                  <div style={{flex:1,minWidth:0,paddingTop:2}}>
+                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.2}}>{it.title}</div>
+                    <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>yoki o'xshash avtomobil</div>
+                    {/* Compact specs row (only top 4 most important) */}
+                    <div style={{display:'flex',flexWrap:'wrap',gap:5,marginTop:8}}>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:3,background:'#F4F6FA',borderRadius:6,padding:'3px 7px',fontSize:11,fontWeight:600,color:'#374151'}}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                        {it.pax}
+                      </div>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:3,background:'#F4F6FA',borderRadius:6,padding:'3px 7px',fontSize:11,fontWeight:600,color:'#374151'}}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        {it.bags}
+                      </div>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:3,background:'#F4F6FA',borderRadius:6,padding:'3px 7px',fontSize:11,fontWeight:600,color:'#374151'}}>{it.gear}</div>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:3,background:'#F4F6FA',borderRadius:6,padding:'3px 7px',fontSize:11,fontWeight:600,color:'#374151'}}>{it.fuel}</div>
                     </div>
                   </div>
-                  {/* Car image */}
-                  <div style={{width:120,height:80,flexShrink:0,borderRadius:12,overflow:'hidden',background:'#F7F8FB'}}>
+                  {/* Larger car image */}
+                  <div style={{width:150,height:110,flexShrink:0,borderRadius:14,overflow:'hidden',background:'#F7F8FB'}}>
                     <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
                   </div>
                 </div>
-                {/* Included services */}
-                <div style={{marginTop:12,display:'flex',flexDirection:'column',gap:4}}>
+                {/* Included services — compact horizontal */}
+                <div style={{marginTop:8,display:'flex',flexWrap:'wrap',gap:'4px 10px'}}>
                   {it.includes.map((inc,j)=>(
-                    <div key={j} style={{display:'flex',alignItems:'center',gap:6}}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      <span style={{fontSize:12,color:'#374151'}}>{inc}</span>
+                    <div key={j} style={{display:'inline-flex',alignItems:'center',gap:4}}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.8" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span style={{fontSize:11,color:'#5C7577'}}>{inc}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              {/* Divider + Price */}
-              <div style={{height:1,background:'#F0F2F8',margin:'12px 16px 0'}}/>
-              <div style={{padding:'12px 16px 14px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <div>
-                  <div style={{fontSize:12,color:'#9AA1B8',textDecoration:'line-through'}}>{it.regular}</div>
-                  <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginTop:2}}>{it.premium}</div>
+              {/* Price + CTA */}
+              <div style={{padding:'10px 14px 12px',marginTop:10,display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:10,borderTop:'1px solid #F0F2F8'}}>
+                <div style={{minWidth:0,flex:1}}>
+                  <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,textTransform:'uppercase',letterSpacing:0.3}}>1 kunga</div>
+                  <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginTop:1}}>{it.regular}</div>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:999,padding:'4px 10px',marginTop:5,boxShadow:'0 2px 8px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
+                    <span style={{fontSize:10.5,fontWeight:600,color:'#fff'}}>Premium</span>
+                    <span style={{fontSize:11.5,fontWeight:800,color:'#fff'}}>{it.premium}</span>
+                  </div>
                 </div>
-                <div style={{display:'flex',alignItems:'center',gap:8}}>
-                  <button style={{background:T,color:'#fff',border:'none',borderRadius:12,padding:'9px 20px',fontSize:13,fontWeight:700,cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.25)'}}>Tanlash</button>
-                  <button style={{width:32,height:32,borderRadius:999,background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'#9AA1B8',fontSize:16,fontWeight:700,padding:0,flexShrink:0}}>···</button>
-                </div>
+                <button style={{background:T,color:'#fff',border:'none',borderRadius:12,padding:'9px 18px',fontSize:13,fontWeight:700,cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.25)',flexShrink:0}}>Tanlash</button>
               </div>
             </div>
           ))}
