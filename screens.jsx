@@ -4292,61 +4292,57 @@ function ScreenTrip() {
             </div>
           ))}
 
-          {/* RENT CAR — specialized card */}
+          {/* RENT CAR — hero-style card */}
           {page === 'rentcar' && items.map((it,i)=>(
-            <div key={i} style={{background:'#fff',borderRadius:18,overflow:'hidden',marginBottom:12,boxShadow:'0 2px 12px rgba(10,31,33,0.07)',border:'1px solid #F0F2F8'}}>
-              <div style={{padding:'10px 14px 0'}}>
-                {/* Top row: condition badge + discount */}
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
-                  <span style={{background:it.condBg,color:it.condColor,borderRadius:999,padding:'3px 9px',fontSize:11,fontWeight:700}}>{it.condition}</span>
-                  <span style={{background:'#DC2626',color:'#fff',borderRadius:8,padding:'3px 8px',fontSize:11.5,fontWeight:800}}>-{it.discount}%</span>
+            <div key={i} style={{background:'#fff',borderRadius:22,overflow:'hidden',marginBottom:16,boxShadow:'0 6px 22px rgba(10,31,33,0.08), 0 1px 3px rgba(10,31,33,0.04)',border:'1px solid rgba(0,0,0,0.04)'}}>
+              {/* Hero image with floating overlays */}
+              <div style={{position:'relative',height:180,overflow:'hidden',background:'linear-gradient(135deg,#EEF2F7,#F7F9FC)'}}>
+                <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                {/* Top gradient for badge legibility */}
+                <div style={{position:'absolute',top:0,left:0,right:0,height:64,background:'linear-gradient(to bottom, rgba(0,0,0,0.30), transparent)',pointerEvents:'none'}}/>
+                {/* Condition badge — top left */}
+                <div style={{position:'absolute',top:12,left:12,display:'inline-flex',alignItems:'center',gap:5,background:'rgba(255,255,255,0.96)',backdropFilter:'blur(8px)',borderRadius:999,padding:'5px 11px',boxShadow:'0 2px 8px rgba(0,0,0,0.12)'}}>
+                  <span style={{width:6,height:6,borderRadius:'50%',background:it.condColor}}/>
+                  <span style={{fontSize:11,fontWeight:700,color:'#0A1F21'}}>{it.condition}</span>
                 </div>
-                {/* F-pattern: title + image side by side */}
-                <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
-                  <div style={{flex:1,minWidth:0,paddingTop:2}}>
-                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.2}}>{it.title}</div>
-                    <div style={{fontSize:11,color:'#9AA1B8',marginTop:2}}>yoki o'xshash avtomobil</div>
-                    {/* Compact specs row (only top 4 most important) */}
-                    <div style={{display:'flex',flexWrap:'wrap',gap:5,marginTop:8}}>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:3,background:'#F4F6FA',borderRadius:6,padding:'3px 7px',fontSize:11,fontWeight:600,color:'#374151'}}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                        {it.pax}
-                      </div>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:3,background:'#F4F6FA',borderRadius:6,padding:'3px 7px',fontSize:11,fontWeight:600,color:'#374151'}}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        {it.bags}
-                      </div>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:3,background:'#F4F6FA',borderRadius:6,padding:'3px 7px',fontSize:11,fontWeight:600,color:'#374151'}}>{it.gear}</div>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:3,background:'#F4F6FA',borderRadius:6,padding:'3px 7px',fontSize:11,fontWeight:600,color:'#374151'}}>{it.fuel}</div>
-                    </div>
-                  </div>
-                  {/* Larger car image */}
-                  <div style={{width:150,height:110,flexShrink:0,borderRadius:14,overflow:'hidden',background:'#F7F8FB'}}>
-                    <img src={it.img} alt={it.title} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
-                  </div>
+                {/* Discount badge — top right */}
+                <div style={{position:'absolute',top:12,right:12,background:'linear-gradient(135deg,#EF4444,#DC2626)',color:'#fff',borderRadius:10,padding:'5px 10px',fontSize:12,fontWeight:800,letterSpacing:0.3,boxShadow:'0 4px 12px rgba(220,38,38,0.35)'}}>−{it.discount}%</div>
+              </div>
+              {/* Content */}
+              <div style={{padding:'14px 16px 8px'}}>
+                <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',letterSpacing:-0.2,lineHeight:1.2}}>{it.title}</div>
+                {/* Single-line dot-separated specs */}
+                <div style={{fontSize:12,color:'#5C7577',marginTop:6,display:'flex',flexWrap:'wrap',gap:'4px 10px'}}>
+                  <span>{it.pax} kishi</span>
+                  <span style={{color:'#DDE0EB'}}>•</span>
+                  <span>{it.bags} bagaj</span>
+                  <span style={{color:'#DDE0EB'}}>•</span>
+                  <span>{it.gear}</span>
+                  <span style={{color:'#DDE0EB'}}>•</span>
+                  <span>{it.fuel}</span>
+                  <span style={{color:'#DDE0EB'}}>•</span>
+                  <span>{it.speed}</span>
                 </div>
-                {/* Included services — compact horizontal */}
-                <div style={{marginTop:8,display:'flex',flexWrap:'wrap',gap:'4px 10px'}}>
-                  {it.includes.map((inc,j)=>(
-                    <div key={j} style={{display:'inline-flex',alignItems:'center',gap:4}}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.8" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      <span style={{fontSize:11,color:'#5C7577'}}>{inc}</span>
-                    </div>
-                  ))}
+                {/* Compact include line — single row, joined */}
+                <div style={{display:'flex',alignItems:'center',gap:6,marginTop:10,padding:'7px 10px',background:'#F0FAF5',borderRadius:10,border:'1px solid rgba(34,197,94,0.15)'}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.6" strokeLinecap="round" style={{flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg>
+                  <span style={{fontSize:11.5,color:'#15803D',fontWeight:600}}>To'lovlar va uchinchi tomon sug'urtasi kiritilgan</span>
                 </div>
               </div>
-              {/* Price + CTA */}
-              <div style={{padding:'10px 14px 12px',marginTop:10,display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:10,borderTop:'1px solid #F0F2F8'}}>
+              {/* Price & CTA */}
+              <div style={{padding:'10px 16px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}>
                 <div style={{minWidth:0,flex:1}}>
-                  <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,textTransform:'uppercase',letterSpacing:0.3}}>1 kunga</div>
-                  <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginTop:1}}>{it.regular}</div>
-                  <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',borderRadius:999,padding:'4px 10px',marginTop:5,boxShadow:'0 2px 8px rgba(217,119,6,0.25), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2"><path d="M3 7l3.5 9h11L21 7l-5 4-4-7-4 7-5-4z"/></svg>
-                    <span style={{fontSize:10.5,fontWeight:600,color:'#fff'}}>Premium</span>
+                  <div style={{display:'flex',alignItems:'baseline',gap:5}}>
+                    <span style={{fontSize:19,fontWeight:900,color:'#0A1F21',letterSpacing:-0.4}}>{it.regular}</span>
+                    <span style={{fontSize:11,color:'#9AA1B8',fontWeight:500}}>/ kun</span>
+                  </div>
+                  <div style={{display:'inline-flex',alignItems:'center',gap:5,marginTop:5,background:'linear-gradient(135deg,#FCD34D 0%,#F59E0B 60%,#D97706 100%)',borderRadius:999,padding:'4px 10px',boxShadow:'0 3px 10px rgba(217,119,6,0.25),inset 0 1px 0 rgba(255,255,255,0.35)'}}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <span style={{fontSize:10.5,fontWeight:700,color:'#fff'}}>Premium:</span>
                     <span style={{fontSize:11.5,fontWeight:800,color:'#fff'}}>{it.premium}</span>
                   </div>
                 </div>
-                <button style={{background:T,color:'#fff',border:'none',borderRadius:12,padding:'9px 18px',fontSize:13,fontWeight:700,cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.25)',flexShrink:0}}>Tanlash</button>
+                <button style={{background:`linear-gradient(135deg,${T},#007A87)`,color:'#fff',border:'none',borderRadius:14,padding:'11px 22px',fontSize:13.5,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.32),inset 0 1px 0 rgba(255,255,255,0.25)',flexShrink:0,letterSpacing:0.2}}>Tanlash</button>
               </div>
             </div>
           ))}
