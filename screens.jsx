@@ -1069,8 +1069,7 @@ function IosTimeWheel({ items, value, onChange, unit }) {
   React.useEffect(() => {
     setIdx(idxOf(value));
   }, [value]);
-  const onScroll = (e) => {
-    const el = e.currentTarget;
+  const detectCross = (el) => {
     const live = el.scrollTop / ITEM_H;
     const rounded = Math.round(live);
     const safe = Math.max(0, Math.min(items.length-1, rounded));
@@ -1079,6 +1078,11 @@ function IosTimeWheel({ items, value, onChange, unit }) {
       lastTickIdx.current = safe;
       playTick();
     }
+    return safe;
+  };
+  const onScroll = (e) => {
+    const el = e.currentTarget;
+    const safe = detectCross(el);
     if (snapTimer.current) clearTimeout(snapTimer.current);
     snapTimer.current = setTimeout(() => {
       const target = safe * ITEM_H;
@@ -1088,9 +1092,12 @@ function IosTimeWheel({ items, value, onChange, unit }) {
       onChange && onChange(items[safe]);
     }, 100);
   };
+  const onTouchMove = () => {
+    if (ref.current) detectCross(ref.current);
+  };
   return (
     <div style={{position:'relative',flex:1,height:VISIBLE*ITEM_H,perspective:'1100px',zIndex:5}}>
-      <div ref={ref} onScroll={onScroll} style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch',transformStyle:'preserve-3d'}}>
+      <div ref={ref} onScroll={onScroll} onTouchMove={onTouchMove} style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch',transformStyle:'preserve-3d'}}>
         <div style={{paddingTop:PAD,paddingBottom:PAD}}>
           {items.map((v,i)=>{
             const d = i - idx;
