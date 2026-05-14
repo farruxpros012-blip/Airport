@@ -1120,16 +1120,17 @@ function IosTimeWheel({ items, value, onChange, unit }) {
                 transformOrigin:'center center',
                 willChange:'transform, opacity',
                 letterSpacing:0.5,
-              }}>
-                <span>{v}</span>
-                {unit && ad===0 && <span style={{fontSize:12,fontWeight:600,color:'#6B7280',marginLeft:6,letterSpacing:0.2}}>{unit}</span>}
-              </div>
+              }}>{v}</div>
             );
           })}
         </div>
       </div>
       <div style={{position:'absolute',top:0,left:0,right:0,height:PAD,background:'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 60%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:6}}/>
       <div style={{position:'absolute',bottom:0,left:0,right:0,height:PAD,background:'linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 60%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:6}}/>
+      {/* Fixed unit label inside center pill */}
+      {unit && (
+        <div style={{position:'absolute',top:PAD,height:ITEM_H,right:'18%',display:'flex',alignItems:'center',pointerEvents:'none',zIndex:7,fontSize:12,fontWeight:600,color:'#6B7280',letterSpacing:0.2}}>{unit}</div>
+      )}
     </div>
   );
 }
