@@ -967,7 +967,7 @@ function MapPin({ dragging }) {
       anim.goToAndPlay(0, true);
       if (timer.current) clearTimeout(timer.current);
       // Pause at midpoint frame
-      const midFrame = Math.floor(totalFrames / 2);
+      const midFrame = Math.floor(totalFrames * 0.4);
       const fps = anim.frameRate || 30;
       const delay = (midFrame / fps) * 1000;
       timer.current = setTimeout(() => {
