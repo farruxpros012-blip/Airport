@@ -956,6 +956,10 @@ function ScreenTrip() {
   }, [page, hintShown]);
   const [preSheet, setPreSheet] = React.useState(null);
   const [tripQuery, setTripQuery] = React.useState({});
+  const [rentPickupLoc, setRentPickupLoc] = React.useState('');
+  const [rentLocation, setRentLocation] = React.useState('');
+  const [rentFrom, setRentFrom] = React.useState('');
+  const [rentTo, setRentTo] = React.useState('');
   const [topScrolled, setTopScrolled] = React.useState(false);
   React.useEffect(() => {
     const on = () => setTopScrolled(window.scrollY > 4);
@@ -1117,10 +1121,6 @@ function ScreenTrip() {
     const [passengerCount, setPassengerCount] = React.useState(1);
     const [pickupTime, setPickupTime] = React.useState('');
     const [pickupLoc, setPickupLoc] = React.useState('Shahar');
-    const [rentFrom, setRentFrom] = React.useState('');
-    const [rentTo, setRentTo] = React.useState('');
-    const [rentPickupLoc, setRentPickupLoc] = React.useState('');
-    const [rentLocation, setRentLocation] = React.useState('');
     const [airportHistory, setAirportHistory] = React.useState(() => {
       try { return JSON.parse(localStorage.getItem('airport_history')||'[]'); } catch { return []; }
     });
@@ -1755,7 +1755,7 @@ function ScreenTrip() {
             {q && <button onClick={()=>setQ('')} style={{border:'none',background:'none',padding:0,cursor:'pointer',color:'#9AA1B8',fontSize:18,lineHeight:1}}>×</button>}
           </div>
           {/* Map option */}
-          <button onClick={()=>setNested(null)} style={{display:'inline-flex',alignItems:'center',gap:8,background:'none',border:'none',padding:'6px 0 12px',cursor:'pointer'}}>
+          <button onClick={()=>{setNested(null);setPreSheet(null);setXferMapPage('rent-location');}} style={{display:'inline-flex',alignItems:'center',gap:8,background:'none',border:'none',padding:'6px 0 12px',cursor:'pointer'}}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
             <span style={{fontSize:14,fontWeight:600,color:T}}>Xaritadan belgilash</span>
           </button>
@@ -3321,20 +3321,29 @@ function ScreenTrip() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
           </div>
-          <button onClick={()=>setXferMapAddr('Mening joriy manzilim')} style={{position:'absolute',right:18,bottom:220,zIndex:6,width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
-          </button>
           {/* Fixed bottom panel */}
           <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
             <div style={{width:36,height:4,background:'#DDE0EB',borderRadius:999,margin:'0 auto 14px'}}/>
-            <div style={{display:'flex',alignItems:'center',gap:10,background:'#F4F5FA',borderRadius:14,padding:'12px 14px',marginBottom:14}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'#F4F5FA',borderRadius:14,padding:'12px 14px',marginBottom:10}}>
               <svg style={{flexShrink:0}} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
               <div>
                 <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{xferMapAddr}</div>
                 <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>Pinni suring va manzilni belgilang</div>
               </div>
             </div>
-            <button onClick={()=>{if(mapTarget==='from')setXferFrom(xferMapAddr);else setXferTo(xferMapAddr);setXferMapPage(null);}} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Tanlash</button>
+            {/* GPS button — above the Tanlash button */}
+            <button onClick={()=>setXferMapAddr('Mening joriy manzilim')} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',padding:'6px 0 10px',cursor:'pointer'}}>
+              <div style={{width:32,height:32,borderRadius:'50%',background:'#E0F2F3',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+              </div>
+              <span style={{fontSize:13,fontWeight:600,color:T}}>Mening joriy manzilim</span>
+            </button>
+            <button onClick={()=>{
+              if(mapTarget==='rent-location'){setRentLocation(xferMapAddr);}
+              else if(mapTarget==='from'){setXferFrom(xferMapAddr);}
+              else{setXferTo(xferMapAddr);}
+              setXferMapPage(null);
+            }} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Tanlash</button>
           </div>
         </div>
       </Frame>
