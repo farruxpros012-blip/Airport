@@ -930,7 +930,7 @@ function MapWithPin() {
       path: 'assets/Pickup_Pin.json',
     });
     animRef.current = anim;
-    anim.setSpeed(2);
+    anim.setSpeed(2.8);
     anim.addEventListener('DOMLoaded', () => anim.goToAndStop(0, true));
 
     const lift = () => {
@@ -944,7 +944,7 @@ function MapWithPin() {
       const totalFrames = a.totalFrames || 60;
       const midFrame = Math.floor(totalFrames * 0.4);
       const fps = a.frameRate || 30;
-      const delay = (midFrame / fps) * 1000 / 2;
+      const delay = (midFrame / fps) * 1000 / 2.8;
       timer.current = setTimeout(() => {
         reachedPeakRef.current = true;
         try { a.goToAndStop(midFrame, true); } catch(e) {}
