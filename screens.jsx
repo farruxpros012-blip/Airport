@@ -3049,117 +3049,147 @@ function ScreenTrip() {
     );
   }
 
-  // Rent car detail page
+  // Rent car detail page — Tour-detail style
   if (rentDetail) {
     const rd = rentDetail;
     const GALLERY = [rd.img];
     const cardStyle = {background:'#fff',borderRadius:18,margin:'16px 16px 0',boxShadow:'0 2px 10px rgba(10,31,33,0.05)',overflow:'hidden'};
-    const secTitle = (t) => <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',padding:'18px 16px 10px'}}>{t}</div>;
-    const row = (icon, label, value, last) => (
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 16px',borderBottom: last?'none':'1px solid #F0F2F5',gap:10}}>
-        <div style={{display:'flex',alignItems:'center',gap:10,minWidth:0,flex:1}}>
-          {icon}
-          <span style={{fontSize:14,color:'#0A1F21',fontWeight:500}}>{label}</span>
-        </div>
-        <span style={{fontSize:14,fontWeight:700,color:'#0A1F21',flexShrink:0}}>{value}</span>
+    const secHeader = (label) => (
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
+        <div style={{width:3,height:14,borderRadius:2,background:T,flexShrink:0}}/>
+        <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{label}</span>
       </div>
     );
-    const checkRow = (label, last) => (
-      <div style={{display:'flex',alignItems:'center',gap:10,padding:'12px 16px',borderBottom: last?'none':'1px solid #F0F2F5'}}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.6" strokeLinecap="round" style={{flexShrink:0}}><polyline points="20 6 9 17 4 12"/><polyline points="20 12 13 19 11 17" opacity="0.5"/></svg>
-        <span style={{fontSize:14,color:'#0A1F21',fontWeight:500}}>{label}</span>
+    const infoRow = (icon, label, value, last) => (
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderBottom: last?'none':'1px solid #F0F2F5',gap:10}}>
+        <div style={{display:'flex',alignItems:'center',gap:10,minWidth:0,flex:1}}>
+          {icon}
+          <span style={{fontSize:13.5,color:'#0A1F21'}}>{label}</span>
+        </div>
+        <span style={{fontSize:13.5,fontWeight:700,color:'#0A1F21',flexShrink:0}}>{value}</span>
+      </div>
+    );
+    const checkItem = (label, last) => (
+      <div style={{display:'flex',alignItems:'center',gap:10,padding:'10px 0',borderBottom: last?'none':'1px solid #F0F2F5'}}>
+        <div style={{width:22,height:22,borderRadius:'50%',background:'#E0F2F3',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span style={{fontSize:13.5,color:'#0A1F21'}}>{label}</span>
       </div>
     );
     return (
       <Frame>
-        <div style={{flex:1,overflowY:'auto',paddingBottom:100,background:'#F4F7F8'}}>
-          {/* Top bar */}
-          <div style={{position:'sticky',top:0,zIndex:10,background:'#fff',display:'flex',alignItems:'center',padding:'14px 16px',gap:10,borderBottom:'1px solid #F0F2F5'}}>
-            <button onClick={()=>setRentDetail(null)} style={{width:40,height:40,borderRadius:'50%',background:'transparent',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+        <div style={{flex:1,overflowY:'auto',paddingBottom:110,background:'#F4F7F8'}}>
+          {/* ── HERO CAROUSEL — edge-to-edge 320px ── */}
+          <div style={{position:'relative',height:320,overflow:'hidden',background:'#000'}}>
+            <img src={GALLERY[rentGallery]} alt={rd.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block',userSelect:'none'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.32) 0%,transparent 38%,rgba(0,0,0,0) 55%,rgba(0,0,0,0.6) 100%)',pointerEvents:'none'}}/>
+            <button onClick={()=>setRentDetail(null)} style={{position:'absolute',top:16,left:16,zIndex:10,width:48,height:48,borderRadius:'50%',background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
-            <div style={{flex:1,textAlign:'center',fontSize:16,fontWeight:800,color:'#0A1F21'}}>{rd.title.split(',')[0]}</div>
-            <button style={{width:40,height:40,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-7h3v5zM3 19a2 2 0 0 0 2 2h1v-7H3v5z"/></svg>
-            </button>
-          </div>
-          {/* Hero image */}
-          <div style={{position:'relative',width:'100%',height:260,background:'#000',overflow:'hidden'}}>
-            <img src={GALLERY[rentGallery]} alt={rd.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
-            <div style={{position:'absolute',top:14,right:14,background:'linear-gradient(135deg,#FB923C,#F97316)',color:'#fff',borderRadius:10,padding:'5px 11px',fontSize:13,fontWeight:800,boxShadow:'0 4px 12px rgba(249,115,22,0.4)'}}>−{rd.discount}%</div>
-            <div style={{position:'absolute',bottom:12,right:12,background:'rgba(0,0,0,0.55)',color:'#fff',borderRadius:999,padding:'4px 10px',fontSize:11,fontWeight:600}}>{rentGallery+1}/{GALLERY.length}</div>
-          </div>
-          {/* Title section */}
-          <div style={{padding:'16px 16px 0'}}>
-            <div style={{fontSize:20,fontWeight:800,color:'#0A1F21',letterSpacing:-0.3}}>{rd.title.split(',')[0]}</div>
-            <div style={{fontSize:13,color:'#9AA1B8',marginTop:3}}>yoki o'rtacha o'lchamdagi shunga o'xshash</div>
-          </div>
-          {/* Price section */}
-          <div style={{padding:'18px 16px 16px',display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12,borderBottom:'1px solid #F0F2F5',margin:'0 0'}}>
-            <div>
-              <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>Narx</div>
-              <div style={{fontSize:12,color:'#9AA1B8',marginTop:3}}>Kunlik ijaraning narxi 15 USD</div>
-            </div>
-            <div style={{textAlign:'right'}}>
-              <div style={{fontSize:20,fontWeight:800,color:T,letterSpacing:-0.3}}>30 $</div>
-              <div style={{fontSize:12,color:'#9AA1B8',marginTop:3}}>2 kunlik narx</div>
+            {/* Discount badge top-right */}
+            <div style={{position:'absolute',top:16,right:16,background:'linear-gradient(135deg,#FB923C,#F97316)',color:'#fff',borderRadius:12,padding:'6px 12px',fontSize:13,fontWeight:800,boxShadow:'0 6px 16px rgba(249,115,22,0.4)'}}>−{rd.discount}%</div>
+            {/* Counter bottom-right */}
+            <div style={{position:'absolute',bottom:16,right:16,background:'rgba(0,0,0,0.55)',color:'#fff',borderRadius:999,padding:'5px 11px',fontSize:12,fontWeight:600}}>{rentGallery+1}/{GALLERY.length}</div>
+            {/* Title overlay */}
+            <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'0 16px 18px'}}>
+              <div style={{fontSize:22,fontWeight:900,color:'#fff',lineHeight:1.2,textShadow:'0 1px 8px rgba(0,0,0,0.4)'}}>{rd.title.split(',')[0]}</div>
+              <div style={{fontSize:13,color:'rgba(255,255,255,0.88)',marginTop:4,textShadow:'0 1px 6px rgba(0,0,0,0.4)'}}>yoki o'rtacha o'lchamdagi shunga o'xshash</div>
             </div>
           </div>
-          {/* Date range */}
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',padding:'16px 16px',background:'#fff'}}>
-            <div style={{borderRight:'1px solid #F0F2F5',paddingRight:14}}>
-              <div style={{fontSize:13,color:'#5C7577',marginBottom:4}}>Ijara boshlanishi</div>
-              <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>15-May, 12:00 PM</div>
+
+          {/* ── CARD: Narx ── */}
+          <div style={cardStyle}>
+            <div style={{padding:'14px 16px'}}>
+              {secHeader('Narx')}
+              <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12}}>
+                <div>
+                  <div style={{fontSize:13,color:'#5C7577'}}>Kunlik ijaraning narxi</div>
+                  <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginTop:3}}>15 USD</div>
+                </div>
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:22,fontWeight:900,color:T,letterSpacing:-0.4}}>30 $</div>
+                  <div style={{fontSize:12,color:'#9AA1B8',marginTop:3}}>2 kunlik narx</div>
+                </div>
+              </div>
             </div>
-            <div style={{paddingLeft:14}}>
-              <div style={{fontSize:13,color:'#5C7577',marginBottom:4}}>Qaytarish</div>
-              <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>17-May, 12:00 PM</div>
+          </div>
+
+          {/* ── CARD: Dates ── */}
+          <div style={cardStyle}>
+            <div style={{padding:'14px 16px'}}>
+              {secHeader('Ijara muddati')}
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr'}}>
+                <div style={{borderRight:'1px solid #F0F2F5',paddingRight:14}}>
+                  <div style={{fontSize:12,color:'#5C7577',marginBottom:4}}>Ijara boshlanishi</div>
+                  <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>15-May, 12:00 PM</div>
+                </div>
+                <div style={{paddingLeft:14}}>
+                  <div style={{fontSize:12,color:'#5C7577',marginBottom:4}}>Qaytarish</div>
+                  <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>17-May, 12:00 PM</div>
+                </div>
+              </div>
             </div>
           </div>
-          {/* Avtomobil xarakteristikalari — collapsible row */}
-          <div style={{margin:'8px 16px 0',background:'#F4F6FA',borderRadius:14,padding:'14px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
-            <span style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>Avtomobil xarakteristikalari</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+
+          {/* ── CARD: Avtomobil xarakteristikalari (expand row) ── */}
+          <div style={cardStyle}>
+            <div style={{padding:'14px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
+              <div style={{display:'flex',alignItems:'center',gap:8}}>
+                <div style={{width:3,height:14,borderRadius:2,background:T}}/>
+                <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Avtomobil xarakteristikalari</span>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
           </div>
-          {/* Muhim ma'lumot */}
-          {secTitle("Muhim ma'lumot")}
-          <div style={{background:'#fff',margin:'0 16px',borderRadius:14,overflow:'hidden'}}>
-            {row(
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>,
-              'Minimal yosh', '22 yosh'
-            )}
-            {row(
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>,
-              "Minimal haydovchilik tajribasi", '2 yil', true
-            )}
+
+          {/* ── CARD: Muhim ma'lumot ── */}
+          <div style={cardStyle}>
+            <div style={{padding:'14px 16px'}}>
+              {secHeader("Muhim ma'lumot")}
+              {infoRow(
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>,
+                'Minimal yosh', '22 yosh'
+              )}
+              {infoRow(
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>,
+                "Minimal haydovchilik tajribasi", '2 yil', true
+              )}
+            </div>
           </div>
-          {/* Turistlar uchun talablar */}
-          {secTitle('Turistlar uchun talablar')}
-          <div style={{background:'#fff',margin:'0 16px',borderRadius:14,overflow:'hidden'}}>
-            {checkRow('Pasport nusxasi')}
-            {checkRow('Tashrif vizasi nusxasi')}
-            {checkRow('AQSH, Kanada, YE, GCC yoki Xalqaro haydovchilik guvohnomasi', true)}
+
+          {/* ── CARD: Turistlar uchun talablar ── */}
+          <div style={cardStyle}>
+            <div style={{padding:'14px 16px'}}>
+              {secHeader('Turistlar uchun talablar')}
+              {checkItem('Pasport nusxasi')}
+              {checkItem('Tashrif vizasi nusxasi')}
+              {checkItem('AQSH, Kanada, YE, GCC yoki Xalqaro haydovchilik guvohnomasi', true)}
+            </div>
           </div>
-          {/* Qo'shimcha talablar */}
-          {secTitle("Qo'shimcha talablar")}
-          <div style={{background:'#fff',margin:'0 16px',borderRadius:14,overflow:'hidden'}}>
-            {row(
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>,
-              'Depozit', '250$'
-            )}
-            {row(
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
-              "Depozit qaytarish muddati", '15 kun'
-            )}
-            {row(
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M3 22V8a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v14"/><path d="M3 22h11"/><path d="M14 13l4-4v9a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-9l-4-4"/></svg>,
-              "Yoqilg'i siyosati", "To'liq bak", true
-            )}
+
+          {/* ── CARD: Qo'shimcha talablar ── */}
+          <div style={cardStyle}>
+            <div style={{padding:'14px 16px'}}>
+              {secHeader("Qo'shimcha talablar")}
+              {infoRow(
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>,
+                'Depozit', '250$'
+              )}
+              {infoRow(
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+                "Depozit qaytarish muddati", '15 kun'
+              )}
+              {infoRow(
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C7577" strokeWidth="2" strokeLinecap="round"><path d="M3 22V8a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v14"/><path d="M3 22h11"/><path d="M14 13l4-4v9a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-9l-4-4"/></svg>,
+                "Yoqilg'i siyosati", "To'liq bak", true
+              )}
+            </div>
           </div>
         </div>
         {/* Fixed CTA */}
         <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,padding:'12px 16px 24px',background:'linear-gradient(to bottom,rgba(244,247,248,0) 0%,#F4F7F8 30%)',zIndex:10}}>
-          <button style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'16px 0',fontSize:15,fontWeight:800,cursor:'pointer',letterSpacing:0.8,boxShadow:'0 6px 18px rgba(0,153,168,0.32)'}}>BAND QILISH</button>
+          <button style={{width:'100%',background:`linear-gradient(135deg,${T},#007A87)`,color:'#fff',border:'none',borderRadius:16,padding:'16px 0',fontSize:15,fontWeight:800,cursor:'pointer',letterSpacing:0.8,boxShadow:'0 6px 18px rgba(0,153,168,0.32),inset 0 1px 0 rgba(255,255,255,0.25)'}}>BAND QILISH</button>
         </div>
       </Frame>
     );
