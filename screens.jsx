@@ -917,10 +917,23 @@ function LeafletMap({ onDragStart, onDragEnd }) {
     if (c._lf) { c._lf.remove(); }
     const map = window.L.map(c, { zoomControl: false, attributionControl: false }).setView([41.31, 69.25], 13);
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-    map.on('movestart', () => onDragStart && onDragStart());
-    map.on('moveend', () => onDragEnd && onDragEnd());
+    const start = () => onDragStart && onDragStart();
+    const end = () => onDragEnd && onDragEnd();
+    map.on('mousedown', start);
+    map.on('mouseup', end);
+    const onTouchStart = () => start();
+    const onTouchEnd = () => end();
+    c.addEventListener('touchstart', onTouchStart, { passive: true });
+    c.addEventListener('touchend', onTouchEnd, { passive: true });
+    c.addEventListener('touchcancel', onTouchEnd, { passive: true });
     c._lf = map;
-    return () => { map.remove(); c._lf = null; };
+    return () => {
+      c.removeEventListener('touchstart', onTouchStart);
+      c.removeEventListener('touchend', onTouchEnd);
+      c.removeEventListener('touchcancel', onTouchEnd);
+      map.remove();
+      c._lf = null;
+    };
   }, []);
   return <div ref={ref} style={{position:'absolute',inset:0,width:'100%',height:'100%'}}/>;
 }
