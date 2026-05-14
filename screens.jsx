@@ -909,48 +909,21 @@ function useSheetViewport() {
   return { sheetH: Math.round(vvh * 0.88), sheetXform: kbOffset > 0 ? `translateY(-${kbOffset}px)` : 'none' };
 }
 
-function LeafletMap({ onDragStart, onDragEnd }) {
-  const ref = React.useRef(null);
-  React.useEffect(() => {
-    const c = ref.current;
-    if (!c || !window.L) return;
-    if (c._lf) { c._lf.remove(); }
-    const map = window.L.map(c, { zoomControl: false, attributionControl: false, inertia: false }).setView([41.31, 69.25], 13);
-    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-    const start = () => onDragStart && onDragStart();
-    const end = () => onDragEnd && onDragEnd();
-    map.on('mousedown', start);
-    map.on('mouseup', end);
-    const onTouchStart = () => start();
-    const onTouchEnd = () => end();
-    c.addEventListener('touchstart', onTouchStart, { passive: true });
-    c.addEventListener('mousedown', onTouchStart, { passive: true });
-    window.addEventListener('touchend', onTouchEnd, { passive: true });
-    window.addEventListener('touchcancel', onTouchEnd, { passive: true });
-    window.addEventListener('mouseup', onTouchEnd, { passive: true });
-    c._lf = map;
-    return () => {
-      c.removeEventListener('touchstart', onTouchStart);
-      c.removeEventListener('mousedown', onTouchStart);
-      window.removeEventListener('touchend', onTouchEnd);
-      window.removeEventListener('touchcancel', onTouchEnd);
-      window.removeEventListener('mouseup', onTouchEnd);
-      map.remove();
-      c._lf = null;
-    };
-  }, []);
-  return <div ref={ref} style={{position:'absolute',inset:0,width:'100%',height:'100%'}}/>;
-}
-
-function MapPin({ dragging }) {
-  const containerRef = React.useRef(null);
+function MapWithPin() {
+  const mapEl = React.useRef(null);
+  const pinEl = React.useRef(null);
   const animRef = React.useRef(null);
   const timer = React.useRef(null);
+  const reachedPeakRef = React.useRef(false);
   React.useEffect(() => {
-    const c = containerRef.current;
-    if (!c || !window.lottie) return;
+    const mc = mapEl.current, pc = pinEl.current;
+    if (!mc || !pc || !window.L || !window.lottie) return;
+    if (mc._lf) { mc._lf.remove(); }
+    const map = window.L.map(mc, { zoomControl: false, attributionControl: false, inertia: false }).setView([41.31, 69.25], 13);
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    mc._lf = map;
     const anim = window.lottie.loadAnimation({
-      container: c,
+      container: pc,
       renderer: 'svg',
       loop: false,
       autoplay: false,
@@ -958,35 +931,66 @@ function MapPin({ dragging }) {
     });
     animRef.current = anim;
     anim.setSpeed(2);
-    anim.addEventListener('DOMLoaded', () => {
-      anim.goToAndStop(0, true);
-    });
-    return () => { anim.destroy(); animRef.current = null; };
-  }, []);
-  React.useEffect(() => {
-    const anim = animRef.current;
-    if (!anim) return;
-    const totalFrames = anim.totalFrames || 60;
-    if (dragging) {
+    anim.addEventListener('DOMLoaded', () => anim.goToAndStop(0, true));
+
+    const lift = () => {
+      if (!animRef.current) return;
+      const a = animRef.current;
+      reachedPeakRef.current = false;
       if (timer.current) clearTimeout(timer.current);
-      try { anim.stop(); } catch(e) {}
-      anim.setDirection(1);
-      anim.goToAndPlay(0, true);
+      try { a.stop(); } catch(e) {}
+      a.setDirection(1);
+      a.goToAndPlay(0, true);
+      const totalFrames = a.totalFrames || 60;
       const midFrame = Math.floor(totalFrames * 0.4);
-      const fps = anim.frameRate || 30;
+      const fps = a.frameRate || 30;
       const delay = (midFrame / fps) * 1000 / 2;
       timer.current = setTimeout(() => {
-        try { anim.goToAndStop(midFrame, true); } catch(e) {}
+        reachedPeakRef.current = true;
+        try { a.goToAndStop(midFrame, true); } catch(e) {}
       }, delay);
-    } else {
+    };
+    const drop = () => {
+      if (!animRef.current) return;
+      const a = animRef.current;
       if (timer.current) { clearTimeout(timer.current); timer.current = null; }
-      // Continue playing from current frame to end
-      anim.setDirection(1);
-      anim.play();
-    }
-    return () => { if (timer.current) clearTimeout(timer.current); };
-  }, [dragging]);
-  return <div ref={containerRef} style={{width:140,height:140,display:'block'}}/>;
+      // If pause never fired (brief tap): let the animation continue naturally to end
+      // If it did fire (held): play from peak to end
+      a.setDirection(1);
+      a.play();
+    };
+
+    map.on('mousedown', lift);
+    map.on('mouseup', drop);
+    const onDown = () => lift();
+    const onUp = () => drop();
+    mc.addEventListener('touchstart', onDown, { passive: true });
+    mc.addEventListener('mousedown', onDown, { passive: true });
+    window.addEventListener('touchend', onUp, { passive: true });
+    window.addEventListener('touchcancel', onUp, { passive: true });
+    window.addEventListener('mouseup', onUp, { passive: true });
+
+    return () => {
+      mc.removeEventListener('touchstart', onDown);
+      mc.removeEventListener('mousedown', onDown);
+      window.removeEventListener('touchend', onUp);
+      window.removeEventListener('touchcancel', onUp);
+      window.removeEventListener('mouseup', onUp);
+      if (timer.current) clearTimeout(timer.current);
+      anim.destroy();
+      animRef.current = null;
+      map.remove();
+      mc._lf = null;
+    };
+  }, []);
+  return (
+    <>
+      <div ref={mapEl} style={{position:'absolute',inset:0,width:'100%',height:'100%'}}/>
+      <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',pointerEvents:'none',zIndex:1000}}>
+        <div ref={pinEl} style={{width:140,height:140,display:'block'}}/>
+      </div>
+    </>
+  );
 }
 
 function RentLocationPicker({ rentPickupLoc, onPick, onMap }) {
@@ -2058,10 +2062,7 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          <LeafletMap onDragStart={()=>setMapDragging(true)} onDragEnd={()=>setMapDragging(false)}/>
-          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',pointerEvents:'none',zIndex:1000}}>
-            <MapPin dragging={mapDragging}/>
-          </div>
+          <MapWithPin/>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,padding:'0 18px'}}>
             <button onClick={()=>setTaxiMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
@@ -3379,10 +3380,7 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          <LeafletMap onDragStart={()=>setMapDragging(true)} onDragEnd={()=>setMapDragging(false)}/>
-          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',pointerEvents:'none',zIndex:1000}}>
-            <MapPin dragging={mapDragging}/>
-          </div>
+          <MapWithPin/>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,padding:'0 18px'}}>
             <button onClick={()=>setXferMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
