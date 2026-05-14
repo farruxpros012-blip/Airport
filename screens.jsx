@@ -924,13 +924,17 @@ function LeafletMap({ onDragStart, onDragEnd }) {
     const onTouchStart = () => start();
     const onTouchEnd = () => end();
     c.addEventListener('touchstart', onTouchStart, { passive: true });
-    c.addEventListener('touchend', onTouchEnd, { passive: true });
-    c.addEventListener('touchcancel', onTouchEnd, { passive: true });
+    c.addEventListener('mousedown', onTouchStart, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', onTouchEnd, { passive: true });
+    window.addEventListener('mouseup', onTouchEnd, { passive: true });
     c._lf = map;
     return () => {
       c.removeEventListener('touchstart', onTouchStart);
-      c.removeEventListener('touchend', onTouchEnd);
-      c.removeEventListener('touchcancel', onTouchEnd);
+      c.removeEventListener('mousedown', onTouchStart);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchEnd);
+      window.removeEventListener('mouseup', onTouchEnd);
       map.remove();
       c._lf = null;
     };
@@ -963,15 +967,15 @@ function MapPin({ dragging }) {
     if (!anim) return;
     const totalFrames = anim.totalFrames || 60;
     if (dragging) {
+      if (timer.current) clearTimeout(timer.current);
+      try { anim.stop(); } catch(e) {}
       anim.setDirection(1);
       anim.goToAndPlay(0, true);
-      if (timer.current) clearTimeout(timer.current);
-      // Pause at midpoint frame
       const midFrame = Math.floor(totalFrames * 0.4);
       const fps = anim.frameRate || 30;
       const delay = (midFrame / fps) * 1000;
       timer.current = setTimeout(() => {
-        anim.goToAndStop(midFrame, true);
+        try { anim.goToAndStop(midFrame, true); } catch(e) {}
       }, delay);
     } else {
       if (timer.current) { clearTimeout(timer.current); timer.current = null; }
