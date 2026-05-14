@@ -1123,6 +1123,8 @@ function ScreenTrip() {
   const [excurDetail, setExcurDetail] = React.useState(null);
   const [rentDetail, setRentDetail] = React.useState(null);
   const [rentGallery, setRentGallery] = React.useState(0);
+  const [rentSpecsOpen, setRentSpecsOpen] = React.useState(false);
+  const rentSwipeX = React.useRef(0);
   const [excurGallery, setExcurGallery] = React.useState(0);
   const [excurExpanded, setExcurExpanded] = React.useState(false);
   const [excurPeople, setExcurPeople] = React.useState(1);
@@ -3052,7 +3054,33 @@ function ScreenTrip() {
   // Rent car detail page — Tour-detail style
   if (rentDetail) {
     const rd = rentDetail;
-    const GALLERY = [rd.img];
+    const GALLERY = [
+      rd.img,
+      'https://images.unsplash.com/photo-1568844293986-8d0400bd4745?w=800',
+      'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800',
+      'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800',
+    ];
+    const swipeStart = e => { rentSwipeX.current = e.touches[0].clientX; };
+    const swipeEnd = e => {
+      const diff = rentSwipeX.current - e.changedTouches[0].clientX;
+      if (diff > 50) setRentGallery(g => Math.min(g+1, GALLERY.length-1));
+      if (diff < -50) setRentGallery(g => Math.max(g-1, 0));
+    };
+    const titleParts = (rd.title||'').split(',');
+    const brandModel = (titleParts[0]||'').trim();
+    const year = (titleParts[1]||'').trim() || '2023';
+    const brand = brandModel.split(' ')[0] || '';
+    const model = brandModel.split(' ').slice(1).join(' ') || brandModel;
+    const condEng = rd.condition && rd.condition.toLowerCase().includes('yangi') ? 'NEW' : 'GOOD';
+    const SPECS = [
+      ['Yil', year],
+      ['Avtomobilning holati', condEng],
+      ['Brend', brand],
+      ['Model', model],
+      ['Dvigatel turi', '1.5'],
+      ["O'rindiqlar", String(rd.pax)],
+      ['Bagaj', String(rd.bags)],
+    ];
     const cardStyle = {background:'#fff',borderRadius:18,margin:'16px 16px 0',boxShadow:'0 2px 10px rgba(10,31,33,0.05)',overflow:'hidden'};
     const secHeader = (label) => (
       <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
@@ -3081,20 +3109,37 @@ function ScreenTrip() {
       <Frame>
         <div style={{flex:1,overflowY:'auto',paddingBottom:110,background:'#F4F7F8'}}>
           {/* ── HERO CAROUSEL — edge-to-edge 320px ── */}
-          <div style={{position:'relative',height:320,overflow:'hidden',background:'#000'}}>
+          <div style={{position:'relative',height:320,overflow:'hidden',background:'#000'}} onTouchStart={swipeStart} onTouchEnd={swipeEnd}>
             <img src={GALLERY[rentGallery]} alt={rd.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block',userSelect:'none'}}/>
             <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.32) 0%,transparent 38%,rgba(0,0,0,0) 55%,rgba(0,0,0,0.6) 100%)',pointerEvents:'none'}}/>
             <button onClick={()=>setRentDetail(null)} style={{position:'absolute',top:16,left:16,zIndex:10,width:48,height:48,borderRadius:'50%',background:'rgba(255,255,255,0.92)',backdropFilter:'blur(12px)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 12px rgba(0,0,0,0.18)'}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
+            {/* Left/right arrows */}
+            {rentGallery > 0 && (
+              <button onClick={()=>setRentGallery(g=>g-1)} style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',zIndex:10,width:32,height:32,borderRadius:'50%',background:'rgba(0,0,0,0.35)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+              </button>
+            )}
+            {rentGallery < GALLERY.length-1 && (
+              <button onClick={()=>setRentGallery(g=>g+1)} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',zIndex:10,width:32,height:32,borderRadius:'50%',background:'rgba(0,0,0,0.35)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            )}
             {/* Discount badge top-right */}
             <div style={{position:'absolute',top:16,right:16,background:'linear-gradient(135deg,#FB923C,#F97316)',color:'#fff',borderRadius:12,padding:'6px 12px',fontSize:13,fontWeight:800,boxShadow:'0 6px 16px rgba(249,115,22,0.4)'}}>−{rd.discount}%</div>
             {/* Counter bottom-right */}
             <div style={{position:'absolute',bottom:16,right:16,background:'rgba(0,0,0,0.55)',color:'#fff',borderRadius:999,padding:'5px 11px',fontSize:12,fontWeight:600}}>{rentGallery+1}/{GALLERY.length}</div>
             {/* Title overlay */}
-            <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'0 16px 18px'}}>
+            <div style={{position:'absolute',bottom:0,left:0,right:64,padding:'0 16px 18px'}}>
               <div style={{fontSize:22,fontWeight:900,color:'#fff',lineHeight:1.2,textShadow:'0 1px 8px rgba(0,0,0,0.4)'}}>{rd.title.split(',')[0]}</div>
               <div style={{fontSize:13,color:'rgba(255,255,255,0.88)',marginTop:4,textShadow:'0 1px 6px rgba(0,0,0,0.4)'}}>yoki o'rtacha o'lchamdagi shunga o'xshash</div>
+              {/* Dots */}
+              <div style={{display:'flex',gap:6,marginTop:10}}>
+                {GALLERY.map((_,d)=>(
+                  <div key={d} style={{width:d===rentGallery?18:6,height:6,borderRadius:99,background:d===rentGallery?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.2s'}}/>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -3134,7 +3179,7 @@ function ScreenTrip() {
 
           {/* ── CARD: Avtomobil xarakteristikalari (expand row) ── */}
           <div style={cardStyle}>
-            <div style={{padding:'14px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
+            <div onClick={()=>setRentSpecsOpen(true)} style={{padding:'14px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer'}}>
               <div style={{display:'flex',alignItems:'center',gap:8}}>
                 <div style={{width:3,height:14,borderRadius:2,background:T}}/>
                 <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>Avtomobil xarakteristikalari</span>
@@ -3191,6 +3236,28 @@ function ScreenTrip() {
         <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,padding:'12px 16px 24px',background:'linear-gradient(to bottom,rgba(244,247,248,0) 0%,#F4F7F8 30%)',zIndex:10}}>
           <button style={{width:'100%',background:`linear-gradient(135deg,${T},#007A87)`,color:'#fff',border:'none',borderRadius:16,padding:'16px 0',fontSize:15,fontWeight:800,cursor:'pointer',letterSpacing:0.8,boxShadow:'0 6px 18px rgba(0,153,168,0.32),inset 0 1px 0 rgba(255,255,255,0.25)'}}>BAND QILISH</button>
         </div>
+        {/* Specs bottomsheet */}
+        {rentSpecsOpen && (
+          <div onClick={()=>setRentSpecsOpen(false)} style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.5)',zIndex:300,display:'flex',alignItems:'flex-end',justifyContent:'center'}}>
+            <div onClick={e=>e.stopPropagation()} style={{width:'100%',maxWidth:460,background:'#fff',borderRadius:'24px 24px 0 0',padding:'0 0 28px',boxShadow:'0 -8px 40px rgba(0,0,0,0.18)'}}>
+              <div style={{width:36,height:4,background:'#DDE0EB',borderRadius:99,margin:'12px auto 0'}}/>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 18px 12px'}}>
+                <div style={{fontSize:17,fontWeight:800,color:'#0A1F21'}}>Avtomobil xarakteristikalari</div>
+                <button onClick={()=>setRentSpecsOpen(false)} style={{width:32,height:32,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+              <div style={{padding:'0 18px'}}>
+                {SPECS.map(([k,v],i)=>(
+                  <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 0',borderBottom: i<SPECS.length-1?'1px solid #F0F2F5':'none'}}>
+                    <span style={{fontSize:14,color:'#5C7577'}}>{k}</span>
+                    <span style={{fontSize:14,fontWeight:800,color:'#0A1F21'}}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </Frame>
     );
   }
