@@ -1030,18 +1030,22 @@ function playTick() {
     }
     const ctx = window.__tickCtx;
     if (ctx.state === 'suspended') ctx.resume();
+    const t = ctx.currentTime;
+    // Soft sine ping with quick decay
     const o = ctx.createOscillator();
     const g = ctx.createGain();
-    o.type = 'square';
-    o.frequency.value = 1800;
-    g.gain.setValueAtTime(0.0001, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.10, ctx.currentTime + 0.002);
-    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.035);
+    o.type = 'sine';
+    o.frequency.setValueAtTime(880, t);
+    o.frequency.exponentialRampToValueAtTime(660, t + 0.05);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.09, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
     o.connect(g);
     g.connect(ctx.destination);
-    o.start(ctx.currentTime);
-    o.stop(ctx.currentTime + 0.04);
+    o.start(t);
+    o.stop(t + 0.08);
   } catch (e) {}
+  try { if (navigator.vibrate) navigator.vibrate(8); } catch(e) {}
 }
 
 function IosTimeWheel({ items, value, onChange }) {
@@ -1120,14 +1124,9 @@ function IosTimePicker({ value, onChange, onConfirm }) {
   const ITEM_H = 38;
   const VISIBLE = 5;
   const HOURS = Array.from({length:24}, (_,i)=>i.toString().padStart(2,'0'));
-  const MINUTES = Array.from({length:12}, (_,i)=>(i*5).toString().padStart(2,'0'));
+  const MINUTES = Array.from({length:60}, (_,i)=>i.toString().padStart(2,'0'));
   const [hh, mm] = (value||'10:00').split(':');
-  const nearestMin = (() => {
-    const v = parseInt(mm,10);
-    let best='00', diff=99;
-    MINUTES.forEach(s=>{ const d=Math.abs(parseInt(s,10)-v); if(d<diff){diff=d; best=s;}});
-    return best;
-  })();
+  const nearestMin = mm.padStart(2,'0');
   const [h, setH] = React.useState(hh);
   const [m, setM] = React.useState(nearestMin);
   React.useEffect(()=>{ onChange && onChange(`${h}:${m}`); }, [h, m]);
