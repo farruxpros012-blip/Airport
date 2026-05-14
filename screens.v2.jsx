@@ -1024,8 +1024,8 @@ function MapWithPin({ onAddressChange }) {
 }
 
 function IosTimeWheel({ items, value, onChange }) {
-  const ITEM_H = 40;
-  const VISIBLE = 7; // odd number → has clear center
+  const ITEM_H = 42;
+  const VISIBLE = 7;
   const PAD = ((VISIBLE-1)/2) * ITEM_H;
   const idxOf = (v) => Math.max(0, items.indexOf(v));
   const [idx, setIdx] = React.useState(idxOf(value));
@@ -1053,45 +1053,44 @@ function IosTimeWheel({ items, value, onChange }) {
     }, 100);
   };
   return (
-    <div style={{position:'relative',flex:1,height:VISIBLE*ITEM_H,perspective:'1000px'}}>
+    <div style={{position:'relative',flex:1,height:VISIBLE*ITEM_H,perspective:'1100px'}}>
       <div ref={ref} onScroll={onScroll} style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch',transformStyle:'preserve-3d'}}>
         <div style={{paddingTop:PAD,paddingBottom:PAD}}>
           {items.map((v,i)=>{
             const d = i - idx;
             const ad = Math.abs(d);
-            const rot = Math.max(-75, Math.min(75, d * 18));
-            const scale = Math.max(0.55, 1 - ad * 0.10);
-            const opacity = ad===0 ? 1 : Math.max(0.18, 1 - ad * 0.30);
+            const rot = Math.max(-72, Math.min(72, d * 16));
+            const scale = Math.max(0.62, 1 - ad * 0.07);
+            const opacity = ad===0 ? 1 : Math.max(0.28, 1 - ad * 0.22);
             return (
               <div key={v} style={{
                 height:ITEM_H,
                 display:'flex',alignItems:'center',justifyContent:'center',
                 scrollSnapAlign:'center',
-                fontSize:24,
+                fontSize:26,
                 fontWeight:ad===0?700:500,
-                color:ad===0?'#0A1F21':'#374151',
+                color:'#0A0A0A',
                 fontVariantNumeric:'tabular-nums',
                 transform:`rotateX(${rot}deg) scale(${scale})`,
                 opacity,
-                transition:'transform 0.12s, opacity 0.12s, color 0.12s, font-weight 0.12s',
+                transition:'transform 0.1s, opacity 0.1s, font-weight 0.1s',
                 transformOrigin:'center center',
                 willChange:'transform, opacity',
+                letterSpacing:0.5,
               }}>{v}</div>
             );
           })}
         </div>
       </div>
-      {/* Top fade */}
-      <div style={{position:'absolute',top:0,left:0,right:0,height:PAD,background:'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:3}}/>
-      {/* Bottom fade */}
-      <div style={{position:'absolute',bottom:0,left:0,right:0,height:PAD,background:'linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:3}}/>
+      <div style={{position:'absolute',top:0,left:0,right:0,height:PAD,background:'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 60%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:3}}/>
+      <div style={{position:'absolute',bottom:0,left:0,right:0,height:PAD,background:'linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 60%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:3}}/>
     </div>
   );
 }
 
 function IosTimePicker({ value, onChange, onConfirm }) {
   const T = '#0099A8';
-  const ITEM_H = 40;
+  const ITEM_H = 42;
   const VISIBLE = 7;
   const HOURS = Array.from({length:24}, (_,i)=>i.toString().padStart(2,'0'));
   const MINUTES = Array.from({length:12}, (_,i)=>(i*5).toString().padStart(2,'0'));
@@ -1107,11 +1106,11 @@ function IosTimePicker({ value, onChange, onConfirm }) {
   React.useEffect(()=>{ onChange && onChange(`${h}:${m}`); }, [h, m]);
   return (
     <div style={{position:'relative'}}>
-      <div style={{position:'relative',display:'flex',alignItems:'center',justifyContent:'center',gap:0}}>
-        {/* Selection band */}
-        <div style={{position:'absolute',left:24,right:24,top:(VISIBLE-1)/2*ITEM_H,height:ITEM_H,borderTop:'1px solid #E8EAF3',borderBottom:'1px solid #E8EAF3',background:'rgba(0,153,168,0.04)',pointerEvents:'none',zIndex:1}}/>
+      <div style={{position:'relative',display:'flex',alignItems:'center',justifyContent:'center',gap:0,padding:'0 8px'}}>
+        {/* iOS-style selection pill */}
+        <div style={{position:'absolute',left:8,right:8,top:(VISIBLE-1)/2*ITEM_H,height:ITEM_H,background:'#EBEBEC',borderRadius:10,pointerEvents:'none',zIndex:1}}/>
         <IosTimeWheel items={HOURS} value={h} onChange={setH}/>
-        <div style={{fontSize:26,fontWeight:700,color:'#0A1F21',padding:'0 2px',zIndex:2}}>:</div>
+        <div style={{fontSize:24,fontWeight:600,color:'#0A0A0A',padding:'0 0',zIndex:2,letterSpacing:0.5}}>:</div>
         <IosTimeWheel items={MINUTES} value={m} onChange={setM}/>
       </div>
       <button onClick={()=>onConfirm && onConfirm(`${h}:${m}`)} style={{width:'100%',marginTop:18,background:T,color:'#fff',border:'none',borderRadius:14,padding:'14px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tasdiqlash</button>
