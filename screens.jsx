@@ -1962,6 +1962,7 @@ function ScreenTrip() {
   const [xferFrom, setXferFrom] = React.useState('');
   const [xferTo, setXferTo] = React.useState('');
   const [xferMapPage, setXferMapPage] = React.useState(null); // null | 'from' | 'to'
+  const [mapDragging, setMapDragging] = React.useState(false);
   const [xferSearchPage, setXferSearchPage] = React.useState(false);
   const [xferPickupDate, setXferPickupDate] = React.useState('');
   const [xferPickupTime, setXferPickupTime] = React.useState('');
@@ -1977,14 +1978,17 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=69.18%2C41.27%2C69.32%2C41.34&amp;layer=mapnik" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:'none'}}/>
-          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none',zIndex:5}}>
-            <div style={{filter:'drop-shadow(0 6px 16px rgba(0,153,168,0.45))'}}>
-              <div style={{width:48,height:48,background:T,borderRadius:'50% 50% 50% 4px',transform:'rotate(-45deg)',display:'flex',alignItems:'center',justifyContent:'center',border:'3px solid #fff'}}>
-                <div style={{transform:'rotate(45deg)',width:14,height:14,background:'#fff',borderRadius:'50%'}}/>
-              </div>
-            </div>
-            <div style={{width:10,height:6,background:'rgba(0,0,0,0.18)',borderRadius:'50%',marginTop:3,filter:'blur(3px)'}}/>
+          <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=69.18%2C41.27%2C69.32%2C41.34&amp;layer=mapnik" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:'none',pointerEvents:'none'}}/>
+          <div
+            onPointerDown={()=>setMapDragging(true)}
+            onPointerUp={()=>setMapDragging(false)}
+            onPointerCancel={()=>setMapDragging(false)}
+            onPointerLeave={()=>setMapDragging(false)}
+            style={{position:'absolute',inset:0,zIndex:3,touchAction:'none',cursor:'grab'}}
+          />
+          <div style={{position:'absolute',top:'50%',left:'50%',transform:`translate(-50%,-100%) translateY(${mapDragging?-28:0}px)`,transition:'transform 0.25s cubic-bezier(0.2,0.8,0.2,1)',pointerEvents:'none',zIndex:5,display:'flex',flexDirection:'column',alignItems:'center'}}>
+            <dotlottie-wc src="assets/Pickup_Pin.lottie" autoplay="" loop="" style={{width:'88px',height:'88px',display:'block'}}></dotlottie-wc>
+            <div style={{width:12,height:6,background:'rgba(0,0,0,0.28)',borderRadius:'50%',filter:'blur(3px)',transform:`scale(${mapDragging?0.55:1})`,opacity:mapDragging?0.5:1,transition:'all 0.25s'}}/>
           </div>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'0 18px'}}>
             <button onClick={()=>setTaxiMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
@@ -3303,14 +3307,17 @@ function ScreenTrip() {
     return (
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
-          <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=69.18%2C41.27%2C69.32%2C41.34&amp;layer=mapnik" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:'none'}}/>
-          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none',zIndex:5}}>
-            <div style={{filter:'drop-shadow(0 6px 16px rgba(0,153,168,0.45))'}}>
-              <div style={{width:48,height:48,background:T,borderRadius:'50% 50% 50% 4px',transform:'rotate(-45deg)',display:'flex',alignItems:'center',justifyContent:'center',border:'3px solid #fff'}}>
-                <div style={{transform:'rotate(45deg)',width:14,height:14,background:'#fff',borderRadius:'50%'}}/>
-              </div>
-            </div>
-            <div style={{width:10,height:6,background:'rgba(0,0,0,0.18)',borderRadius:'50%',marginTop:3,filter:'blur(3px)'}}/>
+          <iframe title="map" src="https://www.openstreetmap.org/export/embed.html?bbox=69.18%2C41.27%2C69.32%2C41.34&amp;layer=mapnik" style={{position:'absolute',inset:0,width:'100%',height:'100%',border:'none',pointerEvents:'none'}}/>
+          <div
+            onPointerDown={()=>setMapDragging(true)}
+            onPointerUp={()=>setMapDragging(false)}
+            onPointerCancel={()=>setMapDragging(false)}
+            onPointerLeave={()=>setMapDragging(false)}
+            style={{position:'absolute',inset:0,zIndex:3,touchAction:'none',cursor:'grab'}}
+          />
+          <div style={{position:'absolute',top:'50%',left:'50%',transform:`translate(-50%,-100%) translateY(${mapDragging?-28:0}px)`,transition:'transform 0.25s cubic-bezier(0.2,0.8,0.2,1)',pointerEvents:'none',zIndex:5,display:'flex',flexDirection:'column',alignItems:'center'}}>
+            <dotlottie-wc src="assets/Pickup_Pin.lottie" autoplay="" loop="" style={{width:'88px',height:'88px',display:'block'}}></dotlottie-wc>
+            <div style={{width:12,height:6,background:'rgba(0,0,0,0.28)',borderRadius:'50%',filter:'blur(3px)',transform:`scale(${mapDragging?0.55:1})`,opacity:mapDragging?0.5:1,transition:'all 0.25s'}}/>
           </div>
           <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'0 18px'}}>
             <button onClick={()=>setXferMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
