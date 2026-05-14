@@ -2014,10 +2014,10 @@ function ScreenTrip() {
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
           <LeafletMap onDragStart={()=>setMapDragging(true)} onDragEnd={()=>setMapDragging(false)}/>
-          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',pointerEvents:'none',zIndex:5}}>
+          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',pointerEvents:'none',zIndex:1000}}>
             <MapPin dragging={mapDragging}/>
           </div>
-          <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'0 18px'}}>
+          <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,padding:'0 18px'}}>
             <button onClick={()=>setTaxiMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
@@ -2026,7 +2026,7 @@ function ScreenTrip() {
           <button onClick={()=>setTaxiMapAddr('Mening joriy manzilim')} style={{position:'absolute',right:18,bottom:220,zIndex:6,width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
           </button>
-          <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
+          <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
             <div style={{width:36,height:4,background:'#DDE0EB',borderRadius:999,margin:'0 auto 14px'}}/>
             <div style={{display:'flex',alignItems:'center',gap:10,background:'#F4F5FA',borderRadius:14,padding:'12px 14px',marginBottom:14}}>
               <svg style={{flexShrink:0}} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
@@ -3335,16 +3335,16 @@ function ScreenTrip() {
       <Frame>
         <div style={{position:'relative',height:'100vh',overflow:'hidden'}}>
           <LeafletMap onDragStart={()=>setMapDragging(true)} onDragEnd={()=>setMapDragging(false)}/>
-          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',pointerEvents:'none',zIndex:5}}>
+          <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-100%)',pointerEvents:'none',zIndex:1000}}>
             <MapPin dragging={mapDragging}/>
           </div>
-          <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,padding:'0 18px'}}>
+          <div style={{position:'fixed',top:18,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,padding:'0 18px'}}>
             <button onClick={()=>setXferMapPage(null)} style={{width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 10px rgba(10,31,33,0.15)'}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.4" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
             </button>
           </div>
           {/* Fixed bottom panel */}
-          <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:10,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
+          <div style={{position:'fixed',bottom:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:460,zIndex:1100,background:'#fff',borderRadius:'24px 24px 0 0',padding:'16px 20px 36px',boxShadow:'0 -8px 30px rgba(0,0,0,0.12)'}}>
             <div style={{width:36,height:4,background:'#DDE0EB',borderRadius:999,margin:'0 auto 14px'}}/>
             <div style={{display:'flex',alignItems:'center',gap:10,background:'#F4F5FA',borderRadius:14,padding:'12px 14px',marginBottom:10}}>
               <svg style={{flexShrink:0}} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
