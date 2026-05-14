@@ -968,7 +968,7 @@ function MapPin({ dragging }) {
     }
     return () => { if (timer.current) clearTimeout(timer.current); };
   }, [dragging]);
-  return <div ref={containerRef} style={{width:96,height:96,display:'block'}}/>;
+  return <div ref={containerRef} style={{width:140,height:140,display:'block'}}/>;
 }
 
 function RentLocationPicker({ rentPickupLoc, onPick, onMap }) {
