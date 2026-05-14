@@ -1023,6 +1023,76 @@ function MapWithPin({ onAddressChange }) {
   );
 }
 
+function IosTimePicker({ value, onChange, onConfirm }) {
+  const T = '#0099A8';
+  const HOURS = Array.from({length:24}, (_,i)=>i.toString().padStart(2,'0'));
+  const MINUTES = Array.from({length:12}, (_,i)=>(i*5).toString().padStart(2,'0'));
+  const [hh,mm] = (value||'10:00').split(':');
+  const hIdx = Math.max(0, HOURS.indexOf(hh));
+  const mIdx = (() => {
+    const v = parseInt(mm,10);
+    let best=0, diff=99;
+    MINUTES.forEach((s,i)=>{ const d=Math.abs(parseInt(s,10)-v); if (d<diff){diff=d; best=i;}});
+    return best;
+  })();
+  const ITEM_H = 40;
+  const VISIBLE = 5;
+  const PAD = ((VISIBLE-1)/2) * ITEM_H;
+  const hRef = React.useRef(null);
+  const mRef = React.useRef(null);
+  const hScrollTimer = React.useRef(null);
+  const mScrollTimer = React.useRef(null);
+  React.useEffect(() => {
+    if (hRef.current) hRef.current.scrollTop = hIdx * ITEM_H;
+    if (mRef.current) mRef.current.scrollTop = mIdx * ITEM_H;
+  }, []);
+  const finalize = (newH, newM) => {
+    const v = `${newH}:${newM}`;
+    if (onChange) onChange(v);
+  };
+  const onScroll = (which) => {
+    return (e) => {
+      const el = e.currentTarget;
+      const timer = which==='h' ? hScrollTimer : mScrollTimer;
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => {
+        const idx = Math.round(el.scrollTop / ITEM_H);
+        const snapTop = idx * ITEM_H;
+        if (Math.abs(el.scrollTop - snapTop) > 1) {
+          el.scrollTo({ top: snapTop, behavior: 'smooth' });
+        }
+        const list = which==='h' ? HOURS : MINUTES;
+        const safe = Math.max(0, Math.min(list.length-1, idx));
+        if (which==='h') finalize(list[safe], MINUTES[mIdx]);
+        else finalize(HOURS[hIdx], list[safe]);
+      }, 80);
+    };
+  };
+  const Wheel = ({items, idx, refEl, onSc}) => (
+    <div style={{position:'relative',flex:1,height:VISIBLE*ITEM_H}}>
+      <div ref={refEl} onScroll={onSc} style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch'}}>
+        <div style={{paddingTop:PAD,paddingBottom:PAD}}>
+          {items.map((v,i)=>(
+            <div key={v} style={{height:ITEM_H,display:'flex',alignItems:'center',justifyContent:'center',scrollSnapAlign:'center',fontSize:22,fontWeight:i===idx?700:500,color:i===idx?'#0A1F21':'#9AA1B8',transition:'color 0.15s',fontVariantNumeric:'tabular-nums'}}>{v}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+  return (
+    <div style={{position:'relative'}}>
+      <div style={{position:'relative',display:'flex',alignItems:'center',justifyContent:'center',gap:0}}>
+        {/* selection band */}
+        <div style={{position:'absolute',left:24,right:24,top:(VISIBLE-1)/2*ITEM_H,height:ITEM_H,borderTop:'1px solid #E8EAF3',borderBottom:'1px solid #E8EAF3',background:'rgba(0,153,168,0.04)',pointerEvents:'none',zIndex:1}}/>
+        <Wheel items={HOURS} idx={hIdx} refEl={hRef} onSc={onScroll('h')}/>
+        <div style={{fontSize:24,fontWeight:700,color:'#0A1F21',padding:'0 2px',zIndex:2}}>:</div>
+        <Wheel items={MINUTES} idx={mIdx} refEl={mRef} onSc={onScroll('m')}/>
+      </div>
+      <button onClick={()=>onConfirm && onConfirm(`${HOURS[hIdx]}:${MINUTES[mIdx]}`)} style={{width:'100%',marginTop:18,background:T,color:'#fff',border:'none',borderRadius:14,padding:'14px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tasdiqlash</button>
+    </div>
+  );
+}
+
 function RentLocationPicker({ rentPickupLoc, onPick, onMap }) {
   const T = '#0099A8';
   const [q, setQ] = React.useState('');
@@ -3126,20 +3196,12 @@ function ScreenTrip() {
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
               </button>
             )}
-            {/* Discount badge top-right */}
-            <div style={{position:'absolute',top:16,right:16,background:'linear-gradient(135deg,#FB923C,#F97316)',color:'#fff',borderRadius:12,padding:'6px 12px',fontSize:13,fontWeight:800,boxShadow:'0 6px 16px rgba(249,115,22,0.4)'}}>−{rd.discount}%</div>
             {/* Counter bottom-right */}
             <div style={{position:'absolute',bottom:16,right:16,background:'rgba(0,0,0,0.55)',color:'#fff',borderRadius:999,padding:'5px 11px',fontSize:12,fontWeight:600}}>{rentGallery+1}/{GALLERY.length}</div>
             {/* Title overlay */}
             <div style={{position:'absolute',bottom:0,left:0,right:64,padding:'0 16px 18px'}}>
               <div style={{fontSize:22,fontWeight:900,color:'#fff',lineHeight:1.2,textShadow:'0 1px 8px rgba(0,0,0,0.4)'}}>{rd.title.split(',')[0]}</div>
               <div style={{fontSize:13,color:'rgba(255,255,255,0.88)',marginTop:4,textShadow:'0 1px 6px rgba(0,0,0,0.4)'}}>yoki o'rtacha o'lchamdagi shunga o'xshash</div>
-              {/* Dots */}
-              <div style={{display:'flex',gap:6,marginTop:10}}>
-                {GALLERY.map((_,d)=>(
-                  <div key={d} style={{width:d===rentGallery?18:6,height:6,borderRadius:99,background:d===rentGallery?'#fff':'rgba(255,255,255,0.5)',transition:'width 0.2s'}}/>
-                ))}
-              </div>
             </div>
           </div>
 
@@ -3152,9 +3214,12 @@ function ScreenTrip() {
                   <div style={{fontSize:13,color:'#5C7577'}}>Kunlik ijaraning narxi</div>
                   <div style={{fontSize:16,fontWeight:800,color:'#0A1F21',marginTop:3}}>15 USD</div>
                 </div>
-                <div style={{textAlign:'right'}}>
-                  <div style={{fontSize:22,fontWeight:900,color:T,letterSpacing:-0.4}}>30 $</div>
-                  <div style={{fontSize:12,color:'#9AA1B8',marginTop:3}}>2 kunlik narx</div>
+                <div style={{textAlign:'right',display:'flex',flexDirection:'column',alignItems:'flex-end',gap:2}}>
+                  <div style={{fontSize:12,color:'#9AA1B8'}}>2 kunlik narx</div>
+                  <div style={{display:'flex',alignItems:'center',gap:8}}>
+                    <span style={{background:'linear-gradient(135deg,#FB923C,#F97316)',color:'#fff',borderRadius:8,padding:'3px 8px',fontSize:11.5,fontWeight:800,boxShadow:'0 2px 6px rgba(249,115,22,0.3)'}}>−{rd.discount}%</span>
+                    <span style={{fontSize:22,fontWeight:900,color:T,letterSpacing:-0.4}}>30 $</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3737,11 +3802,18 @@ function ScreenTrip() {
             <div style={{width:36,height:4,background:'#E0E4EE',borderRadius:99,margin:'12px auto 0'}}/>
             {/* Tabs */}
             <div style={{display:'flex',borderBottom:'1.5px solid #F0F2F5',margin:'14px 20px 0'}}>
-              {['date','time'].map(step=>(
-                <button key={step} onClick={()=>setXferDateStep(step)} style={{flex:1,background:'none',border:'none',padding:'10px 0',fontSize:14,fontWeight:700,color:xferDateStep===step?T:'#9AA1B8',borderBottom:xferDateStep===step?`2.5px solid ${T}`:'2.5px solid transparent',cursor:'pointer',transition:'all 0.15s'}}>
-                  {step==='date'?'📅 Sana':'🕐 Vaqt'}
-                </button>
-              ))}
+              {['date','time'].map(step=>{
+                const active = xferDateStep===step;
+                const ic = step==='date'
+                  ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active?T:'#9AA1B8'} strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active?T:'#9AA1B8'} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;
+                return (
+                  <button key={step} onClick={()=>setXferDateStep(step)} style={{flex:1,display:'inline-flex',alignItems:'center',justifyContent:'center',gap:6,background:'none',border:'none',padding:'10px 0',fontSize:14,fontWeight:700,color:active?T:'#9AA1B8',borderBottom:active?`2.5px solid ${T}`:'2.5px solid transparent',cursor:'pointer',transition:'all 0.15s'}}>
+                    {ic}
+                    {step==='date'?'Sana':'Vaqt'}
+                  </button>
+                );
+              })}
             </div>
             <div style={{overflowY:'auto',flex:1,padding:'16px 20px'}}>
               {xferDateStep==='date' ? (
@@ -3777,19 +3849,7 @@ function ScreenTrip() {
                   </div>
                 </>
               ) : (
-                <>
-                  <div style={{fontSize:13,color:'#9AA1B8',fontWeight:600,marginBottom:12}}>Vaqtni tanlang</div>
-                  <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8}}>
-                    {TIMES.map(t=>{
-                      const sel=xferPickupTime===t;
-                      return (
-                        <div key={t} onClick={()=>{setXferPickupTime(t);setXferDateSheet(false);}} style={{textAlign:'center',padding:'10px 0',borderRadius:12,border:`1.5px solid ${sel?T:'#E8EAF3'}`,background:sel?T:'#fff',color:sel?'#fff':'#0A1F21',fontSize:14,fontWeight:700,cursor:'pointer'}}>
-                          {t}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
+                <IosTimePicker value={xferPickupTime||'10:00'} onChange={v=>setXferPickupTime(v)} onConfirm={v=>{setXferPickupTime(v);setXferDateSheet(false);}}/>
               )}
             </div>
           </div>
