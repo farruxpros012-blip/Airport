@@ -931,17 +931,30 @@ function MapPin({ dragging }) {
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const onReady = () => { try { el.pause?.(); el.seek?.(0); } catch(e) {} };
+    el.addEventListener('ready', onReady);
+    el.addEventListener('load', onReady);
+    return () => {
+      el.removeEventListener('ready', onReady);
+      el.removeEventListener('load', onReady);
+    };
+  }, []);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
     if (dragging) {
-      try { el.stop?.(); el.play?.(); } catch(e) {}
+      try { el.seek?.(0); el.play?.(); } catch(e) {}
+      const dur = (el.getLottie?.()?.getDuration?.() || 1) * 1000;
+      const half = Math.max(300, Math.min(900, dur / 2));
       if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => { try { el.pause?.(); } catch(e) {} }, 450);
+      timer.current = setTimeout(() => { try { el.pause?.(); } catch(e) {} }, half);
     } else {
       if (timer.current) { clearTimeout(timer.current); timer.current = null; }
       try { el.play?.(); } catch(e) {}
     }
     return () => { if (timer.current) clearTimeout(timer.current); };
   }, [dragging]);
-  return <dotlottie-wc ref={ref} src="assets/Pickup_Pin.lottie" style={{width:'96px',height:'96px',display:'block'}}></dotlottie-wc>;
+  return <lottie-player ref={ref} src="assets/Pickup_Pin.lottie" mode="normal" style={{width:'96px',height:'96px',display:'block'}}></lottie-player>;
 }
 
 function RentLocationPicker({ rentPickupLoc, onPick, onMap }) {
