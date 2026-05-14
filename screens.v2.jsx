@@ -1120,8 +1120,7 @@ function ScreenTrip() {
     const [rentFrom, setRentFrom] = React.useState('');
     const [rentTo, setRentTo] = React.useState('');
     const [rentPickupLoc, setRentPickupLoc] = React.useState('');
-    const [rentCountry, setRentCountry] = React.useState('');
-    const [rentCity, setRentCity] = React.useState('');
+    const [rentLocation, setRentLocation] = React.useState('');
     const [airportHistory, setAirportHistory] = React.useState(() => {
       try { return JSON.parse(localStorage.getItem('airport_history')||'[]'); } catch { return []; }
     });
@@ -1721,9 +1720,35 @@ function ScreenTrip() {
       if (nested === 'airport-to')   return <AirportPicker onPick={v=>{setToVal(v);setNested(null);}}/>;
       if (nested === 'route-from') return <CityCountryPicker onPick={v=>{setFromVal(v);setNested(null);}}/>;
       if (nested === 'route-to')   return <CityCountryPicker onPick={v=>{setToVal(v);setNested(null);}}/>;
-      if (nested === 'rent-loc')     return <CityCountryPicker onPick={v=>{setRentPickupLoc(v);setNested(null);}}/>;
-      if (nested === 'rent-country') return <CityCountryPicker mode="country" onPick={v=>{setRentCountry(v);setRentCity('');setNested(null);}}/>;
-      if (nested === 'rent-city')    return <CityCountryPicker onPick={v=>{setRentCity(v);setNested(null);}}/>;
+      if (nested === 'rent-loc')     return <CityCountryPicker onPick={v=>{setRentPickupLoc(v);setRentLocation('');setNested(null);}}/>;
+      if (nested === 'rent-location') {
+        // Specific pickup spots within the city
+        const city = (rentPickupLoc||'').split(',').pop().trim() || 'shahar';
+        const SPOTS = {
+          'Toshkent':['Toshkent Xalqaro Aeroporti','Chorsu bozori','Chilonzor metrostansiyasi','Yunusobod','Mirzo Ulug\'bek stansiyasi','Mustaqillik maydoni','Minor masjidi','Samarqand darvoza','Eski shahar markazi','Beruniy ko\'chasi'],
+          'Samarqand':['Samarqand Xalqaro Aeroporti','Registon maydoni','Siyob bozori','Afrosiyob','Ulug\'bek observatoriyasi'],
+          'Buxoro':['Buxoro aeroporti','Labi-Hovuz','Ark qal\'asi','Kalon masjidi'],
+          'Namangan':['Namangan aeroporti','Bozor ko\'chasi','Markaziy maydon'],
+          'Andijon':['Andijon aeroporti','Markaziy bozor'],
+        };
+        const cityKey = Object.keys(SPOTS).find(k=>city.includes(k)) || null;
+        const spots = cityKey ? SPOTS[cityKey] : ['Markaz','Aeroporti','Temir yo\'l stansiyasi','Bozor','Mehmonxona'];
+        return (
+          <div>
+            {spots.map((s,i)=>(
+              <div key={i} onClick={()=>{setRentLocation(s);setNested(null);}} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 4px',cursor:'pointer',borderBottom:i<spots.length-1?'1px solid #F0F2F5':'none'}}>
+                <div style={{width:34,height:34,borderRadius:10,background:'#E0F2F3',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>
+                </div>
+                <div>
+                  <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{s}</div>
+                  <div style={{fontSize:11.5,color:'#9AA1B8',marginTop:1}}>{city}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      };
       if (nested === 'hotel-country') return <CityCountryPicker mode="country" onPick={v=>{setCountry(v);setNested(null);}}/>;
       if (nested === 'hotels') return (
         <div>
@@ -1797,8 +1822,8 @@ function ScreenTrip() {
       );
       if (preSheet === 'rentcar') return (
         <>
-          {tapCard('DAVLAT', rentCountry, 'Davlatni tanlang', ()=>setNested('rent-country'))}
-          {tapCard('OLIB KETISH SHAHRI / MANZILI', rentCity, rentCountry?'Shahar yoki manzilni tanlang':'Avval davlatni tanlang', rentCountry?()=>setNested('rent-city'):undefined)}
+          {tapCard('OLIB KETISH MANZILI', rentPickupLoc, 'Davlat va shaharni tanlang', ()=>setNested('rent-loc'))}
+          {tapCard('ANIQ LOKATSIYA', rentLocation, rentPickupLoc?'Qayerdan olib ketish (ko\'cha, joy)':'Avval shaharni tanlang', rentPickupLoc?()=>setNested('rent-location'):undefined)}
           {tapSplit(
             {label:'QACHONDAN', val:rentFrom, ph:'8-may, 2026 · 10:00', onClick:()=>setNested('rent-from')},
             {label:'QACHONGACHA', val:rentTo, ph:'10-may, 2026 · 18:00', onClick:()=>setNested('rent-to')}
@@ -1808,7 +1833,7 @@ function ScreenTrip() {
       return null;
     };
 
-    const nestedTitle = {hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','airport-from':'Qayerdan — aeroport','airport-to':'Qayerga — aeroport','rent-loc':'Davlat va shahar','rent-country':'Davlat tanlang','rent-city':'Shahar / Manzil tanlang','hotel-country':'Davlat tanlang','date-start':'Sana tanlang','date-end':'Sana tanlang','rent-from':'Ketish sanasi','rent-to':'Qaytish sanasi'};
+    const nestedTitle = {hotels:'Hotel tanlash','tour-date':'Sana va davomiylik','route-from':'Qayerdan','route-to':'Qayerga','airport-from':'Qayerdan — aeroport','airport-to':'Qayerga — aeroport','rent-loc':'Davlat va shahar','rent-location':'Aniq lokatsiya tanlang','hotel-country':'Davlat tanlang','date-start':'Sana tanlang','date-end':'Sana tanlang','rent-from':'Ketish sanasi','rent-to':'Qaytish sanasi'};
 
     return (
       <div style={{position:'fixed',inset:0,zIndex:200,maxWidth:460,margin:'0 auto',display:'flex',flexDirection:'column',background:'#F4F5FA'}}>
@@ -3872,8 +3897,8 @@ function ScreenTrip() {
                   title = <>{q.country?(ESIM_COUNTRY_FLAGS[q.country]||'')+' ':''}{q.country || esimCountry || 'Davlat tanlang'}</>;
                   sub = 'eSIM tarif';
                 } else if (page === 'rentcar') {
-                  title = rentCountry ? (rentCity ? `${rentCountry} · ${rentCity}` : rentCountry) : 'Manzil tanlang';
-                  sub = <>{rentFrom || 'Boshlanish'}{rentTo?` → ${rentTo}`:''}</>;
+                  title = rentPickupLoc || 'Manzil tanlang';
+                  sub = <>{rentLocation ? rentLocation+' · ' : ''}{rentFrom || 'Boshlanish'}{rentTo?` → ${rentTo}`:''}</>;
                 }
                 return (
                   <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',justifyContent:'center'}}>
