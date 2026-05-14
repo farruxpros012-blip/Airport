@@ -909,6 +909,69 @@ function useSheetViewport() {
   return { sheetH: Math.round(vvh * 0.88), sheetXform: kbOffset > 0 ? `translateY(-${kbOffset}px)` : 'none' };
 }
 
+function RentLocationPicker({ rentPickupLoc, onPick, onMap }) {
+  const T = '#0099A8';
+  const [q, setQ] = React.useState('');
+  const inputRef = React.useRef(null);
+  React.useEffect(()=>{ const t=setTimeout(()=>inputRef.current?.focus(),250); return ()=>clearTimeout(t); },[]);
+  const city = (rentPickupLoc||'').split(',').pop().trim() || '';
+  const ALL_SPOTS = [
+    {type:'plane', name:'Toshkent Xalqaro Aeroporti', sub:'Aeroporti · Yunusobod'},
+    {type:'plane', name:'Samarqand Xalqaro Aeroporti', sub:'Aeroporti · Samarqand'},
+    {type:'plane', name:'Namangan aeroporti', sub:'Aeroporti · Namangan'},
+    {type:'pin', name:'Chorsu bozori', sub:'Eski shahar · Toshkent'},
+    {type:'pin', name:'Chilonzor', sub:'Tuman · Toshkent'},
+    {type:'pin', name:'Yunusobod', sub:'Tuman · Toshkent'},
+    {type:'pin', name:"Mirzo Ulug'bek", sub:'Tuman · Toshkent'},
+    {type:'pin', name:'Mustaqillik maydoni', sub:'Markaz · Toshkent'},
+    {type:'pin', name:'Minor masjidi', sub:'Markaz · Toshkent'},
+    {type:'pin', name:'Sergeli', sub:'Tuman · Toshkent'},
+    {type:'pin', name:'Registon maydoni', sub:'Markaz · Samarqand'},
+    {type:'pin', name:'Siyob bozori', sub:'Bozor · Samarqand'},
+    {type:'pin', name:"Labi-Hovuz", sub:'Markaz · Buxoro'},
+    {type:'pin', name:"Ark qal'asi", sub:'Tarixiy · Buxoro'},
+    {type:'hotel', name:'Hyatt Regency Toshkent', sub:'Mehmonxona · Chilonzor'},
+    {type:'hotel', name:'Hilton Toshkent City', sub:'Mehmonxona · Yunusobod'},
+    {type:'hotel', name:'Wyndham Tashkent', sub:'Mehmonxona · Yunusobod'},
+    {type:'pin', name:'Temir yo\'l stansiyasi', sub:"Vokzal · Toshkent"},
+    {type:'pin', name:"Anhor ko'chasi", sub:'Ko\'cha · Toshkent'},
+  ];
+  const filtered = q.trim()
+    ? ALL_SPOTS.filter(l=>l.name.toLowerCase().includes(q.toLowerCase())||l.sub.toLowerCase().includes(q.toLowerCase()))
+    : ALL_SPOTS.filter(l=>!city || l.sub.toLowerCase().includes(city.toLowerCase())).slice(0,10);
+  const LocIcon = ({type})=>{
+    const st={width:18,height:18,flexShrink:0};
+    if(type==='plane') return <svg {...st} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.98-.98a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.04z"/></svg>;
+    if(type==='hotel') return <svg {...st} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round"><path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/><rect x="11" y="8" width="2" height="2"/></svg>;
+    return <svg {...st} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>;
+  };
+  return (
+    <div>
+      <div style={{display:'flex',alignItems:'center',background:'#F4F5FA',borderRadius:14,padding:'10px 14px',marginBottom:10}}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input ref={inputRef} value={q} onChange={e=>setQ(e.target.value)} placeholder="Ko'cha, joy yoki hudud..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
+        {q && <button onClick={()=>setQ('')} style={{border:'none',background:'none',padding:0,cursor:'pointer',color:'#9AA1B8',fontSize:18,lineHeight:1}}>×</button>}
+      </div>
+      <button onClick={onMap} style={{display:'inline-flex',alignItems:'center',gap:8,background:'none',border:'none',padding:'6px 0 12px',cursor:'pointer'}}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        <span style={{fontSize:14,fontWeight:600,color:T}}>Xaritadan belgilash</span>
+      </button>
+      <div>
+        {filtered.map((loc,i)=>(
+          <div key={i} onClick={()=>onPick(loc.name)} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 4px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
+            <div style={{width:38,height:38,borderRadius:12,background:'#EDF7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><LocIcon type={loc.type}/></div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{loc.name}</div>
+              <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>{loc.sub}</div>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ScreenTrip() {
   const [open, setOpen] = React.useState({});
   const [page, setPage] = React.useState(null);
@@ -1709,73 +1772,6 @@ function ScreenTrip() {
       );
     };
 
-    // ── Nested sheets (date picker / hotel multi-select) ──
-
-    const RentLocationPicker = () => {
-      const [q, setQ] = React.useState('');
-      const inputRef = React.useRef(null);
-      React.useEffect(()=>{ setTimeout(()=>inputRef.current?.focus(),200); },[]);
-      const city = (rentPickupLoc||'').split(',').pop().trim() || '';
-      const ALL_SPOTS = [
-        {type:'plane', name:'Toshkent Xalqaro Aeroporti', sub:'Aeroporti · Yunusobod'},
-        {type:'plane', name:'Samarqand Xalqaro Aeroporti', sub:'Aeroporti · Samarqand'},
-        {type:'plane', name:'Namangan aeroporti', sub:'Aeroporti · Namangan'},
-        {type:'pin', name:'Chorsu bozori', sub:'Eski shahar · Toshkent'},
-        {type:'pin', name:'Chilonzor', sub:'Tuman · Toshkent'},
-        {type:'pin', name:'Yunusobod', sub:'Tuman · Toshkent'},
-        {type:'pin', name:"Mirzo Ulug'bek", sub:'Tuman · Toshkent'},
-        {type:'pin', name:'Mustaqillik maydoni', sub:'Markaz · Toshkent'},
-        {type:'pin', name:'Minor masjidi', sub:'Markaz · Toshkent'},
-        {type:'pin', name:'Sergeli', sub:'Tuman · Toshkent'},
-        {type:'pin', name:'Registon maydoni', sub:'Markaz · Samarqand'},
-        {type:'pin', name:'Siyob bozori', sub:'Bozor · Samarqand'},
-        {type:'pin', name:"Labi-Hovuz", sub:'Markaz · Buxoro'},
-        {type:'pin', name:"Ark qal'asi", sub:'Tarixiy · Buxoro'},
-        {type:'hotel', name:'Hyatt Regency Toshkent', sub:'Mehmonxona · Chilonzor'},
-        {type:'hotel', name:'Hilton Toshkent City', sub:'Mehmonxona · Yunusobod'},
-        {type:'hotel', name:'Wyndham Tashkent', sub:'Mehmonxona · Yunusobod'},
-        {type:'pin', name:'Temir yo\'l stansiyasi', sub:"Vokzal · Toshkent"},
-        {type:'pin', name:"Anhor ko'chasi", sub:'Ko\'cha · Toshkent'},
-      ];
-      const filtered = q.trim()
-        ? ALL_SPOTS.filter(l=>l.name.toLowerCase().includes(q.toLowerCase())||l.sub.toLowerCase().includes(q.toLowerCase()))
-        : ALL_SPOTS.filter(l=>!city || l.sub.toLowerCase().includes(city.toLowerCase())).slice(0,10);
-      const LocIcon = ({type})=>{
-        const st={width:18,height:18,flexShrink:0};
-        if(type==='plane') return <svg {...st} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.98-.98a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.04z"/></svg>;
-        if(type==='hotel') return <svg {...st} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round"><path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/><rect x="11" y="8" width="2" height="2"/></svg>;
-        return <svg {...st} viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/></svg>;
-      };
-      return (
-        <div>
-          {/* Search input */}
-          <div style={{display:'flex',alignItems:'center',background:'#F4F5FA',borderRadius:14,padding:'10px 14px',marginBottom:10}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-            <input ref={inputRef} value={q} onChange={e=>setQ(e.target.value)} placeholder="Ko'cha, joy yoki hudud..." style={{flex:1,border:'none',background:'none',outline:'none',marginLeft:10,fontSize:14,fontFamily:'inherit',color:'#0A1F21'}}/>
-            {q && <button onClick={()=>setQ('')} style={{border:'none',background:'none',padding:0,cursor:'pointer',color:'#9AA1B8',fontSize:18,lineHeight:1}}>×</button>}
-          </div>
-          {/* Map option */}
-          <button onClick={()=>{setNested(null);setPreSheet(null);setXferMapPage('rent-location');}} style={{display:'inline-flex',alignItems:'center',gap:8,background:'none',border:'none',padding:'6px 0 12px',cursor:'pointer'}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
-            <span style={{fontSize:14,fontWeight:600,color:T}}>Xaritadan belgilash</span>
-          </button>
-          {/* Location list */}
-          <div>
-            {filtered.map((loc,i)=>(
-              <div key={i} onClick={()=>{setRentLocation(loc.name);setNested(null);}} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 4px',cursor:'pointer',borderBottom:i<filtered.length-1?'1px solid #F0F2F5':'none'}}>
-                <div style={{width:38,height:38,borderRadius:12,background:'#EDF7F8',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><LocIcon type={loc.type}/></div>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:14,fontWeight:600,color:'#0A1F21'}}>{loc.name}</div>
-                  <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>{loc.sub}</div>
-                </div>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    };
-
     const renderNested = () => {
       if (nested === 'tour-date') return <DatePicker withNights onPick={v=>{setDateStart(v.date);setNights(v.nights);setNested(null);}}/>;
       if (nested === 'date-start') return <DatePicker onPick={v=>{setDateStart(v);setNested(null);}}/>;
@@ -1787,7 +1783,7 @@ function ScreenTrip() {
       if (nested === 'route-from') return <CityCountryPicker onPick={v=>{setFromVal(v);setNested(null);}}/>;
       if (nested === 'route-to')   return <CityCountryPicker onPick={v=>{setToVal(v);setNested(null);}}/>;
       if (nested === 'rent-loc')     return <CityCountryPicker onPick={v=>{setRentPickupLoc(v);setRentLocation('');setNested(null);}}/>;
-      if (nested === 'rent-location') return <RentLocationPicker/>;
+      if (nested === 'rent-location') return <RentLocationPicker rentPickupLoc={rentPickupLoc} onPick={v=>{setRentLocation(v);setNested(null);}} onMap={()=>{setNested(null);setPreSheet(null);setXferMapPage('rent-location');}}/>;
       if (nested === 'hotel-country') return <CityCountryPicker mode="country" onPick={v=>{setCountry(v);setNested(null);}}/>;
       if (nested === 'hotels') return (
         <div>
