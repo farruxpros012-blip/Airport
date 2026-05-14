@@ -1149,7 +1149,22 @@ function ScreenTrip() {
   const scrollToService = (key) => {
     requestAnimationFrame(() => {
       const el = document.getElementById('svc-' + key);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (!el) return;
+      // Walk up to find a scrollable ancestor
+      let sc = el.parentElement;
+      while (sc && sc !== document.body) {
+        const os = window.getComputedStyle(sc).overflowY;
+        if (os === 'auto' || os === 'scroll') break;
+        sc = sc.parentElement;
+      }
+      const TOP_OFFSET = 80;
+      if (sc && sc !== document.body) {
+        const target = sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - TOP_OFFSET;
+        sc.scrollTo({ top: target, behavior: 'smooth' });
+      } else {
+        const target = window.scrollY + el.getBoundingClientRect().top - TOP_OFFSET;
+        window.scrollTo({ top: target, behavior: 'smooth' });
+      }
     });
   };
   const toggle = (key) => {
