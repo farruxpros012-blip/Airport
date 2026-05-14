@@ -1095,9 +1095,29 @@ function IosTimeWheel({ items, value, onChange, unit }) {
   const onTouchMove = () => {
     if (ref.current) detectCross(ref.current);
   };
+  const touchStartIdx = React.useRef(idx);
+  const onTouchStart = () => {
+    if (!ref.current) return;
+    touchStartIdx.current = Math.round(ref.current.scrollTop / ITEM_H);
+  };
+  const onTouchEnd = () => {
+    if (!ref.current) return;
+    // Predict landing after scroll-snap and tick once if changed.
+    // Run a few frames later to catch the snap settlement.
+    const el = ref.current;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const land = Math.max(0, Math.min(items.length-1, Math.round(el.scrollTop / ITEM_H)));
+        if (land !== touchStartIdx.current && land !== lastTickIdx.current) {
+          lastTickIdx.current = land;
+          playTick();
+        }
+      });
+    });
+  };
   return (
     <div style={{position:'relative',flex:1,height:VISIBLE*ITEM_H,perspective:'1100px',zIndex:5}}>
-      <div ref={ref} onScroll={onScroll} onTouchMove={onTouchMove} style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch',transformStyle:'preserve-3d'}}>
+      <div ref={ref} onScroll={onScroll} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch',transformStyle:'preserve-3d'}}>
         <div style={{paddingTop:PAD,paddingBottom:PAD}}>
           {items.map((v,i)=>{
             const d = i - idx;
