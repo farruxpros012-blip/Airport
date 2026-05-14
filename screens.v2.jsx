@@ -3327,12 +3327,9 @@ function ScreenTrip() {
                 <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>Pinni suring va manzilni belgilang</div>
               </div>
             </div>
-            {/* GPS button — above the Tanlash button */}
-            <button onClick={()=>setXferMapAddr('Mening joriy manzilim')} style={{display:'flex',alignItems:'center',gap:8,background:'none',border:'none',padding:'6px 0 10px',cursor:'pointer'}}>
-              <div style={{width:32,height:32,borderRadius:'50%',background:'#E0F2F3',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
-              </div>
-              <span style={{fontSize:13,fontWeight:600,color:T}}>Mening joriy manzilim</span>
+            {/* GPS icon button — floating above white panel */}
+            <button onClick={()=>setXferMapAddr('Mening joriy manzilim')} style={{position:'absolute',right:18,top:-62,width:46,height:46,borderRadius:'50%',background:'#fff',border:'1px solid #E8EAF3',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 14px rgba(10,31,33,0.12)'}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
             </button>
             <button onClick={()=>{
               if(mapTarget==='rent-location'){setRentLocation(xferMapAddr);}
