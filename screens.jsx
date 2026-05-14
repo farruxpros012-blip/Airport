@@ -1023,72 +1023,98 @@ function MapWithPin({ onAddressChange }) {
   );
 }
 
-function IosTimePicker({ value, onChange, onConfirm }) {
-  const T = '#0099A8';
-  const HOURS = Array.from({length:24}, (_,i)=>i.toString().padStart(2,'0'));
-  const MINUTES = Array.from({length:12}, (_,i)=>(i*5).toString().padStart(2,'0'));
-  const [hh,mm] = (value||'10:00').split(':');
-  const hIdx = Math.max(0, HOURS.indexOf(hh));
-  const mIdx = (() => {
-    const v = parseInt(mm,10);
-    let best=0, diff=99;
-    MINUTES.forEach((s,i)=>{ const d=Math.abs(parseInt(s,10)-v); if (d<diff){diff=d; best=i;}});
-    return best;
-  })();
+function IosTimeWheel({ items, value, onChange }) {
   const ITEM_H = 40;
-  const VISIBLE = 5;
+  const VISIBLE = 7; // odd number → has clear center
   const PAD = ((VISIBLE-1)/2) * ITEM_H;
-  const hRef = React.useRef(null);
-  const mRef = React.useRef(null);
-  const hScrollTimer = React.useRef(null);
-  const mScrollTimer = React.useRef(null);
+  const idxOf = (v) => Math.max(0, items.indexOf(v));
+  const [idx, setIdx] = React.useState(idxOf(value));
+  const ref = React.useRef(null);
+  const snapTimer = React.useRef(null);
   React.useEffect(() => {
-    if (hRef.current) hRef.current.scrollTop = hIdx * ITEM_H;
-    if (mRef.current) mRef.current.scrollTop = mIdx * ITEM_H;
+    if (ref.current) ref.current.scrollTop = idxOf(value) * ITEM_H;
   }, []);
-  const finalize = (newH, newM) => {
-    const v = `${newH}:${newM}`;
-    if (onChange) onChange(v);
+  React.useEffect(() => {
+    setIdx(idxOf(value));
+  }, [value]);
+  const onScroll = (e) => {
+    const el = e.currentTarget;
+    const live = el.scrollTop / ITEM_H;
+    const rounded = Math.round(live);
+    const safe = Math.max(0, Math.min(items.length-1, rounded));
+    if (safe !== idx) setIdx(safe);
+    if (snapTimer.current) clearTimeout(snapTimer.current);
+    snapTimer.current = setTimeout(() => {
+      const target = safe * ITEM_H;
+      if (Math.abs(el.scrollTop - target) > 1) {
+        el.scrollTo({ top: target, behavior: 'smooth' });
+      }
+      onChange && onChange(items[safe]);
+    }, 100);
   };
-  const onScroll = (which) => {
-    return (e) => {
-      const el = e.currentTarget;
-      const timer = which==='h' ? hScrollTimer : mScrollTimer;
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => {
-        const idx = Math.round(el.scrollTop / ITEM_H);
-        const snapTop = idx * ITEM_H;
-        if (Math.abs(el.scrollTop - snapTop) > 1) {
-          el.scrollTo({ top: snapTop, behavior: 'smooth' });
-        }
-        const list = which==='h' ? HOURS : MINUTES;
-        const safe = Math.max(0, Math.min(list.length-1, idx));
-        if (which==='h') finalize(list[safe], MINUTES[mIdx]);
-        else finalize(HOURS[hIdx], list[safe]);
-      }, 80);
-    };
-  };
-  const Wheel = ({items, idx, refEl, onSc}) => (
-    <div style={{position:'relative',flex:1,height:VISIBLE*ITEM_H}}>
-      <div ref={refEl} onScroll={onSc} style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch'}}>
+  return (
+    <div style={{position:'relative',flex:1,height:VISIBLE*ITEM_H,perspective:'1000px'}}>
+      <div ref={ref} onScroll={onScroll} style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch',transformStyle:'preserve-3d'}}>
         <div style={{paddingTop:PAD,paddingBottom:PAD}}>
-          {items.map((v,i)=>(
-            <div key={v} style={{height:ITEM_H,display:'flex',alignItems:'center',justifyContent:'center',scrollSnapAlign:'center',fontSize:22,fontWeight:i===idx?700:500,color:i===idx?'#0A1F21':'#9AA1B8',transition:'color 0.15s',fontVariantNumeric:'tabular-nums'}}>{v}</div>
-          ))}
+          {items.map((v,i)=>{
+            const d = i - idx;
+            const ad = Math.abs(d);
+            const rot = Math.max(-75, Math.min(75, d * 18));
+            const scale = Math.max(0.55, 1 - ad * 0.10);
+            const opacity = ad===0 ? 1 : Math.max(0.18, 1 - ad * 0.30);
+            return (
+              <div key={v} style={{
+                height:ITEM_H,
+                display:'flex',alignItems:'center',justifyContent:'center',
+                scrollSnapAlign:'center',
+                fontSize:24,
+                fontWeight:ad===0?700:500,
+                color:ad===0?'#0A1F21':'#374151',
+                fontVariantNumeric:'tabular-nums',
+                transform:`rotateX(${rot}deg) scale(${scale})`,
+                opacity,
+                transition:'transform 0.12s, opacity 0.12s, color 0.12s, font-weight 0.12s',
+                transformOrigin:'center center',
+                willChange:'transform, opacity',
+              }}>{v}</div>
+            );
+          })}
         </div>
       </div>
+      {/* Top fade */}
+      <div style={{position:'absolute',top:0,left:0,right:0,height:PAD,background:'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:3}}/>
+      {/* Bottom fade */}
+      <div style={{position:'absolute',bottom:0,left:0,right:0,height:PAD,background:'linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:3}}/>
     </div>
   );
+}
+
+function IosTimePicker({ value, onChange, onConfirm }) {
+  const T = '#0099A8';
+  const ITEM_H = 40;
+  const VISIBLE = 7;
+  const HOURS = Array.from({length:24}, (_,i)=>i.toString().padStart(2,'0'));
+  const MINUTES = Array.from({length:12}, (_,i)=>(i*5).toString().padStart(2,'0'));
+  const [hh, mm] = (value||'10:00').split(':');
+  const nearestMin = (() => {
+    const v = parseInt(mm,10);
+    let best='00', diff=99;
+    MINUTES.forEach(s=>{ const d=Math.abs(parseInt(s,10)-v); if(d<diff){diff=d; best=s;}});
+    return best;
+  })();
+  const [h, setH] = React.useState(hh);
+  const [m, setM] = React.useState(nearestMin);
+  React.useEffect(()=>{ onChange && onChange(`${h}:${m}`); }, [h, m]);
   return (
     <div style={{position:'relative'}}>
       <div style={{position:'relative',display:'flex',alignItems:'center',justifyContent:'center',gap:0}}>
-        {/* selection band */}
+        {/* Selection band */}
         <div style={{position:'absolute',left:24,right:24,top:(VISIBLE-1)/2*ITEM_H,height:ITEM_H,borderTop:'1px solid #E8EAF3',borderBottom:'1px solid #E8EAF3',background:'rgba(0,153,168,0.04)',pointerEvents:'none',zIndex:1}}/>
-        <Wheel items={HOURS} idx={hIdx} refEl={hRef} onSc={onScroll('h')}/>
-        <div style={{fontSize:24,fontWeight:700,color:'#0A1F21',padding:'0 2px',zIndex:2}}>:</div>
-        <Wheel items={MINUTES} idx={mIdx} refEl={mRef} onSc={onScroll('m')}/>
+        <IosTimeWheel items={HOURS} value={h} onChange={setH}/>
+        <div style={{fontSize:26,fontWeight:700,color:'#0A1F21',padding:'0 2px',zIndex:2}}>:</div>
+        <IosTimeWheel items={MINUTES} value={m} onChange={setM}/>
       </div>
-      <button onClick={()=>onConfirm && onConfirm(`${HOURS[hIdx]}:${MINUTES[mIdx]}`)} style={{width:'100%',marginTop:18,background:T,color:'#fff',border:'none',borderRadius:14,padding:'14px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tasdiqlash</button>
+      <button onClick={()=>onConfirm && onConfirm(`${h}:${m}`)} style={{width:'100%',marginTop:18,background:T,color:'#fff',border:'none',borderRadius:14,padding:'14px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tasdiqlash</button>
     </div>
   );
 }
