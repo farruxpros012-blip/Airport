@@ -1023,6 +1023,27 @@ function MapWithPin({ onAddressChange }) {
   );
 }
 
+function playTick() {
+  try {
+    if (!window.__tickCtx) {
+      window.__tickCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    const ctx = window.__tickCtx;
+    if (ctx.state === 'suspended') ctx.resume();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'square';
+    o.frequency.value = 1800;
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.10, ctx.currentTime + 0.002);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.035);
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start(ctx.currentTime);
+    o.stop(ctx.currentTime + 0.04);
+  } catch (e) {}
+}
+
 function IosTimeWheel({ items, value, onChange }) {
   const ITEM_H = 38;
   const VISIBLE = 5;
@@ -1031,8 +1052,10 @@ function IosTimeWheel({ items, value, onChange }) {
   const [idx, setIdx] = React.useState(idxOf(value));
   const ref = React.useRef(null);
   const snapTimer = React.useRef(null);
+  const lastTickIdx = React.useRef(idxOf(value));
   React.useEffect(() => {
     if (ref.current) ref.current.scrollTop = idxOf(value) * ITEM_H;
+    lastTickIdx.current = idxOf(value);
   }, []);
   React.useEffect(() => {
     setIdx(idxOf(value));
@@ -1043,6 +1066,10 @@ function IosTimeWheel({ items, value, onChange }) {
     const rounded = Math.round(live);
     const safe = Math.max(0, Math.min(items.length-1, rounded));
     if (safe !== idx) setIdx(safe);
+    if (safe !== lastTickIdx.current) {
+      lastTickIdx.current = safe;
+      playTick();
+    }
     if (snapTimer.current) clearTimeout(snapTimer.current);
     snapTimer.current = setTimeout(() => {
       const target = safe * ITEM_H;
