@@ -1048,7 +1048,7 @@ function playTick() {
   try {
     if (navigator.vibrate) {
       navigator.vibrate(0);
-      navigator.vibrate([55]);
+      navigator.vibrate([12]);
     }
   } catch(e) {}
 }
