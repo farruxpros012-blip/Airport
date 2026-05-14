@@ -1163,7 +1163,7 @@ function ScreenTrip() {
   const T = '#0099A8';
   const TBG = '#E0F2F3';
   const SH = '0 1px 2px rgba(15,27,61,0.03), 0 12px 32px rgba(15,27,61,0.07), 0 28px 64px rgba(15,27,61,0.05)';
-  const card = { background:'#fff', borderRadius:24, boxShadow:SH, border:'1px solid rgba(0,153,168,0.10)', overflow:'hidden', marginBottom:16 };
+  const card = { background:'#fff', borderRadius:24, boxShadow:SH, border:'1px solid rgba(0,153,168,0.10)', overflow:'hidden', marginBottom:16, scrollMarginTop:96 };
   const rowStyle = { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', cursor:'pointer' };
   const iBox = { width:46, height:46, borderRadius:'50%', background:T, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 6px 16px rgba(0,153,168,0.35), 0 2px 6px rgba(0,153,168,0.20), inset 0 1px 0 rgba(255,255,255,0.25)' };
   const iWrap = { display:'flex', filter:'brightness(0) invert(1)' };
