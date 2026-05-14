@@ -926,35 +926,49 @@ function LeafletMap({ onDragStart, onDragEnd }) {
 }
 
 function MapPin({ dragging }) {
-  const ref = React.useRef(null);
+  const containerRef = React.useRef(null);
+  const animRef = React.useRef(null);
   const timer = React.useRef(null);
   React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onReady = () => { try { el.pause?.(); el.seek?.(0); } catch(e) {} };
-    el.addEventListener('ready', onReady);
-    el.addEventListener('load', onReady);
-    return () => {
-      el.removeEventListener('ready', onReady);
-      el.removeEventListener('load', onReady);
-    };
+    const c = containerRef.current;
+    if (!c || !window.lottie) return;
+    const anim = window.lottie.loadAnimation({
+      container: c,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      path: 'assets/Pickup_Pin.json',
+    });
+    animRef.current = anim;
+    anim.addEventListener('DOMLoaded', () => {
+      anim.goToAndStop(0, true);
+    });
+    return () => { anim.destroy(); animRef.current = null; };
   }, []);
   React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const anim = animRef.current;
+    if (!anim) return;
+    const totalFrames = anim.totalFrames || 60;
     if (dragging) {
-      try { el.seek?.(0); el.play?.(); } catch(e) {}
-      const dur = (el.getLottie?.()?.getDuration?.() || 1) * 1000;
-      const half = Math.max(300, Math.min(900, dur / 2));
+      anim.setDirection(1);
+      anim.goToAndPlay(0, true);
       if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => { try { el.pause?.(); } catch(e) {} }, half);
+      // Pause at midpoint frame
+      const midFrame = Math.floor(totalFrames / 2);
+      const fps = anim.frameRate || 30;
+      const delay = (midFrame / fps) * 1000;
+      timer.current = setTimeout(() => {
+        anim.goToAndStop(midFrame, true);
+      }, delay);
     } else {
       if (timer.current) { clearTimeout(timer.current); timer.current = null; }
-      try { el.play?.(); } catch(e) {}
+      // Continue playing from current frame to end
+      anim.setDirection(1);
+      anim.play();
     }
     return () => { if (timer.current) clearTimeout(timer.current); };
   }, [dragging]);
-  return <lottie-player ref={ref} src="assets/Pickup_Pin.lottie" mode="normal" style={{width:'96px',height:'96px',display:'block'}}></lottie-player>;
+  return <div ref={containerRef} style={{width:96,height:96,display:'block'}}/>;
 }
 
 function RentLocationPicker({ rentPickupLoc, onPick, onMap }) {
