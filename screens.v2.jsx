@@ -1053,7 +1053,7 @@ function playTick() {
   } catch(e) {}
 }
 
-function IosTimeWheel({ items, value, onChange }) {
+function IosTimeWheel({ items, value, onChange, unit }) {
   const ITEM_H = 38;
   const VISIBLE = 5;
   const PAD = ((VISIBLE-1)/2) * ITEM_H;
@@ -1113,7 +1113,10 @@ function IosTimeWheel({ items, value, onChange }) {
                 transformOrigin:'center center',
                 willChange:'transform, opacity',
                 letterSpacing:0.5,
-              }}>{v}</div>
+              }}>
+                <span>{v}</span>
+                {unit && ad===0 && <span style={{fontSize:12,fontWeight:600,color:'#6B7280',marginLeft:6,letterSpacing:0.2}}>{unit}</span>}
+              </div>
             );
           })}
         </div>
@@ -1140,9 +1143,9 @@ function IosTimePicker({ value, onChange, onConfirm }) {
       <div style={{position:'relative',display:'flex',alignItems:'center',justifyContent:'center',gap:0,padding:'0 8px'}}>
         {/* iOS-style selection pill — BEHIND numbers */}
         <div style={{position:'absolute',left:8,right:8,top:(VISIBLE-1)/2*ITEM_H,height:ITEM_H,background:'#EBEBEC',borderRadius:10,pointerEvents:'none',zIndex:0}}/>
-        <IosTimeWheel items={HOURS} value={h} onChange={setH}/>
+        <IosTimeWheel items={HOURS} value={h} onChange={setH} unit="soat"/>
         <div style={{fontSize:24,fontWeight:600,color:'#0A0A0A',padding:'0 0',zIndex:5,letterSpacing:0.5}}>:</div>
-        <IosTimeWheel items={MINUTES} value={m} onChange={setM}/>
+        <IosTimeWheel items={MINUTES} value={m} onChange={setM} unit="daq"/>
       </div>
       <button onClick={()=>onConfirm && onConfirm(`${h}:${m}`)} style={{width:'100%',marginTop:14,background:T,color:'#fff',border:'none',borderRadius:14,padding:'13px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tasdiqlash</button>
     </div>
