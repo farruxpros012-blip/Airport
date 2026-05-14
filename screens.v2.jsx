@@ -1146,7 +1146,19 @@ function ScreenTrip() {
   const [route, setRoute] = React.useState({ from:'Toshkent', to:'Dubai' });
   const [dates, setDates] = React.useState({ start:'15 May', end:'20 May', nights:5 });
   const [guests, setGuests] = React.useState({ adults:2, children:0 });
-  const toggle = (key) => setOpen(o => ({ ...o, [key]: !o[key] }));
+  const scrollToService = (key) => {
+    requestAnimationFrame(() => {
+      const el = document.getElementById('svc-' + key);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+  const toggle = (key) => {
+    setOpen(o => {
+      const next = { ...o, [key]: !o[key] };
+      if (next[key]) setTimeout(() => scrollToService(key), 60);
+      return next;
+    });
+  };
 
   const T = '#0099A8';
   const TBG = '#E0F2F3';
@@ -2111,7 +2123,7 @@ function ScreenTrip() {
                 <div style={{fontSize:11,color:'#9AA1B8',marginTop:1}}>Pinni suring va manzilni belgilang</div>
               </div>
             </div>
-            <button onClick={()=>{if(taxiTarget==='from')setTaxiFromVal(taxiMapAddr);else setTaxiToVal(taxiMapAddr);setTaxiMapPage(null);}} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Tanlash</button>
+            <button onClick={()=>{if(taxiTarget==='from')setTaxiFromVal(taxiMapAddr);else setTaxiToVal(taxiMapAddr);setTaxiMapPage(null);setTimeout(()=>scrollToService("taxi"),60);}} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Tanlash</button>
           </div>
         </div>
       </Frame>
@@ -3431,10 +3443,12 @@ function ScreenTrip() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
             </button>
             <button onClick={()=>{
+              const svc = mapTarget==='rent-location'?'rentcar':'transfer';
               if(mapTarget==='rent-location'){setRentLocation(xferMapAddr);}
               else if(mapTarget==='from'){setXferFrom(xferMapAddr);}
               else{setXferTo(xferMapAddr);}
               setXferMapPage(null);
+              setTimeout(()=>scrollToService(svc),60);
             }} style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:20,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Tanlash</button>
           </div>
         </div>
@@ -4381,7 +4395,7 @@ function ScreenTrip() {
       </div>
       <Scroll>
         {/* Turlar */}
-        <div style={card}>
+        <div id="svc-turlar" style={card}>
           <Head icon={<FigTours size={26}/>} label="Turlar" desc="Dunyoning istalgan nuqtasiga tur paketlari" k="turlar"/>
           {open.turlar && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
@@ -4393,7 +4407,7 @@ function ScreenTrip() {
         </div>
 
         {/* Ekskursiya */}
-        <div style={card}>
+        <div id="svc-excur" style={card}>
           <Head icon={<FigExcursions size={26}/>} label="Ekskursiya" desc="Qiziqarli ziyoratlar va shahar sayohatlari" k="excur"/>
           {open.excur && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
@@ -4405,7 +4419,7 @@ function ScreenTrip() {
         </div>
 
         {/* eSIM */}
-        <div style={card}>
+        <div id="svc-esim" style={card}>
           <Head icon={<FigEsim size={26}/>} label="eSIM" desc="150+ davlatda uzluksiz internet aloqasi" k="esim"/>
           {open.esim && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
@@ -4433,7 +4447,7 @@ function ScreenTrip() {
         </div>
 
         {/* Mehmonxona */}
-        <div style={card}>
+        <div id="svc-hotel" style={card}>
           <Head icon={<FigHotel size={26}/>} label="Mehmonxona" desc="Har qanday byudjetga mos mehmonxonalar" k="hotel"/>
           {open.hotel && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
@@ -4445,7 +4459,7 @@ function ScreenTrip() {
         </div>
 
         {/* Aviabilet */}
-        <div style={card}>
+        <div id="svc-aviabilet" style={card}>
           <Head icon={<FigFlight size={26}/>} label="Aviabilet" desc="Arzon aviabiletlar, qulay yo'nalishlar" k="aviabilet"/>
           {open.aviabilet && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
@@ -4457,19 +4471,19 @@ function ScreenTrip() {
         </div>
 
         {/* Airport taxi */}
-        <div style={card}>
+        <div id="svc-taxi" style={card}>
           <Head icon={<FigAirportTaxi size={26}/>} label="Airport taxi" desc="Aeroportdan va aeroportga tez yetkazish" k="taxi"/>
           {open.taxi && <TaxiForm/>}
         </div>
 
         {/* Transfer */}
-        <div style={card}>
+        <div id="svc-transfer" style={card}>
           <Head icon={<FigTransfer size={26}/>} label="Transfer" desc="Shaharlararo qulay transfer xizmati" k="transfer"/>
           {open.transfer && <TransferForm/>}
         </div>
 
         {/* Rent Car */}
-        <div style={card}>
+        <div id="svc-rentcar" style={card}>
           <Head icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" width="26" height="26"><path fill="#79808a" d="M28.96 16.18c-.21-2.36-.56-2.82-.69-3-.3-.4-.78-.66-1.3-.94a.2.2 0 0 1-.05-.33.93.93 0 0 0-.04-1.35 1 1 0 0 0-.65-.25h-.91l-.12.01-.08-.03c-.55-1.14-1.29-2.7-2.82-3.47-2.28-1.14-6.48-1.2-7.3-1.2s-5.02.06-7.3 1.2c-1.53.76-2.27 2.33-2.81 3.47v.01l-.09.02H3.77a.95.95 0 0 0-.96.86 1 1 0 0 0 .27.73.2.2 0 0 1 .02.27l-.07.06c-.51.28-1 .54-1.3.94-.13.17-.48.63-.69 3a21 21 0 0 0-.04 3.6c.2 1.85.55 2.96.57 3a.9.9 0 0 0 .77.65.94.94 0 0 0 .94.95h3.28a.94.94 0 0 0 .94-.94c.5 0 .86-.1 1.23-.19a10 10 0 0 1 1.64-.29 53 53 0 0 1 4.63-.23c1.04 0 2.9.06 4.7.23q.83.07 1.64.3c.35.08.7.17 1.16.18a.94.94 0 0 0 .94.94h3.28a.94.94 0 0 0 .94-.94.9.9 0 0 0 .77-.65c.02-.04.38-1.16.57-3 .1-.9.08-2.27-.04-3.6M6.58 11.1c.47-1 1-2.12 1.96-2.6 1.38-.68 4.24-1 6.46-1s5.08.31 6.46 1c.95.48 1.49 1.6 1.96 2.6l.06.13a.47.47 0 0 1-.44.67c-1.95-.05-6.05-.22-8.04-.22-2 0-6.1.17-8.04.22a.47.47 0 0 1-.44-.67zm.7 4.67q-1.5.18-3.04.18c-.62 0-1.26-.18-1.38-.73a2 2 0 0 1-.03-.8c.04-.17.1-.3.4-.35.75-.12 1.18.03 2.43.4.82.24 1.42.57 1.76.82.17.13.08.46-.14.48m12.97 4.8c-.77.09-2.31.06-5.23.06s-4.47.03-5.24-.06c-.8-.08-1.8-.84-1.11-1.5.46-.45 1.53-.78 2.96-.97 1.44-.18 2.04-.28 3.38-.28s1.88.06 3.38.29 2.62.55 2.97.95c.63.72-.31 1.42-1.1 1.52m6.89-5.35c-.12.55-.77.73-1.38.73q-1.56 0-3.1-.18c-.18-.02-.26-.33-.08-.48a6 6 0 0 1 1.76-.82c1.25-.37 1.97-.52 2.59-.4.15.04.23.2.23.3q.07.42-.02.85"/></svg>} label="Rent a Car" desc="Ixtiyoriy mamlakatda avtomobil ijarasi" k="rentcar"/>
           {open.rentcar && <div style={{paddingBottom:20}}>
             <div style={{display:'flex',gap:16,overflowX:'auto',scrollSnapType:'x mandatory',padding:'0 20px'}}>
