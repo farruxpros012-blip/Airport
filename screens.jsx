@@ -1313,6 +1313,14 @@ function ScreenTrip() {
   const [tourExpanded, setTourExpanded] = React.useState(false);
   const [tourRoomImg, setTourRoomImg] = React.useState({0:0,1:0});
   const tourSwipeX = React.useRef(0);
+  const [tourCheckout, setTourCheckout] = React.useState(null);
+  const [tcPassengers, setTcPassengers] = React.useState([]);
+  const [tcPayMethod, setTcPayMethod] = React.useState('click');
+  const [tcPassengerSheet, setTcPassengerSheet] = React.useState(false);
+  const [tcAddPassengerPage, setTcAddPassengerPage] = React.useState(false);
+  const [savedPassengers, setSavedPassengers] = React.useState([]);
+  const [tcAddForm, setTcAddForm] = React.useState({name:'',surname:'',passport:'',birth:''});
+  const [tcPsSearch, setTcPsSearch] = React.useState('');
   const [hotelDetail, setHotelDetail] = React.useState(null);
   const [hotelGallery, setHotelGallery] = React.useState(0);
   const [hotelExpanded, setHotelExpanded] = React.useState(false);
@@ -2756,7 +2764,7 @@ function ScreenTrip() {
               </div>
               <div style={{fontSize:11,color:'#15803D',marginLeft:21}}>Keyin to'liq summa qaytarilmaydi</div>
             </div>
-            <button onClick={()=>setTourRoomDetail(null)} style={{width:'100%',background:T,border:'none',borderRadius:18,padding:'14px 0',fontSize:15,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Band qilish — {fmtS(r.price)}</button>
+            <button onClick={()=>{ setTourCheckout({room:r,tour:td}); setTcPassengers([]); setTcPayMethod('click'); }} style={{width:'100%',background:T,border:'none',borderRadius:18,padding:'14px 0',fontSize:15,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.35),0 2px 6px rgba(0,153,168,0.20),inset 0 1px 0 rgba(255,255,255,0.25)'}}>Buyurtma qilish — {fmtS(r.price)}</button>
           </div>
         </div>
       </Frame>
@@ -3458,6 +3466,281 @@ function ScreenTrip() {
   }
 
   // Tour detail page
+  // ── Add Passenger Page ──────────────────────────────────────────
+  if (tcAddPassengerPage) {
+    const inp = (label, key, ph, type='text') => (
+      <div style={{marginBottom:14}}>
+        <div style={{fontSize:12,fontWeight:700,color:'#6B7280',marginBottom:5,letterSpacing:0.2}}>{label}</div>
+        <input
+          type={type} value={tcAddForm[key]} placeholder={ph}
+          onChange={e=>setTcAddForm(f=>({...f,[key]:e.target.value}))}
+          style={{width:'100%',border:'1.5px solid #E8EAF3',borderRadius:12,padding:'11px 14px',fontSize:14,fontWeight:500,color:'#0A1F21',background:'#F9FAFB',outline:'none',boxSizing:'border-box'}}
+        />
+      </div>
+    );
+    const canSave = tcAddForm.name.trim() && tcAddForm.surname.trim() && tcAddForm.passport.trim();
+    return (
+      <Frame>
+        <div style={{display:'flex',alignItems:'center',gap:10,padding:'14px 16px',borderBottom:'1px solid #F0F2F5'}}>
+          <button type="button" onClick={()=>setTcAddPassengerPage(false)} style={{width:36,height:36,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span style={{fontSize:17,fontWeight:800,color:'#0A1F21'}}>Yo'lovchi qo'shish</span>
+        </div>
+        <Scroll style={{flex:1,padding:'20px 16px 32px'}}>
+          {inp('Ism *','name',"Masalan: Farrux")}
+          {inp('Familiya *','surname',"Masalan: Bozorboyev")}
+          {inp('Pasport raqami *','passport',"AA1234567")}
+          {inp('Tug\'ilgan sana','birth',"1990-01-01",'date')}
+          <button type="button"
+            onClick={()=>{
+              if(!canSave) return;
+              const p = {id:Date.now(),name:tcAddForm.name.trim(),surname:tcAddForm.surname.trim(),passport:tcAddForm.passport.trim(),birth:tcAddForm.birth};
+              setSavedPassengers(sp=>[...sp,p]);
+              setTcAddForm({name:'',surname:'',passport:'',birth:''});
+              setTcAddPassengerPage(false);
+            }}
+            style={{width:'100%',background:canSave?T:'#DDE0EB',color:canSave?'#fff':'#9AA1B8',border:'none',borderRadius:14,padding:'14px 0',fontSize:15,fontWeight:700,cursor:canSave?'pointer':'default',transition:'all 0.2s',marginTop:8,boxShadow:canSave?'0 6px 16px rgba(0,153,168,0.30)':'none'}}>Saqlash</button>
+        </Scroll>
+      </Frame>
+    );
+  }
+
+  // ── Tour Checkout Page ───────────────────────────────────────────
+  if (tourCheckout) {
+    const {room:r, tour:td} = tourCheckout;
+    const fmtS = n => (n||0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ') + ' so\'m';
+    const city = (td.title||'').split(',')[0];
+    const country = (td.title||'').split(',')[1]?.trim()||'';
+    const guestCount = parseInt((r.guests||'2').match(/\d+/)?.[0]||'2');
+    const price = r.price || 0;
+    const stars = 4;
+
+    const infoRow = (icon, text) => (
+      <div style={{display:'flex',alignItems:'center',gap:10,paddingTop:9,borderTop:'1px solid #F2F4F8'}}>
+        <div style={{color:'#9AA1B8',flexShrink:0}}>{icon}</div>
+        <span style={{fontSize:13,fontWeight:500,color:'#374151'}}>{text}</span>
+      </div>
+    );
+    const secHead = label => (
+      <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',marginBottom:12}}>{label}</div>
+    );
+    const card = (children, extra={}) => (
+      <div style={{background:'#fff',borderRadius:18,padding:'14px 16px',marginBottom:12,boxShadow:'0 1px 6px rgba(10,31,33,0.05)',...extra}}>{children}</div>
+    );
+
+    // Passenger slot
+    const PassengerSlot = ({index}) => {
+      const p = tcPassengers[index];
+      return (
+        <div onClick={()=>{setTcPassengerSheet(true);}} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 14px',background:p?'#F0FBF8':'#F9FAFB',border:`1.5px dashed ${p?T:'#D1D5DB'}`,borderRadius:14,cursor:'pointer',marginBottom:8,transition:'all 0.18s'}}>
+          <div style={{width:34,height:34,borderRadius:'50%',background:p?TBG:'#EEF0F5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={p?T:'#9AA1B8'} strokeWidth="2" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          {p ? (
+            <div style={{flex:1}}>
+              <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>{p.surname} {p.name}</div>
+              <div style={{fontSize:12,color:'#6B7280',marginTop:1}}>{p.passport}</div>
+            </div>
+          ) : (
+            <div style={{flex:1}}>
+              <div style={{fontSize:14,fontWeight:600,color:'#9AA1B8'}}>{index+1}-yo'lovchi</div>
+              <div style={{fontSize:12,color:'#C0C5D4',marginTop:1}}>Tanlang</div>
+            </div>
+          )}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0C5D4" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      );
+    };
+
+    // Passenger bottomsheet
+    const PsSheet = () => {
+      const filtered = tcPsSearch.trim()
+        ? savedPassengers.filter(p=>`${p.name} ${p.surname}`.toLowerCase().includes(tcPsSearch.toLowerCase()) || p.passport.toLowerCase().includes(tcPsSearch.toLowerCase()))
+        : savedPassengers;
+      return (
+        <div style={{position:'fixed',inset:0,background:'rgba(10,31,33,0.55)',zIndex:400,display:'flex',alignItems:'flex-end'}} onClick={()=>setTcPassengerSheet(false)}>
+          <div onClick={e=>e.stopPropagation()} style={{width:'100%',maxWidth:460,margin:'0 auto',background:'#fff',borderRadius:'22px 22px 0 0',padding:'0 0 32px',maxHeight:'80vh',display:'flex',flexDirection:'column'}}>
+            <div style={{width:36,height:4,background:'#E0E4EE',borderRadius:99,margin:'12px auto 8px'}}/>
+            <div style={{padding:'0 16px 10px',fontSize:16,fontWeight:800,color:'#0A1F21'}}>Yo'lovchi tanlash</div>
+            {/* Search */}
+            <div style={{padding:'0 16px 10px'}}>
+              <div style={{display:'flex',alignItems:'center',gap:8,background:'#F4F5FA',borderRadius:12,padding:'9px 12px'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2.2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input autoFocus value={tcPsSearch} onChange={e=>setTcPsSearch(e.target.value)} placeholder="Ism yoki pasport raqami..." style={{flex:1,border:'none',background:'none',fontSize:14,outline:'none',color:'#0A1F21'}}/>
+              </div>
+            </div>
+            <div style={{flex:1,overflowY:'auto',padding:'0 16px'}}>
+              {filtered.length > 0 ? filtered.map(p => {
+                const isSelected = tcPassengers.some(s=>s.id===p.id);
+                return (
+                  <div key={p.id} onClick={()=>{
+                    setTcPassengers(prev=>{
+                      if(isSelected) return prev.filter(s=>s.id!==p.id);
+                      if(prev.length>=guestCount) return [...prev.slice(1),p];
+                      return [...prev,p];
+                    });
+                  }} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 0',borderBottom:'1px solid #F2F4F8',cursor:'pointer'}}>
+                    <div style={{width:36,height:36,borderRadius:'50%',background:isSelected?TBG:'#EEF0F5',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={isSelected?T:'#9AA1B8'} strokeWidth="2" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:14,fontWeight:700,color:'#0A1F21'}}>{p.surname} {p.name}</div>
+                      <div style={{fontSize:12,color:'#6B7280'}}>{p.passport}</div>
+                    </div>
+                    <div style={{width:20,height:20,borderRadius:'50%',border:`2px solid ${isSelected?T:'#DDE0EB'}`,background:isSelected?T:'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all 0.15s'}}>
+                      {isSelected && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                    </div>
+                  </div>
+                );
+              }) : (
+                <div style={{textAlign:'center',padding:'24px 0',color:'#9AA1B8'}}>
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C0C5D4" strokeWidth="1.5" strokeLinecap="round" style={{marginBottom:8}}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <div style={{fontSize:13,fontWeight:600}}>Yo'lovchilar yo'q</div>
+                </div>
+              )}
+            </div>
+            <div style={{padding:'12px 16px 0',display:'flex',gap:10}}>
+              <button type="button" onClick={()=>{setTcPassengerSheet(false);setTcAddPassengerPage(true);setTcPsSearch('');}} style={{flex:1,background:'#F4F5FA',border:'none',borderRadius:12,padding:'12px 0',fontSize:14,fontWeight:700,color:T,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Qo'shish
+              </button>
+              <button type="button" onClick={()=>{setTcPassengerSheet(false);setTcPsSearch('');}} style={{flex:2,background:T,border:'none',borderRadius:12,padding:'12px 0',fontSize:14,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 4px 14px rgba(0,153,168,0.30)'}}>
+                Tasdiqlash ({tcPassengers.length}/{guestCount})
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const svgIcon = (d, size=15) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="1.8" strokeLinecap="round">{d}</svg>;
+
+    return (
+      <Frame>
+        {tcPassengerSheet && <PsSheet/>}
+        {/* Header */}
+        <div style={{display:'flex',alignItems:'center',gap:10,padding:'14px 16px',borderBottom:'1px solid #F0F2F5',background:'#fff'}}>
+          <button type="button" onClick={()=>setTourCheckout(null)} style={{width:36,height:36,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span style={{fontSize:17,fontWeight:800,color:'#0A1F21',flex:1,textAlign:'center'}}>Buyurtma</span>
+          <div style={{width:36}}/>
+        </div>
+
+        <Scroll style={{flex:1,background:'#F4F7F8',padding:'14px 16px 120px'}}>
+
+          {/* 1. Mehmonxona */}
+          {card(<>
+            {secHead('Mehmonxona')}
+            <div style={{display:'flex',gap:12,marginBottom:12}}>
+              <img src={td.img} alt={city} style={{width:64,height:64,borderRadius:12,objectFit:'cover',flexShrink:0}}/>
+              <div>
+                <div style={{fontSize:15,fontWeight:800,color:'#0A1F21',lineHeight:1.2}}>{city}</div>
+                <div style={{display:'flex',gap:2,margin:'3px 0'}}>
+                  {Array(5).fill(0).map((_,i)=><svg key={i} width="11" height="11" viewBox="0 0 24 24" fill={i<stars?'#FBBF24':'#E5E7EB'}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}
+                </div>
+                <div style={{fontSize:12,color:'#6B7280'}}>{country}</div>
+              </div>
+            </div>
+            {infoRow(<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>, r.dates + ` · ${r.nights} kecha`)}
+            {infoRow(<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="1.8" strokeLinecap="round"><path d="M2 22V12a10 10 0 0 1 20 0v10"/><path d="M7 22V11"/><path d="M17 22V11"/></svg>, r.type)}
+            {infoRow(<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="1.8" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>, r.meal)}
+            {infoRow(<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="1.8" strokeLinecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 6v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>, 'Guruh transferi')}
+          </>)}
+
+          {/* 2. Aviabilet */}
+          {card(<>
+            {secHead('Aviabilet')}
+            {[
+              {airline:r.airline, from:'Toshkent', to:city, dep:'22:05', arr:'00:25', depDate:'29 May', arrDate:'30 May', dir:'→'},
+              {airline:r.airline, from:city, to:'Toshkent', dep:'15:00', arr:'19:20', depDate:'8 Iyun', arrDate:'8 Iyun', dir:'→'},
+            ].map((fl,fi)=>(
+              <div key={fi} style={{paddingTop:fi>0?12:0,marginTop:fi>0?12:0,borderTop:fi>0?'1px solid #F2F4F8':'none'}}>
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                  <span style={{fontSize:12,fontWeight:700,color:T}}>{fl.airline}</span>
+                </div>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div>
+                    <div style={{fontSize:11,color:'#9AA1B8',fontWeight:600}}>{fl.from}</div>
+                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>{fl.depDate}, {fl.dep}</div>
+                  </div>
+                  <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',gap:3,padding:'0 8px'}}>
+                    <div style={{flex:1,height:1,borderTop:'1.5px dashed #D1D5DB'}}/>
+                    <span style={{fontSize:11,color:'#9AA1B8',fontWeight:600}}>To'g'ridan-to'g'ri</span>
+                    <div style={{flex:1,height:1,borderTop:'1.5px dashed #D1D5DB'}}/>
+                  </div>
+                  <div style={{textAlign:'right'}}>
+                    <div style={{fontSize:11,color:'#9AA1B8',fontWeight:600}}>{fl.to}</div>
+                    <div style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>{fl.arrDate}, {fl.arr}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </>)}
+
+          {/* 3. Yo'lovchilar */}
+          {card(<>
+            {secHead('Yo\'lovchilar')}
+            {Array(guestCount).fill(0).map((_,i)=><PassengerSlot key={i} index={i}/>)}
+          </>)}
+
+          {/* 4. Qo'shimcha savollar */}
+          {card(<>
+            <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',marginBottom:10}}>Boshqa savollaringiz bormi?</div>
+            {['Menejer bilan bog\'laning','Chipta sotib olgandan keyin nima qilish kerak?'].map(q=>(
+              <div key={q} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 0',borderTop:'1px solid #F2F4F8',cursor:'pointer'}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA1B8" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span style={{fontSize:13,fontWeight:500,color:'#374151',flex:1}}>{q}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0C5D4" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              </div>
+            ))}
+            <div style={{background:'#EFF8FF',borderRadius:12,padding:'10px 12px',marginTop:10,display:'flex',gap:8}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke='#3B82F6' strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span style={{fontSize:12,color:'#2563EB',fontWeight:500,lineHeight:1.5}}>Yakuniy narxga shu yerda ko'rsatilmagan qo'shimcha to'lovlar kiritilishi mumkin.</span>
+            </div>
+          </>)}
+
+          {/* 5. To'lov usuli */}
+          {card(<>
+            {secHead("To'lov usuli")}
+            <div style={{fontSize:12,color:'#9AA1B8',fontWeight:600,marginBottom:10}}>To'lov usulini tanlang</div>
+            {[
+              {id:'click', icon:<div style={{width:36,height:36,borderRadius:8,background:'#FF6B35',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:900,color:'#fff'}}>CL</div>, label:'CLICK orqali to\'lash', sub:"Onlayn to'lov — karta qo'shish kerak"},
+              {id:'cash',  icon:<div style={{width:36,height:36,borderRadius:8,background:'#22C55E',display:'flex',alignItems:'center',justifyContent:'center'}}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>, label:"Naqd to'lov", sub:"Ofisimizda to'lov qilish"},
+            ].map(pm=>(
+              <div key={pm.id} onClick={()=>setTcPayMethod(pm.id)} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 12px',borderRadius:14,border:`1.5px solid ${tcPayMethod===pm.id?T:'#EEF0F5'}`,background:tcPayMethod===pm.id?TBG:'#FAFAFA',cursor:'pointer',marginBottom:8,transition:'all 0.15s'}}>
+                {pm.icon}
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:700,color:'#0A1F21'}}>{pm.label}</div>
+                  <div style={{fontSize:11,color:'#6B7280'}}>{pm.sub}</div>
+                </div>
+                <div style={{width:18,height:18,borderRadius:'50%',border:`2px solid ${tcPayMethod===pm.id?T:'#DDE0EB'}`,background:tcPayMethod===pm.id?T:'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  {tcPayMethod===pm.id && <div style={{width:6,height:6,borderRadius:'50%',background:'#fff'}}/>}
+                </div>
+              </div>
+            ))}
+          </>)}
+
+        </Scroll>
+
+        {/* Sticky bottom: Jami + button */}
+        <div style={{position:'absolute',bottom:0,left:0,right:0,background:'#fff',borderTop:'1px solid #F0F2F5',padding:'12px 16px 28px',boxShadow:'0 -4px 20px rgba(10,31,33,0.06)'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:4}}>
+            <span style={{fontSize:15,fontWeight:800,color:'#0A1F21'}}>Jami</span>
+            <span style={{fontSize:17,fontWeight:900,color:'#0A1F21'}}>{fmtS(price)}</span>
+          </div>
+          <div style={{display:'flex',justifyContent:'space-between',marginBottom:14}}>
+            <span style={{fontSize:12,color:'#6B7280'}}>Buyurtma</span>
+            <span style={{fontSize:12,color:'#6B7280'}}>{fmtS(price)}</span>
+          </div>
+          <button type="button" style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:16,padding:'14px 0',fontSize:15,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Buyurtma qoldirish</button>
+        </div>
+      </Frame>
+    );
+  }
+
   if (tourDetail) {
     const td = tourDetail;
     const city = (td.title||'').split(',')[0];
