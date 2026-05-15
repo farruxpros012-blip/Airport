@@ -4107,7 +4107,7 @@ function ScreenTrip() {
                     </div>
                     <div style={{display:'flex',gap:8}}>
                       <button onClick={()=>setTourRoomDetail(r)} style={{flex:1,background:'#fff',border:`1.5px solid ${T}`,borderRadius:12,padding:'10px 0',fontSize:13,fontWeight:700,color:T,cursor:'pointer'}}>Tafsilotlar</button>
-                      <button style={{flex:2,background:T,border:'none',borderRadius:12,padding:'10px 0',fontSize:13,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.28)'}}>Band qilish</button>
+                      <button onClick={()=>{ setTourCheckout({room:r,tour:td}); setTcPassengers([]); setTcPayMethod('click'); }} style={{flex:2,background:T,border:'none',borderRadius:12,padding:'10px 0',fontSize:13,fontWeight:700,color:'#fff',cursor:'pointer',boxShadow:'0 4px 12px rgba(0,153,168,0.28)'}}>Band qilish</button>
                     </div>
                   </div>
                 </div>
