@@ -4034,17 +4034,15 @@ function ScreenTrip() {
                         <span style={{fontWeight:700}}>{ct.bags} bagaj</span>
                       </div>
                     </div>
-                    <div style={{display:'flex',flexDirection:'column',gap:2,marginTop:3}}>
+                    <div style={{display:'flex',flexDirection:'column',gap:3,marginTop:3}}>
                       <div style={{display:'flex',alignItems:'baseline',gap:5}}>
-                        <span style={{fontSize:11,color:'#6B7280',fontWeight:600}}>Oddiy</span>
-                        <span style={{fontSize:13,fontWeight:800,color:'#0A1F21',fontVariantNumeric:'tabular-nums'}}>{ct.price.toLocaleString('ru-RU')}</span>
-                        <span style={{fontSize:11,color:'#6B7280',fontWeight:600}}>so'm</span>
+                        <span style={{fontSize:14,fontWeight:800,color:'#0A1F21',fontVariantNumeric:'tabular-nums'}}>{ct.price.toLocaleString('ru-RU')}</span>
+                        <span style={{fontSize:11,color:'#6B7280',fontWeight:500}}>so'm</span>
                       </div>
-                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'linear-gradient(90deg,#B8860B 0%,#D4A017 50%,#F5C842 100%)',borderRadius:6,padding:'2px 8px',alignSelf:'flex-start'}}>
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <span style={{fontSize:11,color:'#fff',fontWeight:700,letterSpacing:0.2}}>Premium</span>
-                        <span style={{fontSize:13,fontWeight:800,color:'#fff',fontVariantNumeric:'tabular-nums'}}>{ct.premiumPrice.toLocaleString('ru-RU')}</span>
-                        <span style={{fontSize:11,color:'rgba(255,255,255,0.85)',fontWeight:600}}>so'm</span>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:4,background:'linear-gradient(135deg,#FCD34D 0%,#F59E0B 60%,#D97706 100%)',borderRadius:999,padding:'3px 9px',alignSelf:'flex-start',boxShadow:'0 3px 10px rgba(217,119,6,0.25),inset 0 1px 0 rgba(255,255,255,0.35)'}}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M5 16L3 5l5.5 5.5L12 2l3.5 8.5L21 5l-2 11H5zm0 2h14v2H5v-2z"/></svg>
+                        <span style={{fontSize:10.5,fontWeight:700,color:'#fff',letterSpacing:0.2}}>Premium:</span>
+                        <span style={{fontSize:11.5,fontWeight:800,color:'#fff',fontVariantNumeric:'tabular-nums'}}>{ct.premiumPrice.toLocaleString('ru-RU')}</span>
                       </div>
                     </div>
                   </div>
