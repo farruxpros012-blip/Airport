@@ -1,6 +1,17 @@
 // Airport mobile app screens — original design inspired by user's references
 // Russian copy, blue/indigo palette, iOS-style cards with soft shadows.
 
+import React from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import lottie from 'lottie-web';
+
+// Re-export onto window for any legacy references inside screens.jsx
+if (typeof window !== 'undefined') {
+  window.L = window.L || L;
+  window.lottie = window.lottie || lottie;
+}
+
 const C = {
   bg: '#F4F5FA',
   card: '#FFFFFF',
@@ -2721,7 +2732,7 @@ function ScreenTrip() {
     const fmtS = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ') + ' so\'m';
     return (
       <Frame>
-        <div style={{background:'transparent',position:'sticky',top:0,zIndex:20,display:'flex',alignItems:'center',padding:'12px 16px',position:'relative'}}>
+        <div style={{background:'transparent',position:'sticky',top:0,zIndex:20,display:'flex',alignItems:'center',padding:'12px 16px'}}>
           <button onClick={()=>setTourRoomDetail(null)} style={{width:44,height:44,borderRadius:'50%',background:'#fff',border:'none',boxShadow:'0 2px 10px rgba(15,27,61,0.08)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,zIndex:1}}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
@@ -5067,7 +5078,4 @@ const ActionCard = ({ icon, label }) => (
   </Card>
 );
 
-// ─── Export to window for app file ────────────────────────────
-Object.assign(window, {
-  ScreenHome, ScreenServices, ScreenSupport, ScreenProfile, ScreenFlight, ScreenTrip,
-});
+export { ScreenHome, ScreenServices, ScreenSupport, ScreenProfile, ScreenFlight, ScreenTrip };
