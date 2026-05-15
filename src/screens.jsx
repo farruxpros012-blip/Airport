@@ -3901,6 +3901,7 @@ function ScreenTrip() {
         bg:'linear-gradient(135deg,#1F2937 0%,#374151 60%,#4B5563 100%)',
         accent:'#1F2937',
         pax:4, bags:2,
+        price:120000, premiumPrice:180000,
         desc:'Toyota Camry yoki o\'xshash',
         details:['Konditsioner','Wi-Fi','Qulay salon'],
       },
@@ -3911,6 +3912,7 @@ function ScreenTrip() {
         bg:'linear-gradient(135deg,#475569 0%,#64748B 60%,#94A3B8 100%)',
         accent:'#475569',
         pax:5, bags:3,
+        price:180000, premiumPrice:260000,
         desc:'VW Caddy yoki o\'xshash',
         details:['Konditsioner','Qulay salon','USB zaryadlash'],
       },
@@ -3921,6 +3923,7 @@ function ScreenTrip() {
         bg:'linear-gradient(135deg,#F59E0B 0%,#FBBF24 60%,#FCD34D 100%)',
         accent:'#D97706',
         pax:8, bags:6,
+        price:260000, premiumPrice:380000,
         desc:'Toyota Hiace yoki o\'xshash',
         details:['Konditsioner','USB zaryadlash','Katta bagajnik'],
       },
@@ -4039,6 +4042,18 @@ function ScreenTrip() {
                       <div style={{display:'flex',alignItems:'center',gap:4}}>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                         <span style={{fontWeight:700}}>{ct.bags} bagaj</span>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',flexDirection:'column',gap:2,marginTop:3}}>
+                      <div style={{display:'flex',alignItems:'baseline',gap:5}}>
+                        <span style={{fontSize:11,color:'#6B7280',fontWeight:600}}>Oddiy</span>
+                        <span style={{fontSize:13,fontWeight:800,color:'#0A1F21',fontVariantNumeric:'tabular-nums'}}>{ct.price.toLocaleString('ru-RU')}</span>
+                        <span style={{fontSize:11,color:'#6B7280',fontWeight:600}}>so'm</span>
+                      </div>
+                      <div style={{display:'flex',alignItems:'baseline',gap:5}}>
+                        <span style={{fontSize:11,color:'#B8860B',fontWeight:700}}>Premium</span>
+                        <span style={{fontSize:13,fontWeight:800,color:'#B8860B',fontVariantNumeric:'tabular-nums'}}>{ct.premiumPrice.toLocaleString('ru-RU')}</span>
+                        <span style={{fontSize:11,color:'#B8860B',fontWeight:600}}>so'm</span>
                       </div>
                     </div>
                   </div>
