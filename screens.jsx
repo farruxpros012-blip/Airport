@@ -3650,12 +3650,14 @@ function ScreenTrip() {
 
     const iconSm = (d) => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round">{d}</svg>;
 
+    const cityCode = city.slice(0,3).toUpperCase();
+
     return (
       <Frame>
         {tcPassengerSheet && <PsSheet/>}
 
         {/* ── Header ── */}
-        <div style={{display:'flex',alignItems:'center',padding:'10px 12px',background:'#fff',borderBottom:'1px solid #F0F2F5'}}>
+        <div style={{display:'flex',alignItems:'center',padding:'10px 14px',background:'#fff',borderBottom:'1px solid #F0F2F5',position:'sticky',top:0,zIndex:10}}>
           <button type="button" onClick={()=>setTourCheckout(null)} style={{width:32,height:32,borderRadius:'50%',background:'#F4F5FA',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A1F21" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
@@ -3663,118 +3665,159 @@ function ScreenTrip() {
           <div style={{width:32}}/>
         </div>
 
-        <Scroll style={{flex:1,background:'#F2F4F8',paddingBottom:100}}>
+        <Scroll style={{flex:1,background:'#F0F2F6',paddingBottom:108}}>
 
-          {/* ── 1. Compact hero strip ── */}
-          <div style={{background:svc.bg,padding:'12px 14px',display:'flex',alignItems:'center',gap:12}}>
-            <div style={{width:54,height:54,borderRadius:12,overflow:'hidden',flexShrink:0,boxShadow:'0 2px 8px rgba(0,0,0,0.25)'}}>
-              <img src={td.img} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
-            </div>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:3}}>
-                <div style={{width:18,height:18,borderRadius:'50%',background:'rgba(255,255,255,0.25)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                  <SvcIcon/>
+          {/* ── 1. Hero card ── */}
+          <div style={{margin:'12px 12px 0',borderRadius:18,overflow:'hidden',boxShadow:'0 4px 18px rgba(0,0,0,0.13)'}}>
+            <div style={{position:'relative',height:130}}>
+              <img src={td.img} alt="" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+              <div style={{position:'absolute',inset:0,background:'linear-gradient(160deg,rgba(0,77,94,0.55) 0%,rgba(0,153,168,0.82) 100%)'}}/>
+              {/* service pill */}
+              <div style={{position:'absolute',top:10,left:10,display:'flex',alignItems:'center',gap:5,background:'rgba(255,255,255,0.15)',backdropFilter:'blur(6px)',borderRadius:20,padding:'4px 9px 4px 5px',border:'1px solid rgba(255,255,255,0.2)'}}>
+                <div style={{width:20,height:20,borderRadius:'50%',background:'rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center'}}><SvcIcon/></div>
+                <span style={{fontSize:11,fontWeight:700,color:'#fff',letterSpacing:0.3}}>{svc.label}</span>
+              </div>
+              {/* stars */}
+              <div style={{position:'absolute',top:10,right:10,display:'flex',gap:2}}>
+                {Array(5).fill(0).map((_,i)=><svg key={i} width="10" height="10" viewBox="0 0 24 24" fill={i<4?'#FBBF24':'rgba(255,255,255,0.3)'}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}
+              </div>
+              {/* bottom info */}
+              <div style={{position:'absolute',bottom:10,left:12,right:12,display:'flex',alignItems:'flex-end',justifyContent:'space-between'}}>
+                <div>
+                  <div style={{fontSize:20,fontWeight:900,color:'#fff',lineHeight:1,letterSpacing:-0.5,textShadow:'0 1px 4px rgba(0,0,0,0.3)'}}>{city}</div>
+                  <div style={{fontSize:11,color:'rgba(255,255,255,0.8)',marginTop:3,fontWeight:500}}>{country} · {r.dates} · {r.nights} kecha</div>
                 </div>
-                <span style={{fontSize:10,fontWeight:700,color:'rgba(255,255,255,0.85)',textTransform:'uppercase',letterSpacing:0.5}}>{svc.label}</span>
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:17,fontWeight:900,color:'#fff',letterSpacing:-0.5}}>{fmtS(price)}</div>
+                  <div style={{fontSize:10,color:'rgba(255,255,255,0.7)',fontWeight:500}}>{r.guests}</div>
+                </div>
               </div>
-              <div style={{fontSize:15,fontWeight:900,color:'#fff',lineHeight:1.1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{city}{country?`, ${country}`:''}</div>
-              <div style={{fontSize:11,color:'rgba(255,255,255,0.75)',marginTop:2}}>{r.dates} · {r.nights} kecha · {r.guests}</div>
             </div>
-            <div style={{textAlign:'right',flexShrink:0}}>
-              <div style={{fontSize:15,fontWeight:900,color:'#fff'}}>{fmtS(price)}</div>
-              <div style={{display:'flex',gap:1,justifyContent:'flex-end',marginTop:3}}>
-                {Array(5).fill(0).map((_,i)=><svg key={i} width="8" height="8" viewBox="0 0 24 24" fill={i<4?'#FBBF24':'rgba(255,255,255,0.35)'}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}
-              </div>
+            {/* info chips row */}
+            <div style={{background:'#fff',padding:'10px 12px',display:'flex',gap:6,flexWrap:'wrap'}}>
+              {[
+                {icon:<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>, txt:r.dates},
+                {icon:<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>, txt:r.meal},
+                {icon:<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>, txt:r.airline},
+              ].map((c,i)=>(
+                <div key={i} style={{display:'flex',alignItems:'center',gap:4,background:TBG,borderRadius:20,padding:'4px 9px'}}>
+                  {c.icon}
+                  <span style={{fontSize:11,fontWeight:600,color:'#0A1F21'}}>{c.txt}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div style={{padding:'8px 10px 0'}}>
+          <div style={{padding:'10px 12px 0'}}>
 
-            {/* ── 2. Mehmonxona ── */}
-            <Card style={{padding:'10px 12px',marginBottom:8}}>
-              <SecLabel
-                icon={<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/><rect x="11" y="8" width="2" height="2"/></svg>}
-                label="Mehmonxona"
-              />
-              <Row icon={iconSm(<><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>)} label="Sana" val={`${r.dates} · ${r.nights} kecha`}/>
-              <Row icon={iconSm(<><path d="M2 22V12a10 10 0 0 1 20 0v10"/><path d="M7 22V11"/><path d="M17 22V11"/></>)} label="Xona" val={r.type}/>
-              <Row icon={iconSm(<><path d="M3 11l19-9-9 19-2-8-8-2z"/></>)} label="Ovqat" val={r.meal}/>
-              <Row icon={iconSm(<><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 6v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></>)} label="Transfer" val="Guruh transferi"/>
-            </Card>
-
-            {/* ── 3. Aviabilet ── */}
-            <Card style={{padding:'10px 12px',marginBottom:8}}>
-              <SecLabel
-                icon={<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>}
-                label="Aviabilet"
-              />
+            {/* ── 2. Xona tafsiloti ── */}
+            <div style={{background:'#fff',borderRadius:16,marginBottom:8,overflow:'hidden',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
+              <div style={{padding:'10px 14px 0',display:'flex',alignItems:'center',gap:6,borderBottom:'1px solid #F4F5FA',paddingBottom:8}}>
+                <div style={{width:22,height:22,borderRadius:7,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/><rect x="11" y="8" width="2" height="2"/></svg>
+                </div>
+                <span style={{fontSize:13,fontWeight:800,color:'#0A1F21'}}>Mehmonxona</span>
+              </div>
               {[
-                {from:'TAS',to:city.slice(0,3).toUpperCase(),dep:'22:05',arr:'00:25',date:'29 May'},
-                {from:city.slice(0,3).toUpperCase(),to:'TAS',dep:'15:00',arr:'19:20',date:'8 Iyun'},
+                {l:'Xona turi', v:r.type},
+                {l:'Ovqatlanish', v:r.meal},
+                {l:'Transfer', v:'Guruh transferi'},
+              ].map(row=>(
+                <div key={row.l} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'9px 14px',borderBottom:'1px solid #F8F9FB'}}>
+                  <span style={{fontSize:12,color:'#6B7280',fontWeight:500}}>{row.l}</span>
+                  <span style={{fontSize:12,fontWeight:700,color:'#0A1F21',textAlign:'right',maxWidth:'58%'}}>{row.v}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* ── 3. Aviabilet — boarding pass style ── */}
+            <div style={{background:'#fff',borderRadius:16,marginBottom:8,overflow:'hidden',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
+              <div style={{padding:'10px 14px 8px',display:'flex',alignItems:'center',gap:6,borderBottom:'1px solid #F4F5FA'}}>
+                <div style={{width:22,height:22,borderRadius:7,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                </div>
+                <span style={{fontSize:13,fontWeight:800,color:'#0A1F21'}}>Aviabilet</span>
+                <span style={{marginLeft:'auto',fontSize:10,fontWeight:600,color:'#9AA1B8'}}>{r.airline}</span>
+              </div>
+              {[
+                {from:'TAS',fromCity:'Toshkent',to:cityCode,toCity:city,dep:'22:05',arr:'00:25',date:'29 May'},
+                {from:cityCode,fromCity:city,to:'TAS',toCity:'Toshkent',dep:'15:00',arr:'19:20',date:'8 Iyun'},
               ].map((fl,fi)=>(
-                <div key={fi} style={{display:'flex',alignItems:'center',gap:6,marginTop:fi===0?0:6,paddingTop:fi===0?0:6,borderTop:fi===0?'none':'1px solid #F2F4F8'}}>
-                  <div style={{textAlign:'center',minWidth:36}}>
-                    <div style={{fontSize:14,fontWeight:900,color:'#0A1F21',letterSpacing:-0.5}}>{fl.from}</div>
-                    <div style={{fontSize:11,fontWeight:700,color:'#6B7280'}}>{fl.dep}</div>
+                <div key={fi} style={{padding:'10px 14px',borderBottom:fi===0?'1px dashed #E8EAF0':'none',display:'flex',alignItems:'center',gap:0}}>
+                  <div style={{width:52,textAlign:'left'}}>
+                    <div style={{fontSize:18,fontWeight:900,color:'#0A1F21',letterSpacing:-1}}>{fl.from}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8',fontWeight:500,marginTop:1}}>{fl.dep}</div>
                   </div>
-                  <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:2}}>
-                    <div style={{fontSize:9,color:'#9AA1B8',fontWeight:600}}>{fl.date} · {r.airline}</div>
-                    <div style={{display:'flex',alignItems:'center',width:'100%',gap:2}}>
-                      <div style={{flex:1,borderTop:'1.5px dashed #D1D5DB'}}/>
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill={T}><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
-                      <div style={{flex:1,borderTop:'1.5px dashed #D1D5DB'}}/>
+                  <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:3,padding:'0 6px'}}>
+                    <span style={{fontSize:9,color:'#C0C5D4',fontWeight:600,letterSpacing:0.3}}>{fl.date}</span>
+                    <div style={{width:'100%',display:'flex',alignItems:'center',gap:3}}>
+                      <div style={{flex:1,height:1,borderTop:'1.5px dashed #DDE0EB'}}/>
+                      <div style={{width:18,height:18,borderRadius:'50%',background:TBG,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill={T}><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                      </div>
+                      <div style={{flex:1,height:1,borderTop:'1.5px dashed #DDE0EB'}}/>
                     </div>
                   </div>
-                  <div style={{textAlign:'center',minWidth:36}}>
-                    <div style={{fontSize:14,fontWeight:900,color:'#0A1F21',letterSpacing:-0.5}}>{fl.to}</div>
-                    <div style={{fontSize:11,fontWeight:700,color:'#6B7280'}}>{fl.arr}</div>
+                  <div style={{width:52,textAlign:'right'}}>
+                    <div style={{fontSize:18,fontWeight:900,color:'#0A1F21',letterSpacing:-1}}>{fl.to}</div>
+                    <div style={{fontSize:10,color:'#9AA1B8',fontWeight:500,marginTop:1}}>{fl.arr}</div>
                   </div>
                 </div>
               ))}
-            </Card>
+            </div>
 
             {/* ── 4. Yo'lovchilar ── */}
-            <Card style={{padding:'10px 12px',marginBottom:8}}>
-              <SecLabel
-                icon={<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>}
-                label={`Yo'lovchilar (${tcPassengers.length}/${guestCount})`}
-              />
-              {Array(guestCount).fill(0).map((_,i)=><PassengerSlot key={i} index={i}/>)}
-            </Card>
+            <div style={{background:'#fff',borderRadius:16,marginBottom:8,overflow:'hidden',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
+              <div style={{padding:'10px 14px 8px',display:'flex',alignItems:'center',gap:6,borderBottom:'1px solid #F4F5FA'}}>
+                <div style={{width:22,height:22,borderRadius:7,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <span style={{fontSize:13,fontWeight:800,color:'#0A1F21'}}>Yo'lovchilar</span>
+                <span style={{marginLeft:'auto',fontSize:11,fontWeight:700,color:tcPassengers.length===guestCount?T:'#C0C5D4'}}>{tcPassengers.length}/{guestCount}</span>
+              </div>
+              <div style={{padding:'8px 12px 10px'}}>
+                {Array(guestCount).fill(0).map((_,i)=><PassengerSlot key={i} index={i}/>)}
+              </div>
+            </div>
 
             {/* ── 5. To'lov usuli ── */}
-            <Card style={{padding:'10px 12px',marginBottom:8}}>
-              <SecLabel
-                icon={<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>}
-                label="To'lov usuli"
-              />
-              <div style={{display:'flex',gap:8,marginTop:4}}>
-                {[
-                  {id:'click',color:'#FF6B35',label:'CLICK',sub:"Onlayn"},
-                  {id:'cash', color:'#16A34A',label:"Naqd",  sub:"Ofisda"},
-                ].map(pm=>(
-                  <div key={pm.id} onClick={()=>setTcPayMethod(pm.id)} style={{flex:1,display:'flex',alignItems:'center',gap:8,padding:'8px 10px',borderRadius:10,border:`1.5px solid ${tcPayMethod===pm.id?T:'#EEF0F5'}`,background:tcPayMethod===pm.id?TBG:'#FAFAFA',cursor:'pointer',transition:'all 0.15s'}}>
-                    <div style={{width:26,height:26,borderRadius:7,background:pm.color,display:'flex',alignItems:'center',justifyContent:'center',fontSize:9,fontWeight:900,color:'#fff',flexShrink:0}}>{pm.id==='click'?'CL':'₸'}</div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:12,fontWeight:700,color:'#0A1F21'}}>{pm.label}</div>
-                      <div style={{fontSize:10,color:'#6B7280'}}>{pm.sub}</div>
-                    </div>
-                    <div style={{width:14,height:14,borderRadius:'50%',border:`2px solid ${tcPayMethod===pm.id?T:'#DDE0EB'}`,background:tcPayMethod===pm.id?T:'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all 0.15s'}}>
-                      {tcPayMethod===pm.id&&<div style={{width:4,height:4,borderRadius:'50%',background:'#fff'}}/>}
-                    </div>
-                  </div>
-                ))}
+            <div style={{background:'#fff',borderRadius:16,marginBottom:8,overflow:'hidden',boxShadow:'0 1px 6px rgba(10,31,33,0.05)'}}>
+              <div style={{padding:'10px 14px 8px',display:'flex',alignItems:'center',gap:6,borderBottom:'1px solid #F4F5FA'}}>
+                <div style={{width:22,height:22,borderRadius:7,background:TBG,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2.2" strokeLinecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                </div>
+                <span style={{fontSize:13,fontWeight:800,color:'#0A1F21'}}>To'lov usuli</span>
               </div>
-            </Card>
+              <div style={{display:'flex',gap:8,padding:'10px 12px'}}>
+                {[
+                  {id:'click',color:'#FF6B35',label:'CLICK',sub:'Onlayn to\'lov'},
+                  {id:'cash', color:'#16A34A',label:'Naqd',  sub:'Ofisda to\'lov'},
+                ].map(pm=>{
+                  const sel = tcPayMethod===pm.id;
+                  return (
+                    <div key={pm.id} onClick={()=>setTcPayMethod(pm.id)} style={{flex:1,borderRadius:12,border:`2px solid ${sel?T:'#EEF0F5'}`,background:sel?TBG:'#FAFAFA',padding:'10px',cursor:'pointer',transition:'all 0.15s',display:'flex',flexDirection:'column',alignItems:'center',gap:6,position:'relative'}}>
+                      <div style={{width:32,height:32,borderRadius:10,background:pm.color,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:900,color:'#fff'}}>{pm.id==='click'?'CL':'₸'}</div>
+                      <div style={{textAlign:'center'}}>
+                        <div style={{fontSize:12,fontWeight:800,color:sel?T:'#0A1F21'}}>{pm.label}</div>
+                        <div style={{fontSize:10,color:'#9AA1B8',fontWeight:500}}>{pm.sub}</div>
+                      </div>
+                      {sel&&<div style={{position:'absolute',top:8,right:8,width:14,height:14,borderRadius:'50%',background:T,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-            {/* ── 6. Savollar ── */}
+            {/* ── 6. Yordam ── */}
             <div style={{display:'flex',gap:8,marginBottom:8}}>
               {[
-                {icon:<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, label:"Menejer"},
-                {icon:<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>, label:"FAQ"},
+                {icon:<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, label:"Menejer bilan bog'laning"},
+                {icon:<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>, label:"Savollar (FAQ)"},
               ].map(btn=>(
-                <button key={btn.label} type="button" style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',gap:6,background:'#fff',border:'none',borderRadius:12,padding:'10px 0',fontSize:12,fontWeight:700,color:'#374151',cursor:'pointer',boxShadow:'0 1px 4px rgba(10,31,33,0.06)'}}>
-                  {btn.icon}{btn.label}
+                <button key={btn.label} type="button" style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',gap:6,background:'#fff',border:'none',borderRadius:14,padding:'11px 6px',fontSize:11,fontWeight:700,color:'#374151',cursor:'pointer',boxShadow:'0 1px 4px rgba(10,31,33,0.06)'}}>
+                  {btn.icon}<span style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{btn.label}</span>
                 </button>
               ))}
             </div>
@@ -3783,18 +3826,20 @@ function ScreenTrip() {
         </Scroll>
 
         {/* ── Sticky bottom ── */}
-        <div style={{position:'absolute',bottom:0,left:0,right:0,background:'#fff',borderTop:'1px solid #F0F2F5',padding:'8px 12px 20px',boxShadow:'0 -4px 16px rgba(10,31,33,0.07)'}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
+        <div style={{position:'absolute',bottom:0,left:0,right:0,background:'#fff',borderTop:'1px solid #F0F2F5',padding:'10px 14px 24px',boxShadow:'0 -6px 20px rgba(10,31,33,0.08)'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
             <div>
-              <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,letterSpacing:0.5}}>JAMI NARX</div>
-              <div style={{fontSize:18,fontWeight:900,color:'#0A1F21',letterSpacing:-0.5}}>{fmtS(price)}</div>
+              <div style={{fontSize:10,color:'#9AA1B8',fontWeight:600,letterSpacing:0.8,textTransform:'uppercase'}}>Jami narx</div>
+              <div style={{fontSize:20,fontWeight:900,color:'#0A1F21',letterSpacing:-0.7,lineHeight:1.1}}>{fmtS(price)}</div>
             </div>
-            <div style={{textAlign:'right',fontSize:10,color:'#9AA1B8',lineHeight:1.6}}>
-              <div>{r.guests} · {r.nights} kecha</div>
-              <div>{r.airline}</div>
+            <div style={{background:'#F4F5FA',borderRadius:10,padding:'6px 10px',textAlign:'right'}}>
+              <div style={{fontSize:11,fontWeight:700,color:'#374151'}}>{r.guests}</div>
+              <div style={{fontSize:10,color:'#9AA1B8'}}>{r.nights} kecha · {r.airline}</div>
             </div>
           </div>
-          <button type="button" style={{width:'100%',background:T,color:'#fff',border:'none',borderRadius:12,padding:'12px 0',fontSize:14,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.28)',letterSpacing:0.2}}>Buyurtma qoldirish</button>
+          <button type="button" style={{width:'100%',background:`linear-gradient(90deg,#007A87,${T})`,color:'#fff',border:'none',borderRadius:14,padding:'13px 0',fontSize:14,fontWeight:700,cursor:'pointer',boxShadow:'0 6px 18px rgba(0,153,168,0.32)',letterSpacing:0.3}}>
+            Buyurtma qoldirish
+          </button>
         </div>
       </Frame>
     );
