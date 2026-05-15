@@ -4016,7 +4016,7 @@ function ScreenTrip() {
               {CAR_TYPES.map(ct=>{
                 const sel = xferCarType===ct.id;
                 return (
-                <div key={ct.id} onClick={()=>setXferCarType(ct.id)} style={{position:'relative',background:'#fff',border:`2px solid ${sel?ct.accent:'#EEF0F5'}`,borderRadius:22,overflow:'hidden',cursor:'pointer',display:'flex',alignItems:'stretch',boxShadow:sel?`0 8px 24px ${ct.accent}26, 0 2px 6px rgba(10,31,33,0.06)`:'0 1px 4px rgba(10,31,33,0.04)',transition:'all 0.2s'}}>
+                <div key={ct.id} onClick={()=>setXferCarType(ct.id)} style={{position:'relative',background:'#fff',border:`2px solid ${sel?T:'#EEF0F5'}`,borderRadius:22,overflow:'hidden',cursor:'pointer',display:'flex',alignItems:'stretch',boxShadow:sel?`0 8px 24px rgba(0,153,168,0.22), 0 2px 6px rgba(0,153,168,0.10)`:'0 1px 4px rgba(10,31,33,0.04)',transition:'all 0.2s'}}>
                   {/* Car image panel */}
                   <div style={{width:110,background:'transparent',position:'relative',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,overflow:'hidden',padding:'6px 4px'}}>
                     <img src={encodeURI(ct.img)} alt={ct.label} style={{width:'100%',height:'auto',objectFit:'contain',filter:'drop-shadow(0 3px 6px rgba(0,0,0,0.15))',transform:sel?'scale(1.05) rotate(-2deg)':'rotate(-2deg)',transition:'transform 0.25s'}} onError={e=>{e.target.style.display='none';}}/>
