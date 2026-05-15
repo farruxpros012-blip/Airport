@@ -4040,10 +4040,11 @@ function ScreenTrip() {
                         <span style={{fontSize:13,fontWeight:800,color:'#0A1F21',fontVariantNumeric:'tabular-nums'}}>{ct.price.toLocaleString('ru-RU')}</span>
                         <span style={{fontSize:11,color:'#6B7280',fontWeight:600}}>so'm</span>
                       </div>
-                      <div style={{display:'flex',alignItems:'baseline',gap:5}}>
-                        <span style={{fontSize:11,color:'#B8860B',fontWeight:700}}>Premium</span>
-                        <span style={{fontSize:13,fontWeight:800,color:'#B8860B',fontVariantNumeric:'tabular-nums'}}>{ct.premiumPrice.toLocaleString('ru-RU')}</span>
-                        <span style={{fontSize:11,color:'#B8860B',fontWeight:600}}>so'm</span>
+                      <div style={{display:'inline-flex',alignItems:'center',gap:5,background:'linear-gradient(90deg,#B8860B 0%,#D4A017 50%,#F5C842 100%)',borderRadius:6,padding:'2px 8px',alignSelf:'flex-start'}}>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <span style={{fontSize:11,color:'#fff',fontWeight:700,letterSpacing:0.2}}>Premium</span>
+                        <span style={{fontSize:13,fontWeight:800,color:'#fff',fontVariantNumeric:'tabular-nums'}}>{ct.premiumPrice.toLocaleString('ru-RU')}</span>
+                        <span style={{fontSize:11,color:'rgba(255,255,255,0.85)',fontWeight:600}}>so'm</span>
                       </div>
                     </div>
                   </div>
