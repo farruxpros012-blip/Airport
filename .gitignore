@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dist-ssr/
+build/
+*.local
+*.zip
+.DS_Store
+.vscode/
+.idea/
+*.log
+.env
+.env.local
