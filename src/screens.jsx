@@ -4029,7 +4029,7 @@ function ScreenTrip() {
                     <img src={encodeURI(ct.img)} alt={ct.label} style={{width:'100%',height:'auto',objectFit:'contain',filter:'drop-shadow(0 3px 6px rgba(0,0,0,0.15))',transform:sel?'scale(1.05) rotate(-2deg)':'rotate(-2deg)',transition:'transform 0.25s'}} onError={e=>{e.target.style.display='none';}}/>
                   </div>
                   {/* Info */}
-                  <div style={{flex:1,padding:'8px 12px 8px 4px',display:'flex',flexDirection:'column',justifyContent:'center',gap:5}}>
+                  <div style={{flex:1,padding:'8px 42px 8px 4px',display:'flex',flexDirection:'column',justifyContent:'center',gap:5}}>
                     <div style={{fontSize:14,fontWeight:800,color:'#0A1F21',lineHeight:1.2,letterSpacing:-0.2}}>{ct.label}</div>
                     <div style={{display:'flex',gap:12,fontSize:12,color:'#374151'}}>
                       <div style={{display:'flex',alignItems:'center',gap:4}}>
@@ -4043,7 +4043,7 @@ function ScreenTrip() {
                     </div>
                   </div>
                   {/* Selection indicator */}
-                  <div style={{position:'absolute',top:10,right:10,width:22,height:22,borderRadius:'50%',background:sel?T:'#fff',border:`2px solid ${sel?T:'#DDE0EB'}`,display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.18s',boxShadow:sel?'0 2px 8px rgba(0,153,168,0.35)':'none'}}>
+                  <div style={{position:'absolute',top:'50%',right:12,transform:'translateY(-50%)',width:22,height:22,borderRadius:'50%',background:sel?T:'#fff',border:`2px solid ${sel?T:'#DDE0EB'}`,display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.18s',boxShadow:sel?'0 2px 8px rgba(0,153,168,0.35)':'none'}}>
                     {sel && <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
                   </div>
                 </div>
