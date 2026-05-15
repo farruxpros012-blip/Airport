@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F4F5FA">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Let's Trip</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; }
@@ -48,6 +51,12 @@
     40% { opacity: 1; transform: scale(1); }
   }
 </style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <div id="loading-overlay">
@@ -59,6 +68,60 @@
 </div>
 <div id="app"></div>
 <div id="tweaks-root"></div>
-<script type="module" src="/src/main.jsx"></script>
+<script>
+  (function() {
+    var v = Date.now();
+    var files = ['tweaks-panel.jsx', 'tweaks.jsx', 'screens.jsx'];
+    files.forEach(function(f) {
+      document.write('<script type="text/babel" src="' + f + '?v=' + v + '"><\/script>');
+    });
+  })();
+</script>
+<script type="text/babel">
+const { ScreenHome, ScreenServices, ScreenSupport, ScreenProfile, ScreenFlight, ScreenTrip, AirportTweaks, applyLogo, readLogo } = window;
+
+try {
+  const saved = readLogo && readLogo();
+  if (saved) requestAnimationFrame(() => applyLogo(saved));
+} catch (e) {}
+
+function useHash() {
+  const [hash, setHash] = React.useState(window.location.hash || '#/');
+  React.useEffect(() => {
+    const onChange = () => {
+      setHash(window.location.hash || '#/');
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener('hashchange', onChange);
+    return () => window.removeEventListener('hashchange', onChange);
+  }, []);
+  return hash;
+}
+
+function Router() {
+  const hash = useHash();
+  const route = hash.replace(/^#\/?/, '');
+
+  React.useEffect(() => {
+    const el = document.getElementById('loading-overlay');
+    if (!el) return;
+    el.classList.add('fade-out');
+    const t = setTimeout(() => { if (el) el.style.display = 'none'; }, 450);
+    return () => clearTimeout(t);
+  }, []);
+
+  switch (route) {
+    case 'services': return <ScreenServices/>;
+    case 'support':  return <ScreenSupport/>;
+    case 'profile':  return <ScreenProfile/>;
+    case 'flight':   return <ScreenFlight/>;
+    case 'trip':     return <ScreenTrip/>;
+    default:         return <ScreenHome/>;
+  }
+}
+
+ReactDOM.createRoot(document.getElementById('app')).render(<Router/>);
+ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<AirportTweaks/>);
+</script>
 </body>
 </html>
