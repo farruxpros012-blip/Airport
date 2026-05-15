@@ -2900,11 +2900,20 @@ function ScreenTrip() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={excurPeople<10?'#fff':'#B0BAC4'} strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
             </div>
+            <div style={{marginTop:10,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 12px',background:TBG,borderRadius:10}}>
+              <div>
+                <div style={{fontSize:11,color:'#6B9EA4',fontWeight:600}}>{excurPeople} kishi uchun jami</div>
+                <div style={{fontSize:18,fontWeight:900,color:T,letterSpacing:-0.5,lineHeight:1.1}}>{fmtS(total)}</div>
+              </div>
+              <div style={{textAlign:'right',fontSize:11,color:'#6B9EA4',fontWeight:500}}>
+                <div>{fmtS(curPrice.prem)} / kishi</div>
+              </div>
+            </div>
             {excurPeople > 1 && (() => {
               const saved = (PRICE_TABLE[0].prem - curPrice.prem) * excurPeople;
               const pct = Math.round((1 - curPrice.prem / PRICE_TABLE[0].prem)*100);
               return (
-                <div style={{marginTop:10,display:'flex',alignItems:'center',gap:6}}>
+                <div style={{marginTop:6,display:'flex',alignItems:'center',gap:6}}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.8" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
                   <span style={{fontSize:12,fontWeight:700,color:'#065F46',flex:1}}>Guruhda <span style={{color:'#059669'}}>{fmtS(saved)}</span> tejaysiz</span>
                   <span style={{fontSize:12,fontWeight:800,color:'#059669'}}>−{pct}%</span>
