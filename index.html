@@ -76,7 +76,7 @@
   // Cache-bust JSX files on every load — guarantees fresh code on every refresh
   (function() {
     var v = Date.now();
-    var files = ['tweaks-panel.jsx', 'tweaks.jsx', 'screens.v2.jsx'];
+    var files = ['tweaks-panel.jsx', 'tweaks.jsx', 'screens.jsx'];
     files.forEach(function(f) {
       document.write('<script type="text/babel" src="' + f + '?v=' + v + '"><\/script>');
     });

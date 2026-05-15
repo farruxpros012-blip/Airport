@@ -1007,6 +1007,9 @@ function MapWithPin({ onAddressChange }) {
       window.removeEventListener('touchcancel', onUp);
       window.removeEventListener('mouseup', onUp);
       if (timer.current) clearTimeout(timer.current);
+      if (dropTimer.current) clearTimeout(dropTimer.current);
+      if (geoTimer.current) clearTimeout(geoTimer.current);
+      geoCb.current = null;
       anim.destroy();
       animRef.current = null;
       map.remove();
@@ -1023,15 +1026,20 @@ function MapWithPin({ onAddressChange }) {
   );
 }
 
+// Module-scope: stable across renders. Created on first tick, closed on app teardown.
+let __tickCtx = null;
+function getTickCtx() {
+  if (!__tickCtx) {
+    try { __tickCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+  }
+  return __tickCtx;
+}
 function playTick() {
   try {
-    if (!window.__tickCtx) {
-      window.__tickCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    const ctx = window.__tickCtx;
+    const ctx = getTickCtx();
+    if (!ctx) return;
     if (ctx.state === 'suspended') ctx.resume();
     const t = ctx.currentTime;
-    // Soft sine ping with quick decay
     const o = ctx.createOscillator();
     const g = ctx.createGain();
     o.type = 'sine';
@@ -1045,41 +1053,64 @@ function playTick() {
     o.start(t);
     o.stop(t + 0.08);
   } catch (e) {}
+  // iOS Safari has no navigator.vibrate — guard the in-check to avoid runtime error.
   try {
-    if (navigator.vibrate) {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
       navigator.vibrate(0);
       navigator.vibrate([12]);
     }
   } catch(e) {}
 }
 
+// Hoisted out of render — these never change.
+const __HOURS = Array.from({length:24}, (_,i)=>i.toString().padStart(2,'0'));
+const __MINUTES = Array.from({length:60}, (_,i)=>i.toString().padStart(2,'0'));
+const __PREFERS_REDUCED_MOTION = typeof window !== 'undefined'
+  && window.matchMedia
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 function IosTimeWheel({ items, value, onChange, unit }) {
   const ITEM_H = 38;
   const VISIBLE = 5;
   const PAD = ((VISIBLE-1)/2) * ITEM_H;
-  const idxOf = (v) => Math.max(0, items.indexOf(v));
-  const [idx, setIdx] = React.useState(idxOf(value));
+  const idxOf = React.useCallback((v) => Math.max(0, items.indexOf(v)), [items]);
+  const [idx, setIdx] = React.useState(() => idxOf(value));
+  const idxRef = React.useRef(idxOf(value));
   const ref = React.useRef(null);
   const snapTimer = React.useRef(null);
   const lastTickIdx = React.useRef(idxOf(value));
+  const touchStartIdx = React.useRef(idxOf(value));
+  const draggingRef = React.useRef(false);
+
+  // Reset scroll position whenever the controlled `value` changes from outside.
   React.useEffect(() => {
-    if (ref.current) ref.current.scrollTop = idxOf(value) * ITEM_H;
-    lastTickIdx.current = idxOf(value);
+    const target = idxOf(value);
+    if (ref.current) ref.current.scrollTop = target * ITEM_H;
+    idxRef.current = target;
+    lastTickIdx.current = target;
+    setIdx(target);
+  }, [value, idxOf]);
+
+  // Clean up pending snap timer on unmount.
+  React.useEffect(() => () => {
+    if (snapTimer.current) clearTimeout(snapTimer.current);
   }, []);
-  React.useEffect(() => {
-    setIdx(idxOf(value));
-  }, [value]);
-  const detectCross = (el) => {
-    const live = el.scrollTop / ITEM_H;
-    const rounded = Math.round(live);
+
+  const detectCross = React.useCallback((el) => {
+    const rounded = Math.round(el.scrollTop / ITEM_H);
     const safe = Math.max(0, Math.min(items.length-1, rounded));
-    if (safe !== idx) setIdx(safe);
-    if (safe !== lastTickIdx.current) {
+    if (safe !== idxRef.current) {
+      idxRef.current = safe;
+      setIdx(safe);
+    }
+    // Only tick from the active input path (touch drag); onScroll just commits state.
+    if (draggingRef.current && safe !== lastTickIdx.current) {
       lastTickIdx.current = safe;
       playTick();
     }
     return safe;
-  };
+  }, [items.length]);
+
   const onScroll = (e) => {
     const el = e.currentTarget;
     const safe = detectCross(el);
@@ -1089,35 +1120,39 @@ function IosTimeWheel({ items, value, onChange, unit }) {
       if (Math.abs(el.scrollTop - target) > 1) {
         el.scrollTo({ top: target, behavior: 'smooth' });
       }
+      // Tick once after snap settles for flicks that ended off-grid.
+      if (!draggingRef.current && safe !== lastTickIdx.current) {
+        lastTickIdx.current = safe;
+        playTick();
+      }
       onChange && onChange(items[safe]);
-    }, 100);
+    }, 120);
+  };
+  const onTouchStart = () => {
+    draggingRef.current = true;
+    if (!ref.current) return;
+    touchStartIdx.current = Math.round(ref.current.scrollTop / ITEM_H);
   };
   const onTouchMove = () => {
     if (ref.current) detectCross(ref.current);
   };
-  const touchStartIdx = React.useRef(idx);
-  const onTouchStart = () => {
-    if (!ref.current) return;
-    touchStartIdx.current = Math.round(ref.current.scrollTop / ITEM_H);
-  };
   const onTouchEnd = () => {
-    if (!ref.current) return;
-    // Predict landing after scroll-snap and tick once if changed.
-    // Run a few frames later to catch the snap settlement.
-    const el = ref.current;
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const land = Math.max(0, Math.min(items.length-1, Math.round(el.scrollTop / ITEM_H)));
-        if (land !== touchStartIdx.current && land !== lastTickIdx.current) {
-          lastTickIdx.current = land;
-          playTick();
-        }
-      });
-    });
+    draggingRef.current = false;
+    // Snap settlement happens later — onScroll's timer will tick if needed.
   };
   return (
     <div style={{position:'relative',flex:1,height:VISIBLE*ITEM_H,perspective:'1100px',zIndex:5}}>
-      <div ref={ref} onScroll={onScroll} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch',transformStyle:'preserve-3d'}}>
+      <div
+        ref={ref}
+        onScroll={onScroll}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onTouchCancel={onTouchEnd}
+        role="listbox"
+        aria-label={unit || 'wheel'}
+        style={{height:'100%',overflowY:'auto',scrollSnapType:'y mandatory',WebkitOverflowScrolling:'touch',transformStyle:'preserve-3d'}}
+      >
         <div style={{paddingTop:PAD,paddingBottom:PAD}}>
           {items.map((v,i)=>{
             const d = i - idx;
@@ -1136,7 +1171,7 @@ function IosTimeWheel({ items, value, onChange, unit }) {
                 fontVariantNumeric:'tabular-nums',
                 transform:`rotateX(${rot}deg) scale(${scale})`,
                 opacity,
-                transition:'transform 0.1s, opacity 0.1s, font-weight 0.1s',
+                transition: __PREFERS_REDUCED_MOTION ? 'none' : 'transform 0.1s, opacity 0.1s, font-weight 0.1s',
                 transformOrigin:'center center',
                 willChange:'transform, opacity',
                 letterSpacing:0.5,
@@ -1147,35 +1182,42 @@ function IosTimeWheel({ items, value, onChange, unit }) {
       </div>
       <div style={{position:'absolute',top:0,left:0,right:0,height:PAD,background:'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 60%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:6}}/>
       <div style={{position:'absolute',bottom:0,left:0,right:0,height:PAD,background:'linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 60%, rgba(255,255,255,0) 100%)',pointerEvents:'none',zIndex:6}}/>
-      {/* Fixed unit label inside center pill */}
+      {/* Fixed unit label inside center pill — anchored to center, not a %-offset */}
       {unit && (
-        <div style={{position:'absolute',top:PAD,height:ITEM_H,right:'18%',display:'flex',alignItems:'center',pointerEvents:'none',zIndex:7,fontSize:12,fontWeight:600,color:'#6B7280',letterSpacing:0.2}}>{unit}</div>
+        <div style={{position:'absolute',top:PAD,height:ITEM_H,left:'50%',transform:'translateX(38px)',display:'flex',alignItems:'center',pointerEvents:'none',zIndex:7,fontSize:12,fontWeight:600,color:'#6B7280',letterSpacing:0.2}}>{unit}</div>
       )}
     </div>
   );
 }
 
-function IosTimePicker({ value, onChange, onConfirm }) {
+function IosTimePicker({ value, onChange, onConfirm, onCancel }) {
   const T = '#0099A8';
   const ITEM_H = 38;
   const VISIBLE = 5;
-  const HOURS = Array.from({length:24}, (_,i)=>i.toString().padStart(2,'0'));
-  const MINUTES = Array.from({length:60}, (_,i)=>i.toString().padStart(2,'0'));
-  const [hh, mm] = (value||'10:00').split(':');
-  const nearestMin = mm.padStart(2,'0');
-  const [h, setH] = React.useState(hh);
-  const [m, setM] = React.useState(nearestMin);
-  React.useEffect(()=>{ onChange && onChange(`${h}:${m}`); }, [h, m]);
+  const [hhInit, mmInit] = (value||'10:00').split(':');
+  const [h, setH] = React.useState((hhInit||'10').padStart(2,'0'));
+  const [m, setM] = React.useState((mmInit||'00').padStart(2,'0'));
+  // Skip first-render onChange — only fire when user actually moves a wheel.
+  const mountedRef = React.useRef(false);
+  React.useEffect(() => {
+    if (!mountedRef.current) { mountedRef.current = true; return; }
+    onChange && onChange(`${h}:${m}`);
+  }, [h, m, onChange]);
   return (
     <div style={{position:'relative'}}>
       <div style={{position:'relative',display:'flex',alignItems:'center',justifyContent:'center',gap:0,padding:'0 8px'}}>
         {/* iOS-style selection pill — BEHIND numbers */}
         <div style={{position:'absolute',left:8,right:8,top:(VISIBLE-1)/2*ITEM_H,height:ITEM_H,background:'#EBEBEC',borderRadius:10,pointerEvents:'none',zIndex:0}}/>
-        <IosTimeWheel items={HOURS} value={h} onChange={setH} unit="soat"/>
+        <IosTimeWheel items={__HOURS} value={h} onChange={setH} unit="soat"/>
         <div style={{fontSize:24,fontWeight:600,color:'#0A0A0A',padding:'0 0',zIndex:5,letterSpacing:0.5}}>:</div>
-        <IosTimeWheel items={MINUTES} value={m} onChange={setM} unit="daq"/>
+        <IosTimeWheel items={__MINUTES} value={m} onChange={setM} unit="daq"/>
       </div>
-      <button onClick={()=>onConfirm && onConfirm(`${h}:${m}`)} style={{width:'100%',marginTop:14,background:T,color:'#fff',border:'none',borderRadius:14,padding:'13px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tasdiqlash</button>
+      <div style={{display:'flex',gap:10,marginTop:14}}>
+        {onCancel && (
+          <button type="button" onClick={onCancel} style={{flex:1,background:'#F2F3F5',color:'#0F1B3D',border:'none',borderRadius:14,padding:'13px 0',fontSize:15,fontWeight:700,cursor:'pointer'}}>Bekor qilish</button>
+        )}
+        <button type="button" onClick={()=>onConfirm && onConfirm(`${h}:${m}`)} style={{flex:2,background:T,color:'#fff',border:'none',borderRadius:14,padding:'13px 0',fontSize:15,fontWeight:800,cursor:'pointer',boxShadow:'0 6px 16px rgba(0,153,168,0.30)'}}>Tasdiqlash</button>
+      </div>
     </div>
   );
 }
