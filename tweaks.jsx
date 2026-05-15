@@ -2,13 +2,6 @@
 // Logo is stored in localStorage AND ALSO encoded into the URL hash so the
 // link can be shared and the logo will appear for anyone opening it.
 
-import React from 'react';
-import {
-  useTweaks, TweaksPanel, TweakSection, TweakRow,
-  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
-  TweakText, TweakNumber, TweakColor, TweakButton,
-} from './tweaks-panel.jsx';
-
 const LOGO_KEY = 'airport.logoDataUrl';
 const HASH_PARAM = 'logo';
 
@@ -148,4 +141,7 @@ function AirportTweaks() {
   );
 }
 
-export { AirportTweaks, applyLogo, readLogo, TWEAK_DEFAULTS };
+window.AirportTweaks = AirportTweaks;
+window.applyLogo = applyLogo;
+window.readLogo = readLogo;
+window.TWEAK_DEFAULTS = TWEAK_DEFAULTS;

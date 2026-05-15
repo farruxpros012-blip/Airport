@@ -1,16 +1,6 @@
 // Airport mobile app screens — original design inspired by user's references
 // Russian copy, blue/indigo palette, iOS-style cards with soft shadows.
 
-import React from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import lottie from 'lottie-web';
-
-// Re-export onto window for any legacy references inside screens.jsx
-if (typeof window !== 'undefined') {
-  window.L = window.L || L;
-  window.lottie = window.lottie || lottie;
-}
 
 const C = {
   bg: '#F4F5FA',
@@ -5093,4 +5083,6 @@ const ActionCard = ({ icon, label }) => (
   </Card>
 );
 
-export { ScreenHome, ScreenServices, ScreenSupport, ScreenProfile, ScreenFlight, ScreenTrip };
+Object.assign(window, {
+  ScreenHome, ScreenServices, ScreenSupport, ScreenProfile, ScreenFlight, ScreenTrip,
+});
